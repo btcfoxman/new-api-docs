@@ -1,0 +1,28 @@
+# 创建响应 (OpenAI Responses API)
+
+- Source: `relay.json`
+- Method: `POST`
+- Path: `/v1/responses`
+- Operation ID: `createResponse`
+
+## 说明
+
+OpenAI Responses API，用于创建模型响应。
+支持多轮对话、工具调用、推理等功能。
+
+
+## 参数
+
+无
+
+## 请求体
+
+```json
+{'content': {'application/json': {'schema': {'$ref': '#/components/schemas/ResponsesRequest'}}}, 'required': True}
+```
+
+## 响应
+
+| 状态码 | 说明 |
+|---|---|
+| 200 | 成功创建响应 |

@@ -1,6 +1,50 @@
 ---
-title: "多协议适配"
-description: "OpenAI/Claude/Gemini 兼容说明"
+title: "多协议适配说明"
+description: "了解 new-api 如何处理不同厂商的协议差异"
 ---
 
-建议在应用层维护统一请求结构，在网关层做协议映射。
+为了降低开发者的适配成本，new-api 会自动将非 OpenAI 协议的模型（如 Claude, Gemini）封装成标准的 OpenAI Chat 格式。
+
+## 统一响应格式
+
+无论您调用的是哪个厂商的模型，返回的 JSON 结构均一致：
+
+```json
+{
+  "id": "chatcmpl-...",
+  "object": "chat.completion",
+  "created": 1712345678,
+  "model": "claude-3-5-sonnet",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "这是统一后的回复内容"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 10,
+    "completion_tokens": 20,
+    "total_tokens": 30
+  }
+}
+```
+
+## 厂商特有功能映射
+
+### Claude (Anthropic)
+- **Messages API**: 自动映射。
+- **思考模型 (Thinking)**: 我们已兼容 Claude 3.7 的推理字段，支持在 OpenAI 格式下返回推理内容。
+
+### Gemini (Google)
+- **GenerateContent**: 自动映射为 Chat Completions。
+- **Search Grounding**: 如果模型支持搜索，结果将合并在消息内容中返回。
+
+### DeepSeek (推理模型)
+- **Reasoning Content**: 自动映射为 `choices[0].message.reasoning_content`，完美适配 OpenAI 最新标准。
+
+## 限制说明
+某些厂商的极个别特有参数（如非标准的 Top-P 算法）可能在统一封装中被忽略。如果您的业务极度依赖某厂商的原生特定字段，请咨询技术支持。

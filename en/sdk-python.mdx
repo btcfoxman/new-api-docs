@@ -1,9 +1,66 @@
 ---
-title: "SDK Example (Python)"
-description: "OpenAI Python SDK"
+title: "Python SDK 集成"
+description: "使用 OpenAI 官方 Python 库对接 new-api"
 ---
+
+由于 new-api 完全兼容 OpenAI 协议，我们建议直接使用 OpenAI 官方提供的 Python SDK。
+
+## 安装
+
+```bash
+pip install openai
+```
+
+## 基础对话示例
 
 ```python
 from openai import OpenAI
-client = OpenAI(api_key="YOUR_API_KEY", base_url="https://api.your-domain.com/v1")
+
+# 初始化客户端
+client = OpenAI(
+    api_key="sk-your-token",
+    base_url="https://api.your-domain.com/v1"
+)
+
+# 创建对话
+completion = client.chat.completions.create(
+  model="gpt-4o",
+  messages=[
+    {"role": "system", "content": "你是一个专业的技术助手。"},
+    {"role": "user", "content": "如何优化 Python 的并发性能？"}
+  ]
+)
+
+print(completion.choices[0].message.content)
+```
+
+## 流式输出 (Streaming)
+
+对于长文本生成，建议使用流式输出以提升用户体验。
+
+```python
+stream = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "写一篇关于量子计算的短文"}],
+    stream=True,
+)
+for chunk in stream:
+    if chunk.choices[0].delta.content is not None:
+        print(chunk.choices[0].delta.content, end="")
+```
+
+## 异常处理
+
+```python
+import openai
+
+try:
+    # 你的调用代码
+    pass
+except openai.AuthenticationError:
+    print("API Key 错误")
+except openai.RateLimitError:
+    print("触发限流或额度耗尽")
+except openai.APIConnectionError:
+    print("网络连接异常")
 ```

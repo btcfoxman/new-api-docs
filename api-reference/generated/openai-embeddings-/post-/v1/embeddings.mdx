@@ -1,0 +1,26 @@
+# 创建文本嵌入
+
+- Source: `relay.json`
+- Method: `POST`
+- Path: `/v1/embeddings`
+- Operation ID: `createEmbedding`
+
+## 说明
+
+将文本转换为向量嵌入
+
+## 参数
+
+无
+
+## 请求体
+
+```json
+{'content': {'application/json': {'schema': {'$ref': '#/components/schemas/EmbeddingRequest'}}}, 'required': True}
+```
+
+## 响应
+
+| 状态码 | 说明 |
+|---|---|
+| 200 | 成功创建嵌入 |

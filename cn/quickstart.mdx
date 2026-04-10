@@ -1,8 +1,57 @@
 ---
-title: "快速开始"
-description: "5 分钟完成接入"
+title: "5 分钟快速开始"
+description: "通过 3 个简单步骤发起您的首个 API 请求"
 ---
 
-1. 创建 API Key
-2. 设置 Base URL：`https://api.your-domain.com/v1`
-3. 发起首个请求
+## 第一步：获取 API 密钥
+
+1. 登录 [new-api 控制台](https://your-domain.com)。
+2. 进入 **"令牌"** 页面，点击 **"添加令牌"**。
+3. 复制生成的令牌 (通常以 `sk-` 开头)。
+
+## 第二步：配置基础地址
+
+所有请求必须指向我们的 API 网关。建议您将其设置为环境变量：
+
+```bash
+# 全局 Base URL
+API_BASE_URL="https://api.your-domain.com/v1"
+```
+
+## 第三步：发起首个请求
+
+### Python 示例 (OpenAI SDK)
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.your-domain.com/v1"
+)
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "你好，请推荐 3 个最适合 AI 开发的 IDE"}]
+)
+
+print(response.choices[0].message.content)
+```
+
+### cURL 命令行
+
+```bash
+curl https://api.your-domain.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "Hello world!"}]
+  }'
+```
+
+## 后续步骤
+
+- **配置集成工具**：参考 [集成 Cursor](/cn/tools-cursor) 指南。
+- **查阅错误代码**：参考 [状态码详解](/cn/error-codes) 指南。
+- **管理额度**：在控制台实时监控您的配额消耗情况。

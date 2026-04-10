@@ -1,6 +1,43 @@
 ---
-title: "Introduction"
-description: "Unified access to multi-vendor AI APIs"
+title: "服务概览"
+description: "new-api 一站式 AI 模型接入平台"
 ---
 
-`new-api` is a unified gateway for text, image, video, and multimodal APIs.
+# 欢迎使用 new-api
+
+new-api 为开发者提供了统一、稳定且高性能的 AI 模型接入能力。通过兼容 OpenAI 的标准协议，您可以极速集成全球领先的大型语言模型 (LLM)、绘图模型及多模态模型。
+
+<CardGroup cols={2}>
+  <Card title="模型矩阵" icon="cubes">
+    聚合 GPT-4o, Claude 3.5, Gemini 1.5, DeepSeek, Qwen 等 100+ 模型。
+  </Card>
+  <Card title="原生兼容" icon="code">
+    完全遵循 OpenAI API 规范，现有应用仅需修改 Base URL 即可零成本迁移。
+  </Card>
+  <Card title="全球中转" icon="bolt">
+    分布式集群部署，优化跨国网络访问，提供极低延迟的 SSE 流式响应。
+  </Card>
+  <Card title="生态适配" icon="puzzle-piece">
+    完美适配 Cursor, LobeChat, Cline, Dify 等主流开发者工具。
+  </Card>
+</CardGroup>
+
+## 核心能力分布
+
+### 1. 对话与推理 (Chat & Reasoning)
+- **通用模型**：GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro。
+- **推理模型**：OpenAI o1, DeepSeek V3/R1。
+- **国产领先**：通义千问 (Qwen), 腾讯混元 (Hunyuan), 豆包 (Doubao)。
+
+### 2. 多模态与创意 (Multimodal)
+- **图像生成**：Midjourney, DALL·E 3, Flux Pro, Ideogram 2.0。
+- **视频生成**：Luma Dream Machine, Sora, Kling, Kling 视频。
+- **音频处理**：Suno v3.5 (音乐), Whisper (转录), OpenAI TTS (语音)。
+
+## 接入规范
+
+- **API Base URL**: `https://api.your-domain.com/v1`
+- **协议标准**: OpenAI RESTful API / SSE
+- **鉴权方式**: Bearer Token (sk-...)
+
+如果您需要获取计费详情或模型价格，请访问 [计费文档](/cn/models) 或登录 [控制台](https://your-domain.com)。

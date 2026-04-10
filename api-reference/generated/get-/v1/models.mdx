@@ -1,0 +1,36 @@
+# 获取模型列表
+
+- Source: `relay.json`
+- Method: `GET`
+- Path: `/v1/models`
+- Operation ID: `listModels`
+
+## 说明
+
+获取当前可用的模型列表。
+
+根据请求头自动识别返回格式：
+- 包含 `x-api-key` 和 `anthropic-version` 头时返回 Anthropic 格式
+- 包含 `x-goog-api-key` 头或 `key` 查询参数时返回 Gemini 格式
+- 其他情况返回 OpenAI 格式
+
+
+## 参数
+
+| 名称 | 位置 | 必填 | 描述 |
+|---|---|---|---|
+| key | query | False | Google API Key (用于 Gemini 格式) |
+| x-api-key | header | False | Anthropic API Key (用于 Claude 格式) |
+| anthropic-version | header | False | Anthropic API 版本 |
+| x-goog-api-key | header | False | Google API Key (用于 Gemini 格式) |
+
+## 请求体
+
+无
+
+## 响应
+
+| 状态码 | 说明 |
+|---|---|
+| 200 | 成功获取模型列表 |
+| 401 | 认证失败 |

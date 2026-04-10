@@ -1,10 +1,37 @@
 ---
-title: "Models"
-description: "Public model ID examples"
+title: "模型 ID 列表"
+description: "查看当前支持的模型 ID 与映射关系"
 ---
 
-- `gpt-4o`
-- `claude-sonnet-4-20250514`
-- `qwen-image`
-- `sora`
-- `kling-v1`
+在调用 API 时，请在 `model` 参数中使用以下 ID。
+
+## 热门对话模型
+
+| 模型 ID | 厂商 | 说明 |
+| :--- | :--- | :--- |
+| `gpt-4o` | OpenAI | 全能旗舰模型 |
+| `claude-3-5-sonnet` | Anthropic | 编程与逻辑推理首选 |
+| `gemini-1.5-pro` | Google | 长上下文 (1M+) 专家 |
+| `deepseek-v3` | DeepSeek | 极高性价比的通用大模型 |
+| `deepseek-r1` | DeepSeek | 深度推理强化模型 |
+
+## 推理模型 (Reasoning)
+
+| 模型 ID | 厂商 | 特点 |
+| :--- | :--- | :--- |
+| `o1` | OpenAI | 极强思维链推导 |
+| `o3-mini` | OpenAI | 高性能实时推理 |
+
+## 图像与视频
+
+| 模型 ID | 厂商 | 类型 |
+| :--- | :--- | :--- |
+| `mj-v6.1` | Midjourney | 顶级写实绘图 |
+| `flux-pro` | Flux | 电影级画质绘图 |
+| `kling-v1.5` | Kling | 高清视频生成 |
+| `sora` | OpenAI | 电影级长视频生成 |
+
+## 获取全部列表
+
+如需查询您的账号当前可用模型的全量清单，请调用以下接口：
+`GET /v1/models`

@@ -1,9 +1,45 @@
 ---
-title: "SDK Example (Node.js)"
-description: "OpenAI Node SDK"
+title: "Node.js SDK 集成"
+description: "在 JavaScript/TypeScript 环境中使用 new-api"
 ---
 
+## 安装
+
+```bash
+npm install openai
+# 或者
+yarn add openai
+```
+
+## 基础示例
+
 ```javascript
-import OpenAI from "openai";
-const client = new OpenAI({ apiKey: process.env.API_KEY, baseURL: "https://api.your-domain.com/v1" });
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: 'sk-your-token',
+  baseURL: 'https://api.your-domain.com/v1',
+});
+
+async function main() {
+  const chatCompletion = await openai.chat.completions.create({
+    messages: [{ role: 'user', content: 'Say this is a test' }],
+    model: 'gpt-4o',
+  });
+
+  console.log(chatCompletion.choices[0].message.content);
+}
+
+main();
+```
+
+## TypeScript 支持
+
+```typescript
+import OpenAI from 'openai';
+
+const client: OpenAI = new OpenAI({
+  apiKey: process.env.API_KEY,
+  baseURL: 'https://api.your-domain.com/v1',
+});
 ```
