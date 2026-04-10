@@ -13,122 +13,112 @@
     "dark": "/logo/dark.svg"
   },
   "navigation": {
-    "languages": [
+    "tabs": [
       {
-        "language": "cn",
-        "tabs": [
+        "tab": "中文指南",
+        "groups": [
           {
-            "tab": "开发文档",
-            "groups": [
-              {
-                "group": "快速开始",
-                "pages": [
-                  "cn/introduction",
-                  "cn/quickstart",
-                  "cn/authentication"
-                ]
-              },
-              {
-                "group": "开发指南",
-                "pages": [
-                  "cn/base-spec",
-                  "cn/error-codes",
-                  "cn/models",
-                  "cn/multi-format"
-                ]
-              },
-              {
-                "group": "集成与工具",
-                "pages": [
-                  "tools/cursor",
-                  "tools/claude-code",
-                  "tools/windsurf",
-                  "tools/sdk-python",
-                  "tools/sdk-nodejs",
-                  "tools/sdk-go"
-                ]
-              }
+            "group": "快速开始",
+            "pages": [
+              "cn/introduction",
+              "cn/quickstart",
+              "cn/authentication"
             ]
           },
           {
-            "tab": "API 参考",
-            "groups": [
-              {
-                "group": "概览",
-                "pages": [
-                  "api/cn/sign",
-                  "api/cn/errors",
-                  "api/cn/enums",
-                  "api/cn/webhook"
-                ]
-              },
-              {
-                "group": "API",
-                "openapi": {
-                  "source": "api/cn/openapi.json",
-                  "directory": "api/cn"
-                }
-              }
+            "group": "开发指南",
+            "pages": [
+              "cn/base-spec",
+              "cn/error-codes",
+              "cn/models",
+              "cn/multi-format"
+            ]
+          },
+          {
+            "group": "集成与工具",
+            "pages": [
+              "tools/cursor",
+              "tools/claude-code",
+              "tools/windsurf",
+              "tools/sdk-python",
+              "tools/sdk-nodejs",
+              "tools/sdk-go"
             ]
           }
         ]
       },
       {
-        "language": "en",
-        "tabs": [
+        "tab": "API 参考 (CN)",
+        "groups": [
           {
-            "tab": "Guides",
-            "groups": [
-              {
-                "group": "Getting Started",
-                "pages": [
-                  "en/introduction",
-                  "en/quickstart",
-                  "en/authentication"
-                ]
-              },
-              {
-                "group": "Developer Guide",
-                "pages": [
-                  "en/base-spec",
-                  "en/error-codes",
-                  "en/models",
-                  "en/multi-format"
-                ]
-              },
-              {
-                "group": "Tools",
-                "pages": [
-                  "tools/cursor",
-                  "tools/claude-code",
-                  "tools/windsurf",
-                  "tools/sdk-python",
-                  "tools/sdk-nodejs",
-                  "tools/sdk-go"
-                ]
-              }
+            "group": "概览",
+            "pages": [
+              "api/cn/sign",
+              "api/cn/errors",
+              "api/cn/enums",
+              "api/cn/webhook"
             ]
           },
           {
-            "tab": "API Reference",
-            "groups": [
-              {
-                "group": "Overview",
-                "pages": [
-                  "api/en/sign",
-                  "api/en/errors",
-                  "api/en/enums",
-                  "api/en/webhook"
-                ]
-              },
-              {
-                "group": "API",
-                "openapi": {
-                  "source": "api/en/openapi.json",
-                  "directory": "api/en"
-                }
-              }
+            "group": "API",
+            "openapi": {
+              "source": "api/cn/openapi.json",
+              "directory": "api/cn"
+            }
+          }
+        ]
+      },
+      {
+        "tab": "English Guides",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "en/introduction",
+              "en/quickstart",
+              "en/authentication"
             ]
+          },
+          {
+            "group": "Developer Guide",
+            "pages": [
+              "en/base-spec",
+              "en/error-codes",
+              "en/models",
+              "en/multi-format"
+            ]
+          },
+          {
+            "group": "Tools",
+            "pages": [
+              "tools/cursor",
+              "tools/claude-code",
+              "tools/windsurf",
+              "tools/sdk-python",
+              "tools/sdk-nodejs",
+              "tools/sdk-go"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference (EN)",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api/en/sign",
+              "api/en/errors",
+              "api/en/enums",
+              "api/en/webhook"
+            ]
+          },
+          {
+            "group": "API",
+            "openapi": {
+              "source": "api/en/openapi.json",
+              "directory": "api/en"
+            }
           }
         ]
       }
