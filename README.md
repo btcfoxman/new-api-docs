@@ -2,6 +2,8 @@
 
 Public documentation site for `new-api`.
 
+Go
+
 ## Local preview
 
 ```bash
