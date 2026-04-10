@@ -1,46 +1,8 @@
 ---
-title: "快速开始"
-description: "在 5 分钟内发起您的首个 AI 请求"
+title: "????"
+description: "5 ??????"
 ---
 
-## 1. 获取 API 密钥
-
-在我们的 [API 控制台](https://your-domain.com) 登录，进入“令牌”页面创建一个新的令牌并复制。
-
-## 2. 配置 Base URL
-
-我们的 API 接口地址为：
-`https://api.your-domain.com/v1`
-
-## 3. 发起请求
-
-### 使用 Python SDK
-
-```python
-from openai import OpenAI
-
-client = OpenAI(
-    api_key="YOUR_API_KEY",
-    base_url="https://api.your-domain.com/v1"
-)
-
-response = client.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "你好，请介绍你自己"}]
-)
-
-print(response.choices[0].message.content)
-```
-
-### 使用 cURL
-
-```bash
-curl https://api.your-domain.com/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "X-New-API-Extra: optional" \
-  -d '{
-    "model": "gpt-4o",
-    "messages": [{"role": "user", "content": "Hello!"}]
-  }'
-```
+1. ?????? API Key
+2. ?? Base URL: `https://api.your-domain.com/v1`
+3. ??????

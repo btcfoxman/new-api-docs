@@ -1,98 +1,154 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "new-api 对外文档",
   "theme": "mint",
+  "name": "new-api Docs",
+  "description": "Unified AI gateway documentation",
   "colors": {
     "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "light": "#EFFFF7",
+    "dark": "#0B2A1D"
   },
-  "favicon": "/favicon.svg",
+  "favicon": {
+    "light": "/public/assets/favicon.ico",
+    "dark": "/public/assets/favicon.ico"
+  },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/public/assets/logo.png",
+    "dark": "/public/assets/logo.png"
   },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "中文指南",
-        "groups": [
+        "language": "en",
+        "tabs": [
           {
-            "group": "开始使用",
-            "pages": [
-              "cn/introduction",
-              "cn/quickstart",
-              "cn/authentication"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API 参考 (CN)",
-        "groups": [
-          {
-            "group": "概览",
-            "pages": [
-              "api-reference/generated/index"
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "en/overview",
+                  "en/quickstart",
+                  "en/security"
+                ]
+              },
+              {
+                "group": "Developer Guide",
+                "pages": [
+                  "en/base-spec",
+                  "en/error-codes",
+                  "en/models",
+                  "en/multi-format"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "en/tools-cursor",
+                  "en/tools-claude-code",
+                  "en/tools-windsurf",
+                  "en/sdk-python",
+                  "en/sdk-nodejs",
+                  "en/sdk-go"
+                ]
+              }
             ]
           },
           {
-            "group": "接口列表",
-            "pages": [
-              "api-reference/generated/openai-chat-/post-/v1/chat/completions",
-              "api-reference/generated/claude-messages-/post-/v1/messages",
-              "api-reference/generated/gemini-/post-/v1/engines/-model-/embeddings",
-              "api-reference/generated/openai-audio-/post-/v1/audio/speech",
-              "api-reference/generated/openai-embeddings-/post-/v1/embeddings",
-              "api-reference/generated/moderations/post-/v1/moderations",
-              "api-reference/generated/rerank-/post-/v1/rerank",
-              "api-reference/generated/realtime/get-/v1/realtime",
-              "api-reference/generated/qwen-/post-/v1/images/generations",
-              "api-reference/generated/kling-/post-/kling/v1/videos/text2video"
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api/en/sign",
+                  "api/en/errors",
+                  "api/en/enums",
+                  "api/en/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api/en/openapi.json",
+                  "directory": "api/en"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "cn",
+        "tabs": [
+          {
+            "tab": "开发文档",
+            "groups": [
+              {
+                "group": "快速开始",
+                "pages": [
+                  "cn/overview",
+                  "cn/quickstart",
+                  "cn/security"
+                ]
+              },
+              {
+                "group": "开发指南",
+                "pages": [
+                  "cn/base-spec",
+                  "cn/error-codes",
+                  "cn/models",
+                  "cn/multi-format"
+                ]
+              },
+              {
+                "group": "集成与工具",
+                "pages": [
+                  "cn/tools-cursor",
+                  "cn/tools-claude-code",
+                  "cn/tools-windsurf",
+                  "cn/sdk-python",
+                  "cn/sdk-nodejs",
+                  "cn/sdk-go"
+                ]
+              }
             ]
           },
           {
-            "group": "API 定义",
-            "openapi": {
-              "source": "api/cn/openapi.json"
-            }
-          }
-        ]
-      },
-      {
-        "tab": "English Guides",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "en/introduction",
-              "en/quickstart",
-              "en/authentication"
+            "tab": "API 参考",
+            "groups": [
+              {
+                "group": "概览",
+                "pages": [
+                  "api/cn/sign",
+                  "api/cn/errors",
+                  "api/cn/enums",
+                  "api/cn/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api/cn/openapi.json",
+                  "directory": "api/cn"
+                }
+              }
             ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference (EN)",
-        "groups": [
-          {
-            "group": "API",
-            "openapi": {
-              "source": "api/en/openapi.json"
-            }
           }
         ]
       }
     ]
   },
   "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:support@your-domain.com"
+      }
+    ],
     "primary": {
       "type": "button",
-      "label": "API 控制台",
+      "label": "API Console",
       "href": "https://your-domain.com"
     }
-  },
-  "contextual": {
-    "options": ["copy", "view", "chatgpt", "claude", "cursor", "vscode"]
   }
 }

@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "new-api 对外 API 文档",
+    "title": "new-api ?? API ??",
     "version": "1.0.0",
     "description": "Public AI Gateway API Reference"
   },
