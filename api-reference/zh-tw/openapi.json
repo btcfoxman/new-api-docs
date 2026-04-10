@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "出海营 API 参考文档",
+    "title": "出海營 API 參考文件",
     "version": "1.0.0",
     "description": "Public AI Gateway API Reference"
   },
@@ -75,7 +75,7 @@
             "headers": {}
           },
           "401": {
-            "description": "认证失败",
+            "description": "驗證失败",
             "content": {
               "application/json": {
                 "schema": {
@@ -229,7 +229,7 @@
       "post": {
         "summary": "创建视频 ",
         "deprecated": false,
-        "description": "OpenAI 兼容的视频生成接口。\n\n参考文档: https://platform.openai.com/docs/api-reference/videos/create\n",
+        "description": "OpenAI 兼容的视频生成介面。\n\n参考文档: https://platform.openai.com/docs/api-reference/videos/create\n",
         "operationId": "createVideo",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -372,7 +372,7 @@
       "get": {
         "summary": "获取视频任务状态 ",
         "deprecated": false,
-        "description": "OpenAI 兼容的视频任务状态查询接口。\n\n返回视频任务的详细状态信息。\n",
+        "description": "OpenAI 兼容的视频任务状态查询介面。\n\n返回视频任务的详细状态信息。\n",
         "operationId": "getVideo",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -465,7 +465,7 @@
       "get": {
         "summary": "获取视频内容",
         "deprecated": false,
-        "description": "获取已完成视频任务的视频文件内容。\n\n此接口会代理返回视频文件流。\n",
+        "description": "获取已完成视频任务的视频文件内容。\n\n此介面会代理返回视频文件流。\n",
         "operationId": "getVideoContent",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -628,7 +628,7 @@
       "post": {
         "summary": "Kling 图生视频",
         "deprecated": false,
-        "description": "使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。\n",
+        "description": "使用 Kling 模型从图片生成视频。\n\n支持透過 image 参数传入图片 URL 或 Base64 编码的图片数据。\n",
         "operationId": "createKlingImage2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -738,7 +738,7 @@
       "post": {
         "summary": "即梦视频生成",
         "deprecated": false,
-        "description": "即梦官方 API 格式的视频生成接口。\n\n支持通过 Action 参数指定操作类型：\n- `CVSync2AsyncSubmitTask`: 提交视频生成任务\n- `CVSync2AsyncGetResult`: 获取任务结果\n\n需要在查询参数中指定 Action 和 Version。\n",
+        "description": "即梦官方 API 格式的视频生成介面。\n\n支持透過 Action 参数指定操作类型：\n- `CVSync2AsyncSubmitTask`: 提交视频生成任务\n- `CVSync2AsyncGetResult`: 获取任务结果\n\n需要在查询参数中指定 Action 和 Version。\n",
         "operationId": "createJimengVideo",
         "tags": [
           "视频生成/即梦格式"
@@ -849,7 +849,7 @@
       "post": {
         "summary": "创建视频生成任务",
         "deprecated": false,
-        "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可通过 GET 接口查询任务状态。\n",
+        "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可透過 GET 介面查询任务状态。\n",
         "operationId": "createVideoGeneration",
         "tags": [
           "视频生成"
@@ -3064,7 +3064,7 @@
           },
           "task_id": {
             "type": "string",
-            "description": "任务 ID (兼容旧接口)",
+            "description": "任务 ID (兼容旧介面)",
             "deprecated": true
           },
           "object": {
@@ -3323,25 +3323,25 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "使用 Bearer Token 认证。\n格式: `Authorization: Bearer sk-xxxxxx`\n"
+        "description": "使用 Bearer Token 驗證。\n格式: `Authorization: Bearer sk-xxxxxx`\n"
       },
       "SessionAuth": {
         "type": "apiKey",
         "in": "cookie",
         "name": "session",
-        "description": "Session认证，通过登录接口获取"
+        "description": "Session驗證，透過登录介面获取"
       },
       "AccessToken": {
         "type": "apiKey",
         "in": "header",
         "name": "Authorization",
-        "description": "Access Token认证，格式: Bearer {access_token}，通过 /api/user/token 接口生成"
+        "description": "Access Token驗證，格式: Bearer {access_token}，透過 /api/user/token 介面生成"
       },
       "NewApiUser": {
         "type": "apiKey",
         "in": "header",
         "name": "New-Api-User",
-        "description": "用户ID请求头，必须与当前登录用户ID匹配，使用Session或AccessToken认证时必须提供"
+        "description": "用户ID请求头，必须与当前登录用户ID匹配，使用Session或AccessToken驗證时必须提供"
       }
     }
   },

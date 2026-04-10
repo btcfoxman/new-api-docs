@@ -1,20 +1,16 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Overseas API",
+  "name": "出海营API / OverseasAPI",
   "description": "Overseas API documentation",
   "colors": {
-    "primary": "#6d28d9",
-    "light": "#f5f3ff",
-    "dark": "#2e1065"
+    "primary": "#16A34A",
+    "light": "#EFFFF7",
+    "dark": "#0B2A1D"
   },
   "favicon": {
     "light": "/public/assets/favicon.ico",
     "dark": "/public/assets/favicon.ico"
-  },
-  "logo": {
-    "light": "/public/assets/logo.webp",
-    "dark": "/public/assets/logo.webp"
   },
   "navigation": {
     "languages": [

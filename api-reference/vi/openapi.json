@@ -3,7 +3,7 @@
   "info": {
     "title": "Overseas API Reference",
     "version": "1.0.0",
-    "description": "Public AI Gateway API Reference"
+    "description": "Tài liệu API Overseas"
   },
   "servers": [
     {
@@ -3335,7 +3335,7 @@
         "type": "apiKey",
         "in": "header",
         "name": "Authorization",
-        "description": "Access Token认证，格式: Bearer {access_token}，通过 /api/user/token 接口生成"
+        "description": "Access token auth format: Bearer {access_token}, generated via /api/user/token."
       },
       "NewApiUser": {
         "type": "apiKey",
