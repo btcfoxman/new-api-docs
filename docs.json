@@ -150,9 +150,5 @@
       "label": "API Console",
       "href": "https://your-domain.com"
     }
-  },
-  "openapi": [
-    "api-reference/cn/openapi.json",
-    "api-reference/en/openapi.json"
-  ]
+  }
 }
