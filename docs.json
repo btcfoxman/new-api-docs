@@ -62,8 +62,8 @@
           {
             "group": "API",
             "openapi": {
-              "source": "api/cn/openapi.json",
-              "directory": "api/cn"
+              "source": "api-reference/openapi.json",
+              "directory": "api-reference"
             }
           }
         ]
@@ -116,8 +116,8 @@
           {
             "group": "API",
             "openapi": {
-              "source": "api/en/openapi.json",
-              "directory": "api/en"
+              "source": "api-reference/openapi-en.json",
+              "directory": "api-reference"
             }
           }
         ]
