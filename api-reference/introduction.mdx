@@ -1,33 +1,26 @@
+﻿---
+title: "API 协议规范"
+description: "请求格式、鉴权头、通用响应约定"
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
----
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## 协议与编码
 
-## Welcome
+- 协议：`HTTPS`
+- 数据格式：`application/json`
+- 字符编码：`UTF-8`
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## 通用请求头
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
-
-## Authentication
-
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
-
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+```http
+Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json
 ```
+
+## 通用响应结构
+
+成功响应通常返回业务数据对象；失败响应返回 `error` 对象，包含 `code` 与 `message`。
+
+## 幂等与重试
+
+1. 对可重试错误（429/503）使用指数退避。
+2. 视频生成等异步任务避免重复提交，可在业务层做幂等键控制。

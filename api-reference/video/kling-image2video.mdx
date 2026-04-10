@@ -1,0 +1,24 @@
+﻿---
+title: "Kling 图生视频"
+description: "通过图片生成视频"
+---
+
+- 创建任务: `POST /kling/v1/videos/image2video`
+- 查询任务: `GET /kling/v1/videos/image2video/{task_id}`
+
+## 请求体字段
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| model | string | 是 | 例如 `kling-v1` |
+| image_url | string | 是 | 输入图片地址 |
+| prompt | string | 否 | 补充文本描述 |
+| duration | integer | 否 | 时长（秒） |
+
+## 响应字段
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| task_id | string | 任务 ID |
+| status | string | 任务状态 |
+| result_url | string | 成功后的视频地址 |

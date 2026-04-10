@@ -1,0 +1,23 @@
+﻿---
+title: "Embeddings"
+description: "创建文本向量表示"
+---
+
+- Method: `POST`
+- Path: `/embeddings`
+
+## 请求体字段
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| model | string | 是 | 向量模型 ID |
+| input | string 或 string[] | 是 | 输入文本 |
+| encoding_format | string | 否 | 向量编码格式 |
+
+## 响应字段
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| data | array | 向量结果列表 |
+| data[].embedding | number[] | 向量值 |
+| usage | object | token 统计 |

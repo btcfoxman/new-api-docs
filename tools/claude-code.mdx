@@ -1,0 +1,14 @@
+﻿---
+title: "Claude Code 集成"
+description: "在 Claude Code 中接入统一网关"
+---
+
+## 配置要点
+
+1. 在本机设置 `ANTHROPIC_API_KEY`（或等价配置项）。
+2. 将请求入口指向 `https://api.your-domain.com/v1/messages`。
+3. 使用 `model` 指定对外开放的 Claude 模型 ID。
+
+## 校验方式
+
+执行最小 Messages 请求并检查 `content[].text` 返回值。

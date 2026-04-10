@@ -1,0 +1,15 @@
+﻿---
+title: "Windsurf 集成"
+description: "在 Windsurf 中使用统一 API 入口"
+---
+
+## 配置要点
+
+1. 使用安全密钥存储注入 API Key。
+2. 统一设置 Base URL 为 `https://api.your-domain.com/v1`。
+3. 为不同工作区使用独立密钥，避免交叉泄露。
+
+## 校验方式
+
+在工作区运行一条对话请求，确认可稳定返回结果。
+

@@ -1,0 +1,26 @@
+﻿---
+title: "Claude Messages"
+description: "Anthropic Messages 协议兼容接口"
+---
+
+- Method: `POST`
+- Path: `/messages`
+
+## 请求体字段
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| model | string | 是 | 模型 ID |
+| messages | array | 是 | 消息列表 |
+| max_tokens | integer | 是 | 最大输出 token |
+| temperature | number | 否 | 采样温度 |
+| system | string | 否 | 系统提示词 |
+
+## 成功响应字段
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | string | 响应 ID |
+| content | array | 输出内容块 |
+| content[].text | string | 文本输出 |
+| stop_reason | string | 停止原因 |

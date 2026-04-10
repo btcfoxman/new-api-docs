@@ -1,0 +1,27 @@
+﻿---
+title: "OpenAI Chat"
+description: "创建对话补全"
+---
+
+- Method: `POST`
+- Path: `/chat/completions`
+
+## 请求体字段
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| model | string | 是 | 模型 ID |
+| messages | array | 是 | 对话消息列表 |
+| messages[].role | string | 是 | `system`/`user`/`assistant` |
+| messages[].content | string | 是 | 消息内容 |
+| temperature | number | 否 | 采样温度，0 到 2 |
+| stream | boolean | 否 | 是否流式返回 |
+
+## 成功响应字段
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| id | string | 请求 ID |
+| choices | array | 模型候选结果 |
+| choices[].message.content | string | 模型回复文本 |
+| usage | object | token 用量统计 |

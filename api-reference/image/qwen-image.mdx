@@ -1,0 +1,24 @@
+﻿---
+title: "Qwen 图像生成"
+description: "文生图与图像编辑"
+---
+
+- Method: `POST`
+- Path: `/images/generations` 或 `/images/edits`
+
+## 请求体字段
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| model | string | 是 | 例如 `qwen-image` |
+| prompt | string | 是 | 图像描述 |
+| size | string | 否 | 例如 `1024x1024` |
+| image | string | 否 | 编辑场景下的输入图片 |
+
+## 成功响应字段
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| created | integer | 时间戳 |
+| data | array | 结果列表 |
+| data[].url | string | 生成图片地址 |

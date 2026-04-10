@@ -1,0 +1,24 @@
+﻿---
+title: "Rerank"
+description: "对召回文档进行相关性重排"
+---
+
+- Method: `POST`
+- Path: `/rerank`
+
+## 请求体字段
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| model | string | 是 | 重排模型 ID |
+| query | string | 是 | 查询语句 |
+| documents | string[] | 是 | 候选文档列表 |
+| top_n | integer | 否 | 返回条数 |
+
+## 响应字段
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| results | array | 重排后的结果 |
+| results[].index | integer | 原文档下标 |
+| results[].relevance_score | number | 相关性分数 |

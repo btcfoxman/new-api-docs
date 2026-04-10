@@ -1,0 +1,25 @@
+﻿---
+title: "Sora 视频生成"
+description: "Sora 兼容视频创建与查询"
+---
+
+- 创建任务: `POST /videos`
+- 查询任务: `GET /videos/{task_id}`
+- 获取内容: `GET /videos/{task_id}/content`
+
+## 创建任务请求字段
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| model | string | 是 | 例如 `sora` |
+| prompt | string | 是 | 视频描述 |
+| duration | integer | 否 | 时长（秒） |
+| resolution | string | 否 | 分辨率 |
+
+## 查询响应字段
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| task_id | string | 任务 ID |
+| status | string | `queued`/`running`/`succeeded`/`failed` |
+| output | object | 成功后的视频结果信息 |
