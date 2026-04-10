@@ -2,7 +2,7 @@
 
 Public documentation site for `new-api`.
 
-Go
+Go Go
 
 ## Local preview
 
