@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "new-api 开发者文档",
+  "name": "new-api Docs",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -13,52 +13,121 @@
     "dark": "/logo/dark.svg"
   },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "开发文档",
-        "groups": [
+        "language": "cn",
+        "tabs": [
           {
-            "group": "快速开始 (Getting Started)",
-            "pages": [
-              "introduction",
-              "quickstart",
-              "authentication"
+            "tab": "开发文档",
+            "groups": [
+              {
+                "group": "快速开始",
+                "pages": [
+                  "docs/cn/introduction",
+                  "docs/cn/quickstart",
+                  "docs/cn/authentication"
+                ]
+              },
+              {
+                "group": "开发指南",
+                "pages": [
+                  "docs/cn/base-spec",
+                  "docs/cn/error-codes",
+                  "docs/cn/models",
+                  "docs/cn/multi-format"
+                ]
+              },
+              {
+                "group": "集成与工具",
+                "pages": [
+                  "docs/tools/cursor",
+                  "docs/tools/claude-code",
+                  "docs/tools/windsurf",
+                  "docs/tools/sdk-python",
+                  "docs/tools/sdk-nodejs",
+                  "docs/tools/sdk-go"
+                ]
+              }
             ]
           },
           {
-            "group": "开发指南 (Developer Guide)",
-            "pages": [
-              "developer-guide/base-spec",
-              "developer-guide/error-codes",
-              "developer-guide/models",
-              "developer-guide/multi-format"
+            "tab": "API 参考",
+            "groups": [
+              {
+                "group": "概览",
+                "pages": [
+                  "docs/api/cn/sign",
+                  "docs/api/cn/errors",
+                  "docs/api/cn/enums",
+                  "docs/api/cn/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "docs/api/cn/openapi.json",
+                  "directory": "docs/api/cn"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "en",
+        "tabs": [
+          {
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "docs/en/introduction",
+                  "docs/en/quickstart",
+                  "docs/en/authentication"
+                ]
+              },
+              {
+                "group": "Developer Guide",
+                "pages": [
+                  "docs/en/base-spec",
+                  "docs/en/error-codes",
+                  "docs/en/models",
+                  "docs/en/multi-format"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "docs/tools/cursor",
+                  "docs/tools/claude-code",
+                  "docs/tools/windsurf",
+                  "docs/tools/sdk-python",
+                  "docs/tools/sdk-nodejs",
+                  "docs/tools/sdk-go"
+                ]
+              }
             ]
           },
           {
-            "group": "API 参考 (API Reference)",
-            "pages": [
-              "api-reference/introduction",
-              "api-reference/text/openai-chat",
-              "api-reference/text/claude-messages",
-              "api-reference/image/qwen-image",
-              "api-reference/image/jimeng-video",
-              "api-reference/video/sora-video",
-              "api-reference/video/kling-text2video",
-              "api-reference/video/kling-image2video",
-              "api-reference/multimodal/embeddings",
-              "api-reference/multimodal/rerank",
-              "api-reference/multimodal/realtime"
-            ]
-          },
-          {
-            "group": "集成与工具 (Tools)",
-            "pages": [
-              "tools/cursor",
-              "tools/claude-code",
-              "tools/windsurf",
-              "tools/sdk-python",
-              "tools/sdk-nodejs",
-              "tools/sdk-go"
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "docs/api/en/sign",
+                  "docs/api/en/errors",
+                  "docs/api/en/enums",
+                  "docs/api/en/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "docs/api/en/openapi.json",
+                  "directory": "docs/api/en"
+                }
+              }
             ]
           }
         ]
@@ -68,7 +137,7 @@
   "navbar": {
     "primary": {
       "type": "button",
-      "label": "API 控制台",
+      "label": "API Console",
       "href": "https://your-domain.com"
     }
   },

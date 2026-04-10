@@ -1,0 +1,11 @@
+﻿---
+title: "SDK（Node.js）"
+description: "Node.js 调用示例"
+---
+
+```javascript
+import OpenAI from "openai";
+const client = new OpenAI({ apiKey: process.env.API_KEY, baseURL: "https://api.your-domain.com/v1" });
+const resp = await client.chat.completions.create({ model: "gpt-4o", messages: [{ role: "user", content: "hello" }] });
+console.log(resp.choices[0].message.content);
+```
