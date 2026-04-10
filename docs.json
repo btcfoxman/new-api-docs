@@ -2,136 +2,153 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "new-api Docs",
+  "description": "Unified AI gateway documentation",
+  "favicon": {
+    "light": "/public/assets/favicon.ico",
+    "dark": "/public/assets/favicon.ico"
+  },
+  "logo": {
+    "light": "/public/assets/logo.png",
+    "dark": "/public/assets/logo.png"
+  },
   "colors": {
     "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
-  },
-  "favicon": "/favicon.svg",
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "#EFFFF7",
+    "dark": "#0B2A1D"
   },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "中文指南",
-        "groups": [
+        "language": "en",
+        "tabs": [
           {
-            "group": "快速开始",
-            "pages": [
-              "cn/introduction",
-              "cn/quickstart",
-              "cn/authentication"
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "docs/en/overview",
+                  "docs/en/quickstart",
+                  "docs/en/security"
+                ]
+              },
+              {
+                "group": "Developer Guide",
+                "pages": [
+                  "docs/en/base-spec",
+                  "docs/en/error-codes",
+                  "docs/en/models",
+                  "docs/en/multi-format"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "docs/en/tools-cursor",
+                  "docs/en/tools-claude-code",
+                  "docs/en/tools-windsurf",
+                  "docs/en/sdk-python",
+                  "docs/en/sdk-nodejs",
+                  "docs/en/sdk-go"
+                ]
+              }
             ]
           },
           {
-            "group": "开发指南",
-            "pages": [
-              "cn/base-spec",
-              "cn/error-codes",
-              "cn/models",
-              "cn/multi-format"
-            ]
-          },
-          {
-            "group": "集成与工具",
-            "pages": [
-              "tools/cursor",
-              "tools/claude-code",
-              "tools/windsurf",
-              "tools/sdk-python",
-              "tools/sdk-nodejs",
-              "tools/sdk-go"
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "docs/api/en/sign",
+                  "docs/api/en/errors",
+                  "docs/api/en/enums",
+                  "docs/api/en/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "docs/api/en/openapi.json",
+                  "directory": "docs/api"
+                }
+              }
             ]
           }
         ]
       },
       {
-        "tab": "API 参考 (CN)",
-        "groups": [
+        "language": "cn",
+        "tabs": [
           {
-            "group": "概览",
-            "pages": [
-              "api/cn/sign",
-              "api/cn/errors",
-              "api/cn/enums",
-              "api/cn/webhook"
+            "tab": "????",
+            "groups": [
+              {
+                "group": "????",
+                "pages": [
+                  "docs/cn/overview",
+                  "docs/cn/quickstart",
+                  "docs/cn/security"
+                ]
+              },
+              {
+                "group": "????",
+                "pages": [
+                  "docs/cn/base-spec",
+                  "docs/cn/error-codes",
+                  "docs/cn/models",
+                  "docs/cn/multi-format"
+                ]
+              },
+              {
+                "group": "?????",
+                "pages": [
+                  "docs/cn/tools-cursor",
+                  "docs/cn/tools-claude-code",
+                  "docs/cn/tools-windsurf",
+                  "docs/cn/sdk-python",
+                  "docs/cn/sdk-nodejs",
+                  "docs/cn/sdk-go"
+                ]
+              }
             ]
           },
           {
-            "group": "API",
-            "openapi": {
-              "source": "api-reference/openapi.json",
-              "directory": "api-reference"
-            }
-          }
-        ]
-      },
-      {
-        "tab": "English Guides",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "en/introduction",
-              "en/quickstart",
-              "en/authentication"
+            "tab": "API ??",
+            "groups": [
+              {
+                "group": "??",
+                "pages": [
+                  "docs/api/cn/sign",
+                  "docs/api/cn/errors",
+                  "docs/api/cn/enums",
+                  "docs/api/cn/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "docs/api/cn/openapi.json",
+                  "directory": "docs/api"
+                }
+              }
             ]
-          },
-          {
-            "group": "Developer Guide",
-            "pages": [
-              "en/base-spec",
-              "en/error-codes",
-              "en/models",
-              "en/multi-format"
-            ]
-          },
-          {
-            "group": "Tools",
-            "pages": [
-              "tools/cursor",
-              "tools/claude-code",
-              "tools/windsurf",
-              "tools/sdk-python",
-              "tools/sdk-nodejs",
-              "tools/sdk-go"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference (EN)",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": [
-              "api/en/sign",
-              "api/en/errors",
-              "api/en/enums",
-              "api/en/webhook"
-            ]
-          },
-          {
-            "group": "API",
-            "openapi": {
-              "source": "api-reference/openapi-en.json",
-              "directory": "api-reference"
-            }
           }
         ]
       }
     ]
   },
   "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:support@your-domain.com"
+      }
+    ],
     "primary": {
       "type": "button",
       "label": "API Console",
       "href": "https://your-domain.com"
     }
-  },
-  "contextual": {
-    "options": ["copy", "view", "chatgpt", "claude", "cursor", "vscode"]
   }
 }
