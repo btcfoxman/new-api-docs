@@ -23,29 +23,29 @@
               {
                 "group": "快速开始",
                 "pages": [
-                  "docs/cn/introduction",
-                  "docs/cn/quickstart",
-                  "docs/cn/authentication"
+                  "cn/introduction",
+                  "cn/quickstart",
+                  "cn/authentication"
                 ]
               },
               {
                 "group": "开发指南",
                 "pages": [
-                  "docs/cn/base-spec",
-                  "docs/cn/error-codes",
-                  "docs/cn/models",
-                  "docs/cn/multi-format"
+                  "cn/base-spec",
+                  "cn/error-codes",
+                  "cn/models",
+                  "cn/multi-format"
                 ]
               },
               {
                 "group": "集成与工具",
                 "pages": [
-                  "docs/tools/cursor",
-                  "docs/tools/claude-code",
-                  "docs/tools/windsurf",
-                  "docs/tools/sdk-python",
-                  "docs/tools/sdk-nodejs",
-                  "docs/tools/sdk-go"
+                  "tools/cursor",
+                  "tools/claude-code",
+                  "tools/windsurf",
+                  "tools/sdk-python",
+                  "tools/sdk-nodejs",
+                  "tools/sdk-go"
                 ]
               }
             ]
@@ -56,17 +56,17 @@
               {
                 "group": "概览",
                 "pages": [
-                  "docs/api/cn/sign",
-                  "docs/api/cn/errors",
-                  "docs/api/cn/enums",
-                  "docs/api/cn/webhook"
+                  "api/cn/sign",
+                  "api/cn/errors",
+                  "api/cn/enums",
+                  "api/cn/webhook"
                 ]
               },
               {
                 "group": "API",
                 "openapi": {
-                  "source": "docs/api/cn/openapi.json",
-                  "directory": "docs/api/cn"
+                  "source": "api/cn/openapi.json",
+                  "directory": "api/cn"
                 }
               }
             ]
@@ -82,29 +82,29 @@
               {
                 "group": "Getting Started",
                 "pages": [
-                  "docs/en/introduction",
-                  "docs/en/quickstart",
-                  "docs/en/authentication"
+                  "en/introduction",
+                  "en/quickstart",
+                  "en/authentication"
                 ]
               },
               {
                 "group": "Developer Guide",
                 "pages": [
-                  "docs/en/base-spec",
-                  "docs/en/error-codes",
-                  "docs/en/models",
-                  "docs/en/multi-format"
+                  "en/base-spec",
+                  "en/error-codes",
+                  "en/models",
+                  "en/multi-format"
                 ]
               },
               {
                 "group": "Tools",
                 "pages": [
-                  "docs/tools/cursor",
-                  "docs/tools/claude-code",
-                  "docs/tools/windsurf",
-                  "docs/tools/sdk-python",
-                  "docs/tools/sdk-nodejs",
-                  "docs/tools/sdk-go"
+                  "tools/cursor",
+                  "tools/claude-code",
+                  "tools/windsurf",
+                  "tools/sdk-python",
+                  "tools/sdk-nodejs",
+                  "tools/sdk-go"
                 ]
               }
             ]
@@ -115,17 +115,17 @@
               {
                 "group": "Overview",
                 "pages": [
-                  "docs/api/en/sign",
-                  "docs/api/en/errors",
-                  "docs/api/en/enums",
-                  "docs/api/en/webhook"
+                  "api/en/sign",
+                  "api/en/errors",
+                  "api/en/enums",
+                  "api/en/webhook"
                 ]
               },
               {
                 "group": "API",
                 "openapi": {
-                  "source": "docs/api/en/openapi.json",
-                  "directory": "docs/api/en"
+                  "source": "api/en/openapi.json",
+                  "directory": "api/en"
                 }
               }
             ]
