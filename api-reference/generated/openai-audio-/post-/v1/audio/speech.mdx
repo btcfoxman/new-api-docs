@@ -1,0 +1,26 @@
+# 文本转语音
+
+- Source: `relay.json`
+- Method: `POST`
+- Path: `/v1/audio/speech`
+- Operation ID: `createSpeech`
+
+## 说明
+
+将文本转换为音频
+
+## 参数
+
+无
+
+## 请求体
+
+```json
+{'content': {'application/json': {'schema': {'$ref': '#/components/schemas/SpeechRequest'}}}, 'required': True}
+```
+
+## 响应
+
+| 状态码 | 说明 |
+|---|---|
+| 200 | 成功生成音频 |

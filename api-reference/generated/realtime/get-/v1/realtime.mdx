@@ -1,0 +1,32 @@
+# 实时 WebSocket 连接
+
+- Source: `relay.json`
+- Method: `GET`
+- Path: `/v1/realtime`
+- Operation ID: `createRealtimeSession`
+
+## 说明
+
+建立 WebSocket 连接用于实时对话。
+
+**注意**: 这是一个 WebSocket 端点，需要使用 WebSocket 协议连接。
+
+连接 URL 示例: `wss://api.example.com/v1/realtime?model=gpt-4o-realtime`
+
+
+## 参数
+
+| 名称 | 位置 | 必填 | 描述 |
+|---|---|---|---|
+| model | query | False | 要使用的模型 |
+
+## 请求体
+
+无
+
+## 响应
+
+| 状态码 | 说明 |
+|---|---|
+| 101 | WebSocket 协议切换 |
+| 400 | 请求错误 |

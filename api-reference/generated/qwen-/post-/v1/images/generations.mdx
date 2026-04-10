@@ -1,0 +1,26 @@
+# 生成图像(qwen-image)
+
+- Source: `relay.json`
+- Method: `POST`
+- Path: `/v1/images/generations`
+- Operation ID: `createImage`
+
+## 说明
+
+ 百炼qwen-image系列图片生成
+
+## 参数
+
+无
+
+## 请求体
+
+```json
+{'content': {'application/json': {'schema': {'type': 'object', 'properties': {'model': {'type': 'string'}, 'input': {'type': 'object', 'properties': {'messages': {'type': 'array', 'items': {'type': 'object', 'properties': {'role': {'type': 'string'}, 'content': {'type': 'array', 'items': {'type': 'object', 'properties': {'text': {'type': 'string'}}}}}}}}, 'required': ['messages']}, 'parameters': {'type': 'object', 'properties': {'negative_prompt': {'type': 'string'}, 'prompt_extend': {'type': 'boolean'}, 'watermark': {'type': 'boolean'}, 'size': {'type': 'string'}}}}, 'required': ['model', 'input']}, 'example': {'model': 'qwen-image-plus', 'input': {'messages': [{'role': 'user', 'content': [{'text': '一副典雅庄重的对联悬挂于厅堂之中，房间是个安静古典的中式布置，桌子上放着一些青花瓷，对联上左书“义本生知人机同道善思新”，右书“通云赋智乾坤启数高志远”， 横批“智启通义”，字体飘逸，在中间挂着一幅中国风的画作，内容是岳阳楼。'}]}]}, 'parameters': {'negative_prompt': '', 'prompt_extend': True, 'watermark': False, 'size': '1328*1328'}}}}}
+```
+
+## 响应
+
+| 状态码 | 说明 |
+|---|---|
+| 200 | 成功生成图像 |

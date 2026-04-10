@@ -1,0 +1,26 @@
+# 压缩对话 (OpenAI Responses API)
+
+- Source: `relay.json`
+- Method: `POST`
+- Path: `/v1/responses/compact`
+- Operation ID: `compactResponse`
+
+## 说明
+
+OpenAI Responses API，用于对长对话进行 compaction。
+
+## 参数
+
+无
+
+## 请求体
+
+```json
+{'content': {'application/json': {'schema': {'$ref': '#/components/schemas/ResponsesCompactionRequest'}}}, 'required': True}
+```
+
+## 响应
+
+| 状态码 | 说明 |
+|---|---|
+| 200 | 成功压缩对话 |

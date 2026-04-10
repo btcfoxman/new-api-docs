@@ -1,0 +1,78 @@
+# API 参考总览
+
+以下页面由 OpenAPI 自动生成。
+
+## claude格式(messages)
+
+- [Claude 聊天](api-reference/generated/claude-messages-/post-/v1/messages)
+## gemini格式
+
+- [Gemini 嵌入(Embeddings)](api-reference/generated/gemini-/post-/v1/engines/-model-/embeddings)
+- [Gemini 图片(Nano Banana)](api-reference/generated/gemini-/post-/v1beta/models/-model-generatecontent)
+## moderations
+
+- [内容审核](api-reference/generated/moderations/post-/v1/moderations)
+## openai格式(chat)
+
+- [创建聊天对话](api-reference/generated/openai-chat-/post-/v1/chat/completions)
+## openai格式(embeddings)
+
+- [创建文本嵌入](api-reference/generated/openai-embeddings-/post-/v1/embeddings)
+## openai格式(responses)
+
+- [创建响应 (OpenAI Responses API)](api-reference/generated/openai-responses-/post-/v1/responses)
+- [压缩对话 (OpenAI Responses API)](api-reference/generated/openai-responses-/post-/v1/responses/compact)
+## openai音频(audio)
+
+- [文本转语音](api-reference/generated/openai-audio-/post-/v1/audio/speech)
+- [音频转录](api-reference/generated/openai-audio-/post-/v1/audio/transcriptions)
+- [音频翻译](api-reference/generated/openai-audio-/post-/v1/audio/translations)
+## realtime
+
+- [实时 WebSocket 连接](api-reference/generated/realtime/get-/v1/realtime)
+## 图片生成/qwen千问
+
+- [编辑图像(qwen-image-edit)](api-reference/generated//qwen-/post-/v1/images/edits)
+- [生成图像(qwen-image)](api-reference/generated//qwen-/post-/v1/images/generations)
+## 文本补全(completions)
+
+- [创建文本补全](api-reference/generated/completions-/post-/v1/completions)
+## 未实现/files
+
+- [删除文件 (未实现)](api-reference/generated//files/delete-/v1/files/-file_id)
+- [列出文件 (未实现)](api-reference/generated//files/get-/v1/files)
+- [获取文件信息 (未实现)](api-reference/generated//files/get-/v1/files/-file_id)
+- [获取文件内容 (未实现)](api-reference/generated//files/get-/v1/files/-file_id-/content)
+- [上传文件 (未实现)](api-reference/generated//files/post-/v1/files)
+## 未实现/fine-tunes
+
+- [列出微调任务 (未实现)](api-reference/generated//fine-tunes/get-/v1/fine-tunes)
+- [获取微调任务详情 (未实现)](api-reference/generated//fine-tunes/get-/v1/fine-tunes/-fine_tune_id)
+- [获取微调任务事件 (未实现)](api-reference/generated//fine-tunes/get-/v1/fine-tunes/-fine_tune_id-/events)
+- [创建微调任务 (未实现)](api-reference/generated//fine-tunes/post-/v1/fine-tunes)
+- [取消微调任务 (未实现)](api-reference/generated//fine-tunes/post-/v1/fine-tunes/-fine_tune_id-/cancel)
+## 获取模型列表
+
+- [获取模型列表](api-reference/generated//get-/v1/models)
+- [Gemini 格式获取](api-reference/generated//get-/v1beta/models)
+## 视频生成
+
+- [获取视频生成任务状态](api-reference/generated//get-/v1/video/generations/-task_id)
+- [创建视频生成任务](api-reference/generated//post-/v1/video/generations)
+## 视频生成/kling格式
+
+- [获取 Kling 图生视频任务状态](api-reference/generated//kling-/get-/kling/v1/videos/image2video/-task_id)
+- [获取 Kling 文生视频任务状态](api-reference/generated//kling-/get-/kling/v1/videos/text2video/-task_id)
+- [Kling 图生视频](api-reference/generated//kling-/post-/kling/v1/videos/image2video)
+- [Kling 文生视频](api-reference/generated//kling-/post-/kling/v1/videos/text2video)
+## 视频生成/sora兼容格式
+
+- [获取视频任务状态 ](api-reference/generated//sora-/get-/v1/videos/-task_id)
+- [获取视频内容](api-reference/generated//sora-/get-/v1/videos/-task_id-/content)
+- [创建视频 ](api-reference/generated//sora-/post-/v1/videos)
+## 视频生成/即梦格式
+
+- [即梦视频生成](api-reference/generated//-/post-/jimeng/)
+## 重排序(rerank)
+
+- [文档重排序](api-reference/generated/rerank-/post-/v1/rerank)

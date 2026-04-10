@@ -1,0 +1,31 @@
+# Claude 聊天
+
+- Source: `relay.json`
+- Method: `POST`
+- Path: `/v1/messages`
+- Operation ID: `createMessage`
+
+## 说明
+
+Anthropic Claude Messages API 格式的请求。
+需要在请求头中包含 `anthropic-version`。
+
+
+## 参数
+
+| 名称 | 位置 | 必填 | 描述 |
+|---|---|---|---|
+| anthropic-version | header | True | Anthropic API 版本 |
+| x-api-key | header | False | Anthropic API Key (可选，也可使用 Bearer Token) |
+
+## 请求体
+
+```json
+{'content': {'application/json': {'schema': {'$ref': '#/components/schemas/ClaudeRequest'}, 'examples': {}}}}
+```
+
+## 响应
+
+| 状态码 | 说明 |
+|---|---|
+| 200 | 成功创建响应 |
