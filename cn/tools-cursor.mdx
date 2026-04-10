@@ -1,28 +1,6 @@
 ---
-title: "集成 Cursor (推荐)"
-description: "如何在 Cursor 编辑器中配置 new-api"
+title: "Cursor 集成"
+description: "在 Cursor 中使用出海营 API"
 ---
 
-Cursor 是目前最强大的 AI 辅助编程编辑器。通过配置 new-api，您可以以极低的成本使用 GPT-4o 和 Claude 3.5 Sonnet。
-
-## 配置步骤
-
-1. 打开 Cursor，进入 **Settings** > **Models**。
-2. 找到 **OpenAI API Key** 设置项。
-3. 点击 **"Configure model overrides"**。
-4. 在 **Base URL** 处输入：
-   `https://api.your-domain.com/v1`
-5. 在 API Key 处粘贴您的 `sk-` 令牌。
-6. 点击 **"Save"**。
-
-## 推荐模型设置
-
-为了获得最佳体验，我们建议在 Cursor 中启用以下模型：
-- `claude-3-5-sonnet` (推荐：编程能力最强)
-- `gpt-4o`
-- `o1-mini` (适合复杂逻辑推导)
-
-## 常见问题
-
-- **报错 401**：请检查 API Key 是否正确复制，且没有多余空格。
-- **连接超时**：请检查是否在 Cursor 的网络设置中正确配置了代理或直连我们的 Base URL。
+将 Base URL 设置为 `https://api.aiid.edu.kg/v1`。

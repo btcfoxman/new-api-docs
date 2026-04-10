@@ -1,8 +1,8 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "new-api Docs",
-  "description": "Unified AI gateway documentation",
+  "name": "Overseas API",
+  "description": "Overseas API documentation",
   "colors": {
     "primary": "#16A34A",
     "light": "#EFFFF7",
@@ -13,14 +13,35 @@
     "dark": "/public/assets/favicon.ico"
   },
   "logo": {
-    "light": "/public/assets/logo.png",
-    "dark": "/public/assets/logo.png"
+    "light": "/public/assets/logo.webp",
+    "dark": "/public/assets/logo.webp"
   },
   "navigation": {
     "languages": [
       {
         "language": "en",
         "tabs": [
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api-reference/en/sign",
+                  "api-reference/en/errors",
+                  "api-reference/en/enums",
+                  "api-reference/en/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/en/openapi.json",
+                  "directory": "api-reference/en"
+                }
+              }
+            ]
+          },
           {
             "tab": "Guides",
             "groups": [
@@ -53,33 +74,33 @@
                 ]
               }
             ]
-          },
-          {
-            "tab": "API Reference",
-            "groups": [
-              {
-                "group": "Overview",
-                "pages": [
-                  "api-reference/en/sign",
-                  "api-reference/en/errors",
-                  "api-reference/en/enums",
-                  "api-reference/en/webhook"
-                ]
-              },
-              {
-                "group": "API",
-                "openapi": {
-                  "source": "api-reference/en/openapi.json",
-                  "directory": "api-reference/en"
-                }
-              }
-            ]
           }
         ]
       },
       {
         "language": "cn",
         "tabs": [
+          {
+            "tab": "API 参考",
+            "groups": [
+              {
+                "group": "概览",
+                "pages": [
+                  "api-reference/cn/sign",
+                  "api-reference/cn/errors",
+                  "api-reference/cn/enums",
+                  "api-reference/cn/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/cn/openapi.json",
+                  "directory": "api-reference/cn"
+                }
+              }
+            ]
+          },
           {
             "tab": "开发文档",
             "groups": [
@@ -112,25 +133,299 @@
                 ]
               }
             ]
-          },
+          }
+        ]
+      },
+      {
+        "language": "zh-Hant",
+        "tabs": [
           {
-            "tab": "API 参考",
+            "tab": "API 參考",
             "groups": [
               {
-                "group": "概览",
+                "group": "概覽",
                 "pages": [
-                  "api-reference/cn/sign",
-                  "api-reference/cn/errors",
-                  "api-reference/cn/enums",
-                  "api-reference/cn/webhook"
+                  "api-reference/zh-tw/sign",
+                  "api-reference/zh-tw/errors",
+                  "api-reference/zh-tw/enums",
+                  "api-reference/zh-tw/webhook"
                 ]
               },
               {
                 "group": "API",
                 "openapi": {
-                  "source": "api-reference/cn/openapi.json",
-                  "directory": "api-reference/cn"
+                  "source": "api-reference/zh-tw/openapi.json",
+                  "directory": "api-reference/zh-tw"
                 }
+              }
+            ]
+          },
+          {
+            "tab": "開發文檔",
+            "groups": [
+              {
+                "group": "快速開始",
+                "pages": [
+                  "zh-tw/overview",
+                  "zh-tw/quickstart",
+                  "zh-tw/security"
+                ]
+              },
+              {
+                "group": "開發指南",
+                "pages": [
+                  "zh-tw/base-spec",
+                  "zh-tw/error-codes",
+                  "zh-tw/models",
+                  "zh-tw/multi-format"
+                ]
+              },
+              {
+                "group": "整合與工具",
+                "pages": [
+                  "zh-tw/tools-cursor",
+                  "zh-tw/tools-claude-code",
+                  "zh-tw/tools-windsurf",
+                  "zh-tw/sdk-python",
+                  "zh-tw/sdk-nodejs",
+                  "zh-tw/sdk-go"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "tabs": [
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api-reference/fr/sign",
+                  "api-reference/fr/errors",
+                  "api-reference/fr/enums",
+                  "api-reference/fr/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/fr/openapi.json",
+                  "directory": "api-reference/fr"
+                }
+              }
+            ]
+          },
+          {
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "fr/overview",
+                  "fr/quickstart",
+                  "fr/security"
+                ]
+              },
+              {
+                "group": "Developer Guide",
+                "pages": [
+                  "fr/base-spec",
+                  "fr/error-codes",
+                  "fr/models",
+                  "fr/multi-format"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "fr/tools-cursor",
+                  "fr/tools-claude-code",
+                  "fr/tools-windsurf",
+                  "fr/sdk-python",
+                  "fr/sdk-nodejs",
+                  "fr/sdk-go"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "ja",
+        "tabs": [
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api-reference/ja/sign",
+                  "api-reference/ja/errors",
+                  "api-reference/ja/enums",
+                  "api-reference/ja/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/ja/openapi.json",
+                  "directory": "api-reference/ja"
+                }
+              }
+            ]
+          },
+          {
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "ja/overview",
+                  "ja/quickstart",
+                  "ja/security"
+                ]
+              },
+              {
+                "group": "Developer Guide",
+                "pages": [
+                  "ja/base-spec",
+                  "ja/error-codes",
+                  "ja/models",
+                  "ja/multi-format"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "ja/tools-cursor",
+                  "ja/tools-claude-code",
+                  "ja/tools-windsurf",
+                  "ja/sdk-python",
+                  "ja/sdk-nodejs",
+                  "ja/sdk-go"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "ru",
+        "tabs": [
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api-reference/ru/sign",
+                  "api-reference/ru/errors",
+                  "api-reference/ru/enums",
+                  "api-reference/ru/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/ru/openapi.json",
+                  "directory": "api-reference/ru"
+                }
+              }
+            ]
+          },
+          {
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "ru/overview",
+                  "ru/quickstart",
+                  "ru/security"
+                ]
+              },
+              {
+                "group": "Developer Guide",
+                "pages": [
+                  "ru/base-spec",
+                  "ru/error-codes",
+                  "ru/models",
+                  "ru/multi-format"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "ru/tools-cursor",
+                  "ru/tools-claude-code",
+                  "ru/tools-windsurf",
+                  "ru/sdk-python",
+                  "ru/sdk-nodejs",
+                  "ru/sdk-go"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "vi",
+        "tabs": [
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api-reference/vi/sign",
+                  "api-reference/vi/errors",
+                  "api-reference/vi/enums",
+                  "api-reference/vi/webhook"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/vi/openapi.json",
+                  "directory": "api-reference/vi"
+                }
+              }
+            ]
+          },
+          {
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "vi/overview",
+                  "vi/quickstart",
+                  "vi/security"
+                ]
+              },
+              {
+                "group": "Developer Guide",
+                "pages": [
+                  "vi/base-spec",
+                  "vi/error-codes",
+                  "vi/models",
+                  "vi/multi-format"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "vi/tools-cursor",
+                  "vi/tools-claude-code",
+                  "vi/tools-windsurf",
+                  "vi/sdk-python",
+                  "vi/sdk-nodejs",
+                  "vi/sdk-go"
+                ]
               }
             ]
           }
@@ -142,13 +437,32 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:support@your-domain.com"
+        "href": "mailto:support@aiid.edu.kg"
+      },
+      {
+        "label": "Pricing",
+        "href": "https://aiid.edu.kg/pricing"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "API Console",
-      "href": "https://your-domain.com"
+      "label": "Console",
+      "href": "https://aiid.edu.kg/console"
+    }
+  },
+  "footer": {
+    "socials": {
+      "telegram": "https://t.me/overseas_api"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy"
+    ]
+  },
+  "api": {
+    "params": {
+      "expanded": "all"
     }
   }
 }

@@ -5,7 +5,7 @@ description: "通过 3 个简单步骤发起您的首个 API 请求"
 
 ## 第一步：获取 API 密钥
 
-1. 登录 [new-api 控制台](https://your-domain.com)。
+1. 登录 [出海营 API 控制台](https://aiid.edu.kg/console)。
 2. 进入 **"令牌"** 页面，点击 **"添加令牌"**。
 3. 复制生成的令牌 (通常以 `sk-` 开头)。
 
@@ -15,7 +15,7 @@ description: "通过 3 个简单步骤发起您的首个 API 请求"
 
 ```bash
 # 全局 Base URL
-API_BASE_URL="https://api.your-domain.com/v1"
+API_BASE_URL="https://api.aiid.edu.kg/v1"
 ```
 
 ## 第三步：发起首个请求
@@ -27,7 +27,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://api.your-domain.com/v1"
+    base_url="https://api.aiid.edu.kg/v1"
 )
 
 response = client.chat.completions.create(
@@ -41,7 +41,7 @@ print(response.choices[0].message.content)
 ### cURL 命令行
 
 ```bash
-curl https://api.your-domain.com/v1/chat/completions \
+curl https://api.aiid.edu.kg/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
