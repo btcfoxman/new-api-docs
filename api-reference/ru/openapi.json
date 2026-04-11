@@ -1067,11 +1067,10 @@
       "post": {
         "summary": "创建视频生成任务",
         "deprecated": false,
-        "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可通过 GET 接口查询任务状态。\n\n\n【火山方舟模式说明】\n该接口支持与火山方舟视频生成模式的参数映射调用。\n对应上游参考端点：`/api/v3/contents/generations/tasks`",
+        "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可通过 GET 接口查询任务状态。\n",
         "operationId": "createVideoGeneration",
         "tags": [
-          "视频生成",
-          "视频生成/火山方舟格式"
+          "视频生成"
         ],
         "parameters": [],
         "requestBody": {
@@ -1126,11 +1125,10 @@
       "get": {
         "summary": "获取视频生成任务状态",
         "deprecated": false,
-        "description": "查询视频生成任务的状态和结果。\n\n任务状态：\n- `queued`: 排队中\n- `in_progress`: 生成中\n- `completed`: 已完成\n- `failed`: 失败\n\n\n【火山方舟模式说明】\n该状态查询流程可对应至上游 `/api/v3/contents/generations/tasks` 轮询能力。",
+        "description": "查询视频生成任务的状态和结果。\n\n任务状态：\n- `queued`: 排队中\n- `in_progress`: 生成中\n- `completed`: 已完成\n- `failed`: 失败\n",
         "operationId": "getVideoGeneration",
         "tags": [
-          "视频生成",
-          "视频生成/火山方舟格式"
+          "视频生成"
         ],
         "parameters": [
           {
@@ -1291,6 +1289,153 @@
               }
             },
             "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v3/contents/generations/tasks": {
+      "post": {
+        "summary": "创建视频生成任务（火山方舟格式）",
+        "description": "独立火山方舟接口模式：提交视频生成任务。\\n\\n请求示例来源：`tmp/hmapi_seedance完整调用Demo.md`。",
+        "operationId": "createHuoshanGenerationTask",
+        "tags": [
+          "视频生成/火山方舟格式"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "model",
+                  "content"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "HM-Video-SD2.0"
+                  },
+                  "content": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "text"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "text"
+                          ],
+                          "example": "text"
+                        },
+                        "text": {
+                          "type": "string",
+                          "example": "一只猫咪在草地上奔跑 --ratio 16:9 --dur 5"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "任务创建成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "task_xxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "查询视频生成任务（火山方舟格式）",
+        "description": "独立火山方舟接口模式：按任务 ID 轮询任务状态。",
+        "operationId": "listHuoshanGenerationTasks",
+        "tags": [
+          "视频生成/火山方舟格式"
+        ],
+        "parameters": [
+          {
+            "name": "filter.task_ids",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "任务 ID，来自创建任务返回的 `id`。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "查询成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "queued",
+                              "running",
+                              "succeeded",
+                              "failed"
+                            ]
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
