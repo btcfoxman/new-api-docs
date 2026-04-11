@@ -225,6 +225,224 @@
         ]
       }
     },
+    "/v1/images/generations": {
+      "post": {
+        "summary": "生成图像(qwen-image)",
+        "deprecated": false,
+        "description": " 百炼qwen-image系列图片生成",
+        "operationId": "createImage",
+        "tags": [
+          "图片生成/Qwen千问"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string"
+                  },
+                  "input": {
+                    "type": "object",
+                    "properties": {
+                      "messages": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string"
+                            },
+                            "content": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "text": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "messages"
+                    ]
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "negative_prompt": {
+                        "type": "string"
+                      },
+                      "prompt_extend": {
+                        "type": "boolean"
+                      },
+                      "watermark": {
+                        "type": "boolean"
+                      },
+                      "size": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "model",
+                  "input"
+                ]
+              },
+              "example": {
+                "model": "qwen-image-plus",
+                "input": {
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [
+                        {
+                          "text": "一副典雅庄重的对联悬挂于厅堂之中，房间是个安静古典的中式布置，桌子上放着一些青花瓷，对联上左书“义本生知人机同道善思新”，右书“通云赋智乾坤启数高志远”， 横批“智启通义”，字体飘逸，在中间挂着一幅中国风的画作，内容是岳阳楼。"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "parameters": {
+                  "negative_prompt": "",
+                  "prompt_extend": true,
+                  "watermark": false,
+                  "size": "1328*1328"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功生成图像",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/images/edits": {
+      "post": {
+        "summary": "编辑图像(qwen-image-edit)",
+        "deprecated": false,
+        "description": " 百炼qwen-image系列图片生成",
+        "operationId": "createImage",
+        "tags": [
+          "图片生成/Qwen千问"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string"
+                  },
+                  "input": {
+                    "type": "object",
+                    "properties": {
+                      "messages": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string"
+                            },
+                            "content": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "image": {
+                                    "type": "string"
+                                  },
+                                  "text": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "messages"
+                    ]
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "n": {
+                        "type": "integer"
+                      },
+                      "negative_prompt": {
+                        "type": "string"
+                      },
+                      "prompt_extend": {
+                        "type": "boolean"
+                      },
+                      "watermark": {
+                        "type": "boolean"
+                      },
+                      "size": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "model",
+                  "input"
+                ]
+              },
+              "example": "{\n    \"model\": \"qwen-image-edit-plus\",\n    \"input\": {\n        \"messages\": [\n            {\n                \"role\": \"user\",\n                \"content\": [\n                    {\n                        \"image\": \"https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/fpakfo/image36.webp\"\n                    },\n                    {\n                        \"text\": \"生成一张符合深度图的图像，遵循以下描述：一辆红色的破旧的自行车停在一条泥泞的小路上，背景是茂密的原始森林\"\n                    }\n                ]\n            }\n        ]\n    },\n    \"parameters\": {\n        \"n\": 2,\n        \"negative_prompt\": \" \",\n        \"prompt_extend\": true,\n        \"watermark\": false\n    }"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功生成图像",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/videos": {
       "post": {
         "summary": "创建视频 ",
@@ -849,10 +1067,11 @@
       "post": {
         "summary": "创建视频生成任务",
         "deprecated": false,
-        "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可通过 GET 接口查询任务状态。\n",
+        "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可通过 GET 接口查询任务状态。\n\n\n【火山方舟模式说明】\n该接口支持与火山方舟视频生成模式的参数映射调用。\n对应上游参考端点：`/api/v3/contents/generations/tasks`",
         "operationId": "createVideoGeneration",
         "tags": [
-          "视频生成"
+          "视频生成",
+          "视频生成/火山方舟格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -907,10 +1126,11 @@
       "get": {
         "summary": "获取视频生成任务状态",
         "deprecated": false,
-        "description": "查询视频生成任务的状态和结果。\n\n任务状态：\n- `queued`: 排队中\n- `in_progress`: 生成中\n- `completed`: 已完成\n- `failed`: 失败\n",
+        "description": "查询视频生成任务的状态和结果。\n\n任务状态：\n- `queued`: 排队中\n- `in_progress`: 生成中\n- `completed`: 已完成\n- `failed`: 失败\n\n\n【火山方舟模式说明】\n该状态查询流程可对应至上游 `/api/v3/contents/generations/tasks` 轮询能力。",
         "operationId": "getVideoGeneration",
         "tags": [
-          "视频生成"
+          "视频生成",
+          "视频生成/火山方舟格式"
         ],
         "parameters": [
           {
@@ -3361,6 +3581,9 @@
       "name": "OpenAI格式(Responses)"
     },
     {
+      "name": "图片生成/Qwen千问"
+    },
+    {
       "name": "获取模型列表"
     },
     {
@@ -3371,6 +3594,9 @@
     },
     {
       "name": "视频生成/Sora兼容格式"
+    },
+    {
+      "name": "视频生成/火山方舟格式"
     },
     {
       "name": "视频生成/即梦格式"
