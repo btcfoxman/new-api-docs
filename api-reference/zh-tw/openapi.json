@@ -445,44 +445,106 @@
     },
     "/v1/videos": {
       "post": {
-        "summary": "创建视频 ",
+        "summary": "创建视频",
         "deprecated": false,
-        "description": "OpenAI 兼容的视频生成介面。\n\n参考文档: https://platform.openai.com/docs/api-reference/videos/create\n",
+        "description": "OpenAI Sora 兼容格式的视频生成介面。支持文生视频与图/视频参考生成模式。",
         "operationId": "createVideo",
         "tags": [
           "视频生成/Sora兼容格式"
         ],
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "model": {
-                    "description": "模型名称",
-                    "example": "sora-2",
                     "type": "string"
                   },
                   "prompt": {
-                    "description": "提示词",
-                    "example": "cute cat dance",
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "duration": {
+                    "type": "integer"
+                  },
+                  "width": {
+                    "type": "integer",
+                    "example": 512,
+                    "description": "Video width"
+                  },
+                  "height": {
+                    "type": "integer",
+                    "example": 512,
+                    "description": "Video height"
+                  },
+                  "fps": {
+                    "type": "integer",
+                    "example": 30,
+                    "description": "Video frame rate"
+                  },
+                  "seed": {
+                    "type": "integer",
+                    "example": 20231234,
+                    "description": "Random seed"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Number of videos to generate"
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "example": "url",
+                    "description": "Response format"
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "user-1234",
+                    "description": "User identifier"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "mode": {
+                    "type": "string"
+                  },
+                  "images": {
+                    "type": "array",
+                    "description": "Multiple reference images (URL or uploaded files)",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "size": {
                     "type": "string"
                   },
                   "seconds": {
-                    "description": "生成秒数",
-                    "example": "8",
                     "type": "string"
                   },
                   "input_reference": {
-                    "format": "binary",
-                    "type": "string",
-                    "description": "参考图片文件",
-                    "example": ""
+                    "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "model",
+                  "prompt"
+                ]
               },
-              "examples": {}
+              "example": {
+                "model": "sora-2",
+                "prompt": "A cinematic drone shot over snowy mountains at sunrise",
+                "seconds": "8",
+                "size": "1280x720",
+                "n": 1,
+                "response_format": "url"
+              }
             }
           }
         },
@@ -495,67 +557,62 @@
                   "type": "object",
                   "properties": {
                     "id": {
+                      "type": "string"
+                    },
+                    "task_id": {
                       "type": "string",
-                      "description": "视频 ID"
+                      "description": "兼容旧介面 待废弃"
                     },
                     "object": {
-                      "type": "string",
-                      "description": "对象类型"
+                      "type": "string"
                     },
                     "model": {
-                      "type": "string",
-                      "description": "使用的模型"
+                      "type": "string"
                     },
                     "status": {
                       "type": "string",
-                      "description": "任务状态"
+                      "description": "Should use VideoStatus constants: VideoStatusQueued, VideoStatusInProgress, VideoStatusCompleted, VideoStatusFailed"
                     },
                     "progress": {
-                      "type": "integer",
-                      "description": "进度百分比"
+                      "type": "integer"
                     },
                     "created_at": {
-                      "type": "integer",
-                      "description": "创建时间戳"
-                    },
-                    "seconds": {
-                      "type": "string",
-                      "description": "视频时长"
+                      "type": "integer"
                     },
                     "completed_at": {
-                      "type": "integer",
-                      "description": "完成时间戳"
+                      "type": "integer"
                     },
                     "expires_at": {
-                      "type": "integer",
-                      "description": "过期时间戳"
+                      "type": "integer"
+                    },
+                    "seconds": {
+                      "type": "string"
                     },
                     "size": {
-                      "type": "string",
-                      "description": "视频尺寸"
+                      "type": "string"
+                    },
+                    "remixed_from_video_id": {
+                      "type": "string"
                     },
                     "error": {
-                      "$ref": "#/components/schemas/OpenAIVideoError"
+                      "type": "object"
                     },
                     "metadata": {
                       "type": "object",
-                      "description": "额外元数据",
-                      "additionalProperties": true,
-                      "properties": {}
+                      "additionalProperties": true
                     }
                   },
                   "required": [
-                    "id",
-                    "object",
-                    "model",
-                    "status",
-                    "progress",
                     "created_at",
-                    "seconds"
+                    "id",
+                    "model",
+                    "object",
+                    "progress",
+                    "status"
                   ]
                 },
                 "example": {
-                  "id": "sora-2-123456",
+                  "id": "video_abc123",
                   "object": "video",
                   "model": "sora-2",
                   "status": "queued",
