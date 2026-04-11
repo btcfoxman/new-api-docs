@@ -227,7 +227,7 @@
     },
     "/v1/images/generations": {
       "post": {
-        "summary": "生成图像（OpenAI Dall-E兼容）",
+        "summary": "生成图像（OpenAI Dall-E格式）",
         "deprecated": false,
         "description": "OpenAI Dall-E格式图片生成介面。",
         "operationId": "createImage",
@@ -236,87 +236,74 @@
         ],
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "model": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "模型名称",
+                    "example": "dall-e-3"
                   },
-                  "input": {
-                    "type": "object",
-                    "properties": {
-                      "messages": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "role": {
-                              "type": "string"
-                            },
-                            "content": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "text": {
-                                    "type": "string"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "required": [
-                      "messages"
+                  "prompt": {
+                    "type": "string",
+                    "description": "生图提示词"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "description": "生成数量",
+                    "default": 1
+                  },
+                  "size": {
+                    "type": "string",
+                    "description": "图像尺寸",
+                    "enum": [
+                      "1024x1024",
+                      "1024x1792",
+                      "1792x1024"
                     ]
                   },
-                  "parameters": {
-                    "type": "object",
-                    "properties": {
-                      "negative_prompt": {
-                        "type": "string"
-                      },
-                      "prompt_extend": {
-                        "type": "boolean"
-                      },
-                      "watermark": {
-                        "type": "boolean"
-                      },
-                      "size": {
-                        "type": "string"
-                      }
-                    }
+                  "quality": {
+                    "type": "string",
+                    "description": "生图质量",
+                    "enum": [
+                      "standard",
+                      "hd"
+                    ]
+                  },
+                  "style": {
+                    "type": "string",
+                    "description": "风格",
+                    "enum": [
+                      "vivid",
+                      "natural"
+                    ]
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "description": "返回格式",
+                    "enum": [
+                      "url",
+                      "b64_json"
+                    ]
+                  },
+                  "user": {
+                    "type": "string",
+                    "description": "用户标识"
                   }
                 },
                 "required": [
                   "model",
-                  "input"
+                  "prompt"
                 ]
               },
               "example": {
-                "model": "qwen-image-plus",
-                "input": {
-                  "messages": [
-                    {
-                      "role": "user",
-                      "content": [
-                        {
-                          "text": "一副典雅庄重的对联悬挂于厅堂之中，房间是个安静古典的中式布置，桌子上放着一些青花瓷，对联上左书“义本生知人机同道善思新”，右书“通云赋智乾坤启数高志远”， 横批“智启通义”，字体飘逸，在中间挂着一幅中国风的画作，内容是岳阳楼。"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                "parameters": {
-                  "negative_prompt": "",
-                  "prompt_extend": true,
-                  "watermark": false,
-                  "size": "1328*1328"
-                }
+                "model": "dall-e-3",
+                "prompt": "A cute baby sea otter",
+                "n": 1,
+                "size": "1024x1024"
               }
             }
           }
@@ -343,7 +330,7 @@
     },
     "/v1/images/edits": {
       "post": {
-        "summary": "编辑图像（OpenAI Dall-E兼容）",
+        "summary": "编辑图像（OpenAI Dall-E格式）",
         "deprecated": false,
         "description": "OpenAI Dall-E格式图片编辑介面。",
         "operationId": "createImage",
@@ -352,74 +339,59 @@
         ],
         "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "model": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "dall-e-2"
                   },
-                  "input": {
-                    "type": "object",
-                    "properties": {
-                      "messages": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "role": {
-                              "type": "string"
-                            },
-                            "content": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "image": {
-                                    "type": "string"
-                                  },
-                                  "text": {
-                                    "type": "string"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "required": [
-                      "messages"
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "需编辑的图片"
+                  },
+                  "mask": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "可选遮罩图"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "编辑提示词"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "default": 1
+                  },
+                  "size": {
+                    "type": "string",
+                    "enum": [
+                      "256x256",
+                      "512x512",
+                      "1024x1024"
                     ]
                   },
-                  "parameters": {
-                    "type": "object",
-                    "properties": {
-                      "n": {
-                        "type": "integer"
-                      },
-                      "negative_prompt": {
-                        "type": "string"
-                      },
-                      "prompt_extend": {
-                        "type": "boolean"
-                      },
-                      "watermark": {
-                        "type": "boolean"
-                      },
-                      "size": {
-                        "type": "string"
-                      }
-                    }
+                  "response_format": {
+                    "type": "string",
+                    "enum": [
+                      "url",
+                      "b64_json"
+                    ]
+                  },
+                  "user": {
+                    "type": "string"
                   }
                 },
                 "required": [
                   "model",
-                  "input"
+                  "image",
+                  "prompt"
                 ]
-              },
-              "example": "{\n    \"model\": \"qwen-image-edit-plus\",\n    \"input\": {\n        \"messages\": [\n            {\n                \"role\": \"user\",\n                \"content\": [\n                    {\n                        \"image\": \"https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/fpakfo/image36.webp\"\n                    },\n                    {\n                        \"text\": \"生成一张符合深度图的图像，遵循以下描述：一辆红色的破旧的自行车停在一条泥泞的小路上，背景是茂密的原始森林\"\n                    }\n                ]\n            }\n        ]\n    },\n    \"parameters\": {\n        \"n\": 2,\n        \"negative_prompt\": \" \",\n        \"prompt_extend\": true,\n        \"watermark\": false\n    }"
+              }
             }
           }
         },
