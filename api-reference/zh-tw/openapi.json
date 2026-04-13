@@ -227,7 +227,7 @@
     },
     "/v1/images/generations": {
       "post": {
-        "summary": "生成图像（OpenAI Dall-E格式）",
+        "summary": "生成图像（OpenAI Dall-E兼容）",
         "deprecated": false,
         "description": "OpenAI Dall-E格式图片生成介面。",
         "operationId": "createImage",
@@ -330,7 +330,7 @@
     },
     "/v1/images/edits": {
       "post": {
-        "summary": "编辑图像（OpenAI Dall-E格式）",
+        "summary": "编辑图像（OpenAI Dall-E兼容）",
         "deprecated": false,
         "description": "OpenAI Dall-E格式图片编辑介面。",
         "operationId": "createImage",
@@ -1094,53 +1094,87 @@
     },
     "/v1/video/generations": {
       "post": {
-        "summary": "创建视频生成任务",
-        "deprecated": false,
-        "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可透過 GET 介面查询任务状态。\n",
-        "operationId": "createVideoGeneration",
+        "summary": "创建视频生成任务（Veo3格式）",
+        "description": "Google Gemini Veo3 视频生成介面。请求格式为 application/json。\n\n参考官方文档：https://ai.google.dev/gemini-api/docs/video",
+        "operationId": "create__veo3__task",
         "tags": [
-          "视频生成"
+          "视频生成/Veo3格式"
         ],
-        "parameters": [],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
+                "type": "object",
+                "required": [
+                  "model",
+                  "prompt"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "veo-001",
+                    "description": "模型名称"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "example": "A cinematic aerial shot of a modern city at sunrise",
+                    "description": "生成提示词"
+                  },
+                  "videoConfig": {
+                    "type": "object",
+                    "properties": {
+                      "aspectRatio": {
+                        "type": "string",
+                        "enum": [
+                          "16:9",
+                          "1:1",
+                          "9:16"
+                        ],
+                        "default": "16:9"
+                      },
+                      "durationSeconds": {
+                        "type": "integer",
+                        "enum": [
+                          5,
+                          10
+                        ],
+                        "default": 5
+                      }
+                    }
+                  }
+                }
               },
               "example": {
-                "model": "kling-v1",
-                "prompt": "宇航员在月球上漫步",
-                "duration": 5,
-                "width": 1280,
-                "height": 720
+                "model": "veo-001",
+                "prompt": "A cinematic aerial shot of a modern city at sunrise",
+                "videoConfig": {
+                  "aspectRatio": "16:9",
+                  "durationSeconds": 5
+                }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "成功创建视频生成任务",
+            "description": "任务创建成功",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
+                  "type": "object",
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "task_xxx"
+                    }
+                  }
                 }
               }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "请求参数错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
+            }
           }
         },
         "security": [
@@ -1152,47 +1186,64 @@
     },
     "/v1/video/generations/{task_id}": {
       "get": {
-        "summary": "获取视频生成任务状态",
-        "deprecated": false,
-        "description": "查询视频生成任务的状态和结果。\n\n任务状态：\n- `queued`: 排队中\n- `in_progress`: 生成中\n- `completed`: 已完成\n- `failed`: 失败\n",
-        "operationId": "getVideoGeneration",
+        "summary": "查询视频生成任务（Veo3格式）",
+        "description": "Google Gemini Veo3 视频生成介面。请求格式为 application/json。\n\n参考官方文档：https://ai.google.dev/gemini-api/docs/video",
+        "operationId": "query__veo3__task",
         "tags": [
-          "视频生成"
+          "视频生成/Veo3格式"
         ],
         "parameters": [
           {
-            "name": "task_id",
-            "in": "path",
-            "description": "任务 ID",
+            "name": "filter.task_ids",
+            "in": "query",
             "required": true,
-            "example": "abcd1234efgh",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "任务 ID，来自创建任务返回的 `id`。"
           }
         ],
         "responses": {
           "200": {
-            "description": "成功获取任务状态",
+            "description": "查询成功",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "queued",
+                              "running",
+                              "succeeded",
+                              "failed"
+                            ]
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "任务不存在",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
+            }
           }
         },
         "security": [
@@ -1330,7 +1381,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "创建视频生成任务（Seedance火山方舟）",
-        "description": "独立 Seedance 火山方舟介面模式。\n\nSeedance2.0系列支持OpenAI Sora格式（详见链接 视频生成/Sora兼容格式）。",
+        "description": "标准视频生成介面。请求格式为 application/json，支持两种传参方式：content 数组方式和扁平参数方式。\n\n方式一：Seedance2.0系列支持OpenAI Sora兼容格式（详见链接 视频生成/Sora兼容格式）。\n\n方式二：content 数组方式\n使用 content 数组传递文本和素材，支持在文本中嵌入特殊指令。\n\n### 参数说明\n| 参数 | 类型 | 必填 | 说明 |\n| :--- | :--- | :--- | :--- |\n| model | string | 否 | 模型名称，默认 doubao-seedance-2-0-fast-260128 |\n| content | array | 是 | 内容数组（详见下方结构说明） |\n| function_mode | string | 否 | 指定功能模式（不指定则自动推断） |\n| channel | string | 否 | 计费渠道：official（官方，稳定）/ default（逆向，不稳定），默认 official |\n\n### content 数组项结构\n\n#### 文本项 type: \"text\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"text\" |\n| text | 提示词文本，支持嵌入以下指令：<br>--ratio 16:9 宽高比<br>--dur 5 时长（秒）<br>--fps 24 帧率<br>--res 1080p 分辨率<br>--mode omni_reference 功能模式 |\n\n#### 图片项 type: \"image_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"image_url\" |\n| image_url | 图片 URL（string 或 { url } 对象） |\n| role | 角色标记：first_frame / start（首帧）、last_frame / end（尾帧）、frame（多帧引导）、material（全能引用素材）。省略 role 时默认作为首帧处理 |\n| name | 素材名称（仅 role: \"material\" 时有效） |\n\n#### 视频项 type: \"video_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"video_url\" |\n| video_url | 视频 URL（string 或 { url } 对象） |\n| role | 必须为 material，缺少此字段时该视频项会被忽略 |\n| name | 素材名称，用于 prompt 中 @名称 引用 |\n\n#### 音频项 type: \"audio_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"audio_url\" |\n| audio_url | 音频 URL（string 或 { url } 对象） |\n| name | 素材名称，用于 prompt 中 @名称 引用 |\n\n注意：音频项不需要 role 字段，系统自动将所有音频项作为素材处理。",
         "operationId": "create__seedance__task",
         "tags": [
           "视频生成/Seedance火山方舟"
@@ -1348,7 +1399,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "example": "HM-Video-SD2.0"
+                    "example": "doubao-seedance-2-0-260128"
                   },
                   "content": {
                     "type": "array",
@@ -1356,25 +1407,85 @@
                     "items": {
                       "type": "object",
                       "required": [
-                        "type",
-                        "text"
+                        "type"
                       ],
                       "properties": {
                         "type": {
                           "type": "string",
                           "enum": [
-                            "text"
+                            "text",
+                            "image_url",
+                            "video_url",
+                            "audio_url"
                           ],
                           "example": "text"
                         },
                         "text": {
                           "type": "string",
                           "example": "一只猫咪在草地上奔跑 --ratio 16:9 --dur 5"
+                        },
+                        "image_url": {
+                          "type": "string",
+                          "example": "https://example.com/image.jpg"
+                        },
+                        "video_url": {
+                          "type": "string",
+                          "example": "https://example.com/video.mp4"
+                        },
+                        "audio_url": {
+                          "type": "string",
+                          "example": "https://example.com/audio.mp3"
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "material"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "素材1"
                         }
                       }
                     }
+                  },
+                  "function_mode": {
+                    "type": "string"
+                  },
+                  "channel": {
+                    "type": "string"
                   }
                 }
+              },
+              "example": {
+                "model": "doubao-seedance-2-0-260128",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "@角色A 在咖啡馆和 @角色B 聊天，@背景视频 作为场景，配上 @背景音乐 --ratio 16:9 --dur 10"
+                  },
+                  {
+                    "type": "image_url",
+                    "image_url": "https://example.com/characterA.jpg",
+                    "role": "material",
+                    "name": "角色A"
+                  },
+                  {
+                    "type": "image_url",
+                    "image_url": "https://example.com/characterB.jpg",
+                    "role": "material",
+                    "name": "角色B"
+                  },
+                  {
+                    "type": "video_url",
+                    "video_url": "https://example.com/cafe-scene.mp4",
+                    "role": "material",
+                    "name": "背景视频"
+                  },
+                  {
+                    "type": "audio_url",
+                    "audio_url": "https://example.com/bgm.mp3",
+                    "name": "背景音乐"
+                  }
+                ]
               }
             }
           }
@@ -1407,21 +1518,54 @@
         ]
       },
       "get": {
-        "summary": "查询视频生成任务（Seedance火山方舟）",
-        "description": "独立 Seedance 火山方舟介面模式。\n\nSeedance2.0系列支持OpenAI Sora格式（详见链接 视频生成/Sora兼容格式）。",
+        "summary": "查询视频生成任务列表（Seedance火山方舟）",
+        "description": "标准视频生成介面。请求格式为 application/json，支持两种传参方式：content 数组方式和扁平参数方式。\n\n方式一：Seedance2.0系列支持OpenAI Sora兼容格式（详见链接 视频生成/Sora兼容格式）。\n\n方式二：content 数组方式\n使用 content 数组传递文本和素材，支持在文本中嵌入特殊指令。\n\n### 参数说明\n| 参数 | 类型 | 必填 | 说明 |\n| :--- | :--- | :--- | :--- |\n| model | string | 否 | 模型名称，默认 doubao-seedance-2-0-fast-260128 |\n| content | array | 是 | 内容数组（详见下方结构说明） |\n| function_mode | string | 否 | 指定功能模式（不指定则自动推断） |\n| channel | string | 否 | 计费渠道：official（官方，稳定）/ default（逆向，不稳定），默认 official |\n\n### content 数组项结构\n\n#### 文本项 type: \"text\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"text\" |\n| text | 提示词文本，支持嵌入以下指令：<br>--ratio 16:9 宽高比<br>--dur 5 时长（秒）<br>--fps 24 帧率<br>--res 1080p 分辨率<br>--mode omni_reference 功能模式 |\n\n#### 图片项 type: \"image_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"image_url\" |\n| image_url | 图片 URL（string 或 { url } 对象） |\n| role | 角色标记：first_frame / start（首帧）、last_frame / end（尾帧）、frame（多帧引导）、material（全能引用素材）。省略 role 时默认作为首帧处理 |\n| name | 素材名称（仅 role: \"material\" 时有效） |\n\n#### 视频项 type: \"video_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"video_url\" |\n| video_url | 视频 URL（string 或 { url } 对象） |\n| role | 必须为 material，缺少此字段时该视频项会被忽略 |\n| name | 素材名称，用于 prompt 中 @名称 引用 |\n\n#### 音频项 type: \"audio_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"audio_url\" |\n| audio_url | 音频 URL（string 或 { url } 对象） |\n| name | 素材名称，用于 prompt 中 @名称 引用 |\n\n注意：音频项不需要 role 字段，系统自动将所有音频项作为素材处理。",
         "operationId": "query__seedance__task",
         "tags": [
           "视频生成/Seedance火山方舟"
         ],
         "parameters": [
           {
-            "name": "filter.task_ids",
+            "name": "page_num",
             "in": "query",
-            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "返回结果的页码"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "description": "每页的结果数量"
+          },
+          {
+            "name": "filter.status",
+            "in": "query",
             "schema": {
               "type": "string"
             },
-            "description": "任务 ID，来自创建任务返回的 `id`。"
+            "description": "筛选任务状态"
+          },
+          {
+            "name": "filter.task_ids",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "任务 ID 列表，用 & 连接"
+          },
+          {
+            "name": "filter.model",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "模型接入点 ID"
           }
         ],
         "responses": {
@@ -1440,151 +1584,7 @@
                           "id": {
                             "type": "string"
                           },
-                          "status": {
-                            "type": "string",
-                            "enum": [
-                              "queued",
-                              "running",
-                              "succeeded",
-                              "failed"
-                            ]
-                          },
-                          "content": {
-                            "type": "object",
-                            "properties": {
-                              "video_url": {
-                                "type": "string",
-                                "format": "uri"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/v3/veo/generations/tasks": {
-      "post": {
-        "summary": "创建视频生成任务（Veo3格式）",
-        "description": "独立 Veo3 介面模式。\n\nVeo3系列支持OpenAI Sora格式（详见链接 视频生成/Sora兼容格式）。",
-        "operationId": "create__veo3__task",
-        "tags": [
-          "视频生成/Veo3格式"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "model",
-                  "content"
-                ],
-                "properties": {
-                  "model": {
-                    "type": "string",
-                    "example": "veo-3.0"
-                  },
-                  "content": {
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "type",
-                        "text"
-                      ],
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "text"
-                          ],
-                          "example": "text"
-                        },
-                        "text": {
-                          "type": "string",
-                          "example": "A cinematic aerial shot of a modern city at sunrise"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "任务创建成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "id"
-                  ],
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "example": "task_xxx"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      },
-      "get": {
-        "summary": "查询视频生成任务（Veo3格式）",
-        "description": "独立 Veo3 介面模式。\n\nVeo3系列支持OpenAI Sora格式（详见链接 视频生成/Sora兼容格式）。",
-        "operationId": "query__veo3__task",
-        "tags": [
-          "视频生成/Veo3格式"
-        ],
-        "parameters": [
-          {
-            "name": "filter.task_ids",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "任务 ID，来自创建任务返回的 `id`。"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "查询成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
+                          "model": {
                             "type": "string"
                           },
                           "status": {
@@ -1593,20 +1593,56 @@
                               "queued",
                               "running",
                               "succeeded",
-                              "failed"
+                              "failed",
+                              "cancelled",
+                              "expired"
                             ]
+                          },
+                          "error": {
+                            "type": "object",
+                            "nullable": true,
+                            "properties": {
+                              "code": {
+                                "type": "string"
+                              },
+                              "message": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "created_at": {
+                            "type": "integer"
+                          },
+                          "updated_at": {
+                            "type": "integer"
                           },
                           "content": {
                             "type": "object",
                             "properties": {
                               "video_url": {
-                                "type": "string",
-                                "format": "uri"
+                                "type": "string"
+                              },
+                              "last_frame_url": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "usage": {
+                            "type": "object",
+                            "properties": {
+                              "completion_tokens": {
+                                "type": "integer"
+                              },
+                              "total_tokens": {
+                                "type": "integer"
                               }
                             }
                           }
                         }
                       }
+                    },
+                    "total": {
+                      "type": "integer"
                     }
                   }
                 }
