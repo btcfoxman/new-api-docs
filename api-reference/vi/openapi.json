@@ -3935,6 +3935,12 @@
       "name": "OpenAI格式(Responses)"
     },
     {
+      "name": "图片生成/Gemini格式"
+    },
+    {
+      "name": "图片生成/OpenAI Dall-E格式"
+    },
+    {
       "name": "获取模型列表"
     },
     {
@@ -3954,12 +3960,6 @@
     },
     {
       "name": "视频生成/即梦格式"
-    },
-    {
-      "name": "图片生成/Gemini格式"
-    },
-    {
-      "name": "图片生成/OpenAI Dall-E格式"
     }
   ]
 }
