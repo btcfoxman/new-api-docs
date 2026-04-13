@@ -1260,7 +1260,7 @@
         "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成/OpenAI Dall-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)）。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
-          "Gemini格式"
+          "图片生成/Gemini格式"
         ],
         "parameters": [
           {
@@ -1381,7 +1381,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "创建视频生成任务（Seedance火山方舟）",
-        "description": "标准视频生成介面。请求格式为 application/json，支持两种传参方式：content 数组方式和扁平参数方式。\n\n方式一：Seedance2.0系列支持OpenAI Sora兼容格式（详见链接 视频生成/Sora兼容格式）。\n\n方式二：content 数组方式\n使用 content 数组传递文本和素材，支持在文本中嵌入特殊指令。\n\n### 参数说明\n| 参数 | 类型 | 必填 | 说明 |\n| :--- | :--- | :--- | :--- |\n| model | string | 否 | 模型名称，默认 doubao-seedance-2-0-fast-260128 |\n| content | array | 是 | 内容数组（详见下方结构说明） |\n| function_mode | string | 否 | 指定功能模式（不指定则自动推断） |\n| channel | string | 否 | 计费渠道：official（官方，稳定）/ default（逆向，不稳定），默认 official |\n\n### content 数组项结构\n\n#### 文本项 type: \"text\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"text\" |\n| text | 提示词文本，支持嵌入以下指令：<br>--ratio 16:9 宽高比<br>--dur 5 时长（秒）<br>--fps 24 帧率<br>--res 1080p 分辨率<br>--mode omni_reference 功能模式 |\n\n#### 图片项 type: \"image_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"image_url\" |\n| image_url | 图片 URL（string 或 { url } 对象） |\n| role | 角色标记：first_frame / start（首帧）、last_frame / end（尾帧）、frame（多帧引导）、material（全能引用素材）。省略 role 时默认作为首帧处理 |\n| name | 素材名称（仅 role: \"material\" 时有效） |\n\n#### 视频项 type: \"video_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"video_url\" |\n| video_url | 视频 URL（string 或 { url } 对象） |\n| role | 必须为 material，缺少此字段时该视频项会被忽略 |\n| name | 素材名称，用于 prompt 中 @名称 引用 |\n\n#### 音频项 type: \"audio_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"audio_url\" |\n| audio_url | 音频 URL（string 或 { url } 对象） |\n| name | 素材名称，用于 prompt 中 @名称 引用 |\n\n注意：音频项不需要 role 字段，系统自动将所有音频项作为素材处理。",
+        "description": "标准视频生成介面。支持 content 数组（混排文本与多媒体素材）和 OpenAI Sora 兼容格式。\n\n**主要参数说明**：\n- **model**: 模型名称，默认 doubao-seedance-2-0-fast-260128\n- **content**: 内容数组，项类型支持 text, image_url, video_url, audio_url\n- **function_mode**: 指定功能模式（不指定则自动推断）\n- **channel**: 计费渠道，默认 official\n\n**文本项 (text) 指令支持**：\n支持在提示词中嵌入特殊指令：--ratio (宽高比), --dur (时长), --fps (帧率), --res (分辨率)。\n\n**素材引用逻辑**：\n1. 在 content 中定义素材项并指定 **name**。\n2. 在文本项中使用 **@名称** 进行引用（例如：@角色A 在咖啡馆...）。\n3. 图片项支持 **role** (first_frame/last_frame/frame/material)；视频项 role 必须为 material。",
         "operationId": "create__seedance__task",
         "tags": [
           "视频生成/Seedance火山方舟"
@@ -1519,7 +1519,7 @@
       },
       "get": {
         "summary": "查询视频生成任务列表（Seedance火山方舟）",
-        "description": "标准视频生成介面。请求格式为 application/json，支持两种传参方式：content 数组方式和扁平参数方式。\n\n方式一：Seedance2.0系列支持OpenAI Sora兼容格式（详见链接 视频生成/Sora兼容格式）。\n\n方式二：content 数组方式\n使用 content 数组传递文本和素材，支持在文本中嵌入特殊指令。\n\n### 参数说明\n| 参数 | 类型 | 必填 | 说明 |\n| :--- | :--- | :--- | :--- |\n| model | string | 否 | 模型名称，默认 doubao-seedance-2-0-fast-260128 |\n| content | array | 是 | 内容数组（详见下方结构说明） |\n| function_mode | string | 否 | 指定功能模式（不指定则自动推断） |\n| channel | string | 否 | 计费渠道：official（官方，稳定）/ default（逆向，不稳定），默认 official |\n\n### content 数组项结构\n\n#### 文本项 type: \"text\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"text\" |\n| text | 提示词文本，支持嵌入以下指令：<br>--ratio 16:9 宽高比<br>--dur 5 时长（秒）<br>--fps 24 帧率<br>--res 1080p 分辨率<br>--mode omni_reference 功能模式 |\n\n#### 图片项 type: \"image_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"image_url\" |\n| image_url | 图片 URL（string 或 { url } 对象） |\n| role | 角色标记：first_frame / start（首帧）、last_frame / end（尾帧）、frame（多帧引导）、material（全能引用素材）。省略 role 时默认作为首帧处理 |\n| name | 素材名称（仅 role: \"material\" 时有效） |\n\n#### 视频项 type: \"video_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"video_url\" |\n| video_url | 视频 URL（string 或 { url } 对象） |\n| role | 必须为 material，缺少此字段时该视频项会被忽略 |\n| name | 素材名称，用于 prompt 中 @名称 引用 |\n\n#### 音频项 type: \"audio_url\"\n| 字段 | 说明 |\n| :--- | :--- |\n| type | 固定 \"audio_url\" |\n| audio_url | 音频 URL（string 或 { url } 对象） |\n| name | 素材名称，用于 prompt 中 @名称 引用 |\n\n注意：音频项不需要 role 字段，系统自动将所有音频项作为素材处理。",
+        "description": "标准视频生成介面。支持 content 数组（混排文本与多媒体素材）和 OpenAI Sora 兼容格式。\n\n**主要参数说明**：\n- **model**: 模型名称，默认 doubao-seedance-2-0-fast-260128\n- **content**: 内容数组，项类型支持 text, image_url, video_url, audio_url\n- **function_mode**: 指定功能模式（不指定则自动推断）\n- **channel**: 计费渠道，默认 official\n\n**文本项 (text) 指令支持**：\n支持在提示词中嵌入特殊指令：--ratio (宽高比), --dur (时长), --fps (帧率), --res (分辨率)。\n\n**素材引用逻辑**：\n1. 在 content 中定义素材项并指定 **name**。\n2. 在文本项中使用 **@名称** 进行引用（例如：@角色A 在咖啡馆...）。\n3. 图片项支持 **role** (first_frame/last_frame/frame/material)；视频项 role 必须为 material。",
         "operationId": "query__seedance__task",
         "tags": [
           "视频生成/Seedance火山方舟"
@@ -3929,9 +3929,6 @@
   ],
   "tags": [
     {
-      "name": "Gemini格式"
-    },
-    {
       "name": "OpenAI格式(Chat)"
     },
     {
@@ -3957,6 +3954,9 @@
     },
     {
       "name": "视频生成/即梦格式"
+    },
+    {
+      "name": "图片生成/Gemini格式"
     },
     {
       "name": "图片生成/OpenAI Dall-E格式"
