@@ -572,7 +572,7 @@
       "post": {
         "summary": "创建视频",
         "deprecated": false,
-        "description": "OpenAI Sora 兼容格式的视频生成介面。支持文生视频与图/视频参考生成模式。",
+        "description": "OpenAI Sora 兼容格式的视频生成介面。支持文生视频与图/视频参考生成模式。\n\nrelay.json 仍是主参考；该扩展说明补充 /v1/videos 的统一请求骨架、动态模型模式和推荐验证模板，供 new-api-docs 与 test_docs.html 共同读取。\n\n支持模型：\nsora-2, sora-2-pro, doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128, veo-3.0-generate-001, veo-3.0-fast-generate-001, veo-3.1-generate-preview, veo-3.1-fast-generate-preview, jimeng_vgfm_t2v_l20, jimeng_v30_pro, jimeng_v30_base, kling-v1, kling-v1-6, kling-v2-master, viduq2, viduq1, vidu2.0, vidu1.5, hailuo-video, hailuo-02\n\n统一请求字段：\n- `model` (string, 必填): 模型名。不同模型会触发不同上游适配逻辑。\n- `prompt` (string, 必填): 统一提示词入口。大多数模型必填。\n- `mode` (string, 可选): 渠道/模式提示字段，如 i2v_first、reference_images 等。\n- `image` (string, 可选): 单图入口，部分兼容模式会映射到 images。\n- `images` (array[string], 可选): 统一多图入口。Vidu、Seedance、Jimeng 等会使用。\n- `size` (string, 可选): 统一尺寸入口，会映射为 resolution/aspect_ratio 等。\n- `duration` (integer, 可选): 统一时长入口，部分模型也接受 seconds。\n- `seconds` (string, 可选): Sora 兼容入口，运行时会回退到 duration。\n- `input_reference` (string|object|binary, 可选): Sora/Jimeng/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。\n- `metadata` (object, 可选): 动态扩展字段容器。大量模型特有字段从这里反序列化。\n\n常见模型/模式差异：\n- `OpenAI t2v (prompt/model)`: 支持模型 sora-2, sora-2-pro；Sora 文生视频基础模式。\n- `OpenAI i2v (input_reference)`: 支持模型 sora-2, sora-2-pro；Sora 参考图兼容模式。\n- `Alias兼容 (image_url/duration/aspect_ratio)`: 支持模型 sora-2, sora-2-pro；兼容别名字段写法。\n- `Seedance i2v_first`: 支持模型 doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128；单张首帧图生视频。\n- `Seedance i2v_first_last`: 支持模型 doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128；首尾帧双图模式。\n- `Seedance reference_images`: 支持模型 doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128；多张参考图模式。\n- `Seedance 全能参考模式(reference_material)`: 支持模型 doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128；图、视频、音频混合参考模式。\n- `Seedance 火山方舟 content 模式`: 支持模型 doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128；Ark content[] 多媒体数组模式。\n- `Veo 首尾帧模式`: 支持模型 veo-3.0-generate-001, veo-3.0-fast-generate-001, veo-3.1-generate-preview, veo-3.1-fast-generate-preview；Veo 首尾帧输入模式。\n- `Veo 1~3张参考图模式`: 支持模型 veo-3.0-generate-001, veo-3.0-fast-generate-001, veo-3.1-generate-preview, veo-3.1-fast-generate-preview；Veo 参考图数量 1~3。\n- `Jimeng 单图模式`: 支持模型 jimeng_vgfm_t2v_l20, jimeng_v30_pro, jimeng_v30_base；即梦单图输入，兼容 input_reference 或 image_urls。\n- `Jimeng 首尾帧模式`: 支持模型 jimeng_v30_pro, jimeng_v30_base；即梦双图输入模式。\n- `Kling 文生视频`: 支持模型 kling-v1, kling-v1-6, kling-v2-master；可灵文生模式。\n- `Kling 图生视频`: 支持模型 kling-v1, kling-v1-6, kling-v2-master；可灵单图模式。\n- `Vidu 图生视频`: 支持模型 viduq2, viduq1, vidu2.0, vidu1.5；Vidu 单图模式。\n- `Vidu 首尾帧模式`: 支持模型 viduq2, viduq1, vidu2.0, vidu1.5；Vidu 双图首尾帧模式。\n- `Vidu 多参考图模式`: 支持模型 viduq2, viduq1, vidu2.0, vidu1.5；Vidu 参考图数量大于 2 的模式。\n- `Hailuo 文生视频`: 支持模型 hailuo-video, hailuo-02；海螺文生模式，额外字段主要透過 metadata 展开。",
         "operationId": "createVideo",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -586,17 +586,48 @@
                 "type": "object",
                 "properties": {
                   "model": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "模型名。不同模型会触发不同上游适配逻辑。",
+                    "enum": [
+                      "sora-2",
+                      "sora-2-pro",
+                      "doubao-seedance-1-0-lite-t2v-250428",
+                      "doubao-seedance-1-0-pro-250528",
+                      "doubao-seedance-1-0-pro-fast-251015",
+                      "doubao-seedance-1-5-pro-251215",
+                      "doubao-seedance-2-0-260128",
+                      "doubao-seedance-2-0-fast-260128",
+                      "veo-3.0-generate-001",
+                      "veo-3.0-fast-generate-001",
+                      "veo-3.1-generate-preview",
+                      "veo-3.1-fast-generate-preview",
+                      "jimeng_vgfm_t2v_l20",
+                      "jimeng_v30_pro",
+                      "jimeng_v30_base",
+                      "kling-v1",
+                      "kling-v1-6",
+                      "kling-v2-master",
+                      "viduq2",
+                      "viduq1",
+                      "vidu2.0",
+                      "vidu1.5",
+                      "hailuo-video",
+                      "hailuo-02"
+                    ],
+                    "example": "sora-2"
                   },
                   "prompt": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "统一提示词入口。大多数模型必填。"
                   },
                   "image": {
                     "type": "string",
-                    "format": "binary"
+                    "format": "binary",
+                    "description": "单图入口，部分兼容模式会映射到 images。"
                   },
                   "duration": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "统一时长入口，部分模型也接受 seconds。"
                   },
                   "width": {
                     "type": "integer",
@@ -635,26 +666,31 @@
                   },
                   "metadata": {
                     "type": "object",
-                    "additionalProperties": true
+                    "additionalProperties": true,
+                    "description": "动态扩展字段容器。大量模型特有字段从这里反序列化。"
                   },
                   "mode": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "渠道/模式提示字段，如 i2v_first、reference_images 等。"
                   },
                   "images": {
                     "type": "array",
-                    "description": "Multiple reference images (URL or uploaded files)",
+                    "description": "统一多图入口。Vidu、Seedance、Jimeng 等会使用。",
                     "items": {
                       "type": "string"
                     }
                   },
                   "size": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "统一尺寸入口，会映射为 resolution/aspect_ratio 等。"
                   },
                   "seconds": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Sora 兼容入口，运行时会回退到 duration。"
                   },
                   "input_reference": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Sora/Jimeng/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
                   }
                 },
                 "required": [
@@ -669,6 +705,247 @@
                 "size": "1280x720",
                 "n": 1,
                 "response_format": "url"
+              },
+              "examples": {
+                "openai_t2v": {
+                  "summary": "OpenAI t2v (prompt/model)",
+                  "value": {
+                    "model": "sora-2",
+                    "prompt": "A cinematic drone shot over snowy mountains at sunrise",
+                    "seconds": "8",
+                    "size": "1280x720",
+                    "response_format": "url"
+                  }
+                },
+                "openai_i2v_input_reference": {
+                  "summary": "OpenAI i2v (input_reference)",
+                  "value": {
+                    "model": "sora-2",
+                    "prompt": "A cinematic drone shot over snowy mountains at sunrise",
+                    "input_reference": {
+                      "image_url": "https://example.com/input.jpg"
+                    },
+                    "seconds": "8",
+                    "size": "1280x720",
+                    "response_format": "url"
+                  }
+                },
+                "openai_alias_compat": {
+                  "summary": "Alias兼容 (image_url/duration/aspect_ratio)",
+                  "value": {
+                    "model": "sora-2",
+                    "prompt": "A cinematic drone shot over snowy mountains at sunrise",
+                    "image_url": "https://example.com/input.jpg",
+                    "duration": "8",
+                    "aspect_ratio": "16:9",
+                    "response_format": "url"
+                  }
+                },
+                "seedance_i2v_first": {
+                  "summary": "Seedance i2v_first",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-t2v-250428",
+                    "mode": "i2v_first",
+                    "prompt": "A panda skateboarding in a city street, cinematic",
+                    "image_urls": [
+                      "https://example.com/first.jpg"
+                    ],
+                    "seconds": "5",
+                    "size": "1280x720"
+                  }
+                },
+                "seedance_i2v_first_last": {
+                  "summary": "Seedance i2v_first_last",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-t2v-250428",
+                    "mode": "i2v_first_last",
+                    "prompt": "A camera moves from first frame to last frame naturally",
+                    "image_urls": [
+                      "https://example.com/first.jpg"
+                    ],
+                    "end_image_url": "https://example.com/last.jpg",
+                    "seconds": "5",
+                    "size": "1280x720"
+                  }
+                },
+                "seedance_reference_images": {
+                  "summary": "Seedance reference_images",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-t2v-250428",
+                    "mode": "reference_images",
+                    "prompt": "Stylized short video keeping character consistency",
+                    "reference_images": [
+                      "https://example.com/ref-1.jpg",
+                      "https://example.com/ref-2.jpg"
+                    ],
+                    "seconds": "5",
+                    "size": "1280x720"
+                  }
+                },
+                "seedance_reference_material": {
+                  "summary": "Seedance 全能参考模式(reference_material)",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-t2v-250428",
+                    "mode": "reference_material",
+                    "prompt": "Blend image and short reference video into a coherent cinematic clip",
+                    "reference_images": [
+                      "https://example.com/ref-1.jpg",
+                      "https://example.com/ref-2.jpg"
+                    ],
+                    "video_urls": [
+                      "https://example.com/ref-video.mp4"
+                    ],
+                    "audio_urls": [
+                      "https://example.com/ref-audio.mp3"
+                    ],
+                    "seconds": "5",
+                    "size": "1280x720"
+                  }
+                },
+                "seedance_volc_content": {
+                  "summary": "Seedance 火山方舟 content 模式",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-t2v-250428",
+                    "mode": "reference_material",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic teaser video with fast-paced action cuts"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": "https://example.com/ref-1.jpg"
+                      }
+                    ],
+                    "seconds": "5",
+                    "size": "1280x720"
+                  }
+                },
+                "veo_first_last_frame": {
+                  "summary": "Veo 首尾帧模式",
+                  "value": {
+                    "model": "veo-3.0-generate-001",
+                    "prompt": "A smooth transition from first frame to last frame, cinematic motion",
+                    "image_urls": [
+                      "https://example.com/first-frame.jpg"
+                    ],
+                    "end_image_url": "https://example.com/last-frame.jpg",
+                    "seconds": "8",
+                    "size": "1280x720"
+                  }
+                },
+                "veo_reference_images_1to3": {
+                  "summary": "Veo 1~3张参考图模式",
+                  "value": {
+                    "model": "veo-3.0-generate-001",
+                    "prompt": "Use reference style and character consistency for a short ad clip",
+                    "reference_images": [
+                      "https://example.com/ref-1.jpg"
+                    ],
+                    "seconds": "8",
+                    "size": "1280x720"
+                  }
+                },
+                "jimeng_i2v_first": {
+                  "summary": "Jimeng 单图模式",
+                  "value": {
+                    "model": "jimeng_v30_pro",
+                    "prompt": "A short fashion clip with dynamic camera movement",
+                    "image_urls": [
+                      "https://example.com/first.jpg"
+                    ],
+                    "duration": 5,
+                    "aspect_ratio": "16:9"
+                  }
+                },
+                "jimeng_i2v_first_last": {
+                  "summary": "Jimeng 首尾帧模式",
+                  "value": {
+                    "model": "jimeng_v30_pro",
+                    "prompt": "Transition from the first frame to the last frame smoothly",
+                    "image_urls": [
+                      "https://example.com/first.jpg",
+                      "https://example.com/last.jpg"
+                    ],
+                    "duration": 5,
+                    "aspect_ratio": "16:9"
+                  }
+                },
+                "kling_text2video": {
+                  "summary": "Kling 文生视频",
+                  "value": {
+                    "model": "kling-v1",
+                    "prompt": "A cat playing piano in the garden",
+                    "duration": 5,
+                    "size": "1280x720",
+                    "metadata": {
+                      "negative_prompt": "blurry, low quality",
+                      "mode": "std"
+                    }
+                  }
+                },
+                "kling_image2video": {
+                  "summary": "Kling 图生视频",
+                  "value": {
+                    "model": "kling-v1",
+                    "prompt": "A cat playing piano in the garden",
+                    "image": "https://example.com/input.jpg",
+                    "duration": 5,
+                    "size": "1280x720",
+                    "metadata": {
+                      "negative_prompt": "blurry, low quality",
+                      "mode": "std"
+                    }
+                  }
+                },
+                "vidu_img2video": {
+                  "summary": "Vidu 图生视频",
+                  "value": {
+                    "model": "viduq2",
+                    "prompt": "A stylish ad clip from a product still image",
+                    "images": [
+                      "https://example.com/product.jpg"
+                    ],
+                    "duration": 5,
+                    "size": "1080p"
+                  }
+                },
+                "vidu_first_tail": {
+                  "summary": "Vidu 首尾帧模式",
+                  "value": {
+                    "model": "viduq2",
+                    "prompt": "A smooth shot from start frame to end frame",
+                    "images": [
+                      "https://example.com/start.jpg",
+                      "https://example.com/end.jpg"
+                    ],
+                    "duration": 5,
+                    "size": "1080p"
+                  }
+                },
+                "vidu_reference": {
+                  "summary": "Vidu 多参考图模式",
+                  "value": {
+                    "model": "viduq2",
+                    "prompt": "Maintain product style and character consistency",
+                    "images": [
+                      "https://example.com/ref-1.jpg",
+                      "https://example.com/ref-2.jpg",
+                      "https://example.com/ref-3.jpg"
+                    ],
+                    "duration": 5,
+                    "size": "1080p"
+                  }
+                },
+                "hailuo_text2video": {
+                  "summary": "Hailuo 文生视频",
+                  "value": {
+                    "model": "hailuo-video",
+                    "prompt": "A cinematic travel shot over the coastline",
+                    "duration": 6,
+                    "size": "1280x720"
+                  }
+                }
               }
             }
           }
@@ -4620,7 +4897,7 @@
     "type_counts": {}
   },
   "x-interface-extensions": {
-    "generated_at": "2026-04-14T07:04:06+00:00",
+    "generated_at": "2026-04-14T07:34:43+00:00",
     "version": "1",
     "endpoints": {
       "/v1/videos": {
