@@ -1,0 +1,27 @@
+html {
+  font-size: 14px;
+}
+
+#content-area,
+#body-content,
+.mdx-content,
+.api-section,
+.request-example,
+.response-example,
+#api-playground-input {
+  font-size: 0.95rem;
+}
+
+.api-section pre,
+.request-example pre,
+.response-example pre,
+code {
+  font-size: 0.9em;
+}
+
+.api-section h1,
+.api-section h2,
+.api-section h3,
+#page-title {
+  letter-spacing: -0.01em;
+}
