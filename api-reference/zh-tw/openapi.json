@@ -697,14 +697,124 @@
                   "model",
                   "prompt"
                 ]
-              },
-              "example": {
-                "model": "sora-2",
-                "prompt": "A cinematic drone shot over snowy mountains at sunrise",
-                "seconds": "8",
-                "size": "1280x720",
-                "n": 1,
-                "response_format": "url"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "模型名。不同模型会触发不同上游适配逻辑。",
+                    "enum": [
+                      "sora-2",
+                      "sora-2-pro",
+                      "doubao-seedance-1-0-lite-t2v-250428",
+                      "doubao-seedance-1-0-pro-250528",
+                      "doubao-seedance-1-0-pro-fast-251015",
+                      "doubao-seedance-1-5-pro-251215",
+                      "doubao-seedance-2-0-260128",
+                      "doubao-seedance-2-0-fast-260128",
+                      "veo-3.0-generate-001",
+                      "veo-3.0-fast-generate-001",
+                      "veo-3.1-generate-preview",
+                      "veo-3.1-fast-generate-preview",
+                      "jimeng_vgfm_t2v_l20",
+                      "jimeng_v30_pro",
+                      "jimeng_v30_base",
+                      "kling-v1",
+                      "kling-v1-6",
+                      "kling-v2-master",
+                      "viduq2",
+                      "viduq1",
+                      "vidu2.0",
+                      "vidu1.5",
+                      "hailuo-video",
+                      "hailuo-02"
+                    ],
+                    "example": "sora-2"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "统一提示词入口。大多数模型必填。"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "单图入口，部分兼容模式会映射到 images。"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "统一时长入口，部分模型也接受 seconds。"
+                  },
+                  "width": {
+                    "type": "integer",
+                    "example": 512,
+                    "description": "Video width"
+                  },
+                  "height": {
+                    "type": "integer",
+                    "example": 512,
+                    "description": "Video height"
+                  },
+                  "fps": {
+                    "type": "integer",
+                    "example": 30,
+                    "description": "Video frame rate"
+                  },
+                  "seed": {
+                    "type": "integer",
+                    "example": 20231234,
+                    "description": "Random seed"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Number of videos to generate"
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "example": "url",
+                    "description": "Response format"
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "user-1234",
+                    "description": "User identifier"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "动态扩展字段容器。大量模型特有字段从这里反序列化。"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "渠道/模式提示字段，如 i2v_first、reference_images 等。"
+                  },
+                  "images": {
+                    "type": "array",
+                    "description": "统一多图入口。Vidu、Seedance、Jimeng 等会使用。",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "size": {
+                    "type": "string",
+                    "description": "统一尺寸入口，会映射为 resolution/aspect_ratio 等。"
+                  },
+                  "seconds": {
+                    "type": "string",
+                    "description": "Sora 兼容入口，运行时会回退到 duration。"
+                  },
+                  "input_reference": {
+                    "type": "string",
+                    "description": "Sora/Jimeng/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
+                  }
+                },
+                "required": [
+                  "model",
+                  "prompt"
+                ]
               },
               "examples": {
                 "openai_t2v": {
