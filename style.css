@@ -25,11 +25,3 @@ code {
 #page-title {
   letter-spacing: -0.01em;
 }
-
-.prose > ul > li > p:first-child {
-  margin-top: 0 !important;
-}
-
-.prose > ul > li > p:last-child {
-  margin-bottom: 0 !important;
-}
