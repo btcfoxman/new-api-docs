@@ -375,7 +375,7 @@
         "summary": "生成图像（OpenAI Dall-E兼容）",
         "deprecated": false,
         "description": "OpenAI Dall-E格式图片生成接口。",
-        "operationId": "createImage",
+        "operationId": "createImageGeneration",
         "tags": [
           "图片生成/OpenAI Dall-E格式"
         ],
@@ -482,7 +482,7 @@
         "summary": "编辑图像（OpenAI Dall-E兼容）",
         "deprecated": false,
         "description": "OpenAI Dall-E格式图片编辑接口。",
-        "operationId": "createImage",
+        "operationId": "createImageEdit",
         "tags": [
           "图片生成/OpenAI Dall-E格式"
         ],
