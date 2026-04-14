@@ -15,7 +15,7 @@
       "get": {
         "summary": "获取模型列表",
         "deprecated": false,
-        "description": "获取当前可用的模型列表。\n\n根据请求头自动识别返回格式：\n- 包含 `x-api-key` 和 `anthropic-version` 头时返回 Anthropic 格式\n- 包含 `x-goog-api-key` 头或 `key` 查询参数时返回 Gemini 格式\n- 其他情况返回 OpenAI 格式\n",
+        "description": "获取当前可用的模型列表。\n\n根据请求头自动识别返回格式：\n- 包含 `x-api-key` 和 `anthropic-version` 头时返回 Anthropic 格式\n- 包含 `x-goog-api-key` 头或 `key` 查询参数时返回 Gemini 格式\n- 其他情况返回 OpenAI 格式",
         "operationId": "listModels",
         "tags": [
           "获取模型列表"
@@ -135,7 +135,7 @@
       "post": {
         "summary": "创建聊天对话",
         "deprecated": false,
-        "description": "根据对话历史创建模型响应。支持流式和非流式响应。\n\n兼容 OpenAI Chat Completions API。\n",
+        "description": "根据对话历史创建模型响应。支持流式和非流式响应。\n\n兼容 OpenAI Chat Completions API。",
         "operationId": "createChatCompletion",
         "tags": [
           "OpenAI格式(Chat)"
@@ -201,7 +201,7 @@
       "post": {
         "summary": "创建响应 (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API，用于创建模型响应。\n支持多轮对话、工具调用、推理等功能。\n",
+        "description": "OpenAI Responses API，用于创建模型响应。\n支持多轮对话、工具调用、推理等功能。",
         "operationId": "createResponse",
         "tags": [
           "OpenAI格式(Responses)"
@@ -572,7 +572,7 @@
       "post": {
         "summary": "创建视频",
         "deprecated": false,
-        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容（下载）\n\n标准鉴权头：\n- `Authorization: Bearer <LITELLM_API_KEY>`\n- `Content-Type: application/json`（创建任务时）\n\n1. 调用 `POST /v1/videos` 创建任务，拿到 `id`。\n2. 轮询 `GET /v1/videos/{id}`，直到 `status=completed` 或 `failed`。\n3. `completed` 后优先使用返回中的 `video_url`；如需网关统一下载可调用 `GET /v1/videos/{id}/content`。\n\n## 3.1 核心参数\n\n- `model: string`（必填）\n- 说明：要调用的视频模型名称。\n- 示例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推荐）\n- 说明：视频生成主描述。使用 `content` 时也必须传，不能为空。\n- 示例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（可选）\n- 说明：目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。\n- 示例：`8`\n\n- `size: string`（可选）\n- 说明：输出分辨率，常用 `宽x高`。\n- 示例：`720x1280`、`1280x720`\n\n- `mode: string`（可选）\n- 说明：生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。\n- 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 通用兼容参数\n\n- `aspect_ratio` 或 `ratio`：宽高比。\n- `duration`：时长别名（与 `seconds` 二选一即可）。\n- `quality` 或 `resolution`：清晰度相关参数。\n- `fps`：帧率。\n- `channel`：可选路由标识（仅在你的网关账号开通特定路由时使用，如 `official/default`）。\n- `function_mode`：可选功能模式，用于触发特定行为（如 `omni_reference` 表示全能参考语义）。\n\n## 3.3 参考素材参数\n\n- `input_reference`：标准参考输入对象。\n- 说明：仅支持字符串 URL 写法，不支持对象写法。\n- 正确示例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 错误示例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：图片参考。\n- 说明：`image_url` 常用于单图；`image_urls` 用于多图或全能参考。\n\n- `end_image_url` / `last_image_url`：末帧参考。\n- 说明：通常与 `mode=i2v_first_last` 搭配，表示视频结束画面。\n\n- `video_urls`：视频参考列表。\n- 说明：常用于 `reference_material` 或 `content` 全能参考场景。\n\n- `audio_urls`：音频参考列表。\n- 说明：用于背景音乐/旁白风格参考（是否生效取决于模型能力）。\n\n- `reference_images`：多图参考。\n- 说明：常用于多帧/多图参考模式。\n\n说明：不同模型对素材字段要求不同，建议按下文“模式与最小入参”传参。\n\n## 3.4 content 高级模式（推荐给复杂参考场景）\n\n可直接传 `content` 数组：\n- `type=text`：文本指令。\n- `type=image_url|video_url|audio_url`：媒体输入。\n- 支持 `name` 用于在文本中通过 `@名称` 指代素材。\n\n必填约束：\n- 使用 `content` 时，`prompt` 仍必须传且不能为空。\n\n兼容写法：\n- `image_url/video_url/audio_url` 可为字符串，或对象 `{ \"url\": \"https://...\" }`。\n- `role` 可使用 `material`，也兼容 `reference_image/reference_video/reference_audio`。\n\n可同时携带：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n补充说明：\n- `generate_audio=true`：请求模型同时生成音频（仅支持该能力的模型会生效）。\n- `watermark=false`：请求关闭水印（实际是否生效取决于模型与渠道策略）。\n- `name`：素材别名，建议与 `text` 中 `@名称` 一致，便于模型准确关联素材。\n\n不同模型族对参数支持差异较大，建议按下表选参：\n\n| 模型族 | 常见模型名（示例） | 推荐最小入参 | 常用扩展参数 | 注意事项 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | 对 `mode` 最敏感；并非所有版本都支持 `reference_material`。 |\n| Sora 通用 | `sora-2` `sora-2-pro` 及 `*-stable/*-official` | `model + prompt` | `seconds/size`，建议补 `input_reference`（字符串 URL） | 多渠道 fallback 时，是否要求图片可能不同，建议准备参考图提高成功率。 |\n| Sora 时长预置 | `sora2-landscape-10s` `sora2-pro-portrait-25s` 等 | `model + prompt` | `image_url/input_reference` | 时长和方向通常由模型名决定，`seconds/ratio` 仅在模型允许时生效。 |\n| Veo | `veo3*` `veo3.1*` `veo_*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` 类模型通常需要参考图或参考素材；`t2v` 类通常可纯文本。 |\n| 聚合扩展模型 | `kling*` `happyhorse*` `grok-imagine-1.0-video*` 等 | `model + prompt` | `seconds/size/content` | 具体支持字段依赖模型与渠道实现，建议优先使用标准字段，不足再用 `content`。 |\n\n说明：\n1. 若你使用稳定别名模型（如 `*-stable`、`*-official`），底层可能自动切换渠道，请尽量传“跨渠道兼容参数”（`prompt + model + seconds/duration + size/ratio + 必要参考图`）。\n2. 复杂多素材场景（图+视频+音频+@名称）优先使用 `content`，兼容性最高。\n3. 若模型文档未明确支持某字段，请按“最小入参”先跑通，再逐步增加扩展参数。\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`（等同 `i2v_first`）\n- 最小入参：`model + prompt + image_url`（或 `input_reference` 字符串 URL）\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`（通常 1~4 张）\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 复杂场景更推荐用 `content + function_mode=omni_reference`\n- 说明：当传 `function_mode=omni_reference` 时，即使未显式传 `mode=reference_material`，也会按全能参考语义处理。",
+        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容（下载）\n\n标准鉴权头：\n- `Content-Type: application/json`（创建任务时）\n\n1. 调用 `POST /v1/videos` 创建任务，拿到 `id`。\n2. 轮询 `GET /v1/videos/{id}`，直到 `status=completed` 或 `failed`。\n3. `completed` 后优先使用返回中的 `video_url`；如需网关统一下载可调用 `GET /v1/videos/{id}/content`。\n\n## 3.1 核心参数\n\n- `model: string`（必填）\n- 说明：要调用的视频模型名称。\n- 示例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推荐）\n- 说明：视频生成主描述。使用 `content` 时也必须传，不能为空。\n- 示例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（可选）\n- 说明：目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。\n- 示例：`8`\n\n- `size: string`（可选）\n- 说明：输出分辨率，常用 `宽x高`。\n- 示例：`720x1280`、`1280x720`\n\n- `mode: string`（可选）\n- 说明：生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。\n- 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 通用兼容参数\n\n- `aspect_ratio` 或 `ratio`：宽高比。\n- `duration`：时长别名（与 `seconds` 二选一即可）。\n- `quality` 或 `resolution`：清晰度相关参数。\n- `fps`：帧率。\n- `function_mode`：可选功能模式，用于触发特定行为（如 `omni_reference` 表示全能参考语义）。\n\n## 3.3 参考素材参数\n\n- `input_reference`：标准参考输入对象。\n- 说明：仅支持字符串 URL 写法，不支持对象写法。\n- 正确示例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 错误示例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：图片参考。\n- 说明：`image_url` 常用于单图；`image_urls` 用于多图或全能参考。\n\n- `end_image_url` / `last_image_url`：末帧参考。\n- 说明：通常与 `mode=i2v_first_last` 搭配，表示视频结束画面。\n\n- `video_urls`：视频参考列表。\n- 说明：常用于 `reference_material` 或 `content` 全能参考场景。\n\n- `audio_urls`：音频参考列表。\n- 说明：用于背景音乐/旁白风格参考（是否生效取决于模型能力）。\n\n- `reference_images`：多图参考。\n- 说明：常用于多帧/多图参考模式。\n\n说明：不同模型对素材字段要求不同，建议按下文“模式与最小入参”传参。\n\n## 3.4 content 高级模式（推荐给复杂参考场景）\n\n可直接传 `content` 数组：\n- `type=text`：文本指令。\n- `type=image_url|video_url|audio_url`：媒体输入。\n- 支持 `name` 用于在文本中通过 `@名称` 指代素材。\n\n必填约束：\n- 使用 `content` 时，`prompt` 仍必须传且不能为空。\n\n兼容写法：\n- `image_url/video_url/audio_url` 可为字符串，或对象 `{ \"url\": \"https://...\" }`。\n- `role` 可使用 `material`，也兼容 `reference_image/reference_video/reference_audio`。\n\n可同时携带：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n补充说明：\n- `generate_audio=true`：请求模型同时生成音频（仅支持该能力的模型会生效）。\n- `watermark=false`：请求关闭水印（实际是否生效取决于模型与渠道策略）。\n- `name`：素材别名，建议与 `text` 中 `@名称` 一致，便于模型准确关联素材。\n\n不同模型族对参数支持差异较大，建议按下表选参：\n\n| 模型族 | 常见模型名（示例） | 推荐最小入参 | 常用扩展参数 | 注意事项 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | 对 `mode` 最敏感；并非所有版本都支持 `reference_material`。 |\n| Sora 通用 | `sora-2` `sora-2-pro` 及 `*-stable/*-official` | `model + prompt` | `seconds/size`，建议补 `input_reference`（字符串 URL） | 多渠道 fallback 时，是否要求图片可能不同，建议准备参考图提高成功率。 |\n| Sora 时长预置 | `sora2-landscape-10s` `sora2-pro-portrait-25s` 等 | `model + prompt` | `image_url/input_reference` | 时长和方向通常由模型名决定，`seconds/ratio` 仅在模型允许时生效。 |\n| Veo | `veo3*` `veo3.1*` `veo_*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` 类模型通常需要参考图或参考素材；`t2v` 类通常可纯文本。 |\n| 聚合扩展模型 | `kling*` `happyhorse*` `grok-imagine-1.0-video*` 等 | `model + prompt` | `seconds/size/content` | 具体支持字段依赖模型与渠道实现，建议优先使用标准字段，不足再用 `content`。 |\n\n说明：\n1. 若你使用稳定别名模型（如 `*-stable`、`*-official`），底层可能自动切换渠道，请尽量传“跨渠道兼容参数”（`prompt + model + seconds/duration + size/ratio + 必要参考图`）。\n2. 复杂多素材场景（图+视频+音频+@名称）优先使用 `content`，兼容性最高。\n3. 若模型文档未明确支持某字段，请按“最小入参”先跑通，再逐步增加扩展参数。\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`（等同 `i2v_first`）\n- 最小入参：`model + prompt + image_url`（或 `input_reference` 字符串 URL）\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`（通常 1~4 张）\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 复杂场景更推荐用 `content + function_mode=omni_reference`\n- 说明：当传 `function_mode=omni_reference` 时，即使未显式传 `mode=reference_material`，也会按全能参考语义处理。",
         "operationId": "createVideo",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -1179,9 +1179,9 @@
     },
     "/v1/videos/{task_id}": {
       "get": {
-        "summary": "获取视频任务状态 ",
+        "summary": "获取视频任务状态",
         "deprecated": false,
-        "description": "OpenAI 兼容的视频任务状态查询接口。\n\n返回视频任务的详细状态信息。\n",
+        "description": "OpenAI 兼容的视频任务状态查询接口。\n\n返回视频任务的详细状态信息。",
         "operationId": "getVideo",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -1278,7 +1278,7 @@
       "get": {
         "summary": "获取视频内容",
         "deprecated": false,
-        "description": "获取已完成视频任务的视频文件内容。\n\n此接口会代理返回视频文件流。\n",
+        "description": "获取已完成视频任务的视频文件内容。\n\n此接口会代理返回视频文件流。",
         "operationId": "getVideoContent",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -1335,7 +1335,7 @@
       "post": {
         "summary": "Kling 文生视频",
         "deprecated": false,
-        "description": "使用 Kling 模型从文本描述生成视频。\n\n支持的模型：kling-v1, kling-v1-5 等\n",
+        "description": "使用 Kling 模型从文本描述生成视频。\n\n支持的模型：kling-v1, kling-v1-5 等",
         "operationId": "createKlingText2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -1453,7 +1453,7 @@
       "post": {
         "summary": "Kling 图生视频",
         "deprecated": false,
-        "description": "使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。\n",
+        "description": "使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。",
         "operationId": "createKlingImage2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -1571,7 +1571,7 @@
       "post": {
         "summary": "即梦视频生成",
         "deprecated": false,
-        "description": "即梦官方 API 格式的视频生成接口。\n\n支持通过 Action 参数指定操作类型：\n- `CVSync2AsyncSubmitTask`: 提交视频生成任务\n- `CVSync2AsyncGetResult`: 获取任务结果\n\n需要在查询参数中指定 Action 和 Version。\n",
+        "description": "即梦官方 API 格式的视频生成接口。\n\n支持通过 Action 参数指定操作类型：\n- `CVSync2AsyncSubmitTask`: 提交视频生成任务\n- `CVSync2AsyncGetResult`: 获取任务结果\n\n需要在查询参数中指定 Action 和 Version。",
         "operationId": "createJimengVideo",
         "tags": [
           "视频生成/即梦格式"
@@ -1846,7 +1846,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "创建视频生成任务（Seedance火山方舟）",
-        "description": "用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\n对外建议消费简洁错误结构：\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```\n\n规则：\n- 仅保留可执行、简洁错误信息。\n- 保留 `code` 供调用方程序分支判断。",
+        "description": "用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\n对外建议消费简洁错误结构：\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```\n\n规则：\n- 仅保留可执行、简洁错误信息。\n- 不暴露 traceback、内部类名、实现细节。\n- 保留 `code` 供调用方程序分支判断。",
         "operationId": "create__seedance__task",
         "tags": [
           "视频生成/Seedance火山方舟"
@@ -2125,56 +2125,25 @@
             "BearerAuth": []
           }
         ]
-      },
+      }
+    },
+    "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
-        "summary": "查询视频生成任务列表（Seedance火山方舟）",
-        "description": "用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\n对外建议消费简洁错误结构：\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```\n\n规则：\n- 仅保留可执行、简洁错误信息。\n- 保留 `code` 供调用方程序分支判断。",
+        "summary": "查询视频生成任务（Seedance火山方舟）",
+        "description": "用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\n对外建议消费简洁错误结构：\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```\n\n规则：\n- 仅保留可执行、简洁错误信息。\n- 不暴露 traceback、内部类名、实现细节。\n- 保留 `code` 供调用方程序分支判断。",
         "operationId": "query__seedance__task",
         "tags": [
           "视频生成/Seedance火山方舟"
         ],
         "parameters": [
           {
-            "name": "page_num",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "default": 1
-            },
-            "description": "返回结果的页码"
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "default": 10
-            },
-            "description": "每页的结果数量"
-          },
-          {
-            "name": "filter.status",
-            "in": "query",
+            "name": "task_id",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             },
-            "description": "筛选任务状态"
-          },
-          {
-            "name": "filter.task_ids",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": "任务 ID 列表，用 & 连接"
-          },
-          {
-            "name": "filter.model",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": "模型接入点 ID"
+            "description": "?? ID"
           }
         ],
         "responses": {
@@ -2185,91 +2154,63 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "model": {
-                            "type": "string"
-                          },
-                          "status": {
-                            "type": "string",
-                            "enum": [
-                              "queued",
-                              "running",
-                              "succeeded",
-                              "failed",
-                              "cancelled",
-                              "expired"
-                            ]
-                          },
-                          "error": {
-                            "type": "object",
-                            "nullable": true,
-                            "properties": {
-                              "code": {
-                                "type": "string"
-                              },
-                              "message": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "created_at": {
-                            "type": "integer"
-                          },
-                          "updated_at": {
-                            "type": "integer"
-                          },
-                          "content": {
-                            "type": "object",
-                            "properties": {
-                              "video_url": {
-                                "type": "string"
-                              },
-                              "last_frame_url": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "usage": {
-                            "type": "object",
-                            "properties": {
-                              "completion_tokens": {
-                                "type": "integer"
-                              },
-                              "total_tokens": {
-                                "type": "integer"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "total": {
-                      "type": "integer"
-                    },
                     "id": {
                       "type": "string",
                       "description": "任务 ID。"
                     },
+                    "model": {
+                      "type": "string"
+                    },
                     "status": {
                       "type": "string",
-                      "description": "任务状态。",
                       "enum": [
                         "queued",
                         "running",
                         "succeeded",
                         "failed"
-                      ]
+                      ],
+                      "description": "任务状态。"
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
                     },
                     "created_at": {
-                      "type": "string",
+                      "type": "integer",
                       "description": "创建时间（Unix 秒）。"
+                    },
+                    "updated_at": {
+                      "type": "integer"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "video_url": {
+                          "type": "string"
+                        },
+                        "last_frame_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "usage": {
+                      "type": "object",
+                      "properties": {
+                        "completion_tokens": {
+                          "type": "integer"
+                        },
+                        "total_tokens": {
+                          "type": "integer"
+                        }
+                      }
                     }
                   }
                 }
@@ -4527,7 +4468,7 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "使用 Bearer Token 认证。\n格式: `Authorization: Bearer sk-xxxxxx`\n"
+        "description": "使用 Bearer Token 认证。\n格式: `Authorization: Bearer sk-xxxxxx`"
       },
       "SessionAuth": {
         "type": "apiKey",
