@@ -1,0 +1,36 @@
+# 创建视频生成任务（Veo3 Google原生格式）
+
+- Source: `openapi.json`
+- Method: `POST`
+- Path: `/v1beta/models/{model}:predictLongRunning`
+- Operation ID: `create_veo3_google_native_task`
+
+## 说明
+
+该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。
+
+Google Veo 原生视频生成接口。请求格式为 application/json，创建成功后返回 `operation name`。
+
+推荐两种接入方式：
+- OpenAI Sora 兼容模式：`POST /v1/videos`
+- Google 原生模式：`POST /v1beta/models/{model}:predictLongRunning`
+
+Google 原生模式适用于直接传递 Veo 专有结构，例如 `instances[].referenceImages`、`parameters.aspectRatio`、`parameters.durationSeconds` 等。
+
+## 参数
+
+| 名称 | 位置 | 必填 | 描述 |
+|---|---|---|---|
+| model | path | True | Veo 模型名称。 |
+
+## 请求体
+
+```json
+{'required': True, 'content': {'application/json': {'schema': {'type': 'object', 'required': ['instances'], 'properties': {'instances': {'type': 'array', 'minItems': 1, 'items': {'type': 'object', 'properties': {'prompt': {'type': 'string', 'example': 'A cinematic aerial shot of a modern city at sunrise', 'description': '生成提示词'}, 'referenceImages': {'type': 'array', 'description': '可选。1~3 张参考图，使用 Gemini 原生 `inlineData` 或文件 URI 结构。', 'items': {'type': 'object', 'properties': {'image': {'type': 'object', 'properties': {'inlineData': {'type': 'object', 'properties': {'mimeType': {'type': 'string', 'example': 'image/png'}, 'data': {'type': 'string', 'example': 'BASE64_IMAGE_DATA'}}}}}, 'referenceType': {'type': 'string', 'example': 'asset'}}}}}}}, 'parameters': {'type': 'object', 'properties': {'aspectRatio': {'type': 'string', 'enum': ['16:9', '1:1', '9:16'], 'default': '16:9'}, 'durationSeconds': {'type': 'integer', 'enum': [5, 6, 8, 10], 'default': 5}, 'resolution': {'type': 'string', 'example': '720p'}}}}}, 'example': {'instances': [{'prompt': 'A cinematic aerial shot of a modern city at sunrise', 'referenceImages': [{'image': {'inlineData': {'mimeType': 'image/png', 'data': 'BASE64_IMAGE_DATA'}}, 'referenceType': 'asset'}]}], 'parameters': {'aspectRatio': '16:9', 'durationSeconds': 5, 'resolution': '720p'}}}}}
+```
+
+## 响应
+
+| 状态码 | 说明 |
+|---|---|
+| 200 | 创建成功，返回 Google long-running operation 名称。 |

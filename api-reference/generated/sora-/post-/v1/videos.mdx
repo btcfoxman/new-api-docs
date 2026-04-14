@@ -1,16 +1,133 @@
-# 创建视频 
+# 创建视频
 
-- Source: `relay.json`
+- Source: `openapi.json`
 - Method: `POST`
 - Path: `/v1/videos`
 - Operation ID: `createVideo`
 
 ## 说明
 
-OpenAI 兼容的视频生成接口。
+OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。
 
-参考文档: https://platform.openai.com/docs/api-reference/videos/create
+- `POST /v1/videos`：创建视频任务
+- `GET /v1/videos/{video_id}`：查询任务状态
+- `GET /v1/videos/{video_id}/content`：获取视频二进制内容（下载）
 
+标准鉴权头：
+- `Content-Type: application/json`（创建任务时）
+
+1. 调用 `POST /v1/videos` 创建任务，拿到 `id`。
+2. 轮询 `GET /v1/videos/{id}`，直到 `status=completed` 或 `failed`。
+3. `completed` 后优先使用返回中的 `video_url`；如需网关统一下载可调用 `GET /v1/videos/{id}/content`。
+
+## 3.1 核心参数
+
+- `model: string`（必填）
+- 说明：要调用的视频模型名称。
+- 示例：`sora-2`、`doubao-seedance-2-0-260128`
+
+- `prompt: string`（推荐）
+- 说明：视频生成主描述。使用 `content` 时也必须传，不能为空。
+- 示例：`第一人称视角果茶广告，节奏轻快`
+
+- `seconds: number|string`（可选）
+- 说明：目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。
+- 示例：`8`
+
+- `size: string`（可选）
+- 说明：输出分辨率，常用 `宽x高`。
+- 示例：`720x1280`、`1280x720`
+
+- `mode: string`（可选）
+- 说明：生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。
+- 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`
+
+## 3.2 通用兼容参数
+
+- `aspect_ratio` 或 `ratio`：宽高比。
+- `duration`：时长别名（与 `seconds` 二选一即可）。
+- `quality` 或 `resolution`：清晰度相关参数。
+- `fps`：帧率。
+- `function_mode`：可选功能模式，用于触发特定行为（如 `omni_reference` 表示全能参考语义）。
+
+## 3.3 参考素材参数
+
+- `input_reference`：标准参考输入对象。
+- 说明：仅支持字符串 URL 写法，不支持对象写法。
+- 正确示例：`"input_reference": "https://example.com/ref.png"`
+- 错误示例：`"input_reference": { "image_url": "https://example.com/ref.png" }`
+
+- `image_url` / `image_urls`：图片参考。
+- 说明：`image_url` 常用于单图；`image_urls` 用于多图或全能参考。
+
+- `end_image_url` / `last_image_url`：末帧参考。
+- 说明：通常与 `mode=i2v_first_last` 搭配，表示视频结束画面。
+
+- `video_urls`：视频参考列表。
+- 说明：常用于 `reference_material` 或 `content` 全能参考场景。
+
+- `audio_urls`：音频参考列表。
+- 说明：用于背景音乐/旁白风格参考（是否生效取决于模型能力）。
+
+- `reference_images`：多图参考。
+- 说明：常用于多帧/多图参考模式。
+
+说明：不同模型对素材字段要求不同，建议按下文“模式与最小入参”传参。
+
+## 3.4 content 高级模式（推荐给复杂参考场景）
+
+可直接传 `content` 数组：
+- `type=text`：文本指令。
+- `type=image_url|video_url|audio_url`：媒体输入。
+- 支持 `name` 用于在文本中通过 `@名称` 指代素材。
+
+必填约束：
+- 使用 `content` 时，`prompt` 仍必须传且不能为空。
+
+兼容写法：
+- `image_url/video_url/audio_url` 可为字符串，或对象 `{ "url": "https://..." }`。
+- `role` 可使用 `material`，也兼容 `reference_image/reference_video/reference_audio`。
+
+可同时携带：
+- `generate_audio: boolean`
+- `watermark: boolean`
+
+补充说明：
+- `generate_audio=true`：请求模型同时生成音频（仅支持该能力的模型会生效）。
+- `watermark=false`：请求关闭水印（实际是否生效取决于模型与渠道策略）。
+- `name`：素材别名，建议与 `text` 中 `@名称` 一致，便于模型准确关联素材。
+
+不同模型族对参数支持差异较大，建议按下表选参：
+
+| 模型族 | 常见模型名（示例） | 推荐最小入参 | 常用扩展参数 | 注意事项 |
+|---|---|---|---|---|
+| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | 对 `mode` 最敏感；并非所有版本都支持 `reference_material`。 |
+| Sora 通用 | `sora-2` `sora-2-pro` 及 `*-stable/*-official` | `model + prompt` | `seconds/size`，建议补 `input_reference`（字符串 URL） | 多渠道 fallback 时，是否要求图片可能不同，建议准备参考图提高成功率。 |
+| Sora 时长预置 | `sora2-landscape-10s` `sora2-pro-portrait-25s` 等 | `model + prompt` | `image_url/input_reference` | 时长和方向通常由模型名决定，`seconds/ratio` 仅在模型允许时生效。 |
+| Veo | `veo3*` `veo3.1*` `veo_*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` 类模型通常需要参考图或参考素材；`t2v` 类通常可纯文本。 |
+| 聚合扩展模型 | `kling*` `happyhorse*` `grok-imagine-1.0-video*` 等 | `model + prompt` | `seconds/size/content` | 具体支持字段依赖模型与渠道实现，建议优先使用标准字段，不足再用 `content`。 |
+
+说明：
+1. 若你使用稳定别名模型（如 `*-stable`、`*-official`），底层可能自动切换渠道，请尽量传“跨渠道兼容参数”（`prompt + model + seconds/duration + size/ratio + 必要参考图`）。
+2. 复杂多素材场景（图+视频+音频+@名称）优先使用 `content`，兼容性最高。
+3. 若模型文档未明确支持某字段，请按“最小入参”先跑通，再逐步增加扩展参数。
+
+- `mode=t2v`
+- 最小入参：`model + prompt`
+
+- `mode=i2v`（等同 `i2v_first`）
+- 最小入参：`model + prompt + image_url`（或 `input_reference` 字符串 URL）
+
+- `mode=i2v_first_last`
+- 最小入参：`model + prompt + image_url + end_image_url`
+
+- `mode=reference_images`
+- 最小入参：`model + prompt + reference_images`（通常 1~4 张）
+
+- `mode=reference_material`
+- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`
+- 复杂场景更推荐用 `content + function_mode=omni_reference`
+- 说明：当传 `function_mode=omni_reference` 时，即使未显式传 `mode=reference_material`，也会按全能参考语义处理。
 
 ## 参数
 
@@ -19,7 +136,7 @@ OpenAI 兼容的视频生成接口。
 ## 请求体
 
 ```json
-{'content': {'multipart/form-data': {'schema': {'type': 'object', 'properties': {'model': {'description': '模型名称', 'example': 'sora-2', 'type': 'string'}, 'prompt': {'description': '提示词', 'example': 'cute cat dance', 'type': 'string'}, 'seconds': {'description': '生成秒数', 'example': '8', 'type': 'string'}, 'input_reference': {'format': 'binary', 'type': 'string', 'description': '参考图片文件', 'example': ''}}}, 'examples': {}}}}
+{'required': True, 'content': {'multipart/form-data': {'schema': {'type': 'object', 'properties': {'model': {'type': 'string', 'description': '要调用的视频模型名称。 示例：`sora-2`、`doubao-seedance-2-0-260128`', 'enum': ['sora-2', 'sora-2-pro', 'doubao-seedance-1-0-lite-t2v-250428', 'doubao-seedance-1-0-pro-250528', 'doubao-seedance-1-0-pro-fast-251015', 'doubao-seedance-1-5-pro-251215', 'doubao-seedance-2-0-260128', 'doubao-seedance-2-0-fast-260128', 'veo-3.0-generate-001', 'veo-3.0-fast-generate-001', 'veo-3.1-generate-preview', 'veo-3.1-fast-generate-preview', 'jimeng_vgfm_t2v_l20', 'jimeng_v30_pro', 'jimeng_v30_base', 'kling-v1', 'kling-v1-6', 'kling-v2-master', 'viduq2', 'viduq1', 'vidu2.0', 'vidu1.5', 'hailuo-video', 'hailuo-02'], 'example': 'sora-2'}, 'prompt': {'type': 'string', 'description': '视频生成主描述。使用 `content` 时也必须传，不能为空。 示例：`第一人称视角果茶广告，节奏轻快`'}, 'image': {'type': 'string', 'format': 'binary', 'description': '单图入口，部分兼容模式会映射到 images。'}, 'duration': {'type': 'integer', 'description': '时长别名（与 `seconds` 二选一即可）。'}, 'width': {'type': 'integer', 'example': 512, 'description': 'Video width'}, 'height': {'type': 'integer', 'example': 512, 'description': 'Video height'}, 'fps': {'type': 'integer', 'example': 30, 'description': '帧率。'}, 'seed': {'type': 'integer', 'example': 20231234, 'description': 'Random seed'}, 'n': {'type': 'integer', 'example': 1, 'description': 'Number of videos to generate'}, 'response_format': {'type': 'string', 'example': 'url', 'description': 'Response format'}, 'user': {'type': 'string', 'example': 'user-1234', 'description': 'User identifier'}, 'metadata': {'type': 'object', 'additionalProperties': True, 'description': '动态扩展字段容器。大量模型特有字段从这里反序列化。'}, 'mode': {'type': 'string', 'description': '生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`'}, 'images': {'type': 'array', 'description': '统一多图入口。Vidu、Seedance、Jimeng 等会使用。', 'items': {'type': 'string'}}, 'size': {'type': 'string', 'description': '输出分辨率，常用 `宽x高`。 示例：`720x1280`、`1280x720`'}, 'seconds': {'type': 'string', 'description': '目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。 示例：`8`'}, 'input_reference': {'type': 'string', 'description': '标准参考输入对象。'}}, 'required': ['model', 'prompt']}}, 'application/json': {'schema': {'type': 'object', 'properties': {'model': {'type': 'string', 'description': '要调用的视频模型名称。 示例：`sora-2`、`doubao-seedance-2-0-260128`', 'enum': ['sora-2', 'sora-2-pro', 'doubao-seedance-1-0-lite-t2v-250428', 'doubao-seedance-1-0-pro-250528', 'doubao-seedance-1-0-pro-fast-251015', 'doubao-seedance-1-5-pro-251215', 'doubao-seedance-2-0-260128', 'doubao-seedance-2-0-fast-260128', 'veo-3.0-generate-001', 'veo-3.0-fast-generate-001', 'veo-3.1-generate-preview', 'veo-3.1-fast-generate-preview', 'jimeng_vgfm_t2v_l20', 'jimeng_v30_pro', 'jimeng_v30_base', 'kling-v1', 'kling-v1-6', 'kling-v2-master', 'viduq2', 'viduq1', 'vidu2.0', 'vidu1.5', 'hailuo-video', 'hailuo-02'], 'example': 'sora-2'}, 'prompt': {'type': 'string', 'description': '视频生成主描述。使用 `content` 时也必须传，不能为空。 示例：`第一人称视角果茶广告，节奏轻快`'}, 'image': {'type': 'string', 'format': 'binary', 'description': '单图入口，部分兼容模式会映射到 images。'}, 'duration': {'type': 'integer', 'description': '时长别名（与 `seconds` 二选一即可）。'}, 'width': {'type': 'integer', 'example': 512, 'description': 'Video width'}, 'height': {'type': 'integer', 'example': 512, 'description': 'Video height'}, 'fps': {'type': 'integer', 'example': 30, 'description': '帧率。'}, 'seed': {'type': 'integer', 'example': 20231234, 'description': 'Random seed'}, 'n': {'type': 'integer', 'example': 1, 'description': 'Number of videos to generate'}, 'response_format': {'type': 'string', 'example': 'url', 'description': 'Response format'}, 'user': {'type': 'string', 'example': 'user-1234', 'description': 'User identifier'}, 'metadata': {'type': 'object', 'additionalProperties': True, 'description': '动态扩展字段容器。大量模型特有字段从这里反序列化。'}, 'mode': {'type': 'string', 'description': '生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`'}, 'images': {'type': 'array', 'description': '统一多图入口。Vidu、Seedance、Jimeng 等会使用。', 'items': {'type': 'string'}}, 'size': {'type': 'string', 'description': '输出分辨率，常用 `宽x高`。 示例：`720x1280`、`1280x720`'}, 'seconds': {'type': 'string', 'description': '目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。 示例：`8`'}, 'input_reference': {'type': 'string', 'description': '标准参考输入对象。'}}, 'required': ['model', 'prompt']}, 'examples': {'openai_t2v': {'summary': 'OpenAI t2v (prompt/model)', 'value': {'model': 'sora-2', 'prompt': 'A cinematic drone shot over snowy mountains at sunrise', 'seconds': '8', 'size': '1280x720', 'response_format': 'url'}}, 'openai_i2v_input_reference': {'summary': 'OpenAI i2v (input_reference)', 'value': {'model': 'sora-2', 'prompt': 'A cinematic drone shot over snowy mountains at sunrise', 'input_reference': {'image_url': 'https://example.com/input.jpg'}, 'seconds': '8', 'size': '1280x720', 'response_format': 'url'}}, 'openai_alias_compat': {'summary': 'Alias兼容 (image_url/duration/aspect_ratio)', 'value': {'model': 'sora-2', 'prompt': 'A cinematic drone shot over snowy mountains at sunrise', 'image_url': 'https://example.com/input.jpg', 'duration': '8', 'aspect_ratio': '16:9', 'response_format': 'url'}}, 'seedance_i2v_first': {'summary': 'Seedance i2v_first', 'value': {'model': 'doubao-seedance-1-0-lite-t2v-250428', 'mode': 'i2v_first', 'prompt': 'A panda skateboarding in a city street, cinematic', 'image_urls': ['https://example.com/first.jpg'], 'seconds': '5', 'size': '1280x720'}}, 'seedance_i2v_first_last': {'summary': 'Seedance i2v_first_last', 'value': {'model': 'doubao-seedance-1-0-lite-t2v-250428', 'mode': 'i2v_first_last', 'prompt': 'A camera moves from first frame to last frame naturally', 'image_urls': ['https://example.com/first.jpg'], 'end_image_url': 'https://example.com/last.jpg', 'seconds': '5', 'size': '1280x720'}}, 'seedance_reference_images': {'summary': 'Seedance reference_images', 'value': {'model': 'doubao-seedance-1-0-lite-t2v-250428', 'mode': 'reference_images', 'prompt': 'Stylized short video keeping character consistency', 'reference_images': ['https://example.com/ref-1.jpg', 'https://example.com/ref-2.jpg'], 'seconds': '5', 'size': '1280x720'}}, 'seedance_reference_material': {'summary': 'Seedance 全能参考模式(reference_material)', 'value': {'model': 'doubao-seedance-1-0-lite-t2v-250428', 'mode': 'reference_material', 'prompt': 'Blend image and short reference video into a coherent cinematic clip', 'reference_images': ['https://example.com/ref-1.jpg', 'https://example.com/ref-2.jpg'], 'video_urls': ['https://example.com/ref-video.mp4'], 'audio_urls': ['https://example.com/ref-audio.mp3'], 'seconds': '5', 'size': '1280x720'}}, 'seedance_volc_content': {'summary': 'Seedance 火山方舟 content 模式', 'value': {'model': 'doubao-seedance-1-0-lite-t2v-250428', 'mode': 'reference_material', 'content': [{'type': 'text', 'text': 'A cinematic teaser video with fast-paced action cuts'}, {'type': 'image_url', 'image_url': 'https://example.com/ref-1.jpg'}], 'seconds': '5', 'size': '1280x720'}}, 'veo_first_last_frame': {'summary': 'Veo 首尾帧模式', 'value': {'model': 'veo-3.0-generate-001', 'prompt': 'A smooth transition from first frame to last frame, cinematic motion', 'image_urls': ['https://example.com/first-frame.jpg'], 'end_image_url': 'https://example.com/last-frame.jpg', 'seconds': '8', 'size': '1280x720'}}, 'veo_reference_images_1to3': {'summary': 'Veo 1~3张参考图模式', 'value': {'model': 'veo-3.0-generate-001', 'prompt': 'Use reference style and character consistency for a short ad clip', 'reference_images': ['https://example.com/ref-1.jpg'], 'seconds': '8', 'size': '1280x720'}}, 'jimeng_i2v_first': {'summary': 'Jimeng 单图模式', 'value': {'model': 'jimeng_v30_pro', 'prompt': 'A short fashion clip with dynamic camera movement', 'image_urls': ['https://example.com/first.jpg'], 'duration': 5, 'aspect_ratio': '16:9'}}, 'jimeng_i2v_first_last': {'summary': 'Jimeng 首尾帧模式', 'value': {'model': 'jimeng_v30_pro', 'prompt': 'Transition from the first frame to the last frame smoothly', 'image_urls': ['https://example.com/first.jpg', 'https://example.com/last.jpg'], 'duration': 5, 'aspect_ratio': '16:9'}}, 'kling_text2video': {'summary': 'Kling 文生视频', 'value': {'model': 'kling-v1', 'prompt': 'A cat playing piano in the garden', 'duration': 5, 'size': '1280x720', 'metadata': {'negative_prompt': 'blurry, low quality', 'mode': 'std'}}}, 'kling_image2video': {'summary': 'Kling 图生视频', 'value': {'model': 'kling-v1', 'prompt': 'A cat playing piano in the garden', 'image': 'https://example.com/input.jpg', 'duration': 5, 'size': '1280x720', 'metadata': {'negative_prompt': 'blurry, low quality', 'mode': 'std'}}}, 'vidu_img2video': {'summary': 'Vidu 图生视频', 'value': {'model': 'viduq2', 'prompt': 'A stylish ad clip from a product still image', 'images': ['https://example.com/product.jpg'], 'duration': 5, 'size': '1080p'}}, 'vidu_first_tail': {'summary': 'Vidu 首尾帧模式', 'value': {'model': 'viduq2', 'prompt': 'A smooth shot from start frame to end frame', 'images': ['https://example.com/start.jpg', 'https://example.com/end.jpg'], 'duration': 5, 'size': '1080p'}}, 'vidu_reference': {'summary': 'Vidu 多参考图模式', 'value': {'model': 'viduq2', 'prompt': 'Maintain product style and character consistency', 'images': ['https://example.com/ref-1.jpg', 'https://example.com/ref-2.jpg', 'https://example.com/ref-3.jpg'], 'duration': 5, 'size': '1080p'}}, 'hailuo_text2video': {'summary': 'Hailuo 文生视频', 'value': {'model': 'hailuo-video', 'prompt': 'A cinematic travel shot over the coastline', 'duration': 6, 'size': '1280x720'}}}}}}
 ```
 
 ## 响应
