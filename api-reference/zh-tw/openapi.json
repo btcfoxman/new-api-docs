@@ -225,6 +225,131 @@
         ]
       }
     },
+    "/v1beta/models/{model}:generateContent": {
+      "post": {
+        "summary": "Gemini 图片(Nano Banana)",
+        "deprecated": false,
+        "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成/OpenAI Dall-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)）。",
+        "operationId": "geminiRelayV1Beta",
+        "tags": [
+          "图片生成/Gemini格式"
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "description": "模型名称",
+            "required": true,
+            "example": "gemini-3-pro-image-preview",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "contents": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string"
+                        },
+                        "parts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "text": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "generationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "responseModalities": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "imageConfig": {
+                        "type": "object",
+                        "properties": {
+                          "aspectRatio": {
+                            "type": "string"
+                          },
+                          "imageSize": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "responseModalities"
+                    ]
+                  }
+                },
+                "required": [
+                  "contents",
+                  "generationConfig"
+                ]
+              },
+              "example": {
+                "contents": [
+                  {
+                    "role": "user",
+                    "parts": [
+                      {
+                        "text": "draw a cat"
+                      }
+                    ]
+                  }
+                ],
+                "generationConfig": {
+                  "responseModalities": [
+                    "TEXT",
+                    "IMAGE"
+                  ],
+                  "imageConfig": {
+                    "aspectRatio": "16:9",
+                    "imageSize": "4K"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeminiResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/images/generations": {
       "post": {
         "summary": "生成图像（OpenAI Dall-E兼容）",
@@ -1244,131 +1369,6 @@
                 }
               }
             }
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
-    "/v1beta/models/{model}:generateContent": {
-      "post": {
-        "summary": "Gemini 图片(Nano Banana)",
-        "deprecated": false,
-        "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成/OpenAI Dall-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)）。",
-        "operationId": "geminiRelayV1Beta",
-        "tags": [
-          "图片生成/Gemini格式"
-        ],
-        "parameters": [
-          {
-            "name": "model",
-            "in": "path",
-            "description": "模型名称",
-            "required": true,
-            "example": "gemini-3-pro-image-preview",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "contents": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "role": {
-                          "type": "string"
-                        },
-                        "parts": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "text": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "generationConfig": {
-                    "type": "object",
-                    "properties": {
-                      "responseModalities": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "imageConfig": {
-                        "type": "object",
-                        "properties": {
-                          "aspectRatio": {
-                            "type": "string"
-                          },
-                          "imageSize": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    },
-                    "required": [
-                      "responseModalities"
-                    ]
-                  }
-                },
-                "required": [
-                  "contents",
-                  "generationConfig"
-                ]
-              },
-              "example": {
-                "contents": [
-                  {
-                    "role": "user",
-                    "parts": [
-                      {
-                        "text": "draw a cat"
-                      }
-                    ]
-                  }
-                ],
-                "generationConfig": {
-                  "responseModalities": [
-                    "TEXT",
-                    "IMAGE"
-                  ],
-                  "imageConfig": {
-                    "aspectRatio": "16:9",
-                    "imageSize": "4K"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "成功",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GeminiResponse"
-                }
-              }
-            },
-            "headers": {}
           }
         },
         "security": [
