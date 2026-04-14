@@ -1,0 +1,32 @@
+# 查询视频生成任务（Veo3 Google原生格式，暂不支持）
+
+- Source: `openapi.json`
+- Method: `GET`
+- Path: `/v1beta/{operation_name}`
+- Operation ID: `query_veo3_google_native_task`
+
+## 说明
+
+该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。
+
+该接口专题页仅用于说明 Veo 原生查询协议。
+
+当前 Veo 系列请改用 `/v1/videos` 统一接口进行创建与查询。
+
+下述 `operation_name` 查询结构仅作为预留协议说明保留，暂不支持实际调用。
+
+## 参数
+
+| 名称 | 位置 | 必填 | 描述 |
+|---|---|---|---|
+| operation_name | path | True | 创建接口返回的完整 operation name。调用时需对 `/` 做 URL 编码。 |
+
+## 请求体
+
+无
+
+## 响应
+
+| 状态码 | 说明 |
+|---|---|
+| 200 | 预留中的查询响应结构。当前仅作协议说明，不支持实际调用。 |

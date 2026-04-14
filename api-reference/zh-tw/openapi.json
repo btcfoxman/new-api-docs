@@ -2092,8 +2092,8 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "创建视频生成任务（Veo3 Google原生格式）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/zh-tw/视频生成sora兼容格式/创建视频)）。\n\nGoogle Veo 原生视频生成介面。请求格式为 application/json，创建成功后返回 `operation name`。\n\n推荐两种接入方式：\n- OpenAI Sora 兼容模式：`POST /v1/videos`\n- Google 原生模式：`POST /v1beta/models/{model}:predictLongRunning`\n\nGoogle 原生模式适用于直接传递 Veo 专有结构，例如 `instances[].referenceImages`、`parameters.aspectRatio`、`parameters.durationSeconds` 等。",
+        "summary": "创建视频生成任务（Veo3 Google原生格式，暂不支持）",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/zh-tw/视频生成sora兼容格式/创建视频)）。\n\n该介面专题页仅用于说明 Veo 原生格式与当前网关支持状态。\n\n当前 Veo 系列对外请使用 OpenAI Sora 兼容模式：`POST /v1/videos`。\n\nGoogle 原生模式路径预留为：`POST /v1beta/models/{model}:predictLongRunning`。当前网关尚未接通 Veo 原生任务分发链路，因此按原生 `instances/parameters` 请求体调用暂不支持。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
           "视频生成/Veo3格式"
@@ -2105,7 +2105,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "example": "veo-001",
+              "example": "veo-3.1-fast-generate-preview",
               "enum": [
                 "veo-3.0-generate-001",
                 "veo-3.0-fast-generate-001",
@@ -2139,7 +2139,7 @@
                         },
                         "referenceImages": {
                           "type": "array",
-                          "description": "可选。1~3 张参考图，使用 Gemini 原生 `inlineData` 或文件 URI 结构。",
+                          "description": "可选。1~3 张参考图，使用 Google 原生 `inlineData` 或文件 URI 结构。",
                           "items": {
                             "type": "object",
                             "properties": {
@@ -2229,7 +2229,7 @@
         },
         "responses": {
           "200": {
-            "description": "创建成功，返回 Google long-running operation 名称。",
+            "description": "预留中的成功响应结构。当前仅作协议说明，不支持实际调用。",
             "content": {
               "application/json": {
                 "schema": {
@@ -2258,8 +2258,8 @@
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "查询视频生成任务（Veo3 Google原生格式）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/zh-tw/视频生成sora兼容格式/创建视频)）。\n\nGoogle Veo 原生长任务查询介面。\n\n使用创建介面返回的完整 `name` 作为 `operation_name` 进行查询。由于 `operation_name` 通常包含 `/`，调用时需要进行 URL 编码。\n\n创建返回示例：`models/veo-3.1-generate-preview/operations/abc123`\n查询路径示例：`/v1beta/models%2Fveo-3.1-generate-preview%2Foperations%2Fabc123`\n\n`done=false` 表示任务仍在执行；`done=true` 且 `response.generatedVideos[0].video.uri` 非空时可获取结果视频地址。",
+        "summary": "查询视频生成任务（Veo3 Google原生格式，暂不支持）",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/zh-tw/视频生成sora兼容格式/创建视频)）。\n\n该介面专题页仅用于说明 Veo 原生查询协议。\n\n当前 Veo 系列请改用 `/v1/videos` 统一介面进行创建与查询。\n\n下述 `operation_name` 查询结构仅作为预留协议说明保留，暂不支持实际调用。",
         "operationId": "query_veo3_google_native_task",
         "tags": [
           "视频生成/Veo3格式"
@@ -2278,7 +2278,7 @@
         ],
         "responses": {
           "200": {
-            "description": "查询成功。",
+            "description": "预留中的查询响应结构。当前仅作协议说明，不支持实际调用。",
             "content": {
               "application/json": {
                 "schema": {
