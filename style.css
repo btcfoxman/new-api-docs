@@ -9,14 +9,14 @@ html {
 .request-example,
 .response-example,
 #api-playground-input {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .api-section pre,
 .request-example pre,
 .response-example pre,
 code {
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 .api-section h1,
