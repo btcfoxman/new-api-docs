@@ -1226,6 +1226,32 @@
                     },
                     "seconds": {
                       "type": "string"
+                    },
+                    "video_url": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "视频结果地址。不同模型可能返回 `video_url` 或 `url`，二者取其一。"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "视频结果地址。不同模型可能返回 `url` 或 `video_url`，二者取其一。"
+                    },
+                    "completed_at": {
+                      "type": "integer",
+                      "description": "完成时间（Unix 秒）。"
+                    },
+                    "expires_at": {
+                      "type": "integer",
+                      "description": "结果过期时间（Unix 秒）。"
+                    },
+                    "error": {
+                      "type": "object",
+                      "description": "失败时的错误信息。"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "description": "附加元数据。"
                     }
                   },
                   "required": [
@@ -1784,8 +1810,8 @@
         ],
         "parameters": [
           {
-            "name": "filter.task_ids",
-            "in": "query",
+            "name": "task_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
