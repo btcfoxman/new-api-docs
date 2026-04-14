@@ -572,7 +572,7 @@
       "post": {
         "summary": "创建视频",
         "deprecated": false,
-        "description": "OpenAI Sora 兼容格式的视频生成介面。支持文生视频与图/视频参考生成模式。\n\nrelay.json 仍是主参考；该扩展说明补充 /v1/videos 的统一请求骨架、动态模型模式和推荐验证模板，供 new-api-docs 与 test_docs.html 共同读取。\n\n支持模型：\nsora-2, sora-2-pro, doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128, veo-3.0-generate-001, veo-3.0-fast-generate-001, veo-3.1-generate-preview, veo-3.1-fast-generate-preview, jimeng_vgfm_t2v_l20, jimeng_v30_pro, jimeng_v30_base, kling-v1, kling-v1-6, kling-v2-master, viduq2, viduq1, vidu2.0, vidu1.5, hailuo-video, hailuo-02\n\n统一请求字段：\n- `model` (string, 必填): 模型名。不同模型会触发不同上游适配逻辑。\n- `prompt` (string, 必填): 统一提示词入口。大多数模型必填。\n- `mode` (string, 可选): 渠道/模式提示字段，如 i2v_first、reference_images 等。\n- `image` (string, 可选): 单图入口，部分兼容模式会映射到 images。\n- `images` (array[string], 可选): 统一多图入口。Vidu、Seedance、Jimeng 等会使用。\n- `size` (string, 可选): 统一尺寸入口，会映射为 resolution/aspect_ratio 等。\n- `duration` (integer, 可选): 统一时长入口，部分模型也接受 seconds。\n- `seconds` (string, 可选): Sora 兼容入口，运行时会回退到 duration。\n- `input_reference` (string|object|binary, 可选): Sora/Jimeng/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。\n- `metadata` (object, 可选): 动态扩展字段容器。大量模型特有字段从这里反序列化。\n\n常见模型/模式差异：\n- `OpenAI t2v (prompt/model)`: 支持模型 sora-2, sora-2-pro；Sora 文生视频基础模式。\n- `OpenAI i2v (input_reference)`: 支持模型 sora-2, sora-2-pro；Sora 参考图兼容模式。\n- `Alias兼容 (image_url/duration/aspect_ratio)`: 支持模型 sora-2, sora-2-pro；兼容别名字段写法。\n- `Seedance i2v_first`: 支持模型 doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128；单张首帧图生视频。\n- `Seedance i2v_first_last`: 支持模型 doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128；首尾帧双图模式。\n- `Seedance reference_images`: 支持模型 doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128；多张参考图模式。\n- `Seedance 全能参考模式(reference_material)`: 支持模型 doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128；图、视频、音频混合参考模式。\n- `Seedance 火山方舟 content 模式`: 支持模型 doubao-seedance-1-0-lite-t2v-250428, doubao-seedance-1-0-pro-250528, doubao-seedance-1-0-pro-fast-251015, doubao-seedance-1-5-pro-251215, doubao-seedance-2-0-260128, doubao-seedance-2-0-fast-260128；Ark content[] 多媒体数组模式。\n- `Veo 首尾帧模式`: 支持模型 veo-3.0-generate-001, veo-3.0-fast-generate-001, veo-3.1-generate-preview, veo-3.1-fast-generate-preview；Veo 首尾帧输入模式。\n- `Veo 1~3张参考图模式`: 支持模型 veo-3.0-generate-001, veo-3.0-fast-generate-001, veo-3.1-generate-preview, veo-3.1-fast-generate-preview；Veo 参考图数量 1~3。\n- `Jimeng 单图模式`: 支持模型 jimeng_vgfm_t2v_l20, jimeng_v30_pro, jimeng_v30_base；即梦单图输入，兼容 input_reference 或 image_urls。\n- `Jimeng 首尾帧模式`: 支持模型 jimeng_v30_pro, jimeng_v30_base；即梦双图输入模式。\n- `Kling 文生视频`: 支持模型 kling-v1, kling-v1-6, kling-v2-master；可灵文生模式。\n- `Kling 图生视频`: 支持模型 kling-v1, kling-v1-6, kling-v2-master；可灵单图模式。\n- `Vidu 图生视频`: 支持模型 viduq2, viduq1, vidu2.0, vidu1.5；Vidu 单图模式。\n- `Vidu 首尾帧模式`: 支持模型 viduq2, viduq1, vidu2.0, vidu1.5；Vidu 双图首尾帧模式。\n- `Vidu 多参考图模式`: 支持模型 viduq2, viduq1, vidu2.0, vidu1.5；Vidu 参考图数量大于 2 的模式。\n- `Hailuo 文生视频`: 支持模型 hailuo-video, hailuo-02；海螺文生模式，额外字段主要透過 metadata 展开。",
+        "description": "OpenAI Sora 兼容格式的视频生成介面。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容（下载）\n\n标准鉴权头：\n- `Authorization: Bearer <LITELLM_API_KEY>`\n- `Content-Type: application/json`（创建任务时）\n\n1. 调用 `POST /v1/videos` 创建任务，拿到 `id`。\n2. 轮询 `GET /v1/videos/{id}`，直到 `status=completed` 或 `failed`。\n3. `completed` 后优先使用返回中的 `video_url`；如需网关统一下载可调用 `GET /v1/videos/{id}/content`。\n\n## 3.1 核心参数\n\n- `model: string`（必填）\n- 说明：要调用的视频模型名称。\n- 示例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推荐）\n- 说明：视频生成主描述。使用 `content` 时也必须传，不能为空。\n- 示例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（可选）\n- 说明：目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。\n- 示例：`8`\n\n- `size: string`（可选）\n- 说明：输出分辨率，常用 `宽x高`。\n- 示例：`720x1280`、`1280x720`\n\n- `mode: string`（可选）\n- 说明：生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。\n- 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 通用兼容参数\n\n- `aspect_ratio` 或 `ratio`：宽高比。\n- `duration`：时长别名（与 `seconds` 二选一即可）。\n- `quality` 或 `resolution`：清晰度相关参数。\n- `fps`：帧率。\n- `channel`：可选路由标识（仅在你的网关账号开通特定路由时使用，如 `official/default`）。\n- `function_mode`：可选功能模式，用于触发特定行为（如 `omni_reference` 表示全能参考语义）。\n\n## 3.3 参考素材参数\n\n- `input_reference`：标准参考输入对象。\n- 说明：仅支持字符串 URL 写法，不支持对象写法。\n- 正确示例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 错误示例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：图片参考。\n- 说明：`image_url` 常用于单图；`image_urls` 用于多图或全能参考。\n\n- `end_image_url` / `last_image_url`：末帧参考。\n- 说明：通常与 `mode=i2v_first_last` 搭配，表示视频结束画面。\n\n- `video_urls`：视频参考列表。\n- 说明：常用于 `reference_material` 或 `content` 全能参考场景。\n\n- `audio_urls`：音频参考列表。\n- 说明：用于背景音乐/旁白风格参考（是否生效取决于模型能力）。\n\n- `reference_images`：多图参考。\n- 说明：常用于多帧/多图参考模式。\n\n说明：不同模型对素材字段要求不同，建议按下文“模式与最小入参”传参。\n\n## 3.4 content 高级模式（推荐给复杂参考场景）\n\n可直接传 `content` 数组：\n- `type=text`：文本指令。\n- `type=image_url|video_url|audio_url`：媒体输入。\n- 支持 `name` 用于在文本中透過 `@名称` 指代素材。\n\n必填约束：\n- 使用 `content` 时，`prompt` 仍必须传且不能为空。\n\n兼容写法：\n- `image_url/video_url/audio_url` 可为字符串，或对象 `{ \"url\": \"https://...\" }`。\n- `role` 可使用 `material`，也兼容 `reference_image/reference_video/reference_audio`。\n\n可同时携带：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n补充说明：\n- `generate_audio=true`：请求模型同时生成音频（仅支持该能力的模型会生效）。\n- `watermark=false`：请求关闭水印（实际是否生效取决于模型与渠道策略）。\n- `name`：素材别名，建议与 `text` 中 `@名称` 一致，便于模型准确关联素材。\n\n不同模型族对参数支持差异较大，建议按下表选参：\n\n| 模型族 | 常见模型名（示例） | 推荐最小入参 | 常用扩展参数 | 注意事项 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | 对 `mode` 最敏感；并非所有版本都支持 `reference_material`。 |\n| Sora 通用 | `sora-2` `sora-2-pro` 及 `*-stable/*-official` | `model + prompt` | `seconds/size`，建议补 `input_reference`（字符串 URL） | 多渠道 fallback 时，是否要求图片可能不同，建议准备参考图提高成功率。 |\n| Sora 时长预置 | `sora2-landscape-10s` `sora2-pro-portrait-25s` 等 | `model + prompt` | `image_url/input_reference` | 时长和方向通常由模型名决定，`seconds/ratio` 仅在模型允许时生效。 |\n| Veo | `veo3*` `veo3.1*` `veo_*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` 类模型通常需要参考图或参考素材；`t2v` 类通常可纯文本。 |\n| 聚合扩展模型 | `kling*` `happyhorse*` `grok-imagine-1.0-video*` 等 | `model + prompt` | `seconds/size/content` | 具体支持字段依赖模型与渠道实现，建议优先使用标准字段，不足再用 `content`。 |\n\n说明：\n1. 若你使用稳定别名模型（如 `*-stable`、`*-official`），底层可能自动切换渠道，请尽量传“跨渠道兼容参数”（`prompt + model + seconds/duration + size/ratio + 必要参考图`）。\n2. 复杂多素材场景（图+视频+音频+@名称）优先使用 `content`，兼容性最高。\n3. 若模型文档未明确支持某字段，请按“最小入参”先跑通，再逐步增加扩展参数。\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`（等同 `i2v_first`）\n- 最小入参：`model + prompt + image_url`（或 `input_reference` 字符串 URL）\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`（通常 1~4 张）\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 复杂场景更推荐用 `content + function_mode=omni_reference`\n- 说明：当传 `function_mode=omni_reference` 时，即使未显式传 `mode=reference_material`，也会按全能参考语义处理。",
         "operationId": "createVideo",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -587,7 +587,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "模型名。不同模型会触发不同上游适配逻辑。",
+                    "description": "要调用的视频模型名称。 示例：`sora-2`、`doubao-seedance-2-0-260128`",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -618,7 +618,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "统一提示词入口。大多数模型必填。"
+                    "description": "视频生成主描述。使用 `content` 时也必须传，不能为空。 示例：`第一人称视角果茶广告，节奏轻快`"
                   },
                   "image": {
                     "type": "string",
@@ -627,7 +627,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "统一时长入口，部分模型也接受 seconds。"
+                    "description": "时长别名（与 `seconds` 二选一即可）。"
                   },
                   "width": {
                     "type": "integer",
@@ -642,7 +642,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "Video frame rate"
+                    "description": "帧率。"
                   },
                   "seed": {
                     "type": "integer",
@@ -671,7 +671,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "渠道/模式提示字段，如 i2v_first、reference_images 等。"
+                    "description": "生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
                   },
                   "images": {
                     "type": "array",
@@ -682,15 +682,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "统一尺寸入口，会映射为 resolution/aspect_ratio 等。"
+                    "description": "输出分辨率，常用 `宽x高`。 示例：`720x1280`、`1280x720`"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Sora 兼容入口，运行时会回退到 duration。"
+                    "description": "目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。 示例：`8`"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Sora/Jimeng/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
+                    "description": "标准参考输入对象。"
                   }
                 },
                 "required": [
@@ -705,7 +705,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "模型名。不同模型会触发不同上游适配逻辑。",
+                    "description": "要调用的视频模型名称。 示例：`sora-2`、`doubao-seedance-2-0-260128`",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -736,7 +736,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "统一提示词入口。大多数模型必填。"
+                    "description": "视频生成主描述。使用 `content` 时也必须传，不能为空。 示例：`第一人称视角果茶广告，节奏轻快`"
                   },
                   "image": {
                     "type": "string",
@@ -745,7 +745,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "统一时长入口，部分模型也接受 seconds。"
+                    "description": "时长别名（与 `seconds` 二选一即可）。"
                   },
                   "width": {
                     "type": "integer",
@@ -760,7 +760,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "Video frame rate"
+                    "description": "帧率。"
                   },
                   "seed": {
                     "type": "integer",
@@ -789,7 +789,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "渠道/模式提示字段，如 i2v_first、reference_images 等。"
+                    "description": "生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
                   },
                   "images": {
                     "type": "array",
@@ -800,15 +800,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "统一尺寸入口，会映射为 resolution/aspect_ratio 等。"
+                    "description": "输出分辨率，常用 `宽x高`。 示例：`720x1280`、`1280x720`"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Sora 兼容入口，运行时会回退到 duration。"
+                    "description": "目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。 示例：`8`"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Sora/Jimeng/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
+                    "description": "标准参考输入对象。"
                   }
                 },
                 "required": [
@@ -1069,7 +1069,8 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "任务 ID（后续查询/下载使用）。"
                     },
                     "task_id": {
                       "type": "string",
@@ -1083,16 +1084,25 @@
                     },
                     "status": {
                       "type": "string",
-                      "description": "Should use VideoStatus constants: VideoStatusQueued, VideoStatusInProgress, VideoStatusCompleted, VideoStatusFailed"
+                      "description": "任务状态。",
+                      "enum": [
+                        "queued",
+                        "in_progress",
+                        "completed",
+                        "failed"
+                      ]
                     },
                     "progress": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "进度（0~100，近似值）。"
                     },
                     "created_at": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "创建时间（Unix 秒）。"
                     },
                     "completed_at": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "完成时间。"
                     },
                     "expires_at": {
                       "type": "integer"
@@ -1112,6 +1122,14 @@
                     "metadata": {
                       "type": "object",
                       "additionalProperties": true
+                    },
+                    "video_url": {
+                      "type": "string",
+                      "description": "可直接下载的视频地址。"
+                    },
+                    "url": {
+                      "type": "string",
+                      "description": "部分模型/渠道可能返回该字段作为结果地址。"
                     }
                   },
                   "required": [
