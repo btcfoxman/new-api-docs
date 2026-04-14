@@ -1335,7 +1335,7 @@
       "post": {
         "summary": "Kling 文生视频",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](#tag/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%2FSora%E5%85%BC%E5%AE%B9%E6%A0%BC%E5%BC%8F)）。\n\n使用 Kling 模型从文本描述生成视频。\n\n支持的模型：kling-v1, kling-v1-5 等",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n使用 Kling 模型从文本描述生成视频。\n\n支持的模型：kling-v1, kling-v1-5 等",
         "operationId": "createKlingText2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -1397,7 +1397,7 @@
       "get": {
         "summary": "获取 Kling 文生视频任务状态",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](#tag/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%2FSora%E5%85%BC%E5%AE%B9%E6%A0%BC%E5%BC%8F)）。\n\n查询 Kling 文生视频任务的状态和结果。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n查询 Kling 文生视频任务的状态和结果。",
         "operationId": "getKlingText2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -1453,7 +1453,7 @@
       "post": {
         "summary": "Kling 图生视频",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](#tag/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%2FSora%E5%85%BC%E5%AE%B9%E6%A0%BC%E5%BC%8F)）。\n\n使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。",
         "operationId": "createKlingImage2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -1515,7 +1515,7 @@
       "get": {
         "summary": "获取 Kling 图生视频任务状态",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](#tag/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%2FSora%E5%85%BC%E5%AE%B9%E6%A0%BC%E5%BC%8F)）。\n\n查询 Kling 图生视频任务的状态和结果。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n查询 Kling 图生视频任务的状态和结果。",
         "operationId": "getKlingImage2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -1571,7 +1571,7 @@
       "post": {
         "summary": "即梦视频生成",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](#tag/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%2FSora%E5%85%BC%E5%AE%B9%E6%A0%BC%E5%BC%8F)）。\n\n即梦官方 API 格式的视频生成接口。\n\n支持通过 Action 参数指定操作类型：\n- `CVSync2AsyncSubmitTask`: 提交视频生成任务\n- `CVSync2AsyncGetResult`: 获取任务结果\n\n需要在查询参数中指定 Action 和 Version。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n即梦官方 API 格式的视频生成接口。\n\n支持通过 Action 参数指定操作类型：\n- `CVSync2AsyncSubmitTask`: 提交视频生成任务\n- `CVSync2AsyncGetResult`: 获取任务结果\n\n需要在查询参数中指定 Action 和 Version。",
         "operationId": "createJimengVideo",
         "tags": [
           "视频生成/即梦格式"
@@ -1685,7 +1685,7 @@
     "/v1/video/generations": {
       "post": {
         "summary": "创建视频生成任务（Veo3格式）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](#tag/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%2FSora%E5%85%BC%E5%AE%B9%E6%A0%BC%E5%BC%8F)）。\n\nGoogle Gemini Veo3 视频生成接口。请求格式为 application/json。\n\n参考官方文档：https://ai.google.dev/gemini-api/docs/video",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nGoogle Gemini Veo3 视频生成接口。请求格式为 application/json。\n\n参考官方文档：https://ai.google.dev/gemini-api/docs/video",
         "operationId": "create__veo3__task",
         "tags": [
           "视频生成/Veo3格式"
@@ -1777,7 +1777,7 @@
     "/v1/video/generations/{task_id}": {
       "get": {
         "summary": "查询视频生成任务（Veo3格式）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](#tag/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%2FSora%E5%85%BC%E5%AE%B9%E6%A0%BC%E5%BC%8F)）。\n\nGoogle Gemini Veo3 视频生成接口。请求格式为 application/json。\n\n参考官方文档：https://ai.google.dev/gemini-api/docs/video",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nGoogle Gemini Veo3 视频生成接口。请求格式为 application/json。\n\n参考官方文档：https://ai.google.dev/gemini-api/docs/video",
         "operationId": "query__veo3__task",
         "tags": [
           "视频生成/Veo3格式"
@@ -1846,7 +1846,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "创建视频生成任务（Seedance火山方舟）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](#tag/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%2FSora%E5%85%BC%E5%AE%B9%E6%A0%BC%E5%BC%8F)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\n对外建议消费简洁错误结构：\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```\n\n规则：\n- 仅保留可执行、简洁错误信息。\n- 不暴露 traceback、内部类名、实现细节。\n- 保留 `code` 供调用方程序分支判断。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\n对外建议消费简洁错误结构：\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```\n\n规则：\n- 仅保留可执行、简洁错误信息。\n- 不暴露 traceback、内部类名、实现细节。\n- 保留 `code` 供调用方程序分支判断。",
         "operationId": "create__seedance__task",
         "tags": [
           "视频生成/Seedance火山方舟"
@@ -2130,7 +2130,7 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "查询视频生成任务（Seedance火山方舟）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](#tag/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%2FSora%E5%85%BC%E5%AE%B9%E6%A0%BC%E5%BC%8F)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\n对外建议消费简洁错误结构：\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```\n\n规则：\n- 仅保留可执行、简洁错误信息。\n- 不暴露 traceback、内部类名、实现细节。\n- 保留 `code` 供调用方程序分支判断。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\n对外建议消费简洁错误结构：\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```\n\n规则：\n- 仅保留可执行、简洁错误信息。\n- 不暴露 traceback、内部类名、实现细节。\n- 保留 `code` 供调用方程序分支判断。",
         "operationId": "query__seedance__task",
         "tags": [
           "视频生成/Seedance火山方舟"
