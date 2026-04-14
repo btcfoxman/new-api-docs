@@ -1710,7 +1710,7 @@
     },
     "/api/v3/contents/generations/tasks": {
       "post": {
-        "summary": "创建视频生成任务（Seedance火山方舟）",
+        "summary": "创建视频（Seedance）",
         "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/fr/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
@@ -1994,7 +1994,7 @@
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
-        "summary": "查询视频生成任务（Seedance火山方舟）",
+        "summary": "查询任务（Seedance）",
         "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/fr/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
@@ -2092,7 +2092,7 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "创建视频生成任务（Veo3 Google原生格式，暂不支持）",
+        "summary": "创建视频（Veo3格式）",
         "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/fr/视频生成sora兼容格式/创建视频)）。\n\n该接口专题页仅用于说明 Veo 原生格式与当前网关支持状态。\n\n当前 Veo 系列对外请使用 OpenAI Sora 兼容模式：`POST /v1/videos`。\n\nGoogle 原生模式路径预留为：`POST /v1beta/models/{model}:predictLongRunning`。当前网关尚未接通 Veo 原生任务分发链路，因此按原生 `instances/parameters` 请求体调用暂不支持。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
@@ -2258,7 +2258,7 @@
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "查询视频生成任务（Veo3 Google原生格式，暂不支持）",
+        "summary": "查询任务（Veo3格式）",
         "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成/Sora兼容格式](/api-reference/fr/视频生成sora兼容格式/创建视频)）。\n\n该接口专题页仅用于说明 Veo 原生查询协议。\n\n当前 Veo 系列请改用 `/v1/videos` 统一接口进行创建与查询。\n\n下述 `operation_name` 查询结构仅作为预留协议说明保留，暂不支持实际调用。",
         "operationId": "query_veo3_google_native_task",
         "tags": [
