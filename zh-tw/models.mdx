@@ -1,12 +1,170 @@
 ---
-title: "模型列表"
-description: "公開模型 ID 範例"
+title: "模型與能力矩陣"
+description: "當前頁面展示的是 `new-api` 目前公開介面中已出現的模型，而非靜態範例清單。"
 ---
 
-- `gpt-4o`
-- `claude-sonnet-4-20250514`
-- `qwen-image`
-- `sora`
-- `kling-v1`
+## 模型分組
 
-價格資訊請見：[定價頁](https://aiid.edu.kg/pricing)。
+### Nano Banana
+
+主要用於影像生成與編輯，也支援 Gemini 原生格式接入。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `nano-banana` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+
+
+### Sora
+
+優先走 https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D OpenAI 影片相容格式，適合統一影片接入。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `sora-2` | `/v1/videos` |
+
+| `sora-2-pro` | `/v1/videos` |
+
+
+
+### Veo
+
+同時存在 https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D 相容格式和 `/v1beta/...` 原生格式。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `veo3` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-4k` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-components` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro-4k` | `/v1/videos` / `/v1beta/...` |
+
+
+
+### Grok
+
+目前公開的是影片生成模型，建議優先按統一影片介面接入。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `grok-video-3` | `/v1/videos` |
+
+
+
+### Seedance
+
+支援 https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D 原生格式，也支援透過 `/v1/videos` 相容接入。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `doubao-seedance-1-0-lite-i2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-lite-t2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-250528` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-fast-251015` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-5-pro-251215` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-fast-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+
+
+### Kling
+
+同時公開模型專用介面與統一影片入口。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `kling-video` | `/kling/v1/...` / `/v1/videos` |
+
+| `kling-*` | `/kling/v1/...` / `/v1/videos` |
+
+
+
+### Hailuo
+
+使用統一影片能力接入，適合文字生成影片場景。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `hailuo*` | `/v1/videos` |
+
+
+
+### Vidu
+
+以統一影片能力說明為主，適合單圖、首尾幀和多參考圖場景。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `vidu*` | `/v1/videos` |
+
+
+
+如需計費資訊，請造訪：[計費頁面](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)。

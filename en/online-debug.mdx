@@ -1,0 +1,22 @@
+---
+title: "Online Debugging"
+description: "You can initiate requests directly in the API Playground on the documentation page without writing any code first."
+---
+
+## Usage Steps
+
+1. Open the target API page and click `试一试`.
+2. Fill in `api_key` on the page. This value is only stored locally in the current browser and will not be synchronized to the server or shared among team members.
+3. Fill in the path parameters, query parameters, or request body according to the API requirements.
+4. Click `发送` to view the returned results and error messages.
+
+## Debugging Suggestions
+
+- First, confirm whether the Base URL, API path, and model name are correct.
+- For long-running task APIs, prioritize recording the returned `task_id` or `operation_name` before calling the query API.
+- If the API supports multiple parameter modes, prioritize using the documentation example request body to verify the minimum viable parameters.
+
+## Using with AI-Generated Code
+
+It is recommended to first complete a minimum viable request verification on the documentation page, then click "Copy Page" and send the entire page content to the AI to generate the formal invocation code.
+This way, the AI receives API page content that has been manually confirmed by you, making the path, authentication method, and parameter modes less prone to errors.

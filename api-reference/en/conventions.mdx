@@ -1,0 +1,82 @@
+---
+title: "Calling Conventions"
+description: "Instructions for authentication, error structures, common enums, and asynchronous task queries."
+---
+
+## Authentication
+
+All public APIs use Bearer Token by default:
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+Base URL:
+
+```text
+https://api.aiid.edu.kg/v1
+```
+
+While paths may vary for some native format or model-specific APIs, they still use the same API Key authentication method.
+
+## Error Structure
+
+When troubleshooting failed requests, focus on:
+
+- HTTP Status Code
+- `error.code`
+- `error.message`
+
+Typical Structure:
+
+```json
+{
+  "error": {
+    "code": "invalid_request_error",
+    "message": "具体错误原因"
+  }
+}
+```
+
+## Common Status Codes
+
+| HTTP | Meaning | Recommendation |
+|---|---|---|
+| 400 | Bad Request | Check required fields, model names, and path parameters |
+| 401 | Authentication Failed | Check if the API Key is valid |
+| 404 | Not Found | Check query paths and Task IDs |
+| 429 | Rate Limit Exceeded | Reduce frequency or retry |
+| 500 | Internal Server Error | Record the request and retry or contact support |
+
+## Common Enums
+
+Common role enums:
+
+- `system`
+- `user`
+- `assistant`
+
+Common long-running task statuses:
+
+- `queued`
+- `running`
+- `succeeded`
+- `failed`
+- `in_progress`
+- `completed`
+
+Status fields returned by different video APIs may vary slightly, but the semantics revolve around "Queued / Running / Succeeded / Failed".
+
+## Asynchronous Task Querying
+
+Current public documentation primarily focuses on "polling task results"; common methods include:
+
+- `GET /v1/videos/{task_id}`
+- `GET /api/v3/contents/generations/tasks/{task_id}`
+- `GET /v1beta/{operation_name}`
+
+Integration Recommendations:
+
+- Implement retries and backoff for task queries
+- Persist `task_id` or `operation_name`
+- Use result queries as a fallback mechanism for asynchronous task polling.

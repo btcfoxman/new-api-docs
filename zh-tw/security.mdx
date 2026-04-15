@@ -1,6 +1,31 @@
 ---
-title: "驗證與安全"
-description: "API Key 使用規範"
+title: "鑑權與安全"
+description: "保護您的 API 權杖與資料安全"
 ---
 
-所有請求都應帶上：`Authorization: Bearer YOUR_API_KEY`。
+## 權杖驗證 (Authentication)
+
+出海營 API 使用標準的 Bearer Token 機制進行身分驗證。
+
+### Header 格式
+```text
+Authorization: Bearer YOUR_API_KEY
+```
+
+## 權杖安全規範
+
+### 1. 最小權限原則
+如果您將 API Key 分發給外部合作方，請在主控台為該 Key 限制特定的：
+- **模型範圍**：僅允許呼叫特定模型。
+- **過期時間**：設定短期失效以降低風險。
+- **IP 白名單**：限制呼叫端的 IP 地址。
+
+### 2. 嚴禁用戶端寫死 (Hard-coding)
+切勿在前端 JavaScript 或行動端 App 程式碼中直接寫入 `sk-` 權杖。所有 API 呼叫應由後端伺服器中轉，或者透過我們的安全分發系統生成短期權杖。
+
+### 3. 資料隱私
+我們不會儲存您的對話內容。API 僅作為高效能中轉節點，對話內容會在記憶體中流轉並直接透傳給底層服務商。
+
+## 監控與稽核
+
+您可以在主控台的「日誌」頁面即時監控每一筆 API 呼叫的詳情。如有安全疑問，請傳送郵件至 support@aiid.edu.kg。

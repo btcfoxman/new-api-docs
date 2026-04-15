@@ -1,10 +1,170 @@
 ---
-title: "Models"
-description: "Public model ID examples"
+title: "Models and Capabilities Matrix"
+description: "This page displays the models currently available in the `new-api` public interface, rather than a static list of examples."
 ---
 
-- `gpt-4o`
-- `claude-sonnet-4-20250514`
-- `qwen-image`
-- `sora`
-- `kling-v1`
+## Model Grouping
+
+### Nano Banana
+
+Mainly used for image generation and editing; also supports Gemini native format access.
+
+
+
+| Model | Primary Access Method |
+
+|---|---|
+
+| `nano-banana` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+
+
+### Sora
+
+Prioritize the https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D OpenAI video compatibility format, suitable for unified video access.
+
+
+
+| Model | Primary Access Method |
+
+|---|---|
+
+| `sora-2` | `/v1/videos` |
+
+| `sora-2-pro` | `/v1/videos` |
+
+
+
+### Veo
+
+Both `/v1/videos` compatible format and `/v1beta/...` native format are available.
+
+
+
+| Model | Primary Access Method |
+
+|---|---|
+
+| `veo3` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-4k` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-components` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro-4k` | `/v1/videos` / `/v1beta/...` |
+
+
+
+### Grok
+
+The currently available models are video generation models. It is recommended to prioritize access via the unified video interface.
+
+
+
+| Model | Primary Access Method |
+
+|---|---|
+
+| `grok-video-3` | `/v1/videos` |
+
+
+
+### Seedance
+
+Supports `/api/v3/contents/generations/tasks` native format and compatible access via `/v1/videos`.
+
+
+
+| Model | Primary Access Method |
+
+|---|---|
+
+| `doubao-seedance-1-0-lite-i2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-lite-t2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-250528` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-fast-251015` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-5-pro-251215` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-fast-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+
+
+### Kling
+
+Both the model-specific interface and the unified video entry point are available.
+
+
+
+| Model | Primary Access Method |
+
+|---|---|
+
+| `kling-video` | `/kling/v1/...` / `/v1/videos` |
+
+| `kling-*` | `/kling/v1/...` / `/v1/videos` |
+
+
+
+### Hailuo
+
+Access using unified video capabilities, suitable for text-to-video scenarios.
+
+
+
+| Model | Primary Access Method |
+
+|---|---|
+
+| `hailuo*` | `/v1/videos` |
+
+
+
+### Vidu
+
+Focuses on unified video capability specifications, suitable for single image, start/end frames, and multi-reference image scenarios.
+
+
+
+| Model | Primary Access Method |
+
+|---|---|
+
+| `vidu*` | `/v1/videos` |
+
+
+
+For billing information, please visit: [Billing Page](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D).

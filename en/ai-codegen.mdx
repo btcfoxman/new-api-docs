@@ -1,0 +1,31 @@
+---
+title: "AI-Generated Integration Code"
+description: "No need to manually parse API endpoints, request bodies, or response structures. Simply use \"Copy Page\" on the documentation page and send the entire content to the AI."
+---
+
+## Recommended Workflow
+
+1. Open the target API page and click "Copy Page" in the top right corner or the context menu.
+2. Send the copied page content directly to GPT, Claude, or other code generation models.
+3. Simply specify your target language, business parameters, and required response handling; there is no need to manually organize API paths, request bodies, or response structures.
+4. After integrating the generated code into your local project, return to the documentation page to verify the Base URL, authentication method, and required fields.
+
+## Prompt Suggestions
+
+```text
+以下内容是我从 API 文档页直接复制的完整页面内容。
+请基于这些内容生成 Python/Node.js/Go 调用代码。
+要求：
+1. 使用 Bearer Token 鉴权
+2. Base URL 使用 https://api.aiid.edu.kg/v1
+3. 保留完整请求体和错误处理
+4. 用注释标明需要替换的 model、API Key 和业务参数
+5. 若该接口是异步任务接口，补上查询任务结果的示例
+```
+
+## Pre-delivery Checklist
+
+- Whether the correct Base URL has been provided
+- Is the correct API path being used?
+- Is `Authorization: Bearer YOUR_API_KEY` included?
+- Are all required fields passed according to the documentation?

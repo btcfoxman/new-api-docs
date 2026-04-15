@@ -1,8 +1,68 @@
 ---
 title: "Quickstart"
-description: "Integrate in 5 minutes"
+description: "Get your API Key, replace the Base URL, and make your first request."
 ---
 
-1. Create API key in [Console](https://aiid.edu.kg/console).
-2. Set Base URL: `https://api.aiid.edu.kg/v1`.
-3. Send your first request.
+## Step 1: Obtain the API Key
+
+1. Log in to the [Chuhaiying API Console](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)
+2. Go to the Tokens page to create a API Key
+3. Subsequently use it via https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D
+
+## Step 2: Configure Base URL
+
+```bash
+API_BASE_URL="https://api.aiid.edu.kg/v1"
+```
+
+If the existing client default is:
+
+- `https://api.openai.com`
+- `https://api.openai.com/v1`
+
+Replace them respectively with:
+
+- `https://api.aiid.edu.kg`
+- `https://api.aiid.edu.kg/v1`
+
+## Step 3: Initiate your first request
+
+### Python
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.aiid.edu.kg/v1",
+)
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "你好，请给我一个快速接入建议"}],
+)
+
+print(response.choices[0].message.content)
+```
+
+### cURL
+
+```bash
+curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer YOUR_API_KEY"   -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "Hello world!"}]
+  }'
+```
+
+## Integration Recommendations
+
+- For new projects, prioritize starting with OpenAI compatible interfaces
+- For image editing, pay close attention to https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D and file field requirements
+- For video task interfaces, save https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D or `operation_name` before querying
+- If debugging fails, prioritize checking the HTTP status code, https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D, and `error.message`
+
+## Next Steps
+
+- Online Debugging: See https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D
+- AI-Generated Invocation Code: See https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D
+- Model Groups and Capabilities: See https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D

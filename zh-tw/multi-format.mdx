@@ -1,6 +1,50 @@
 ---
-title: "多協議適配"
-description: "OpenAI/Claude/Gemini 相容說明"
+title: "多協定與多格式接入說明"
+description: "目前專案並非僅支援單一協定。為降低接入成本，公開文件優先提供統一格式；同時保留少量模型原生格式或專用格式。"
 ---
 
-建議在應用層維護統一請求結構，在網關層完成協議映射。
+## 1. OpenAI 相容格式
+
+適合大多數新串接場景，優先考慮：
+
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
+- `POST /v1/images/generations`
+- `POST /v1/images/edits`
+- `POST /v1/videos`
+- `GET /v1/videos/{task_id}`
+
+特點：
+- SDK 生態成熟
+- 欄位風格統一
+- 適合多模型切換
+
+## 2. 模型原生格式
+
+當模型本身需要專用欄位、專用任務結構或原生查詢協定時，公開原生介面：
+
+- Seedance：`/api/v3/contents/generations/tasks`
+- Veo3：`/v1beta/models/{model}:predictLongRunning` 和 `/v1beta/{operation_name}`
+- Gemini 圖片生成：`/v1beta/models/{model}:generateContent`
+
+適合：
+- 模型特有欄位較多
+- 需要原生請求體結構
+- 需要保持與上游官方格式接近
+
+## 3. 模型專用影片介面
+
+目前還公開少量模型專用介面，例如：
+
+- `POST /kling/v1/videos/text2video`
+- `POST /kling/v1/videos/image2video`
+適合：
+- 已經基於對應模型專用協定整合
+- 需要使用該模型專用參數模式
+
+## 4. 選擇建議
+
+1. 新專案優先使用 OpenAI 相容格式。
+2. 如果相容格式無法覆蓋模型特有欄位，再切換到原生格式。
+3. 長任務介面應明確區分「建立介面」與「查詢介面」，儲存 `task_id` 或 `operation_name`。
+4. 同一模型存在多種呼叫格式時，以對應介面頁面的支援欄位為準，不要混用請求體。

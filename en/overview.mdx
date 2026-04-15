@@ -1,6 +1,72 @@
 ---
-title: "Overview"
-description: "Unified AI API gateway"
+title: "Service Overview"
+description: "The current documentation is based on the actual public interfaces of the `new-api`. It also includes a more accessible product-level overview, allowing you to understand the scope of capabilities before diving into specific API pages."
 ---
 
-Overseas API provides unified access to chat, image, video, and multimodal endpoints.
+<CardGroup cols={2}>
+  <Card title="Unified Access" icon="code">
+    Prioritizes OpenAI compatible formats; applications already based on OpenAI SDK or HTTP typically only need to replace the Base URL and API Keys.
+  </Card>
+  <Card title="Multiple Video Protocols" icon="film">
+    Simultaneously exposes `/v1/videos`, Seedance native format, Veo3 native format, and certain model-specific video interfaces.
+  </Card>
+  <Card title="Imaging Capabilities" icon="image">
+    Provides OpenAI image generation and editing interfaces, while retaining model-specific formats such as Gemini image generation.
+  </Card>
+  <Card title="Long-Running Task Query" icon="clock">
+    Video and certain generation tasks use a unified Task ID or operation name for queries, suitable for asynchronous integration and status polling.
+  </Card>
+</CardGroup>
+
+## Overview of Currently Public Capabilities
+
+### Text and Response
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
+
+### Image
+- `POST /v1/images/generations`
+- `POST /v1/images/edits`
+- `POST /v1beta/models/{model}:generateContent`
+
+### Video
+- `POST /v1/videos`
+- `GET /v1/videos/{task_id}`
+- `POST /api/v3/contents/generations/tasks`
+- `GET /api/v3/contents/generations/tasks/{task_id}`
+- `POST /v1beta/models/{model}:predictLongRunning`
+- `GET /v1beta/{operation_name}`
+- Model-specific video interfaces such as Kling
+
+## Currently Public Model Families
+### Nano Banana
+- 7 public models in total
+- `nano-banana`、`nano-banana-2`、`nano-banana-2-2k`、`nano-banana-2-4k`、`nano-banana-pro`、`nano-banana-pro-2k`、`nano-banana-pro-4k`
+
+### Sora
+- 2 public models in total
+- `sora-2`、`sora-2-pro`
+
+### Veo
+- 12 public models in total
+- `veo3`、`veo3-fast`、`veo3-fast-frames`、`veo3-frames`、`veo3-pro`、`veo3-pro-frames`、`veo3.1`、`veo3.1-4k`、`veo3.1-components`、`veo3.1-fast`、`veo3.1-pro`、`veo3.1-pro-4k`
+
+### Grok
+- 1 public model in total
+- `grok-video-3`
+
+### Seedance
+- 7 public models in total
+- `doubao-seedance-1-0-lite-i2v-250428`、`doubao-seedance-1-0-lite-t2v-250428`、`doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-pro-fast-251015`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128`
+
+### Kling
+- 2 public models in total
+- `kling-video`、`kling-*`
+
+### Hailuo
+- 1 public model in total
+- `hailuo*`
+
+### Vidu
+- 1 public model in total
+- `vidu*`
