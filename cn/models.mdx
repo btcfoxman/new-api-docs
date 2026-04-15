@@ -1,15 +1,35 @@
 ---
 title: "模型与能力矩阵"
-description: "按当前公开模型分组展示主要接入方式"
+description: "当前页面展示的是 `new-api` 当前公开接口中已出现的模型，而不是静态示例清单。"
 ---
 
-# 模型与能力矩阵
-
-当前页面展示的是 `new-api` 当前公开接口中已出现的模型，而不是静态示例清单。
-
-
-
 ## 模型分组
+
+### Nano Banana
+
+主要用于图像生成与编辑，也支持 Gemini 原生格式接入。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `nano-banana` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+
 
 ### Sora
 
@@ -37,13 +57,43 @@ description: "按当前公开模型分组展示主要接入方式"
 
 |---|---|
 
-| `veo-3.0-fast-generate-001` | `/v1/videos` / `/v1beta/...` |
+| `veo3` | `/v1/videos` / `/v1beta/...` |
 
-| `veo-3.0-generate-001` | `/v1/videos` / `/v1beta/...` |
+| `veo3-fast` | `/v1/videos` / `/v1beta/...` |
 
-| `veo-3.1-fast-generate-preview` | `/v1/videos` / `/v1beta/...` |
+| `veo3-fast-frames` | `/v1/videos` / `/v1beta/...` |
 
-| `veo-3.1-generate-preview` | `/v1/videos` / `/v1beta/...` |
+| `veo3-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-4k` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-components` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro-4k` | `/v1/videos` / `/v1beta/...` |
+
+
+
+### Grok
+
+当前公开的是视频生成模型，建议优先按统一视频接口接入。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `grok-video-3` | `/v1/videos` |
 
 
 
@@ -56,6 +106,8 @@ description: "按当前公开模型分组展示主要接入方式"
 | 模型 | 主要接入方式 |
 
 |---|---|
+
+| `doubao-seedance-1-0-lite-i2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
 | `doubao-seedance-1-0-lite-t2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
@@ -81,17 +133,15 @@ description: "按当前公开模型分组展示主要接入方式"
 
 |---|---|
 
-| `kling-v1` | `/kling/v1/...` / `/v1/videos` |
+| `kling-video` | `/kling/v1/...` / `/v1/videos` |
 
-| `kling-v1-6` | `/kling/v1/...` / `/v1/videos` |
-
-| `kling-v2-master` | `/kling/v1/...` / `/v1/videos` |
+| `kling-*` | `/kling/v1/...` / `/v1/videos` |
 
 
 
-### 即梦
+### Hailuo
 
-公开模型专用接口，输入模式受图片数量和首尾帧场景影响较大。
+使用统一视频能力接入，适合文本生成视频场景。
 
 
 
@@ -99,11 +149,7 @@ description: "按当前公开模型分组展示主要接入方式"
 
 |---|---|
 
-| `jimeng_v30_base` | `/jimeng/...` |
-
-| `jimeng_v30_pro` | `/jimeng/...` |
-
-| `jimeng_vgfm_t2v_l20` | `/jimeng/...` |
+| `hailuo*` | `/v1/videos` |
 
 
 
@@ -117,29 +163,7 @@ description: "按当前公开模型分组展示主要接入方式"
 
 |---|---|
 
-| `vidu1.5` | `/v1/videos` |
-
-| `vidu2.0` | `/v1/videos` |
-
-| `viduq1` | `/v1/videos` |
-
-| `viduq2` | `/v1/videos` |
-
-
-
-### 海螺
-
-使用统一视频能力接入，适合文本生成视频场景。
-
-
-
-| 模型 | 主要接入方式 |
-
-|---|---|
-
-| `hailuo-02` | `/v1/videos` |
-
-| `hailuo-video` | `/v1/videos` |
+| `vidu*` | `/v1/videos` |
 
 
 

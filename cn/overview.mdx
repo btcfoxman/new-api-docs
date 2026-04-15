@@ -1,10 +1,7 @@
 ---
 title: "服务概览"
-description: "当前公开能力、模型族与主要接口概览"
+description: "当前中文文档以 `new-api` 实际公开接口为准，同时保留更易理解的产品化概览，便于先理解能力范围，再进入具体接口页。"
 ---
-
-# 服务概览
-当前中文文档以 `new-api` 实际公开接口为准，同时保留更易理解的产品化概览，便于先理解能力范围，再进入具体接口页。
 
 <CardGroup cols={2}>
   <Card title="统一接入" icon="code">
@@ -39,33 +36,37 @@ description: "当前公开能力、模型族与主要接口概览"
 - `GET /api/v3/contents/generations/tasks/{task_id}`
 - `POST /v1beta/models/{model}:predictLongRunning`
 - `GET /v1beta/{operation_name}`
-- Kling、即梦等模型专用视频接口
+- Kling 等模型专用视频接口
 
 ## 当前公开模型族
+### Nano Banana
+- 共 7 个公开模型
+- `nano-banana`、`nano-banana-2`、`nano-banana-2-2k`、`nano-banana-2-4k`、`nano-banana-pro`、`nano-banana-pro-2k`、`nano-banana-pro-4k`
+
 ### Sora
 - 共 2 个公开模型
 - `sora-2`、`sora-2-pro`
 
 ### Veo
-- 共 4 个公开模型
-- `veo-3.0-fast-generate-001`、`veo-3.0-generate-001`、`veo-3.1-fast-generate-preview`、`veo-3.1-generate-preview`
+- 共 12 个公开模型
+- `veo3`、`veo3-fast`、`veo3-fast-frames`、`veo3-frames`、`veo3-pro`、`veo3-pro-frames`、`veo3.1`、`veo3.1-4k`、`veo3.1-components`、`veo3.1-fast`、`veo3.1-pro`、`veo3.1-pro-4k`
+
+### Grok
+- 共 1 个公开模型
+- `grok-video-3`
 
 ### Seedance
-- 共 6 个公开模型
-- `doubao-seedance-1-0-lite-t2v-250428`、`doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-pro-fast-251015`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128`
+- 共 7 个公开模型
+- `doubao-seedance-1-0-lite-i2v-250428`、`doubao-seedance-1-0-lite-t2v-250428`、`doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-pro-fast-251015`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128`
 
 ### Kling
-- 共 3 个公开模型
-- `kling-v1`、`kling-v1-6`、`kling-v2-master`
+- 共 2 个公开模型
+- `kling-video`、`kling-*`
 
-### 即梦
-- 共 3 个公开模型
-- `jimeng_v30_base`、`jimeng_v30_pro`、`jimeng_vgfm_t2v_l20`
+### Hailuo
+- 共 1 个公开模型
+- `hailuo*`
 
 ### Vidu
-- 共 4 个公开模型
-- `vidu1.5`、`vidu2.0`、`viduq1`、`viduq2`
-
-### 海螺
-- 共 2 个公开模型
-- `hailuo-02`、`hailuo-video`
+- 共 1 个公开模型
+- `vidu*`
