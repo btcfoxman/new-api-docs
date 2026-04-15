@@ -1,43 +1,71 @@
 ---
 title: "服务概览"
-description: "出海营 API 一站式 AI 模型接入平台"
+description: "当前公开能力、模型族与主要接口概览"
 ---
 
-# 欢迎使用 出海营 API
-
-出海营 API (Overseas API) 为开发者提供了统一、稳定且高性能的 AI 模型接入能力。通过兼容 OpenAI 的标准协议，您可以极速集成全球领先的大型语言模型 (LLM)、绘图模型及多模态模型。
+# 服务概览
+当前中文文档以 `new-api` 实际公开接口为准，同时保留更易理解的产品化概览，便于先理解能力范围，再进入具体接口页。
 
 <CardGroup cols={2}>
-  <Card title="模型矩阵" icon="cubes">
-    聚合 GPT-4o, Claude 3.5, Gemini 1.5, DeepSeek, Qwen 等 100+ 模型。
+  <Card title="统一接入" icon="code">
+    优先提供 OpenAI 兼容格式，已有基于 OpenAI SDK 或 HTTP 的应用通常只需要替换 Base URL 和 API Key。
   </Card>
-  <Card title="原生兼容" icon="code">
-    完全遵循 OpenAI API 规范，现有应用仅需修改 Base URL 即可零成本迁移。
+  <Card title="多种视频协议" icon="film">
+    同时公开 `/v1/videos`、Seedance 原生格式、Veo3 原生格式，以及部分模型专用视频接口。
   </Card>
-  <Card title="全球中转" icon="bolt">
-    分布式集群部署，优化跨国网络访问，提供极低延迟的 SSE 流式响应。
+  <Card title="图像能力" icon="image">
+    提供 OpenAI 图片生成与编辑接口，并保留 Gemini 图片生成等模型专用格式。
   </Card>
-  <Card title="生态适配" icon="puzzle-piece">
-    完美适配 Cursor, LobeChat, Cline, Dify 等主流开发者工具。
+  <Card title="长任务查询" icon="clock">
+    视频与部分生成任务统一使用任务 ID 或 operation name 查询，适合异步集成与回查。
   </Card>
 </CardGroup>
 
-## 核心能力分布
+## 当前公开能力总览
 
-### 1. 对话与推理 (Chat & Reasoning)
-- **通用模型**：GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro。
-- **推理模型**：OpenAI o1, DeepSeek V3/R1。
-- **国产领先**：通义千问 (Qwen), 腾讯混元 (Hunyuan), 豆包 (Doubao)。
+### 文本与响应
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
 
-### 2. 多模态与创意 (Multimodal)
-- **图像生成**：Midjourney, DALL·E 3, Flux Pro, Ideogram 2.0。
-- **视频生成**：Luma Dream Machine, Sora, Kling, Kling 视频。
-- **音频处理**：Suno v3.5 (音乐), Whisper (转录), OpenAI TTS (语音)。
+### 图像
+- `POST /v1/images/generations`
+- `POST /v1/images/edits`
+- `POST /v1beta/models/{model}:generateContent`
 
-## 接入规范
+### 视频
+- `POST /v1/videos`
+- `GET /v1/videos/{task_id}`
+- `POST /api/v3/contents/generations/tasks`
+- `GET /api/v3/contents/generations/tasks/{task_id}`
+- `POST /v1beta/models/{model}:predictLongRunning`
+- `GET /v1beta/{operation_name}`
+- Kling、即梦等模型专用视频接口
 
-- **API Base URL**: `https://api.aiid.edu.kg/v1`
-- **协议标准**: OpenAI RESTful API / SSE
-- **鉴权方式**: Bearer Token (sk-...)
+## 当前公开模型族
+### Sora
+- 共 2 个公开模型
+- `sora-2`、`sora-2-pro`
 
-如果您需要获取计费详情或模型价格，请访问 [计费页面](https://aiid.edu.kg/pricing) 或登录 [控制台](https://aiid.edu.kg/console)。
+### Veo
+- 共 4 个公开模型
+- `veo-3.0-fast-generate-001`、`veo-3.0-generate-001`、`veo-3.1-fast-generate-preview`、`veo-3.1-generate-preview`
+
+### Seedance
+- 共 6 个公开模型
+- `doubao-seedance-1-0-lite-t2v-250428`、`doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-pro-fast-251015`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128`
+
+### Kling
+- 共 3 个公开模型
+- `kling-v1`、`kling-v1-6`、`kling-v2-master`
+
+### 即梦
+- 共 3 个公开模型
+- `jimeng_v30_base`、`jimeng_v30_pro`、`jimeng_vgfm_t2v_l20`
+
+### Vidu
+- 共 4 个公开模型
+- `vidu1.5`、`vidu2.0`、`viduq1`、`viduq2`
+
+### 海螺
+- 共 2 个公开模型
+- `hailuo-02`、`hailuo-video`

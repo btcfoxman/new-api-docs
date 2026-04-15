@@ -86,10 +86,10 @@
               {
                 "group": "概览",
                 "pages": [
-                  "api-reference/cn/sign",
-                  "api-reference/cn/errors",
-                  "api-reference/cn/enums",
-                  "api-reference/cn/webhook"
+                  "api-reference/cn/conventions",
+                  "api-reference/cn/quickstart",
+                  "api-reference/cn/online-debug",
+                  "api-reference/cn/ai-codegen"
                 ]
               },
               {
@@ -119,6 +119,13 @@
                   "cn/error-codes",
                   "cn/models",
                   "cn/multi-format"
+                ]
+              },
+              {
+                "group": "使用帮助",
+                "pages": [
+                  "cn/online-debug",
+                  "cn/ai-codegen"
                 ]
               },
               {

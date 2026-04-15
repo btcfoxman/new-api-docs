@@ -1,0 +1,84 @@
+---
+title: "调用约定"
+description: "鉴权、错误结构、常用枚举与异步任务查询说明"
+---
+
+# 调用约定
+
+## 鉴权方式
+
+所有公开接口默认使用 Bearer Token：
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+基础地址：
+
+```text
+https://api.aiid.edu.kg/v1
+```
+
+部分原生格式或模型专用接口虽然路径不同，但仍沿用同一套 API Key 鉴权方式。
+
+## 错误结构
+
+排查失败请求时，优先关注：
+
+- HTTP 状态码
+- `error.code`
+- `error.message`
+
+典型结构：
+
+```json
+{
+  "error": {
+    "code": "invalid_request_error",
+    "message": "具体错误原因"
+  }
+}
+```
+
+## 常见状态码
+
+| HTTP | 含义 | 建议 |
+|---|---|---|
+| 400 | 请求参数错误 | 检查必填字段、模型名、路径参数 |
+| 401 | 鉴权失败 | 检查 API Key 是否有效 |
+| 404 | 路径或任务不存在 | 检查查询路径和任务 ID |
+| 429 | 触发限流 | 降低频率或重试 |
+| 500 | 服务端错误 | 记录请求并重试或联系支持 |
+
+## 常用状态枚举
+
+常见角色枚举：
+
+- `system`
+- `user`
+- `assistant`
+
+常见长任务状态：
+
+- `queued`
+- `running`
+- `succeeded`
+- `failed`
+- `in_progress`
+- `completed`
+
+不同视频接口返回的状态字段可能略有差异，但语义都围绕“排队 / 运行中 / 已完成 / 失败”。
+
+## 异步任务查询
+
+当前公开文档以“主动查询任务结果”为主，常见方式包括：
+
+- `GET /v1/videos/{task_id}`
+- `GET /api/v3/contents/generations/tasks/{task_id}`
+- `GET /v1beta/{operation_name}`
+
+接入侧建议：
+
+- 对任务查询做重试与退避
+- 持久化保存 `task_id` 或 `operation_name`
+- 结果查询作为异步任务回查的兜底方式

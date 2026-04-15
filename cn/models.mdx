@@ -1,12 +1,146 @@
 ---
-title: "模型列表"
-description: "公开模型 ID 示例"
+title: "模型与能力矩阵"
+description: "按当前公开模型分组展示主要接入方式"
 ---
 
-- `gpt-4o`
-- `claude-sonnet-4-20250514`
-- `qwen-image`
-- `sora`
-- `kling-v1`
+# 模型与能力矩阵
 
-如需价格信息，请访问：[计费页面](https://aiid.edu.kg/pricing)。
+当前页面展示的是 `new-api` 当前公开接口中已出现的模型，而不是静态示例清单。
+
+
+
+## 模型分组
+
+### Sora
+
+优先走 `/v1/videos` OpenAI 视频兼容格式，适合统一视频接入。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `sora-2` | `/v1/videos` |
+
+| `sora-2-pro` | `/v1/videos` |
+
+
+
+### Veo
+
+同时存在 `/v1/videos` 兼容格式和 `/v1beta/...` 原生格式。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `veo-3.0-fast-generate-001` | `/v1/videos` / `/v1beta/...` |
+
+| `veo-3.0-generate-001` | `/v1/videos` / `/v1beta/...` |
+
+| `veo-3.1-fast-generate-preview` | `/v1/videos` / `/v1beta/...` |
+
+| `veo-3.1-generate-preview` | `/v1/videos` / `/v1beta/...` |
+
+
+
+### Seedance
+
+支持 `/api/v3/contents/generations/tasks` 原生格式，也支持通过 `/v1/videos` 兼容接入。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `doubao-seedance-1-0-lite-t2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-250528` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-fast-251015` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-5-pro-251215` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-fast-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+
+
+### Kling
+
+同时公开模型专用接口和统一视频入口。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `kling-v1` | `/kling/v1/...` / `/v1/videos` |
+
+| `kling-v1-6` | `/kling/v1/...` / `/v1/videos` |
+
+| `kling-v2-master` | `/kling/v1/...` / `/v1/videos` |
+
+
+
+### 即梦
+
+公开模型专用接口，输入模式受图片数量和首尾帧场景影响较大。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `jimeng_v30_base` | `/jimeng/...` |
+
+| `jimeng_v30_pro` | `/jimeng/...` |
+
+| `jimeng_vgfm_t2v_l20` | `/jimeng/...` |
+
+
+
+### Vidu
+
+以统一视频能力说明为主，适合单图、首尾帧和多参考图场景。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `vidu1.5` | `/v1/videos` |
+
+| `vidu2.0` | `/v1/videos` |
+
+| `viduq1` | `/v1/videos` |
+
+| `viduq2` | `/v1/videos` |
+
+
+
+### 海螺
+
+使用统一视频能力接入，适合文本生成视频场景。
+
+
+
+| 模型 | 主要接入方式 |
+
+|---|---|
+
+| `hailuo-02` | `/v1/videos` |
+
+| `hailuo-video` | `/v1/videos` |
+
+
+
+如需计费信息，请访问：[计费页面](https://aiid.edu.kg/pricing)。

@@ -1,0 +1,30 @@
+---
+title: "快速开始"
+description: "API 参考区的最小接入说明"
+---
+
+# 快速开始
+
+本页面向 API 参考区使用者，目标是尽快发出第一条可验证请求。
+
+## 必备信息
+
+- Base URL：`https://api.aiid.edu.kg/v1`
+- 鉴权头：`Authorization: Bearer YOUR_API_KEY`
+- 推荐起点：`POST /v1/chat/completions`
+
+## 最小请求示例
+
+```bash
+curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer YOUR_API_KEY"   -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "hello"}]
+  }'
+```
+
+## 进入其他接口前的检查项
+
+- 是否替换了正确的 Base URL
+- 是否带上了 Bearer Token
+- 是否使用了接口页要求的请求格式
+- 是否保存了视频任务查询所需的 `task_id` 或 `operation_name`
