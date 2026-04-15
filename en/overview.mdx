@@ -1,20 +1,20 @@
 ---
 title: "Service Overview"
-description: "The current documentation is based on the actual public interfaces of the `new-api`. It also includes a more accessible product-level overview, allowing you to understand the scope of capabilities before diving into specific API pages."
+description: "The current documentation is based on the actual public interfaces of the `new-api`. It includes a user-friendly product overview to help you understand the scope of capabilities before diving into specific API reference pages."
 ---
 
 <CardGroup cols={2}>
   <Card title="Unified Access" icon="code">
-    Prioritizes OpenAI compatible formats; applications already based on OpenAI SDK or HTTP typically only need to replace the Base URL and API Keys.
+    Prioritize providing OpenAI compatible formats; existing applications based on OpenAI SDK or HTTP usually only need to replace the Base URL and API keys.
   </Card>
-  <Card title="Multiple Video Protocols" icon="film">
-    Simultaneously exposes `/v1/videos`, Seedance native format, Veo3 native format, and certain model-specific video interfaces.
+  <Card title="Multi-Protocol Video Support" icon="film">
+    Simultaneously expose `/v1/videos`, Seedance native formats, Veo3 native formats, and certain model-specific video interfaces.
   </Card>
   <Card title="Imaging Capabilities" icon="image">
-    Provides OpenAI image generation and editing interfaces, while retaining model-specific formats such as Gemini image generation.
+    Provide OpenAI image generation and editing interfaces, while retaining model-specific formats such as Gemini image generation.
   </Card>
   <Card title="Long-Running Task Query" icon="clock">
-    Video and certain generation tasks use a unified Task ID or operation name for queries, suitable for asynchronous integration and status polling.
+    Video and certain generation tasks consistently use task IDs or operation names for queries, suitable for asynchronous integration and status polling.
   </Card>
 </CardGroup>
 

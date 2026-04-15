@@ -1,11 +1,11 @@
 ---
 title: "Multi-protocol and Multi-format Integration Guide"
-description: "This project supports multiple protocols. To reduce integration costs, the public documentation prioritizes unified formats while retaining a limited number of model-native or specialized formats."
+description: "This project supports multiple protocols. To reduce integration costs, the public documentation prioritizes a unified format while retaining a limited number of model-native or specialized formats."
 ---
 
 ## 1. OpenAI Compatible Format
 
-Suitable for most new integration scenarios; priority consideration:
+Recommended for most new integration scenarios:
 
 - `POST /v1/chat/completions`
 - `POST /v1/responses`
@@ -15,36 +15,36 @@ Suitable for most new integration scenarios; priority consideration:
 - `GET /v1/videos/{task_id}`
 
 Features:
-- SDK mature ecosystem
+- Mature SDK ecosystem
 - Consistent field styling
 - Ideal for switching between multiple models
 
 ## 2. Model Native Format
 
-Expose native interfaces when the model requires specialized fields, task structures, or native query protocols:
+Expose native interfaces when the model requires dedicated fields, specific task structures, or native query protocols:
 
 - Seedance：`/api/v3/contents/generations/tasks`
 - Veo3: `/v1beta/models/{model}:predictLongRunning` and `/v1beta/{operation_name}`
 - Gemini Image Generation: `/v1beta/models/{model}:generateContent`
 
-Suitable for:
-- Models with many unique fields
-- Scenarios requiring native request body structures
-- Requirement to stay close to upstream official formats
+Best for:
+- Large number of model-specific fields
+- Requires native request body structure
+- Needs to remain close to the upstream official format
 
-## 3. Model-Specific Video Interfaces
+## 3. Model-Specific Video Interface
 
-A small number of model-specific interfaces are currently exposed, such as:
+A few model-specific interfaces are currently available, such as:
 
 - `POST /kling/v1/videos/text2video`
 - `POST /kling/v1/videos/image2video`
-Suitable for:
+Best for:
 - Existing integrations based on the specific model protocol
-- Requirement to use the model's specialized parameter modes
+- Requires specific parameter modes for that model
 
 ## 4. Selection Recommendations
 
-1. Use OpenAI compatible format for new projects by default.
+1. Prioritize using OpenAI compatible format for new projects.
 2. Switch to the native format only if the compatible format cannot cover model-specific fields.
-3. Long-task interfaces should clearly distinguish between "Create" and "Query" interfaces, and save `task_id` or `operation_name`.
-4. When multiple invocation formats exist for the same model, refer to the supported fields on the corresponding interface page and do not mix request bodies.
+3. Long-running task interfaces should clearly distinguish between "Create API" and "Query API," and save `task_id` or `operation_name`.
+4. When multiple invocation formats exist for the same model, refer to the supported fields on the corresponding API page; do not mix request body formats.

@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Global Venture API Reference Documentation",
+    "title": "Global Expansion Camp API Reference Documentation",
     "version": "1.0.0",
     "description": "Public AI Gateway API Reference"
   },
@@ -13,9 +13,9 @@
   "paths": {
     "/v1/models": {
       "get": {
-        "summary": "List Models",
+        "summary": "List models",
         "deprecated": false,
-        "description": "Retrieves a list of currently available models.\n\nThe response format is automatically identified based on request headers:\n- Returns Anthropic format when https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D and `anthropic-version` headers are present\n- Returns Gemini format when `x-goog-api-key` header or `key` query parameter is present\n- Returns OpenAI format otherwise",
+        "description": "Retrieve a list of currently available models.\n\nThe response format is automatically identified based on the request headers:\n- Returns the Anthropic format when both `x-api-key` and `anthropic-version` headers are included\n- Returns the Gemini format when the `x-goog-api-key` header or the `key` query parameter is included\n- Returns the OpenAI format in all other cases",
         "operationId": "listModels",
         "tags": [
           "获取模型列表"
@@ -43,7 +43,7 @@
           {
             "name": "anthropic-version",
             "in": "header",
-            "description": "Anthropic API Version",
+            "description": "Anthropic API version",
             "required": false,
             "example": "",
             "schema": {
@@ -64,7 +64,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Models retrieved successfully",
+            "description": "Successfully retrieved the model list",
             "content": {
               "application/json": {
                 "schema": {
@@ -99,9 +99,9 @@
     },
     "/v1beta/models": {
       "get": {
-        "summary": "Fetch in Gemini format",
+        "summary": "Get Gemini Format",
         "deprecated": false,
-        "description": "Returns the list of available models in Gemini API format",
+        "description": "Returns a list of available models in Gemini API format",
         "operationId": "listModelsGemini",
         "tags": [
           "获取模型列表"
@@ -109,7 +109,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Models retrieved successfully",
+            "description": "Successfully retrieved the model list",
             "content": {
               "application/json": {
                 "schema": {
@@ -133,9 +133,9 @@
     },
     "/v1/chat/completions": {
       "post": {
-        "summary": "Create Chat Completion",
+        "summary": "Create chat session",
         "deprecated": false,
-        "description": "Creates a model response based on conversation history. Supports both streaming and non-streaming responses.\n\nCompatible with OpenAI Chat Completions API.",
+        "description": "Creates model responses based on conversation history. Supports both streaming and non-streaming responses.\n\nCompatible with OpenAI Chat Completions API.",
         "operationId": "createChatCompletion",
         "tags": [
           "OpenAI格式(Chat)"
@@ -175,7 +175,7 @@
             "headers": {}
           },
           "429": {
-            "description": "Rate limit exceeded",
+            "description": "Rate Limits",
             "content": {
               "application/json": {
                 "schema": {
@@ -201,7 +201,7 @@
       "post": {
         "summary": "Create Response (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API, used to create model responses.\nSupports multi-turn conversations, tool calling, reasoning, and more.",
+        "description": "OpenAI Responses API, used to create model responses.\nSupports multi-turn conversations, tool calling, reasoning, and other features.",
         "operationId": "createResponse",
         "tags": [
           "OpenAI格式(Responses)"
@@ -243,9 +243,9 @@
     },
     "/v1beta/models/{model}:generateContent": {
       "post": {
-        "summary": "Gemini Image (Nano Banana)",
+        "summary": "Gemini Images (Nano Banana)",
         "deprecated": false,
-        "description": "Gemini image generation.\n\nThe Nano Banana series supports OpenAI Dall-E format (see link [Image Generation/OpenAI Dall-E Format](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).",
+        "description": "Gemini image generation.\n\nThe Nano Banana series supports OpenAI Dall-E format (for details, see the link [Image Generation/OpenAI Dall-E Format](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "图片生成/Gemini格式"
@@ -372,9 +372,9 @@
     },
     "/v1/images/generations": {
       "post": {
-        "summary": "Generate Image (OpenAI Dall-E Compatible)",
+        "summary": "Generate images (OpenAI Dall-E compatible)",
         "deprecated": false,
-        "description": "Image generation interface in OpenAI Dall-E format.",
+        "description": "OpenAI DALL-E format image generation API.",
         "operationId": "createImageGeneration",
         "tags": [
           "图片生成/OpenAI Dall-E格式"
@@ -394,11 +394,11 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Image Prompt"
+                    "description": "Image generation prompt"
                   },
                   "n": {
                     "type": "integer",
-                    "description": "Number of Generations",
+                    "description": "Number of generations",
                     "default": 1
                   },
                   "size": {
@@ -412,7 +412,7 @@
                   },
                   "quality": {
                     "type": "string",
-                    "description": "Image Quality",
+                    "description": "Image Generation Quality",
                     "enum": [
                       "standard",
                       "hd"
@@ -436,7 +436,7 @@
                   },
                   "user": {
                     "type": "string",
-                    "description": "User Identifier"
+                    "description": "User ID"
                   }
                 },
                 "required": [
@@ -455,7 +455,7 @@
         },
         "responses": {
           "200": {
-            "description": "Image successfully generated",
+            "description": "Image generated successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -479,9 +479,9 @@
     },
     "/v1/images/edits": {
       "post": {
-        "summary": "Edit Image (OpenAI Dall-E Compatible)",
+        "summary": "Edit Image (OpenAI DALL-E Compatible)",
         "deprecated": false,
-        "description": "OpenAI Dall-E format image editing interface.",
+        "description": "OpenAI Dall-E format image editing API.",
         "operationId": "createImageEdit",
         "tags": [
           "图片生成/OpenAI Dall-E格式"
@@ -510,7 +510,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Edit prompt"
+                    "description": "Edit Prompt"
                   },
                   "n": {
                     "type": "integer",
@@ -546,7 +546,7 @@
         },
         "responses": {
           "200": {
-            "description": "Image successfully generated",
+            "description": "Image generated successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -570,9 +570,9 @@
     },
     "/v1/videos": {
       "post": {
-        "summary": "Create Video",
+        "summary": "Create video",
         "deprecated": false,
-        "description": "OpenAI Sora compatible format video generation interface. Supports text-to-video and image/video reference generation modes.\n\n- `POST /v1/videos`: Create video task\n- `GET /v1/videos/{video_id}`: Query task status\n- `GET /v1/videos/{video_id}/content`: Get video binary content (download)\n\nStandard Authentication Header:\n- `Content-Type: application/json` (When creating task)\n\n1. Call `POST /v1/videos` to create a task and obtain `id`.\n2. Poll `GET /v1/videos/{id}` until `status=completed` or `failed`.\n3. After `completed`, prioritize using `video_url` from the response; if unified gateway download is required, call `GET /v1/videos/{id}/content`.\n\n## 3.1 Core Parameters\n\n- `model: string` (Required)\n- Description: The name of the video model to be called.\n- Example: `sora-2`, `doubao-seedance-2-0-260128`\n\n- `prompt: string` (Recommended)\n- Description: Main description for video generation. Must be provided even when using `content`, cannot be empty.\n- Example: `第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string` (Optional)\n- Description: Target duration. Mutually exclusive with `duration`; if both are provided, the gateway parsing result usually prevails.\n- Example: `8`\n\n- `size: string` (Optional)\n- Description: Output resolution, commonly `宽x高`.\n- Example: `720x1280`, `1280x720`\n\n- `mode: string` (Optional)\n- Description: Generation mode, defaults to `t2v` if not provided. Different modes have different requirements for asset parameters.\n- Example: `t2v`, `i2v`, `i2v_first_last`, `reference_material`\n\n## 3.2 General Compatibility Parameters\n\n- `aspect_ratio` or `ratio`: Aspect ratio.\n- `duration`: Duration alias (mutually exclusive with `seconds`).\n- `quality` or `resolution`: Definition-related parameters.\n- `fps`: Frame rate.\n- `function_mode`: Optional feature mode, used to trigger specific behaviors (e.g., `omni_reference` denotes Omni-Reference semantics).\n\n## 3.3 Reference Asset Parameters\n\n- `input_reference`: Standard reference input object.\n- Description: Only supports string URL format; object format is not supported.\n- Correct Example: `\"input_reference\": \"https://example.com/ref.png\"`\n- Incorrect Example: `\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`: Image reference.\n- Description: `image_url` is commonly used for single images; `image_urls` is used for multiple images or Omni-Reference.\n\n- `end_image_url` / `last_image_url`: Last-frame reference.\n- Description: Usually paired with `mode=i2v_first_last` to represent the final frame of the video.\n\n- `video_urls`: Video reference list.\n- Description: Commonly used in `reference_material` or `content` Omni-Reference scenarios.\n\n- `audio_urls`: Audio reference list.\n- Description: Used for background music/voiceover style reference (effectiveness depends on model capability).\n\n- `reference_images`: Multi-image reference.\n- Description: Commonly used in multi-frame/multi-image reference modes.\n\nNote: Different models have different requirements for asset fields; it is recommended to pass parameters according to the \"Mode and Minimum Parameters\" section below.\n\n## 3.4 content Advanced Mode (Recommended for complex reference scenarios)\n\nYou can directly pass an array of `content`:\n- `type=text`: Text instruction.\n- `type=image_url|video_url|audio_url`: Media input.\n- Supports `name` for referring to assets in text via `@名称`.\n\nRequired Constraints:\n- When using `content`, `prompt` must still be provided and cannot be empty.\n\nCompatible Syntax:\n- `image_url/video_url/audio_url` can be a string or an object `{ \"url\": \"https://...\" }`.\n- `role` can use `material`, and is also compatible with `reference_image/reference_video/reference_audio`.\n\nCan be carried simultaneously:\n- `generate_audio: boolean`\n- `watermark: boolean`\n\nAdditional Notes:\n- `generate_audio=true`: Request the model to generate audio simultaneously (only effective for models with this capability).\n- `watermark=false`: Request to disable watermark (actual effectiveness depends on model and channel policies).\n- `name`: Asset alias, recommended to match `@名称` in `text` for accurate asset association by the model.\n\nParameter support varies significantly across model families; refer to the table below for selection:\n\n| Model Family | Common Model Name (Example) | Recommended Min. Parameters | Common Extension Parameters | Notes |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | Most sensitive to `mode`; not all versions support `reference_material`. |\n| Sora General | `sora-2` `sora-2-pro` and `*-stable/*-official` | `model + prompt` | `seconds/size`, `input_reference` (string URL) recommended | Image requirements may vary during multi-channel fallback; preparing reference images is advised to improve success rate. |\n| Sora Duration Preset | `sora2-landscape-10s` `sora2-pro-portrait-25s` etc. | `model + prompt` | `image_url/input_reference` | Duration and orientation are usually determined by the model name; `seconds/ratio` is only effective if allowed by the model. |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` class models usually require reference images or assets; `t2v` class usually support pure text. |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`, and official fields like `image/image_list` | Compatible with official path semantics (text2video/image2video/multi-image2video) and unified into `/v1/videos`; video extension capability not provided externally. |\n| Aggregated Extension Models | `happyhorse*` `grok-imagine-1.0-video*` etc. | `model + prompt` | `seconds/size/content` | Supported fields depend on model and channel implementation; prioritize standard fields, using `content` only if necessary. |\n\nNotes:\n1. If you use stable alias models (e.g., `*-stable`, `*-official`), the underlying channel may switch automatically; please try to pass \"Cross-channel compatible parameters\" (`prompt + model + seconds/duration + size/ratio + 必要参考图`).\n2. For complex multi-asset scenarios (image+video+audio+@name), prioritize using `content` for highest compatibility.\n3. If model documentation does not explicitly support a field, first run with \"Minimum Parameters\" before gradually adding extension parameters.\n\n### 4.1 Kling Official Mode Supplement\n\n- `mode=t2v`: Text-to-Video\n- `mode=i2v`: Image-to-Video (Requires `image` or `image_url`)\n- `mode=multi_i2v`: Multi-image Reference (Requires `image_list` or multiple `image_urls`)\n- `mode=extend`: Not supported (Video extension `/v1/videos` capability currently not provided externally)\n\nCommon official parameters can be passed through directly in the `/v1/videos` request body:\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok Video Mode Supplement\n\nRecommended Parameters:\n- `model`: e.g., `grok-video-3`\n- `prompt`\n- `ratio` or `aspect_ratio`\n- `resolution` or `size`\n- `seconds` or `duration`\n- `image` / `image_url` / `input_reference` (Single-image reference)\n- `reference_images` / `reference_image_urls` (Multi-image reference, official `reference-to-video` semantics)\n- `mode` (Optional): `image-to-video`, `reference-to-video`\n\nConstraints:\n- `mode=edit-video` / `mode=extend-video` not supported (Video editing and extension currently not available externally).\n- `image/input_reference` and `reference_images` cannot be passed simultaneously.\n\n- `mode=t2v`\n- Min. Parameters: `model + prompt`\n\n- `mode=i2v` (Equivalent to `i2v_first`)\n- Min. Parameters: `model + prompt + image_url` (or `input_reference` string URL)\n\n- `mode=i2v_first_last`\n- Min. Parameters: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Min. Parameters: `model + prompt + reference_images` (Usually 1–4 images)\n\n- `mode=reference_material`\n- Min. Parameters: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- `content + function_mode=omni_reference` is highly recommended for complex scenarios.\n- Note: When `function_mode=omni_reference` is passed, it will be processed with Omni-Reference semantics even if `mode=reference_material` is not explicitly passed.",
+        "description": "Video generation interface compatible with OpenAI Sora. Supports text-to-video and image/video reference generation modes.\n\n- `POST /v1/videos`: Create video task\n- `GET /v1/videos/{video_id}`: Query task status\n- `GET /v1/videos/{video_id}/content`: Get video binary content (download)\n\nStandard authentication headers:\n- `Content-Type: application/json` (when creating tasks)\n\n1. Call `POST /v1/videos` to create a task and obtain `id`.\n2. Poll `GET /v1/videos/{id}` until `status=completed` or `failed`.\n3. After `completed`, prioritize using the `video_url` in the response; if unified gateway download is required, call `GET /v1/videos/{id}/content`.\n\n## 3.1 Core Parameters\n\n- `model: string` (Required)\n- Description: The name of the video model to be called.\n- Example: `sora-2`, `doubao-seedance-2-0-260128`\n\n- `prompt: string` (Recommended)\n- Description: Main description for video generation. Must be provided when using `content` and cannot be empty.\n- Example: `第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string` (Optional)\n- Description: Target duration. Mutually exclusive with `duration`; if both are provided, the gateway parsing result usually takes precedence.\n- Example: `8`\n\n- `size: string` (Optional)\n- Description: Output resolution, commonly `宽x高`.\n- Example: `720x1280`, `1280x720`\n\n- `mode: string` (Optional)\n- Description: Generation mode; defaults to `t2v` if not specified. Different modes have different requirements for asset parameters.\n- Example: `t2v`, `i2v`, `i2v_first_last`, `reference_material`\n\n## 3.2 General Compatibility Parameters\n\n- `aspect_ratio` or `ratio`: Aspect ratio.\n- `duration`: Duration alias (choose either `duration` or `seconds`).\n- `quality` or `resolution`: Resolution-related parameters.\n- `fps`: Frame rate.\n- `function_mode`: Optional function mode, used to trigger specific behaviors (e.g., `omni_reference` represents omni-reference semantics).\n\n## 3.3 Reference Material Parameters\n\n- `input_reference`: Standard reference input object.\n- Description: Only string URL format is supported; object format is not supported.\n- Correct example: `\"input_reference\": \"https://example.com/ref.png\"`\n- Incorrect example: `\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`: Image reference.\n- Description: `image_url` is commonly used for single images; `image_urls` is used for multi-image or omni-reference.\n\n- `end_image_url` / `last_image_url`: Last-frame reference.\n- Description: Usually paired with `mode=i2v_first_last` to represent the ending frame of the video.\n\n- `video_urls`: Video reference list.\n- Description: Often used in `reference_material` or `content` omni-reference scenarios.\n\n- `audio_urls`: Audio reference list.\n- Description: Used for BGM/voiceover style reference (effectiveness depends on model capabilities).\n\n- `reference_images`: Multi-image reference.\n- Description: Commonly used in multi-frame/multi-image reference modes.\n\nNote: Different models have different requirements for material fields. It is recommended to pass parameters according to the \"Mode and Minimum Input Parameters\" section below.\n\n## 3.4 content Advanced Mode (Recommended for complex reference scenarios)\n\nYou can directly pass a `content` array:\n- `type=text`: Text instructions.\n- `type=image_url|video_url|audio_url`: Media input.\n- Supports `name` for referencing assets in text via `@名称`.\n\nRequired Constraints:\n- When using `content`, `prompt` must still be passed and cannot be empty.\n\nCompatibility Syntax:\n- `image_url/video_url/audio_url` can be a string or an object `{ \"url\": \"https://...\" }`.\n- `role` can use `material`, and is also compatible with `reference_image/reference_video/reference_audio`.\n\nCan be included simultaneously:\n- `generate_audio: boolean`\n- `watermark: boolean`\n\nAdditional Notes:\n- `generate_audio=true`: Request the model to generate audio simultaneously (only takes effect for models supporting this capability).\n- `watermark=false`: Request to disable watermarks (actual effect depends on the model and channel policy).\n- `name`: Asset alias; it is recommended to be consistent with `@名称` in `text` to help the model accurately associate the asset.\n\nParameter support varies significantly across model families; it is recommended to select parameters according to the following table:\n\n| Model Family | Common Model Names (Example) | Recommended Minimum Parameters | Common Extension Parameters | Notes |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | Most sensitive to `mode`; not all versions support `reference_material`. |\n| Sora General | `sora-2`, `sora-2-pro`, and `*-stable/*-official` | `model + prompt` | `seconds/size`, recommended to include `input_reference` (string URL) | Image requirements may vary during multi-channel fallback; preparing a reference image is recommended to improve success rates. |\n| Sora Preset Duration | `sora2-landscape-10s`, `sora2-pro-portrait-25s`, etc. | `model + prompt` | `image_url/input_reference` | Duration and orientation are usually determined by the model name; `seconds/ratio` only takes effect if the model allows it. |\n| Veo | `veo3*`, `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` types usually require a reference image or asset; `t2v` types usually support pure text. |\n| Kling | `kling-video`, `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`, and official fields like `image/image_list` | Compatible with official path semantics (text2video/image2video/multi-image2video) and unified into `/v1/videos`; does not provide external video extension capabilities. |\n| Aggregated Extension Models | `happyhorse*`, `grok-imagine-1.0-video*`, etc. | `model + prompt` | `seconds/size/content` | Supported fields depend on the model and channel implementation; prioritize standard fields and use `content` only if necessary. |\n\nDescription:\n1. If you use stable alias models (such as `*-stable`, `*-official`), the underlying system may automatically switch channels; please try to pass \"cross-channel compatible parameters\" (`prompt + model + seconds/duration + size/ratio + 必要参考图`).\n2. For complex multi-asset scenarios (image + video + audio + @name), prioritize using `content` for maximum compatibility.\n3. If the model documentation does not explicitly support a specific field, please verify the workflow using \"minimum input parameters\" first, then gradually add extended parameters.\n\n### 4.1 Kling Official Mode Supplement\n\n- `mode=t2v`: Text-to-Video\n- `mode=i2v`: Image-to-Video (requires `image` or `image_url`)\n- `mode=multi_i2v`: Multi-image reference (requires `image_list` or multiple `image_urls`)\n- `mode=extend`: Not supported (video extension `/v1/videos` capabilities are not currently available externally)\n\nCommon official parameters can be passed through directly in the `/v1/videos` request body:\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok Video Mode Supplement\n\nRecommended parameters:\n- `model`: e.g., `grok-video-3`\n- `prompt`\n- `ratio` or `aspect_ratio`\n- `resolution` or `size`\n- `seconds` or `duration`\n- `image` / `image_url` / `input_reference` (Single-image reference)\n- `reference_images` / `reference_image_urls` (Multi-image reference, official `reference-to-video` semantics)\n- `mode` (Optional): `image-to-video`, `reference-to-video`\n\nConstraints:\n- `mode=edit-video` / `mode=extend-video` are not supported (video editing and extension are not yet available externally).\n- `image/input_reference` and `reference_images` cannot be passed simultaneously.\n\n- `mode=t2v`\n- Minimum input: `model + prompt`\n\n- `mode=i2v` (Equivalent to `i2v_first`)\n- Minimum input parameter: `model + prompt + image_url` (or `input_reference` string URL)\n\n- `mode=i2v_first_last`\n- Minimum input: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Minimum input: `model + prompt + reference_images` (typically 1–4 images)\n\n- `mode=reference_material`\n- Minimum input: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- `content + function_mode=omni_reference` is recommended for complex scenarios\n- Note: When `function_mode=omni_reference` is passed, it will be processed using all-in-one reference semantics even if `mode=reference_material` is not explicitly provided.",
         "operationId": "createVideo",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -587,7 +587,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "The name of the video model to be called. Example: `sora-2`, `doubao-seedance-2-0-260128`",
+                    "description": "The name of the video model to be called. Examples: `sora-2`, `doubao-seedance-2-0-260128`",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -619,16 +619,16 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Main description for video generation. Must be provided even when using `content`, cannot be empty. Example: `第一人称视角果茶广告，节奏轻快`"
+                    "description": "Primary description for video generation. This field is required and cannot be empty when using `content`. Example: `第一人称视角果茶广告，节奏轻快`"
                   },
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Single image entry; some compatibility modes will map to images."
+                    "description": "Single image entry point; will be mapped to `images` in certain compatibility modes."
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "Duration alias (mutually exclusive with `seconds`)."
+                    "description": "Duration alias (use either this or `seconds`)."
                   },
                   "width": {
                     "type": "integer",
@@ -668,26 +668,26 @@
                   "metadata": {
                     "type": "object",
                     "additionalProperties": true,
-                    "description": "Dynamic extension field container. Many model-specific fields are deserialized from here."
+                    "description": "Dynamic extension field container. Numerous model-specific fields are deserialized from here."
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Generation mode, defaults to `t2v` if not provided. Different modes have different requirements for asset parameters. Example: `t2v`, `i2v`, `i2v_first_last`, `reference_material`"
+                    "description": "Generation mode. Defaults to `t2v` if not specified. Different modes have different requirements for asset parameters. Examples: `t2v`, `i2v`, `i2v_first_last`, `reference_material`."
                   },
                   "images": {
                     "type": "array",
-                    "description": "Unified multi-image entry. Used by Vidu, Seedance, Veo, etc.",
+                    "description": "Unified entry point for multiple images. Used by Vidu, Seedance, Veo, etc.",
                     "items": {
                       "type": "string"
                     }
                   },
                   "size": {
                     "type": "string",
-                    "description": "Output resolution, commonly `宽x高`. Example: `720x1280`, `1280x720`"
+                    "description": "Output resolution, commonly `宽x高`. Examples: `720x1280`, `1280x720`"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Target duration. Mutually exclusive with `duration`; if both are provided, the gateway parsing result usually prevails. Example: `8`"
+                    "description": "Target duration. Choose between this and `duration`; if both are provided, the gateway's parsing result typically prevails. Example: `8`"
                   },
                   "input_reference": {
                     "type": "string",
@@ -706,7 +706,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "The name of the video model to be called. Example: `sora-2`, `doubao-seedance-2-0-260128`",
+                    "description": "The name of the video model to be called. Examples: `sora-2`, `doubao-seedance-2-0-260128`",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -738,16 +738,16 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Main description for video generation. Must be provided even when using `content`, cannot be empty. Example: `第一人称视角果茶广告，节奏轻快`"
+                    "description": "Primary description for video generation. This field is required and cannot be empty when using `content`. Example: `第一人称视角果茶广告，节奏轻快`"
                   },
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Single image entry; some compatibility modes will map to images."
+                    "description": "Single image entry point; will be mapped to `images` in certain compatibility modes."
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "Duration alias (mutually exclusive with `seconds`)."
+                    "description": "Duration alias (use either this or `seconds`)."
                   },
                   "width": {
                     "type": "integer",
@@ -787,26 +787,26 @@
                   "metadata": {
                     "type": "object",
                     "additionalProperties": true,
-                    "description": "Dynamic extension field container. Many model-specific fields are deserialized from here."
+                    "description": "Dynamic extension field container. Numerous model-specific fields are deserialized from here."
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Generation mode, defaults to `t2v` if not provided. Different modes have different requirements for asset parameters. Example: `t2v`, `i2v`, `i2v_first_last`, `reference_material`"
+                    "description": "Generation mode. Defaults to `t2v` if not specified. Different modes have different requirements for asset parameters. Examples: `t2v`, `i2v`, `i2v_first_last`, `reference_material`."
                   },
                   "images": {
                     "type": "array",
-                    "description": "Unified multi-image entry. Used by Vidu, Seedance, Veo, etc.",
+                    "description": "Unified entry point for multiple images. Used by Vidu, Seedance, Veo, etc.",
                     "items": {
                       "type": "string"
                     }
                   },
                   "size": {
                     "type": "string",
-                    "description": "Output resolution, commonly `宽x高`. Example: `720x1280`, `1280x720`"
+                    "description": "Output resolution, commonly `宽x高`. Examples: `720x1280`, `1280x720`"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Target duration. Mutually exclusive with `duration`; if both are provided, the gateway parsing result usually prevails. Example: `8`"
+                    "description": "Target duration. Choose between this and `duration`; if both are provided, the gateway's parsing result typically prevails. Example: `8`"
                   },
                   "input_reference": {
                     "type": "string",
@@ -895,7 +895,7 @@
                   }
                 },
                 "seedance_reference_material": {
-                  "summary": "Seedance All-in-one reference mode (reference_material)",
+                  "summary": "Seedance Universal Reference Mode (reference_material)",
                   "value": {
                     "model": "doubao-seedance-1-0-lite-i2v-250428",
                     "mode": "reference_material",
@@ -934,7 +934,7 @@
                   }
                 },
                 "veo_first_last_frame": {
-                  "summary": "Veo First and last frame mode",
+                  "summary": "Veo First and Last Frame Mode",
                   "value": {
                     "model": "veo3.1-fast",
                     "prompt": "A smooth transition from first frame to last frame, cinematic motion",
@@ -947,7 +947,7 @@
                   }
                 },
                 "veo_reference_images_1to3": {
-                  "summary": "Veo 1-3 reference images mode",
+                  "summary": "Veo 1-3 Reference Image Mode",
                   "value": {
                     "model": "veo3.1-fast",
                     "prompt": "Use reference style and character consistency for a short ad clip",
@@ -986,7 +986,7 @@
                   }
                 },
                 "grok_reference_video": {
-                  "summary": "Grok Video mode",
+                  "summary": "Grok Video Mode",
                   "value": {
                     "model": "grok-video-3",
                     "prompt": "A dramatic cinematic shot with fast motion and rich lighting",
@@ -1023,7 +1023,7 @@
                   }
                 },
                 "vidu_reference": {
-                  "summary": "Vidu Multi-reference image mode",
+                  "summary": "Vidu Multi-Reference Image Mode",
                   "value": {
                     "model": "vidu2.0",
                     "prompt": "Maintain product style and character consistency",
@@ -1059,11 +1059,11 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "Task ID (used for subsequent query/downloading)."
+                      "description": "Task ID (used for subsequent queries/downloads)."
                     },
                     "task_id": {
                       "type": "string",
-                      "description": "Compatible with legacy interface; deprecated soon"
+                      "description": "Legacy compatibility; to be deprecated"
                     },
                     "object": {
                       "type": "string"
@@ -1083,7 +1083,7 @@
                     },
                     "progress": {
                       "type": "integer",
-                      "description": "Progress (0-100, approximate value)."
+                      "description": "Progress (0–100, approximate value)."
                     },
                     "created_at": {
                       "type": "integer",
@@ -1114,7 +1114,7 @@
                     },
                     "video_url": {
                       "type": "string",
-                      "description": "Directly downloadable video URL."
+                      "description": "A direct download URL for the video."
                     },
                     "url": {
                       "type": "string",
@@ -1170,7 +1170,7 @@
       "get": {
         "summary": "Get video task status",
         "deprecated": false,
-        "description": "OpenAI Compatible video task status query interface.\n\nReturns detailed status information of the video task.",
+        "description": "OpenAI compatible video task status query interface.\n\nReturns detailed status information for the video task.",
         "operationId": "getVideo",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -1219,12 +1219,12 @@
                     "video_url": {
                       "type": "string",
                       "format": "uri",
-                      "description": "Video result URL. Different models may return either https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D or `url`."
+                      "description": "Video result URL. Different models may return either `video_url` or `url`."
                     },
                     "url": {
                       "type": "string",
                       "format": "uri",
-                      "description": "Video result URL. Different models may return either https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D or `video_url`."
+                      "description": "Video result URL. Different models may return either `url` or `video_url`."
                     },
                     "completed_at": {
                       "type": "integer",
@@ -1236,7 +1236,7 @@
                     },
                     "error": {
                       "type": "object",
-                      "description": "Error message upon failure."
+                      "description": "Error message returned when the request fails."
                     },
                     "metadata": {
                       "type": "object",
@@ -1293,7 +1293,7 @@
       "get": {
         "summary": "Get video content",
         "deprecated": false,
-        "description": "Retrieve the video file content of a completed video task.\n\nThis endpoint returns the video file stream via proxy.",
+        "description": "Retrieves the video file content of a completed video task.\n\nThis endpoint returns the video file stream via proxy.",
         "operationId": "getVideoContent",
         "tags": [
           "视频生成/Sora兼容格式"
@@ -1312,7 +1312,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved video content",
+            "description": "Video content retrieved successfully",
             "content": {
               "video/mp4": {
                 "schema": {
@@ -1350,7 +1350,7 @@
       "post": {
         "summary": "Kling Text-to-Video",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nGenerate videos from text descriptions using Kling models.\n\nSupported models: kling-v1, kling-v1-5, etc.",
+        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nUse the Kling model to generate videos from text descriptions.\n\nSupported models: kling-v1, kling-v1-5, etc.",
         "operationId": "createKlingText2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -1375,7 +1375,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully created video generation task",
+            "description": "Video generation task created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -1410,9 +1410,9 @@
     },
     "/kling/v1/videos/text2video/{task_id}": {
       "get": {
-        "summary": "Get Kling Text-to-Video task status",
+        "summary": "Get Kling text-to-video task status",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nQuery the status and results of a Kling Text-to-Video task.",
+        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nQuery the status and results of the Kling text-to-video task.",
         "operationId": "getKlingText2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -1468,7 +1468,7 @@
       "post": {
         "summary": "Kling Image-to-Video",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nGenerate videos from images using Kling models.\n\nSupports passing image URLs or Base64-encoded image data via the image parameter.",
+        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nGenerate videos from images using the Kling model.\n\nSupports passing image URLs or Base64-encoded image data via the `image` parameter.",
         "operationId": "createKlingImage2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -1493,7 +1493,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully created video generation task",
+            "description": "Video generation task created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -1528,9 +1528,9 @@
     },
     "/kling/v1/videos/image2video/{task_id}": {
       "get": {
-        "summary": "Get Kling Image-to-Video task status",
+        "summary": "Get Kling image-to-video task status",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nQuery the status and results of a Kling Image-to-Video task.",
+        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nQuery the status and results of the Kling image-to-video task.",
         "operationId": "getKlingImage2Video",
         "tags": [
           "视频生成/Kling格式"
@@ -1585,7 +1585,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "Create Video (Seedance)",
-        "description": "This series supports OpenAI video generation formats (see [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_32%5D%5D) for details).\n\nUsed to create video generation tasks and query status and results via Task ID.\n\nCore fields for task creation:\n- https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D: Required. Model name.\n- `prompt`: Required. Main description for video generation.\n- `content`: Optional. Multimedia input array in advanced mode.\n- `function_mode`: Optional. Often used for advanced modes like universal reference.\n\nCompatible input parameters:\n- `mode`: `t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nInvocation details:\n- When `mode=reference_material` or `function_mode=omni_reference` is used, it is recommended to pass text and reference materials via `content`.\n- Media fields in `content` support direct URL strings as well as object notation, e.g., `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n``json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n``",
+        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional. Multimedia input array for advanced mode.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- Media fields in `content` support passing URL strings directly as well as object notation, such as `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
           "视频生成/Seedance火山方舟"
@@ -1604,12 +1604,12 @@
                   "model": {
                     "type": "string",
                     "example": "doubao-seedance-1-0-lite-i2v-250428",
-                    "description": "Required. Model name."
+                    "description": "Required. The name of the model."
                   },
                   "prompt": {
                     "type": "string",
                     "example": "参考素材生成一段剧情短视频",
-                    "description": "Required. Main description for video generation; cannot be empty."
+                    "description": "Required. The primary description for video generation; cannot be empty."
                   },
                   "content": {
                     "type": "array",
@@ -1684,38 +1684,38 @@
                         }
                       }
                     },
-                    "description": "Optional. Multimedia input array in advanced mode; recommended for complex reference scenarios."
+                    "description": "Optional. An array of multimedia inputs in advanced mode; recommended for complex reference scenarios."
                   },
                   "function_mode": {
                     "type": "string",
-                    "description": "Optional. Advanced function mode, such as `omni_reference` for versatile reference."
+                    "description": "Optional. Advanced feature mode, such as `omni_reference` for all-in-one reference."
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Optional. Compatibility mode fields, such as `t2v`, `i2v`, `i2v_first_last`, `reference_images`, `reference_material`."
+                    "description": "Optional. Compatibility mode fields, such as `t2v`, `i2v`, `i2v_first_last`, `reference_images`, and `reference_material`."
                   },
                   "image_url": {
                     "type": "string",
-                    "description": "Optional. URL for a single reference image."
+                    "description": "Optional. URL of a single reference image."
                   },
                   "image_urls": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "Optional. List of URLs for multiple reference images."
+                    "description": "Optional. A list of URLs for multiple reference images."
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Optional. Compatible reference input field."
+                    "description": "Optional. Compatible with reference input fields."
                   },
                   "end_image_url": {
                     "type": "string",
-                    "description": "Optional. URL for the end-frame reference image."
+                    "description": "Optional. The URL of the last-frame reference image."
                   },
                   "last_image_url": {
                     "type": "string",
-                    "description": "Optional. Alias for the end-frame reference image URL."
+                    "description": "Optional. URL alias for the last frame reference image."
                   },
                   "video_urls": {
                     "type": "array",
@@ -1759,11 +1759,11 @@
                   },
                   "ratio": {
                     "type": "string",
-                    "description": "Optional. Alias for aspect ratio, such as `16:9`."
+                    "description": "Optional. Aspect ratio aliases, such as `16:9`."
                   },
                   "size": {
                     "type": "string",
-                    "description": "Optional. Compatibility field for resolution or dimensions."
+                    "description": "Optional. Field for resolution or dimension compatibility."
                   },
                   "quality": {
                     "type": "string",
@@ -1771,7 +1771,7 @@
                   },
                   "resolution": {
                     "type": "string",
-                    "description": "Optional. Output resolution."
+                    "description": "Optional. The output resolution."
                   },
                   "fps": {
                     "type": "number",
@@ -1869,7 +1869,7 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "Query Task (Seedance)",
-        "description": "This series supports OpenAI video generation formats (see [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_32%5D%5D) for details).\n\nUsed to create video generation tasks and query status and results via Task ID.\n\nCore fields for task creation:\n- https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D: Required. Model name.\n- `prompt`: Required. Main description for video generation.\n- `content`: Optional. Multimedia input array in advanced mode.\n- `function_mode`: Optional. Often used for advanced modes like universal reference.\n\nCompatible input parameters:\n- `mode`: `t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nInvocation details:\n- When `mode=reference_material` or `function_mode=omni_reference` is used, it is recommended to pass text and reference materials via `content`.\n- Media fields in `content` support direct URL strings as well as object notation, e.g., `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n``json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n``",
+        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional. Multimedia input array for advanced mode.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- Media fields in `content` support passing URL strings directly as well as object notation, such as `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
           "视频生成/Seedance火山方舟"
@@ -1966,8 +1966,8 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "Create video (Veo3 format)",
-        "description": "This series supports OpenAI video generation formats (see link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_3%5D%5D) for details).\n\nThis interface topic page is only intended to explain the Veo native format and current gateway support status.\n\nFor the current Veo series, please use the external OpenAI Sora compatibility mode: `POST /v1/videos`.\n\nThe Google native mode path is reserved as: `POST /v1beta/models/{model}:predictLongRunning`. The current gateway has not yet connected to the Veo native task distribution link, so calling via the native https://www.google.com/search?q=%5B%5BKEEP_2%5D%5D request body is currently not supported.",
+        "summary": "Create video ([[KEEP_0]]3 format)",
+        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nThis interface topic page is intended only to explain the Veo native format and the current gateway support status.\n\nFor the current Veo series, please use the OpenAI Sora compatibility mode for external requests: `POST /v1/videos`.\n\nThe Google native mode path is reserved as: `POST /v1beta/models/{model}:predictLongRunning`. The current gateway has not yet connected to the Veo native task distribution link; therefore, calls using the native `instances/parameters` request body are currently not supported.",
         "operationId": "create_veo3_google_native_task",
         "tags": [
           "视频生成/Veo3格式"
@@ -2017,7 +2017,7 @@
                         "prompt": {
                           "type": "string",
                           "example": "A cinematic aerial shot of a modern city at sunrise",
-                          "description": "Generation prompt"
+                          "description": "Generate prompt"
                         },
                         "referenceImages": {
                           "type": "array",
@@ -2111,7 +2111,7 @@
         },
         "responses": {
           "200": {
-            "description": "Reserved success response structure. Currently for protocol description only; actual calls are not supported.",
+            "description": "Reserved success response structure. Currently provided for protocol documentation only; actual calls are not supported.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2123,7 +2123,7 @@
                     "name": {
                       "type": "string",
                       "example": "models/veo3.1-fast/operations/abc123",
-                      "description": "operation name, used for subsequent status queries."
+                      "description": "The operation name, used for subsequent status queries."
                     }
                   }
                 }
@@ -2140,8 +2140,8 @@
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "Query task (Veo3 format)",
-        "description": "This series supports OpenAI video generation formats (see link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_2%5D%5D) for details).\n\nThis interface topic page is only intended to explain the Veo native query protocol.\n\nFor the current Veo series, please use the `/v1/videos` unified interface for creation and queries instead.\n\nThe following `operation_name` query structure is kept for reserved protocol description purposes only and does not support actual calls.",
+        "summary": "Query Task ([[KEEP_0]]3 Format)",
+        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nThis interface topic page is intended solely to explain the Veo native query protocol.\n\nFor the current Veo series, please use the `/v1/videos` unified interface for creation and queries instead.\n\nThe following `operation_name` query structure is retained for reserved protocol documentation only and does not currently support actual calls.",
         "operationId": "query_veo3_google_native_task",
         "tags": [
           "视频生成/Veo3格式"
@@ -2155,12 +2155,12 @@
               "type": "string",
               "example": "models/veo3.1-fast/operations/abc123"
             },
-            "description": "The full operation name returned by the creation interface. `/` must be URL-encoded when called."
+            "description": "The complete operation name returned by the creation interface. When calling, `/` must be URL-encoded."
           }
         ],
         "responses": {
           "200": {
-            "description": "Reserved query response structure. Currently for protocol description only; actual calls are not supported.",
+            "description": "Reserved query response structure. This is currently for protocol specification only and does not support actual calls.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2172,15 +2172,15 @@
                   "properties": {
                     "name": {
                       "type": "string",
-                      "description": "Operation name, consistent with the `name` returned by the creation interface."
+                      "description": "The operation name, which is consistent with the `name` returned by the creation API."
                     },
                     "done": {
                       "type": "boolean",
-                      "description": "Whether the task is completed."
+                      "description": "Indicates whether the task is completed."
                     },
                     "response": {
                       "type": "object",
-                      "description": "The result object after successful completion.",
+                      "description": "Result object upon successful completion.",
                       "properties": {
                         "generatedVideos": {
                           "type": "array",
@@ -2193,7 +2193,7 @@
                                   "uri": {
                                     "type": "string",
                                     "format": "uri",
-                                    "description": "The video URL after successful generation."
+                                    "description": "The URL of the generated video."
                                   }
                                 }
                               }
@@ -2204,7 +2204,7 @@
                     },
                     "error": {
                       "type": "object",
-                      "description": "Error message upon failure.",
+                      "description": "Error message returned when the request fails.",
                       "properties": {
                         "message": {
                           "type": "string",
@@ -2253,16 +2253,16 @@
               },
               "type": {
                 "type": "string",
-                "description": "Error type"
+                "description": "Error Type"
               },
               "param": {
                 "type": "string",
-                "description": "Related parameters",
+                "description": "Related Parameters",
                 "nullable": true
               },
               "code": {
                 "type": "string",
-                "description": "Error code",
+                "description": "Error Codes",
                 "nullable": true
               }
             }
@@ -2274,15 +2274,15 @@
         "properties": {
           "prompt_tokens": {
             "type": "integer",
-            "description": "Prompt tokens"
+            "description": "Prompt Tokens"
           },
           "completion_tokens": {
             "type": "integer",
-            "description": "Completion tokens"
+            "description": "Completion Tokens"
           },
           "total_tokens": {
             "type": "integer",
-            "description": "Total tokens"
+            "description": "Total Tokens"
           },
           "prompt_tokens_details": {
             "type": "object",
@@ -2327,12 +2327,12 @@
           },
           "object": {
             "type": "string",
-            "description": "Object Type",
+            "description": "Object type",
             "example": "model"
           },
           "created": {
             "type": "integer",
-            "description": "Created Timestamp"
+            "description": "Created timestamp"
           },
           "owned_by": {
             "type": "string",
@@ -2424,7 +2424,7 @@
                 }
               }
             ],
-            "description": "Message Content"
+            "description": "Message content"
           },
           "name": {
             "type": "string",
@@ -2438,7 +2438,7 @@
           },
           "tool_call_id": {
             "type": "string",
-            "description": "Tool Call ID (for tool role messages)"
+            "description": "Tool call ID (used for tool role messages)"
           },
           "reasoning_content": {
             "type": "string",
@@ -2560,7 +2560,7 @@
               },
               "parameters": {
                 "type": "object",
-                "description": "Parameter definition in JSON Schema format",
+                "description": "Parameter definitions in JSON Schema format",
                 "properties": {}
               }
             }
@@ -2602,7 +2602,7 @@
             "items": {
               "$ref": "#/components/schemas/Message"
             },
-            "description": "List of chat messages"
+            "description": "Chat message list"
           },
           "temperature": {
             "type": "number",
@@ -2616,18 +2616,18 @@
             "minimum": 0,
             "maximum": 1,
             "default": 1,
-            "description": "Top P"
+            "description": "Top-p sampling parameters"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "default": 1,
-            "description": "Number of Generations"
+            "description": "Number of generations"
           },
           "stream": {
             "type": "boolean",
             "default": false,
-            "description": "Stream response"
+            "description": "Whether to use streaming response"
           },
           "stream_options": {
             "type": "object",
@@ -2653,11 +2653,11 @@
           },
           "max_tokens": {
             "type": "integer",
-            "description": "Max generation tokens"
+            "description": "Max Output Tokens"
           },
           "max_completion_tokens": {
             "type": "integer",
-            "description": "Max completion tokens"
+            "description": "Max Completion Tokens"
           },
           "presence_penalty": {
             "type": "number",
@@ -3462,7 +3462,7 @@
                 }
               }
             ],
-            "description": "Text to embed"
+            "description": "The text to embed"
           },
           "encoding_format": {
             "type": "string",
@@ -3474,7 +3474,7 @@
           },
           "dimensions": {
             "type": "integer",
-            "description": "Output vector dimensions"
+            "description": "Output vector dimension"
           }
         }
       },
@@ -3534,7 +3534,7 @@
           },
           "prompt": {
             "type": "string",
-            "description": "Image description"
+            "description": "Image Description"
           },
           "n": {
             "type": "integer",
@@ -3735,7 +3735,7 @@
           },
           "input": {
             "type": "string",
-            "description": "Text to convert",
+            "description": "The text to be converted",
             "maxLength": 4096
           },
           "voice": {
@@ -3798,11 +3798,11 @@
                 }
               ]
             },
-            "description": "List of documents to rerank"
+            "description": "List of documents to reorder"
           },
           "top_n": {
             "type": "integer",
-            "description": "Return top N results"
+            "description": "Return the top N results"
           },
           "return_documents": {
             "type": "boolean",
@@ -4061,7 +4061,7 @@
           },
           "image": {
             "type": "string",
-            "description": "Image input (URL or Base64)",
+            "description": "Image Input (URL or Base64)",
             "example": "https://example.com/image.jpg"
           },
           "duration": {
@@ -4081,32 +4081,32 @@
           },
           "fps": {
             "type": "integer",
-            "description": "Video frame rate",
+            "description": "Video Frame Rate",
             "example": 30
           },
           "seed": {
             "type": "integer",
-            "description": "Random seed",
+            "description": "Random Seed",
             "example": 20231234
           },
           "n": {
             "type": "integer",
-            "description": "Number of videos to generate",
+            "description": "Number of videos generated",
             "example": 1
           },
           "response_format": {
             "type": "string",
-            "description": "Response format",
+            "description": "Response Format",
             "example": "url"
           },
           "user": {
             "type": "string",
-            "description": "User Identifier",
+            "description": "User ID",
             "example": "user-1234"
           },
           "metadata": {
             "type": "object",
-            "description": "Extended parameters (e.g., negative_prompt, style, quality_level, etc.)",
+            "description": "Extended parameters (such as `negative_prompt`, `style`, `quality_level`, etc.)",
             "additionalProperties": true,
             "properties": {}
           }
@@ -4123,7 +4123,7 @@
           },
           "status": {
             "type": "string",
-            "description": "Task status",
+            "description": "Task Status",
             "example": "queued"
           }
         }
@@ -4139,7 +4139,7 @@
           },
           "status": {
             "type": "string",
-            "description": "Task status",
+            "description": "Task Status",
             "enum": [
               "queued",
               "in_progress",
@@ -4177,17 +4177,17 @@
           },
           "fps": {
             "type": "integer",
-            "description": "Actual frame rate",
+            "description": "Actual Frame Rate",
             "example": 30
           },
           "width": {
             "type": "integer",
-            "description": "Actual width",
+            "description": "Actual Width",
             "example": 1280
           },
           "height": {
             "type": "integer",
-            "description": "Actual height",
+            "description": "Actual Height",
             "example": 720
           },
           "seed": {
@@ -4203,7 +4203,7 @@
         "properties": {
           "code": {
             "type": "integer",
-            "description": "Error code"
+            "description": "Error Codes"
           },
           "message": {
             "type": "string",
@@ -4227,7 +4227,7 @@
           },
           "object": {
             "type": "string",
-            "description": "Object Type",
+            "description": "Object type",
             "example": "video"
           },
           "model": {
@@ -4237,7 +4237,7 @@
           },
           "status": {
             "type": "string",
-            "description": "Task status",
+            "description": "Task Status",
             "enum": [
               "queued",
               "in_progress",
@@ -4248,16 +4248,16 @@
           },
           "progress": {
             "type": "integer",
-            "description": "Progress percentage",
+            "description": "Progress Percentage",
             "example": 100
           },
           "created_at": {
             "type": "integer",
-            "description": "Created Timestamp"
+            "description": "Created timestamp"
           },
           "completed_at": {
             "type": "integer",
-            "description": "Completion timestamp"
+            "description": "Completion Timestamp"
           },
           "expires_at": {
             "type": "integer",
@@ -4265,11 +4265,11 @@
           },
           "seconds": {
             "type": "string",
-            "description": "Video duration"
+            "description": "Video Duration"
           },
           "size": {
             "type": "string",
-            "description": "Video dimensions"
+            "description": "Video Dimensions"
           },
           "remixed_from_video_id": {
             "type": "string",
@@ -4280,7 +4280,7 @@
           },
           "metadata": {
             "type": "object",
-            "description": "Additional metadata",
+            "description": "Additional Metadata",
             "additionalProperties": true,
             "properties": {}
           }
@@ -4296,7 +4296,7 @@
           },
           "code": {
             "type": "string",
-            "description": "Error code"
+            "description": "Error Codes"
           }
         }
       },
@@ -4487,19 +4487,19 @@
         "type": "apiKey",
         "in": "cookie",
         "name": "session",
-        "description": "Session authentication, obtained via login interface"
+        "description": "Session authentication, obtained via the login endpoint."
       },
       "AccessToken": {
         "type": "apiKey",
         "in": "header",
         "name": "Authorization",
-        "description": "Access Token authentication, format: Bearer {access_token}, generated via /api/user/token interface"
+        "description": "Access Token authentication. Format: Bearer {access_token}, generated via the `/api/user/token` endpoint."
       },
       "NewApiUser": {
         "type": "apiKey",
         "in": "header",
         "name": "New-Api-User",
-        "description": "User ID request header; must match the current logged-in user ID and is required when using Session or Access Token authentication"
+        "description": "User ID request header. This must match the ID of the currently logged-in user and is required when using Session or AccessToken authentication."
       }
     }
   },
@@ -4510,31 +4510,31 @@
   ],
   "tags": [
     {
-      "name": "OpenAI格式(Chat)"
+      "name": "OpenAI Format (Chat)"
     },
     {
-      "name": "OpenAI格式(Responses)"
+      "name": "OpenAI Format (Responses)"
     },
     {
-      "name": "图片生成/Gemini格式"
+      "name": "Image Generation / Gemini Format"
     },
     {
-      "name": "图片生成/OpenAI Dall-E格式"
+      "name": "Image Generation / OpenAI Dall-E Format"
     },
     {
-      "name": "获取模型列表"
+      "name": "List models"
     },
     {
-      "name": "视频生成/Kling格式"
+      "name": "Video Generation/Kling Format"
     },
     {
-      "name": "视频生成/Sora兼容格式"
+      "name": "Video Generation/Sora Compatible Format"
     },
     {
-      "name": "视频生成/Seedance火山方舟"
+      "name": "Video Generation/Seedance Volcano Ark"
     },
     {
-      "name": "视频生成/Veo3格式"
+      "name": "Video Generation/Veo3 Format"
     }
   ],
   "x-doc-drift-summary": {
