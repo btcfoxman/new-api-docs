@@ -5,9 +5,9 @@ description: "Получите ключ API, замените Base URL и вып
 
 ## Шаг 1: Получение ключа API
 
-1. Войдите в [консоль API Chuhaiying](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)
+1. Войдите в [консоль API Chuhaiying](https://www.google.com/search?q=https://aiid.edu.kg/console)
 2. Перейдите на страницу токенов, чтобы создать ключ API
-3. В дальнейшем используйте через https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D
+3. В дальнейшем используйте через https://www.google.com/search?q=`Authorization: Bearer YOUR_API_KEY`
 
 ## Шаг 2: Настройка Base URL
 
@@ -57,9 +57,9 @@ curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application
 ## Рекомендации по интеграции
 
 - Для новых проектов рекомендуется начинать с интерфейсов, совместимых с OpenAI
-- При редактировании изображений необходимо учитывать требования к https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D и полям файлов
-- Для интерфейсов видеозадач следует сначала сохранить https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D или `operation_name`, а затем выполнять запрос
-- При сбое отладки в первую очередь проверьте код состояния HTTP, https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D и `error.message`
+- При редактировании изображений необходимо учитывать требования к https://www.google.com/search?q=`multipart/form-data` и полям файлов
+- Для интерфейсов видеозадач следует сначала сохранить https://www.google.com/search?q=`task_id` или `operation_name`, а затем выполнять запрос
+- При сбое отладки в первую очередь проверьте код состояния HTTP, https://www.google.com/search?q=`error.code` и `error.message`
 
 ## Дальнейшие шаги
 

@@ -245,7 +245,7 @@
       "post": {
         "summary": "Gemini 圖片(Nano Banana)",
         "deprecated": false,
-        "description": "Gemini 圖片生成。\n\nNano Banana系列支援OpenAI Dall-E格式（詳見連結 [圖片生成/OpenAI Dall-E格式](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)）。",
+        "description": "Gemini 圖片生成。\n\nNano Banana系列支援OpenAI Dall-E格式（詳見連結 [圖片生成/OpenAI Dall-E格式](https://www.google.com/search?q=#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)）。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "圖片生成/Gemini 格式"
