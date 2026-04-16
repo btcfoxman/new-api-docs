@@ -1,11 +1,11 @@
 ---
-title: "多协议与多格式接入说明"
-description: "当前项目不是只有一种协议。为降低接入成本，公开文档优先提供统一格式；同时保留少量模型原生格式或专用格式。"
+title: "Instructions pour l'accès multiprotocole et multiformat"
+description: "Ce projet ne se limite pas à un seul protocole. Afin de réduire les coûts d'intégration, la documentation publique privilégie un format unifié, tout en conservant quelques formats natifs de modèles ou des formats spécifiques."
 ---
 
-## 1. OpenAI 兼容格式
+## 1. Format compatible OpenAI
 
-适合大多数新接入场景，优先考虑：
+Adapté à la plupart des scénarios d'intégration récents, à privilégier :
 
 - `POST /v1/chat/completions`
 - `POST /v1/responses`
@@ -14,37 +14,37 @@ description: "当前项目不是只有一种协议。为降低接入成本，公
 - `POST /v1/videos`
 - `GET /v1/videos/{task_id}`
 
-特点：
-- SDK 生态成熟
-- 字段风格统一
-- 适合多模型切换
+Caractéristiques :
+- Écosystème SDK mature
+- Style de champs unifié
+- Idéal pour l'alternance entre plusieurs modèles
 
-## 2. 模型原生格式
+## 2. Format natif du modèle
 
-当模型本身需要专用字段、专用任务结构或原生查询协议时，公开原生接口：
+Lorsque le modèle lui-même nécessite des champs spécifiques, une structure de tâche dédiée ou un protocole de requête natif, les interfaces natives sont exposées :
 
 - Seedance：`/api/v3/contents/generations/tasks`
-- Veo3：`/v1beta/models/{model}:predictLongRunning` 和 `/v1beta/{operation_name}`
-- Gemini 图片生成：`/v1beta/models/{model}:generateContent`
+- Veo3 : `/v1beta/models/{model}:predictLongRunning` et `/v1beta/{operation_name}`
+- Génération d'images Gemini : `/v1beta/models/{model}:generateContent`
 
-适合：
-- 模型特有字段较多
-- 需要原生请求体结构
-- 需要保持与上游官方格式接近
+Adapté pour :
+- Présence de nombreux champs spécifiques au modèle
+- Nécessité d'une structure de corps de requête native
+- Besoin de rester proche du format officiel en amont
 
-## 3. 模型专用视频接口
+## 3. Interfaces vidéo spécifiques au modèle
 
-当前还公开少量模型专用接口，例如：
+Actuellement, quelques interfaces spécifiques aux modèles sont encore exposées, par exemple :
 
 - `POST /kling/v1/videos/text2video`
 - `POST /kling/v1/videos/image2video`
-适合：
-- 已经基于对应模型专用协议集成
-- 需要使用该模型专用参数模式
+Adapté pour :
+- Intégrations déjà basées sur le protocole spécifique du modèle correspondant
+- Besoin d'utiliser le mode de paramètres spécifique à ce modèle
 
-## 4. 选择建议
+## 4. Conseils de sélection
 
-1. 新项目优先使用 OpenAI 兼容格式。
-2. 如果兼容格式无法覆盖模型特有字段，再切换到原生格式。
-3. 长任务接口应明确区分“创建接口”和“查询接口”，保存 `task_id` 或 `operation_name`。
-4. 同一模型存在多种调用格式时，以对应接口页的支持字段为准，不要混用请求体。
+1. Pour les nouveaux projets, utilisez en priorité le format compatible OpenAI.
+2. Si le format compatible ne couvre pas les champs spécifiques au modèle, passez alors au format natif.
+3. Les interfaces de tâches longues doivent distinguer clairement l'interface de création de l'interface de requête, en conservant `task_id` ou `operation_name`.
+4. Lorsque plusieurs formats d'appel existent pour un même modèle, fiez-vous aux champs pris en charge sur la page de l'interface correspondante et ne mélangez pas les corps de requête.

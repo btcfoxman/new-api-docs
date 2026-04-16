@@ -1,72 +1,72 @@
 ---
-title: "服务概览"
-description: "当前中文文档以 `new-api` 实际公开接口为准，同时保留更易理解的产品化概览，便于先理解能力范围，再进入具体接口页。"
+title: "サービスの概要"
+description: "現在のドキュメントは `new-api` で実際に公開されているインターフェースを基準としていますが、機能範囲を把握しやすくするために、製品ベースの概要も残しています。まず全体像を理解してから、各インターフェースの詳細ページに進むことができます。"
 ---
 
 <CardGroup cols={2}>
-  <Card title="统一接入" icon="code">
-    优先提供 OpenAI 兼容格式，已有基于 OpenAI SDK 或 HTTP 的应用通常只需要替换 Base URL 和 API Key。
+  <Card title="統合アクセス" icon="code">
+    OpenAI 互換形式を優先的に提供しており、既存の OpenAI SDK または HTTP ベースのアプリケーションは、通常 Base URL と API キーを置き換えるだけで済みます。
   </Card>
-  <Card title="多种视频协议" icon="film">
-    同时公开 `/v1/videos`、Seedance 原生格式、Veo3 原生格式，以及部分模型专用视频接口。
+  <Card title="マルチビデオプロトコル" icon="film">
+    同時に `/v1/videos`、Seedance ネイティブ形式、Veo3 ネイティブ形式、および一部のモデル専用ビデオインターフェースを公開しています。
   </Card>
-  <Card title="图像能力" icon="image">
-    提供 OpenAI 图片生成与编辑接口，并保留 Gemini 图片生成等模型专用格式。
+  <Card title="画像処理機能" icon="image">
+    OpenAI 画像生成・編集インターフェースを提供し、Gemini 画像生成などのモデル専用形式も保持しています。
   </Card>
-  <Card title="长任务查询" icon="clock">
-    视频与部分生成任务统一使用任务 ID 或 operation name 查询，适合异步集成与回查。
+  <Card title="長時間タスクのクエリ" icon="clock">
+    ビデオおよび一部の生成タスクは、タスク ID または operation name を使用して一元的に照会でき、非同期統合やステータス確認に適しています。
   </Card>
 </CardGroup>
 
-## 当前公开能力总览
+## 現在公開中の機能概要
 
-### 文本与响应
+### テキストとレスポンス
 - `POST /v1/chat/completions`
 - `POST /v1/responses`
 
-### 图像
+### 画像
 - `POST /v1/images/generations`
 - `POST /v1/images/edits`
 - `POST /v1beta/models/{model}:generateContent`
 
-### 视频
+### ビデオ
 - `POST /v1/videos`
 - `GET /v1/videos/{task_id}`
 - `POST /api/v3/contents/generations/tasks`
 - `GET /api/v3/contents/generations/tasks/{task_id}`
 - `POST /v1beta/models/{model}:predictLongRunning`
 - `GET /v1beta/{operation_name}`
-- Kling 等模型专用视频接口
+- Kling などのモデル専用ビデオインターフェース
 
-## 当前公开模型族
+## 現在公開中のモデルファミリー
 ### Nano Banana
-- 共 7 个公开模型
+- 計 7 つの公開モデル
 - `nano-banana`、`nano-banana-2`、`nano-banana-2-2k`、`nano-banana-2-4k`、`nano-banana-pro`、`nano-banana-pro-2k`、`nano-banana-pro-4k`
 
 ### Sora
-- 共 2 个公开模型
+- 計 2 つの公開モデル
 - `sora-2`、`sora-2-pro`
 
 ### Veo
-- 共 12 个公开模型
+- 計 12 の公開モデル
 - `veo3`、`veo3-fast`、`veo3-fast-frames`、`veo3-frames`、`veo3-pro`、`veo3-pro-frames`、`veo3.1`、`veo3.1-4k`、`veo3.1-components`、`veo3.1-fast`、`veo3.1-pro`、`veo3.1-pro-4k`
 
 ### Grok
-- 共 1 个公开模型
+- 計 1 つの公開モデル
 - `grok-video-3`
 
 ### Seedance
-- 共 7 个公开模型
+- 計 7 つの公開モデル
 - `doubao-seedance-1-0-lite-i2v-250428`、`doubao-seedance-1-0-lite-t2v-250428`、`doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-pro-fast-251015`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128`
 
 ### Kling
-- 共 2 个公开模型
+- 計 2 つの公開モデル
 - `kling-video`、`kling-*`
 
 ### Hailuo
-- 共 1 个公开模型
+- 計 1 つの公開モデル
 - `hailuo*`
 
 ### Vidu
-- 共 1 个公开模型
+- 計 1 つの公開モデル
 - `vidu*`

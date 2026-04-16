@@ -1,31 +1,31 @@
 ---
-title: "快速开始"
-description: "获取 API Key、替换 Base URL 并发起首个请求。"
+title: "クイックスタート"
+description: "API キーを取得し、Base URL を置き換えて、最初のリクエストを送信します。"
 ---
 
-## 第一步：获取 API Key
+## ステップ 1: API キーの取得
 
-1. 登录 [出海营 API 控制台](https://aiid.edu.kg/console)
-2. 进入令牌页面创建 API Key
-3. 后续通过 `Authorization: Bearer YOUR_API_KEY` 使用
+1. [出海営 API コンソール](https://aiid.edu.kg/console) にログインします
+2. トークンページに移動し、API キーを作成します
+3. 以降は `Authorization: Bearer YOUR_API_KEY` から利用します
 
-## 第二步：配置 Base URL
+## ステップ 2: Base URL の設定
 
 ```bash
 API_BASE_URL="https://api.aiid.edu.kg/v1"
 ```
 
-如果现有客户端默认写的是：
+既存のクライアントでデフォルトが以下のように記述されている場合：
 
 - `https://api.openai.com`
 - `https://api.openai.com/v1`
 
-则分别替换为：
+それぞれ次のように置き換えます：
 
 - `https://api.aiid.edu.kg`
 - `https://api.aiid.edu.kg/v1`
 
-## 第三步：发起第一个请求
+## ステップ 3: 最初のリクエストの送信
 
 ### Python
 
@@ -54,15 +54,15 @@ curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application
   }'
 ```
 
-## 接入建议
+## 導入のアドバイス
 
-- 新项目优先从 OpenAI 兼容接口开始
-- 图片编辑必须注意 `multipart/form-data` 与文件字段要求
-- 视频任务接口应先保存 `task_id` 或 `operation_name` 再查询
-- 调试失败时优先看 HTTP 状态码、`error.code` 和 `error.message`
+- 新規プロジェクトでは OpenAI 互換インターフェースの使用を優先してください
+- 画像編集では、`multipart/form-data` とファイルフィールドの要件に必ず注意してください
+- 動画タスク API では、先に `task_id` または `operation_name` を保存してから照会してください
+- デバッグに失敗した場合は、まず HTTP ステータスコード、`error.code`、および `error.message` を確認してください
 
-## 下一步
+## 次のステップ
 
-- 在线调试：见 `cn/online-debug`
-- AI 生成调用代码：见 `cn/ai-codegen`
-- 模型分组与能力：见 `cn/models`
+- オンラインデバッグ：`ja/online-debug`を参照
+- AI コード生成：`ja/ai-codegen` を参照
+- モデルのグループ化と機能：`ja/models` を参照

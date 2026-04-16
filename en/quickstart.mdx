@@ -1,31 +1,31 @@
 ---
-title: "快速开始"
-description: "获取 API Key、替换 Base URL 并发起首个请求。"
+title: "Quickstart"
+description: "Obtain your API Key, replace the Base URL, and initiate your first request."
 ---
 
-## 第一步：获取 API Key
+## Step 1: Obtain the API Key
 
-1. 登录 [出海营 API 控制台](https://aiid.edu.kg/console)
-2. 进入令牌页面创建 API Key
-3. 后续通过 `Authorization: Bearer YOUR_API_KEY` 使用
+1. Log in to the [Chuhaiying API Console](https://aiid.edu.kg/console)
+2. Go to the Tokens page to create a API Key
+3. Then use it via `Authorization: Bearer YOUR_API_KEY`
 
-## 第二步：配置 Base URL
+## Step 2: Configure Base URL
 
 ```bash
 API_BASE_URL="https://api.aiid.edu.kg/v1"
 ```
 
-如果现有客户端默认写的是：
+If the existing client default is set to:
 
 - `https://api.openai.com`
 - `https://api.openai.com/v1`
 
-则分别替换为：
+Then replace them with:
 
 - `https://api.aiid.edu.kg`
 - `https://api.aiid.edu.kg/v1`
 
-## 第三步：发起第一个请求
+## Step 3: Send your first request
 
 ### Python
 
@@ -54,15 +54,15 @@ curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application
   }'
 ```
 
-## 接入建议
+## Integration Recommendations
 
-- 新项目优先从 OpenAI 兼容接口开始
-- 图片编辑必须注意 `multipart/form-data` 与文件字段要求
-- 视频任务接口应先保存 `task_id` 或 `operation_name` 再查询
-- 调试失败时优先看 HTTP 状态码、`error.code` 和 `error.message`
+- For new projects, prioritize starting with OpenAI compatible interfaces
+- For image editing, be sure to pay attention to `multipart/form-data` and the file field requirements
+- For the video task API, save `task_id` or `operation_name` first before querying
+- If debugging fails, first check the HTTP status code, `error.code`, and `error.message`
 
-## 下一步
+## Next Steps
 
-- 在线调试：见 `cn/online-debug`
-- AI 生成调用代码：见 `cn/ai-codegen`
-- 模型分组与能力：见 `cn/models`
+- Online debugging: see `en/online-debug`
+- AI-generated calling code: see `en/ai-codegen`
+- Model groups and capabilities: see `en/models`

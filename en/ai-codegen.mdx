@@ -1,29 +1,29 @@
 ---
-title: "AI 生成调用代码"
-description: "你无需手工拆接口链接、请求体和响应结构。直接在文档页使用“复制页面”，把整页内容发给 AI 即可。"
+title: "AI-Generated Integration Code"
+description: "No need to manually parse endpoint URLs, request bodies, or response structures. Simply use \"Copy Page\" on the documentation page and send the entire content to the AI."
 ---
 
-## 推荐流程
+## Recommended Workflow
 
-1. 打开目标接口页，点击页面右上角或上下文操作中的“复制页面”。
-2. 将复制得到的整页内容直接发给 GPT、Claude 或其他代码生成模型。
-3. 只补充你的目标语言、业务参数和需要的返回处理方式，无需手工再整理接口路径、请求体和响应结构。
-4. 将生成代码放回本地项目后，再回到文档页核对 Base URL、鉴权方式和必填字段。
+1. Open the target API page and click "Copy Page" in the top right corner or the context menu.
+2. Send the copied page content directly to GPT, Claude, or other code generation models.
+3. Simply specify your target language, business parameters, and required response handling; there is no need to manually organize API paths, request bodies, or response structures.
+4. After integrating the generated code into your local project, return to the documentation page to verify the Base URL, authentication methods, and required fields.
 
-## 提示词建议
+## Prompt Suggestions
 
-> 以下内容是我从 API 文档页直接复制的完整页面内容。
-> 请基于这些内容生成 Python/Node.js/Go 调用代码。
-> 要求：
-> 1. 使用 Bearer Token 鉴权
-> 2. Base URL 使用 https://api.aiid.edu.kg/v1
-> 3. 保留完整请求体和错误处理
-> 4. 用注释标明需要替换的 model、API Key 和业务参数
-> 5. 若该接口是异步任务接口，补上查询任务结果的示例
+> The following content is the complete page content that I copied directly from the API documentation page.
+> Please generate Python/Node.js/Go sample code based on this content.
+> Requirements:
+> 1. Use Bearer Token for authentication
+> 2. Use https://api.aiid.edu.kg/v1 for Base URL
+> 3. Keep the complete request body and error handling
+> 4. Use comments to indicate the model, API Key, and business parameters that need to be replaced
+> 5. If this API is an asynchronous task API, also include an example for querying the task result
 
-## 交付前检查
+## Pre-delivery Checklist
 
-- 是否填写了正确的 Base URL
-- 是否使用了正确的接口路径
-- 是否带上了 `Authorization: Bearer YOUR_API_KEY`
-- 是否按文档要求传了必填字段
+- Check if the correct Base URL is filled in
+- Check if the correct API path is used
+- Check if `Authorization: Bearer YOUR_API_KEY` is included
+- Check if all required fields are passed according to the documentation

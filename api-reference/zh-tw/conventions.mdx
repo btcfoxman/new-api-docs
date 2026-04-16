@@ -1,0 +1,82 @@
+---
+title: "呼叫慣例"
+description: "鑑權、錯誤結構、常用列舉與非同步任務查詢說明。"
+---
+
+## 驗證方式
+
+所有公開介面預設使用 Bearer Token：
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+基礎位址：
+
+```text
+https://api.aiid.edu.kg/v1
+```
+
+部分原生格式或模型專用介面雖然路徑不同，但仍沿用同一套 API Key 驗證方式。
+
+## 錯誤結構
+
+排查失敗請求時，優先關注：
+
+- HTTP 狀態碼
+- `error.code`
+- `error.message`
+
+典型結構：
+
+```json
+{
+  "error": {
+    "code": "invalid_request_error",
+    "message": "the reason why error occurred"
+  }
+}
+```
+
+## 常見狀態碼
+
+| HTTP | 含義 | 建議 |
+|---|---|---|
+| 400 | 請求參數錯誤 | 檢查必填欄位、模型名稱、路徑參數 |
+| 401 | 驗證失敗 | 檢查 API Key 是否有效 |
+| 404 | 路徑或任務不存在 | 檢查查詢路徑和任務 ID |
+| 429 | 觸發限流 | 降低頻率或重試 |
+| 500 | 伺服器端錯誤 | 記錄請求並重試或聯繫技術支援 |
+
+## 常用狀態列舉
+
+常見角色列舉：
+
+- `system`
+- `user`
+- `assistant`
+
+常見長任務狀態：
+
+- `queued`
+- `running`
+- `succeeded`
+- `failed`
+- `in_progress`
+- `completed`
+
+不同影片介面回傳的狀態欄位可能略有差異，但語義皆圍繞「排隊中 / 執行中 / 已完成 / 失敗」。
+
+## 非同步任務查詢
+
+目前公開文件以「主動查詢任務結果」為主，常見方式包括：
+
+- `GET /v1/videos/{task_id}`
+- `GET /api/v3/contents/generations/tasks/{task_id}`
+- `GET /v1beta/{operation_name}`
+
+串接端建議：
+
+- 對任務查詢進行重試與退避 (Exponential Backoff)
+- 持久化儲存 `task_id` 或 `operation_name`
+- 結果查詢作為非同步任務回傳檢查的保底機制

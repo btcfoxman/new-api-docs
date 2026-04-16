@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Overseas API Reference",
+    "title": "グローバル進出キャンプ API リファレンスドキュメント",
     "version": "1.0.0",
-    "description": "Overseas API リファレンス"
+    "description": "Public AI Gateway API Reference"
   },
   "servers": [
     {
@@ -13,18 +13,18 @@
   "paths": {
     "/v1/models": {
       "get": {
-        "summary": "获取模型列表",
+        "summary": "モデル一覧の取得",
         "deprecated": false,
-        "description": "获取当前可用的模型列表。\n\n根据请求头自动识别返回格式：\n- 包含 `x-api-key` 和 `anthropic-version` 头时返回 Anthropic 格式\n- 包含 `x-goog-api-key` 头或 `key` 查询参数时返回 Gemini 格式\n- 其他情况返回 OpenAI 格式",
+        "description": "現在利用可能なモデルの一覧を取得します。\n\nリクエストヘッダーに基づいてレスポンス形式を自動的に識別します：\n- `x-api-key` および `anthropic-version` ヘッダーが含まれる場合は Anthropic 形式を返します\n- `x-goog-api-key` ヘッダーまたは `key` クエリパラメータが含まれる場合は Gemini 形式を返します\n- その他の場合は OpenAI 形式を返します",
         "operationId": "listModels",
         "tags": [
-          "获取模型列表"
+          "モデル一覧の取得"
         ],
         "parameters": [
           {
             "name": "key",
             "in": "query",
-            "description": "Google API Key (用于 Gemini 格式)",
+            "description": "Google API キー (Gemini 形式用)",
             "required": false,
             "schema": {
               "type": "string"
@@ -33,7 +33,7 @@
           {
             "name": "x-api-key",
             "in": "header",
-            "description": "Anthropic API Key (用于 Claude 格式)",
+            "description": "Anthropic API Key (Claude 形式用)",
             "required": false,
             "example": "",
             "schema": {
@@ -43,7 +43,7 @@
           {
             "name": "anthropic-version",
             "in": "header",
-            "description": "Anthropic API 版本",
+            "description": "Anthropic API バージョン",
             "required": false,
             "example": "",
             "schema": {
@@ -54,7 +54,7 @@
           {
             "name": "x-goog-api-key",
             "in": "header",
-            "description": "Google API Key (用于 Gemini 格式)",
+            "description": "Google API キー (Gemini 形式用)",
             "required": false,
             "example": "",
             "schema": {
@@ -64,7 +64,7 @@
         ],
         "responses": {
           "200": {
-            "description": "成功获取模型列表",
+            "description": "モデル一覧の取得に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -75,7 +75,7 @@
             "headers": {}
           },
           "401": {
-            "description": "认证失败",
+            "description": "認証に失敗しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -99,17 +99,17 @@
     },
     "/v1beta/models": {
       "get": {
-        "summary": "Gemini 格式获取",
+        "summary": "Gemini 形式の取得",
         "deprecated": false,
-        "description": "以 Gemini API 格式返回可用模型列表",
+        "description": "利用可能なモデルのリストを Gemini API 形式で返します",
         "operationId": "listModelsGemini",
         "tags": [
-          "获取模型列表"
+          "モデル一覧の取得"
         ],
         "parameters": [],
         "responses": {
           "200": {
-            "description": "成功获取模型列表",
+            "description": "モデル一覧の取得に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -133,12 +133,12 @@
     },
     "/v1/chat/completions": {
       "post": {
-        "summary": "创建聊天对话",
+        "summary": "チャットセッションの作成",
         "deprecated": false,
-        "description": "根据对话历史创建模型响应。支持流式和非流式响应。\n\n兼容 OpenAI Chat Completions API。",
+        "description": "対話履歴に基づいてモデルのレスポンスを作成します。ストリーミング形式および非ストリーミング形式のレスポンスをサポートしています。\n\nOpenAI Chat Completions API と互換性があります。",
         "operationId": "createChatCompletion",
         "tags": [
-          "OpenAI格式(Chat)"
+          "OpenAI形式 (Chat)"
         ],
         "parameters": [],
         "requestBody": {
@@ -153,7 +153,7 @@
         },
         "responses": {
           "200": {
-            "description": "成功创建响应",
+            "description": "レスポンスの作成に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -164,7 +164,7 @@
             "headers": {}
           },
           "400": {
-            "description": "请求参数错误",
+            "description": "リクエストパラメータのエラー",
             "content": {
               "application/json": {
                 "schema": {
@@ -175,7 +175,7 @@
             "headers": {}
           },
           "429": {
-            "description": "请求频率限制",
+            "description": "リクエストレート制限",
             "content": {
               "application/json": {
                 "schema": {
@@ -199,12 +199,12 @@
     },
     "/v1/responses": {
       "post": {
-        "summary": "创建响应 (OpenAI Responses API)",
+        "summary": "レスポンスの作成 (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API，用于创建模型响应。\n支持多轮对话、工具调用、推理等功能。",
+        "description": "OpenAI Responses APIは、モデルのレスポンスを作成するために使用されます。\nマルチターン対話、ツール呼び出し、推論などの機能をサポートしています。",
         "operationId": "createResponse",
         "tags": [
-          "OpenAI格式(Responses)"
+          "OpenAI形式 (Responses)"
         ],
         "parameters": [],
         "requestBody": {
@@ -219,7 +219,7 @@
         },
         "responses": {
           "200": {
-            "description": "成功创建响应",
+            "description": "レスポンスの作成に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -243,18 +243,18 @@
     },
     "/v1beta/models/{model}:generateContent": {
       "post": {
-        "summary": "Gemini 图片(Nano Banana)",
+        "summary": "Gemini 画像(Nano Banana)",
         "deprecated": false,
-        "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成OpenAI DALL-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)）。",
+        "description": "Gemini 画像生成。\n\nNano BananaシリーズはOpenAI Dall-E形式をサポートしています（詳細は [画像生成OpenAI DALL-E形式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F) を参照してください）。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
-          "图片生成Gemini格式"
+          "画像生成Gemini形式"
         ],
         "parameters": [
           {
             "name": "model",
             "in": "path",
-            "description": "模型名称",
+            "description": "モデル名",
             "required": true,
             "example": "gemini-3-pro-image-preview",
             "schema": {
@@ -372,12 +372,12 @@
     },
     "/v1/images/generations": {
       "post": {
-        "summary": "生成图像（OpenAI Dall-E兼容）",
+        "summary": "画像を生成（OpenAI Dall-E互換）",
         "deprecated": false,
-        "description": "OpenAI Dall-E格式图片生成接口。",
+        "description": "OpenAI Dall-E形式の画像生成APIです。",
         "operationId": "createImageGeneration",
         "tags": [
-          "图片生成OpenAI DALL-E格式"
+          "画像生成OpenAI DALL-E形式"
         ],
         "parameters": [],
         "requestBody": {
@@ -389,21 +389,21 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "模型名称",
+                    "description": "モデル名",
                     "example": "dall-e-3"
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "生图提示词"
+                    "description": "画像生成プロンプト"
                   },
                   "n": {
                     "type": "integer",
-                    "description": "生成数量",
+                    "description": "生成数",
                     "default": 1
                   },
                   "size": {
                     "type": "string",
-                    "description": "图像尺寸",
+                    "description": "画像サイズ",
                     "enum": [
                       "1024x1024",
                       "1024x1792",
@@ -412,7 +412,7 @@
                   },
                   "quality": {
                     "type": "string",
-                    "description": "生图质量",
+                    "description": "生成画像の品質",
                     "enum": [
                       "standard",
                       "hd"
@@ -420,7 +420,7 @@
                   },
                   "style": {
                     "type": "string",
-                    "description": "风格",
+                    "description": "スタイル",
                     "enum": [
                       "vivid",
                       "natural"
@@ -428,7 +428,7 @@
                   },
                   "response_format": {
                     "type": "string",
-                    "description": "返回格式",
+                    "description": "レスポンス形式",
                     "enum": [
                       "url",
                       "b64_json"
@@ -436,7 +436,7 @@
                   },
                   "user": {
                     "type": "string",
-                    "description": "用户标识"
+                    "description": "ユーザー識別子"
                   }
                 },
                 "required": [
@@ -455,7 +455,7 @@
         },
         "responses": {
           "200": {
-            "description": "成功生成图像",
+            "description": "画像の生成に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -479,12 +479,12 @@
     },
     "/v1/images/edits": {
       "post": {
-        "summary": "编辑图像（OpenAI Dall-E兼容）",
+        "summary": "画像を編集（OpenAI Dall-E互換）",
         "deprecated": false,
-        "description": "OpenAI Dall-E格式图片编辑接口。",
+        "description": "OpenAI Dall-E形式の画像編集APIです。",
         "operationId": "createImageEdit",
         "tags": [
-          "图片生成OpenAI DALL-E格式"
+          "画像生成OpenAI DALL-E形式"
         ],
         "parameters": [],
         "requestBody": {
@@ -501,16 +501,16 @@
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "需编辑的图片"
+                    "description": "編集対象の画像"
                   },
                   "mask": {
                     "type": "string",
                     "format": "binary",
-                    "description": "可选遮罩图"
+                    "description": "オプションのマスク画像"
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "编辑提示词"
+                    "description": "プロンプトを編集"
                   },
                   "n": {
                     "type": "integer",
@@ -546,7 +546,7 @@
         },
         "responses": {
           "200": {
-            "description": "成功生成图像",
+            "description": "画像の生成に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -570,12 +570,12 @@
     },
     "/v1/videos": {
       "post": {
-        "summary": "创建视频",
+        "summary": "動画の生成",
         "deprecated": false,
-        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容（下载）\n\n当前对外不提供：\n- `GET /v1/videos`：任务列表\n- `POST /v1/videos/{video_id}/remix`：视频二次编辑 / remix\n\n标准鉴权头：\n- `Content-Type: application/json`（创建任务时）\n\n1. 调用 `POST /v1/videos` 创建任务，拿到 `id`。\n2. 轮询 `GET /v1/videos/{id}`，直到 `status=completed` 或 `failed`。\n3. `completed` 后优先使用返回中的 `video_url`；如需网关统一下载可调用 `GET /v1/videos/{id}/content`。\n\n## 3.1 核心参数\n\n- `model: string`（必填）\n- 说明：要调用的视频模型名称。\n- 示例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推荐）\n- 说明：视频生成主描述。使用 `content` 时也必须传，不能为空。\n- 示例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（可选）\n- 说明：目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。\n- 示例：`8`\n\n- `size: string`（可选）\n- 说明：输出分辨率，常用 `宽x高`。\n- 示例：`720x1280`、`1280x720`\n\n- `mode: string`（可选）\n- 说明：生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。\n- 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 通用兼容参数\n\n- `aspect_ratio` 或 `ratio`：宽高比。\n- `duration`：时长别名（与 `seconds` 二选一即可）。\n- `quality` 或 `resolution`：清晰度相关参数。\n- `fps`：帧率。\n- `function_mode`：可选功能模式，用于触发特定行为（如 `omni_reference` 表示全能参考语义）。\n\n## 3.3 参考素材参数\n\n- `input_reference`：标准参考输入对象。\n- 说明：仅支持字符串 URL 写法，不支持对象写法。\n- 正确示例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 错误示例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：图片参考。\n- 说明：`image_url` 常用于单图；`image_urls` 用于多图或全能参考。\n\n- `end_image_url` / `last_image_url`：末帧参考。\n- 说明：通常与 `mode=i2v_first_last` 搭配，表示视频结束画面。\n\n- `video_urls`：视频参考列表。\n- 说明：常用于 `reference_material` 或 `content` 全能参考场景。\n\n- `audio_urls`：音频参考列表。\n- 说明：用于背景音乐/旁白风格参考（是否生效取决于模型能力）。\n\n- `reference_images`：多图参考。\n- 说明：常用于多帧/多图参考模式。\n\n说明：不同模型对素材字段要求不同，建议按下文“模式与最小入参”传参。\n\n## 3.4 content 高级模式（推荐给复杂参考场景）\n\n可直接传 `content` 数组：\n- `type=text`：文本指令。\n- `type=image_url|video_url|audio_url`：媒体输入。\n- 支持 `name` 用于在文本中通过 `@名称` 指代素材。\n\n必填约束：\n- 使用 `content` 时，`prompt` 仍必须传且不能为空。\n\n兼容写法：\n- `image_url/video_url/audio_url` 可为字符串，或对象 `{ \"url\": \"https://...\" }`。\n- `role` 可使用 `material`，也兼容 `reference_image/reference_video/reference_audio`。\n\n可同时携带：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n补充说明：\n- `generate_audio=true`：请求模型同时生成音频（仅支持该能力的模型会生效）。\n- `watermark=false`：请求关闭水印（实际是否生效取决于模型与渠道策略）。\n- `name`：素材别名，建议与 `text` 中 `@名称` 一致，便于模型准确关联素材。\n\n不同模型族对参数支持差异较大，建议按下表选参：\n\n| 模型族 | 常见模型名（示例） | 推荐最小入参 | 常用扩展参数 | 注意事项 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | 对 `mode` 最敏感；并非所有版本都支持 `reference_material`。 |\n| Sora 通用 | `sora-2` `sora-2-pro` 及 `*-stable/*-official` | `model + prompt` | `seconds/size`，建议补 `input_reference`（字符串 URL） | 多渠道 fallback 时，是否要求图片可能不同，建议准备参考图提高成功率。 |\n| Sora 时长预置 | `sora2-landscape-10s` `sora2-pro-portrait-25s` 等 | `model + prompt` | `image_url/input_reference` | 时长和方向通常由模型名决定，`seconds/ratio` 仅在模型允许时生效。 |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` 类模型通常需要参考图或参考素材；`t2v` 类通常可纯文本。 |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`，以及 `image/image_list` 等官方字段 | 已兼容官方路径语义（text2video/image2video/multi-image2video）并统一到 `/v1/videos`；不提供视频延长对外能力。 |\n| 聚合扩展模型 | `happyhorse*` `grok-imagine-1.0-video*` 等 | `model + prompt` | `seconds/size/content` | 具体支持字段依赖模型与渠道实现，建议优先使用标准字段，不足再用 `content`。 |\n\n说明：\n1. 若你使用稳定别名模型（如 `*-stable`、`*-official`），底层可能自动切换渠道，请尽量传“跨渠道兼容参数”（`prompt + model + seconds/duration + size/ratio + 必要参考图`）。\n2. 复杂多素材场景（图+视频+音频+@名称）优先使用 `content`，兼容性最高。\n3. 若模型文档未明确支持某字段，请按“最小入参”先跑通，再逐步增加扩展参数。\n\n### 4.1 Kling 官方模式补充\n\n- `mode=t2v`：文生视频\n- `mode=i2v`：图生视频（需 `image` 或 `image_url`）\n- `mode=multi_i2v`：多图参考（需 `image_list` 或多张 `image_urls`）\n- `mode=extend`：不支持（视频延长暂不提供 `/v1/videos` 对外能力）\n\n常见官方参数可直接放在 `/v1/videos` 请求体中透传：\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok 视频模式补充\n\n推荐参数：\n- `model`：如 `grok-video-3`\n- `prompt`\n- `ratio` 或 `aspect_ratio`\n- `resolution` 或 `size`\n- `seconds` 或 `duration`\n- `image` / `image_url` / `input_reference`（单图参考）\n- `reference_images` / `reference_image_urls`（多图参考，官方 `reference-to-video` 语义）\n- `mode`（可选）：`image-to-video`、`reference-to-video`\n\n约束：\n- 不支持 `mode=edit-video` / `mode=extend-video`（视频编辑与延长暂不对外）。\n- `image/input_reference` 与 `reference_images` 不能同时传。\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`（等同 `i2v_first`）\n- 最小入参：`model + prompt + image_url`（或 `input_reference` 字符串 URL）\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`（通常 1~4 张）\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 复杂场景更推荐用 `content + function_mode=omni_reference`\n- 说明：当传 `function_mode=omni_reference` 时，即使未显式传 `mode=reference_material`，也会按全能参考语义处理。",
+        "description": "OpenAI Sora 互換形式の動画生成APIです。テキストからの動画生成、および画像・動画リファレンス生成モードをサポートしています。\n\n- `POST /v1/videos`：動画タスクの作成\n- `GET /v1/videos/{video_id}`：タスクステータスの照会\n- `GET /v1/videos/{video_id}/content`：動画バイナリコンテンツの取得（ダウンロード）\n\n現在は外部に提供されていません：\n- `GET /v1/videos`：タスク一覧\n- `POST /v1/videos/{video_id}/remix`：動画の二次編集 / リミックス\n\n標準認証ヘッダー：\n- `Content-Type: application/json`（タスク作成時）\n\n1. `POST /v1/videos` を呼び出してタスクを作成し、`id` を取得します。\n2. `status=completed` または `failed` になるまで `GET /v1/videos/{id}` をポーリングします。\n3. `completed` 後は、レスポンス内の `video_url` を優先的に使用してください。ゲートウェイ経由の統一ダウンロードが必要な場合は `GET /v1/videos/{id}/content` を呼び出すことができます。\n\n## 3.1 コアパラメータ\n\n- `model: string`（必須）\n- 説明：呼び出す動画モデルの名前。\n- 例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推奨）\n- 説明：動画生成のメイン説明文。`content` を使用する場合も必須であり、空にすることはできません。\n- 例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（オプション）\n- 説明：目標の長さ。`duration` との選択式で、両方指定された場合は通常ゲートウェイの解析結果が優先されます。\n- 例：`8`\n\n- `size: string`（オプション）\n- 説明：出力解像度。一般的には `宽x高` が使用されます。\n- 例：`720x1280`、`1280x720`\n\n- `mode: string`（オプション）\n- 説明：生成モード。指定しない場合のデフォルトは `t2v` です。モードによって素材パラメータの要件が異なります。\n- 例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 共通互換パラメータ\n\n- `aspect_ratio` または `ratio`：アスペクト比。\n- `duration`：再生時間のエイリアス（`seconds` とのいずれか一方を選択）。\n- `quality` または `resolution`：解像度関連パラメータ。\n- `fps`：フレームレート。\n- `function_mode`：オプション機能モード。特定の動作をトリガーするために使用されます（例：`omni_reference` は万能参照セマンティクスを表します）。\n\n## 3.3 参照素材パラメータ\n\n- `input_reference`：標準参照入力オブジェクト。\n- 説明：文字列 URL 形式のみをサポートし、オブジェクト形式はサポートしていません。\n- 正しい例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 誤った例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：画像参照。\n- 説明：`image_url` は通常、単一の画像に使用されます。`image_urls` は複数の画像または万能参照に使用されます。\n\n- `end_image_url` / `last_image_url`：最終フレーム参照。\n- 説明：通常 `mode=i2v_first_last` と組み合わせて、動画の終了画面を表します。\n\n- `video_urls`：動画参照リスト。\n- 説明：通常 `reference_material` または `content` の万能参照シナリオで使用されます。\n\n- `audio_urls`：音声参照リスト。\n- 説明：BGMやナレーションのスタイル参照に使用されます（有効かどうかはモデルの能力に依存します）。\n\n- `reference_images`：マルチ画像参照。\n- 説明：通常、マルチフレーム/マルチ画像参照モードで使用されます。\n\n説明：モデルによって素材フィールドの要件が異なるため、以下の「モードと最小入力パラメータ」に従ってパラメータを渡すことを推奨します。\n\n## 3.4 content 高度なモード（複雑な参照シナリオに推奨）\n\n`content` 配列を直接渡すことが可能です：\n- `type=text`：テキスト指示。\n- `type=image_url|video_url|audio_url`：メディア入力。\n- テキスト内で `@名称` を使用して素材を参照するための `name` をサポートしています。\n\n必須制約：\n- `content` を使用する場合でも、`prompt` は必須であり、空にすることはできません。\n\n互換性のある記述方法：\n- `image_url/video_url/audio_url` は文字列、またはオブジェクト `{ \"url\": \"https://...\" }` として指定可能です。\n- `role` では `material` を使用でき、`reference_image/reference_video/reference_audio` にも互換性があります。\n\n同時に含めることが可能な項目：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n補足説明：\n- `generate_audio=true`：モデルに音声の同時生成をリクエストします（この機能をサポートするモデルでのみ有効）。\n- `watermark=false`：ウォーターマークのオフをリクエストします（実際に有効になるかは、モデルおよびチャネルのポリシーに依存します）。\n- `name`：素材のエイリアス。モデルが素材を正確に関連付けられるよう、`text` 内の `@名称` と一致させることを推奨します。\n\nモデルファミリーによってパラメータのサポート状況が大きく異なるため、下表に従ってパラメータを選択することを推奨します：\n\n| モデルファミリー | 主なモデル名（例） | 推奨される最小入力パラメータ | よく使われる拡張パラメータ | 注意事項 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | `mode` に対して最も敏感です。すべてのバージョンが `reference_material` をサポートしているわけではありません。 |\n| Sora 汎用 | `sora-2` `sora-2-pro` および `*-stable/*-official` | `model + prompt` | `seconds/size`。`input_reference`（文字列 URL）の追加を推奨 | マルチチャネルのフォールバック時、画像の要否が異なる場合があるため、成功率を高めるために参考画像の用意を推奨します。 |\n| Sora 長さプリセット | `sora2-landscape-10s` `sora2-pro-portrait-25s` など | `model + prompt` | `image_url/input_reference` | 長さとアスペクト比は通常モデル名によって決定され、`seconds/ratio` はモデルが許可する場合のみ有効になります。 |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` タイプのモデルは通常、参考画像や参考素材を必要とします。`t2v` タイプは通常テキストのみで可能です。 |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v` および `image/image_list` などの公式フィールド | 公式パスのセマンティクス（text2video/image2video/multi-image2video）に対応し `/v1/videos` に統合済みです。動画の延長機能は提供していません。 |\n| 統合拡張モデル | `happyhorse*` `grok-imagine-1.0-video*` など | `model + prompt` | `seconds/size/content` | 具体的な対応フィールドはモデルとチャネルの実装に依存します。標準フィールドを優先し、不足している場合に `content` を使用することを推奨します。 |\n\n説明：\n1. 固定エイリアスモデル（`*-stable`、`*-official` など）を使用する場合、基盤側でチャネルが自動的に切り替わることがあるため、可能な限り「マルチチャネル互換パラメータ」（`prompt + model + seconds/duration + size/ratio + 必要参考图`）を渡してください。\n2. 複雑なマルチ素材シーン（画像+動画+音声+@名称）では `content` を優先して使用してください。互換性が最も高くなります。\n3. モデルドキュメントで特定のフィールドのサポートが明記されていない場合は、まず「最小入力パラメータ」で疎通を確認してから、段階的に拡張パラメータを追加してください。\n\n### 4.1 Kling 公式モードの補足\n\n- `mode=t2v`：テキストから動画生成（Text-to-Video）\n- `mode=i2v`：画像から動画生成（`image` または `image_url` が必要）\n- `mode=multi_i2v`：複数画像リファレンス（`image_list` または複数の `image_urls` が必要）\n- `mode=extend`：未対応（動画の延長は現在 `/v1/videos` の外部提供を行っていません）\n\n一般的な公式パラメータは、`/v1/videos` リクエストボディに含めて直接透過的に渡すことができます：\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok 動画モードの補足\n\n推奨パラメータ：\n- `model`：例 `grok-video-3`\n- `prompt`\n- `ratio` または `aspect_ratio`\n- `resolution` または `size`\n- `seconds` または `duration`\n- `image` / `image_url` / `input_reference`（単一画像リファレンス）\n- `reference_images` / `reference_image_urls`（複数画像リファレンス、公式の `reference-to-video` セマンティクス）\n- `mode`（任意）：`image-to-video`、`reference-to-video`\n\n制約事項：\n- `mode=edit-video` / `mode=extend-video` は未対応です（動画編集および延長機能は現在外部に公開されていません）。\n- `image/input_reference` と `reference_images` を同時に渡すことはできません。\n\n- `mode=t2v`\n- 最小入力パラメータ：`model + prompt`\n\n- `mode=i2v`（`i2v_first` と同等）\n- 最小入力パラメータ：`model + prompt + image_url`（または `input_reference` 文字列 URL）\n\n- `mode=i2v_first_last`\n- 最小入力パラメータ：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入力パラメータ：`model + prompt + reference_images`（通常 1〜4枚）\n\n- `mode=reference_material`\n- 最小入力パラメータ：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 複雑なシナリオでは `content + function_mode=omni_reference` の使用を推奨します\n- 説明：`function_mode=omni_reference` を渡す際、`mode=reference_material` を明示的に渡さなくても、万能リファレンス（all-around reference）のセマンティクスとして処理されます。",
         "operationId": "createVideo",
         "tags": [
-          "视频生成Sora兼容格式"
+          "動画生成Sora互換フォーマット"
         ],
         "parameters": [],
         "requestBody": {
@@ -587,7 +587,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "要调用的视频模型名称。 示例：`sora-2`、`doubao-seedance-2-0-260128`",
+                    "description": "呼び出す動画モデルの名前。例：`sora-2`、`doubao-seedance-2-0-260128`",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -619,16 +619,16 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "视频生成主描述。使用 `content` 时也必须传，不能为空。 示例：`第一人称视角果茶广告，节奏轻快`"
+                    "description": "動画生成のメイン説明文です。`content` を使用する場合も必須であり、空にすることはできません。例：`第一人称视角果茶广告，节奏轻快`"
                   },
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "单图入口，部分兼容模式会映射到 images。"
+                    "description": "単一画像エントリ。一部の互換モードでは images にマッピングされます。"
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "时长别名（与 `seconds` 二选一即可）。"
+                    "description": "期間のエイリアス（`seconds` とのどちらか一方を指定してください）。"
                   },
                   "width": {
                     "type": "integer",
@@ -643,7 +643,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "帧率。"
+                    "description": "フレームレート。"
                   },
                   "seed": {
                     "type": "integer",
@@ -668,30 +668,30 @@
                   "metadata": {
                     "type": "object",
                     "additionalProperties": true,
-                    "description": "动态扩展字段容器。大量模型特有字段从这里反序列化。"
+                    "description": "動的拡張フィールドコンテナです。モデル固有の大量のフィールドがここからデシリアライズされます。"
                   },
                   "mode": {
                     "type": "string",
-                    "description": "生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
+                    "description": "生成モード。指定しない場合のデフォルトは `t2v` です。モードによって素材パラメータの要件が異なります。例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
                   },
                   "images": {
                     "type": "array",
-                    "description": "统一多图入口。Vidu、Seedance、Veo 等会使用。",
+                    "description": "マルチ画像入力用エントリポイントを統一します。[[KEEP_0]]、[[KEEP_1]]、[[KEEP_2]] などで使用されます。",
                     "items": {
                       "type": "string"
                     }
                   },
                   "size": {
                     "type": "string",
-                    "description": "输出分辨率，常用 `宽x高`。 示例：`720x1280`、`1280x720`"
+                    "description": "出力解像度。一般的には `宽x高` が使用されます。例：`720x1280`、`1280x720`"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。 示例：`8`"
+                    "description": "目標時間。`duration` との排他選択です。両方が渡された場合、通常はゲートウェイの解析結果が優先されます。例：`8`"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "标准参考输入对象。"
+                    "description": "標準参照入力オブジェクトです。"
                   }
                 },
                 "required": [
@@ -706,7 +706,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "要调用的视频模型名称。 示例：`sora-2`、`doubao-seedance-2-0-260128`",
+                    "description": "呼び出す動画モデルの名前。例：`sora-2`、`doubao-seedance-2-0-260128`",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -738,16 +738,16 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "视频生成主描述。使用 `content` 时也必须传，不能为空。 示例：`第一人称视角果茶广告，节奏轻快`"
+                    "description": "動画生成のメイン説明文です。`content` を使用する場合も必須であり、空にすることはできません。例：`第一人称视角果茶广告，节奏轻快`"
                   },
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "单图入口，部分兼容模式会映射到 images。"
+                    "description": "単一画像エントリ。一部の互換モードでは images にマッピングされます。"
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "时长别名（与 `seconds` 二选一即可）。"
+                    "description": "期間のエイリアス（`seconds` とのどちらか一方を指定してください）。"
                   },
                   "width": {
                     "type": "integer",
@@ -762,7 +762,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "帧率。"
+                    "description": "フレームレート。"
                   },
                   "seed": {
                     "type": "integer",
@@ -787,30 +787,30 @@
                   "metadata": {
                     "type": "object",
                     "additionalProperties": true,
-                    "description": "动态扩展字段容器。大量模型特有字段从这里反序列化。"
+                    "description": "動的拡張フィールドコンテナです。モデル固有の大量のフィールドがここからデシリアライズされます。"
                   },
                   "mode": {
                     "type": "string",
-                    "description": "生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
+                    "description": "生成モード。指定しない場合のデフォルトは `t2v` です。モードによって素材パラメータの要件が異なります。例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
                   },
                   "images": {
                     "type": "array",
-                    "description": "统一多图入口。Vidu、Seedance、Veo 等会使用。",
+                    "description": "マルチ画像入力用エントリポイントを統一します。[[KEEP_0]]、[[KEEP_1]]、[[KEEP_2]] などで使用されます。",
                     "items": {
                       "type": "string"
                     }
                   },
                   "size": {
                     "type": "string",
-                    "description": "输出分辨率，常用 `宽x高`。 示例：`720x1280`、`1280x720`"
+                    "description": "出力解像度。一般的には `宽x高` が使用されます。例：`720x1280`、`1280x720`"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。 示例：`8`"
+                    "description": "目標時間。`duration` との排他選択です。両方が渡された場合、通常はゲートウェイの解析結果が優先されます。例：`8`"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "标准参考输入对象。"
+                    "description": "標準参照入力オブジェクトです。"
                   }
                 },
                 "required": [
@@ -895,7 +895,7 @@
                   }
                 },
                 "seedance_reference_material": {
-                  "summary": "Seedance 全能参考模式(reference_material)",
+                  "summary": "Seedance 万能リファレンスモード (reference_material)",
                   "value": {
                     "model": "doubao-seedance-1-0-lite-i2v-250428",
                     "mode": "reference_material",
@@ -915,7 +915,7 @@
                   }
                 },
                 "seedance_volc_content": {
-                  "summary": "Seedance 火山方舟 content 模式",
+                  "summary": "Seedance 火山方舟 content モード",
                   "value": {
                     "model": "doubao-seedance-1-0-lite-i2v-250428",
                     "mode": "reference_material",
@@ -934,7 +934,7 @@
                   }
                 },
                 "veo_first_last_frame": {
-                  "summary": "Veo 首尾帧模式",
+                  "summary": "Veo 先頭・末尾フレームモード",
                   "value": {
                     "model": "veo3.1-fast",
                     "prompt": "A smooth transition from first frame to last frame, cinematic motion",
@@ -947,7 +947,7 @@
                   }
                 },
                 "veo_reference_images_1to3": {
-                  "summary": "Veo 1~3张参考图模式",
+                  "summary": "Veo 1〜3枚のリファレンス画像モード",
                   "value": {
                     "model": "veo3.1-fast",
                     "prompt": "Use reference style and character consistency for a short ad clip",
@@ -959,7 +959,7 @@
                   }
                 },
                 "kling_text2video": {
-                  "summary": "Kling 文生视频",
+                  "summary": "Kling テキストからの動画生成",
                   "value": {
                     "model": "kling-video",
                     "prompt": "A cat playing piano in the garden",
@@ -972,7 +972,7 @@
                   }
                 },
                 "kling_image2video": {
-                  "summary": "Kling 图生视频",
+                  "summary": "Kling イメージ動画生成",
                   "value": {
                     "model": "kling-video",
                     "prompt": "A cat playing piano in the garden",
@@ -986,7 +986,7 @@
                   }
                 },
                 "grok_reference_video": {
-                  "summary": "Grok 视频模式",
+                  "summary": "Grok ビデオモード",
                   "value": {
                     "model": "grok-video-3",
                     "prompt": "A dramatic cinematic shot with fast motion and rich lighting",
@@ -998,7 +998,7 @@
                   }
                 },
                 "vidu_img2video": {
-                  "summary": "Vidu 图生视频",
+                  "summary": "Vidu イメージから動画生成",
                   "value": {
                     "model": "vidu2.0",
                     "prompt": "A stylish ad clip from a product still image",
@@ -1010,7 +1010,7 @@
                   }
                 },
                 "vidu_first_tail": {
-                  "summary": "Vidu 首尾帧模式",
+                  "summary": "Vidu 先頭・末尾フレームモード",
                   "value": {
                     "model": "vidu2.0",
                     "prompt": "A smooth shot from start frame to end frame",
@@ -1023,7 +1023,7 @@
                   }
                 },
                 "vidu_reference": {
-                  "summary": "Vidu 多参考图模式",
+                  "summary": "Vidu マルチリファレンスイメージモード",
                   "value": {
                     "model": "vidu2.0",
                     "prompt": "Maintain product style and character consistency",
@@ -1037,7 +1037,7 @@
                   }
                 },
                 "hailuo_text2video": {
-                  "summary": "Hailuo 文生视频",
+                  "summary": "Hailuo テキストからビデオ生成",
                   "value": {
                     "model": "hailuo-video",
                     "prompt": "A cinematic travel shot over the coastline",
@@ -1051,7 +1051,7 @@
         },
         "responses": {
           "200": {
-            "description": "成功创建视频任务",
+            "description": "動画タスクの作成に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -1059,11 +1059,11 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "任务 ID（后续查询/下载使用）。"
+                      "description": "タスクID（その後の照会やダウンロードに使用）。"
                     },
                     "task_id": {
                       "type": "string",
-                      "description": "兼容旧接口 待废弃"
+                      "description": "レガシーAPI互換（非推奨予定）"
                     },
                     "object": {
                       "type": "string"
@@ -1073,7 +1073,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "description": "任务状态。",
+                      "description": "タスクのステータス。",
                       "enum": [
                         "queued",
                         "in_progress",
@@ -1083,15 +1083,15 @@
                     },
                     "progress": {
                       "type": "integer",
-                      "description": "进度（0~100，近似值）。"
+                      "description": "進捗状況（0～100、近似値）。"
                     },
                     "created_at": {
                       "type": "integer",
-                      "description": "创建时间（Unix 秒）。"
+                      "description": "作成日時（Unix秒）。"
                     },
                     "completed_at": {
                       "type": "integer",
-                      "description": "完成时间。"
+                      "description": "完了時刻。"
                     },
                     "expires_at": {
                       "type": "integer"
@@ -1114,11 +1114,11 @@
                     },
                     "video_url": {
                       "type": "string",
-                      "description": "可直接下载的视频地址。"
+                      "description": "直接ダウンロード可能な動画のURL。"
                     },
                     "url": {
                       "type": "string",
-                      "description": "部分模型/渠道可能返回该字段作为结果地址。"
+                      "description": "一部のモデルまたはチャネルでは、このフィールドが結果のURLとして返される場合があります。"
                     }
                   },
                   "required": [
@@ -1144,7 +1144,7 @@
             "headers": {}
           },
           "400": {
-            "description": "请求参数错误",
+            "description": "リクエストパラメータのエラー",
             "content": {
               "application/json": {
                 "schema": {
@@ -1168,18 +1168,18 @@
     },
     "/v1/videos/{task_id}": {
       "get": {
-        "summary": "获取视频任务状态",
+        "summary": "動画タスクステータスの取得",
         "deprecated": false,
-        "description": "OpenAI 兼容的视频任务状态查询接口。\n\n返回视频任务的详细状态信息。",
+        "description": "OpenAI 互換のビデオタスクステータス照会インターフェースです。\n\nビデオタスクの詳細なステータス情報を返します。",
         "operationId": "getVideo",
         "tags": [
-          "视频生成Sora兼容格式"
+          "動画生成Sora互換フォーマット"
         ],
         "parameters": [
           {
             "name": "task_id",
             "in": "path",
-            "description": "视频任务 ID",
+            "description": "ビデオタスク ID",
             "required": true,
             "example": "sora-2-123456",
             "schema": {
@@ -1189,7 +1189,7 @@
         ],
         "responses": {
           "200": {
-            "description": "成功获取视频任务状态",
+            "description": "動画タスクのステータスを取得しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -1219,28 +1219,28 @@
                     "video_url": {
                       "type": "string",
                       "format": "uri",
-                      "description": "视频结果地址。不同模型可能返回 `video_url` 或 `url`，二者取其一。"
+                      "description": "動画結果のURLです。モデルによって `video_url` または `url` のいずれか一方が返されます。"
                     },
                     "url": {
                       "type": "string",
                       "format": "uri",
-                      "description": "视频结果地址。不同模型可能返回 `url` 或 `video_url`，二者取其一。"
+                      "description": "動画結果のURLです。モデルによって `url` または `video_url` のいずれか一方が返されます。"
                     },
                     "completed_at": {
                       "type": "integer",
-                      "description": "完成时间（Unix 秒）。"
+                      "description": "完了時間（Unix秒）。"
                     },
                     "expires_at": {
                       "type": "integer",
-                      "description": "结果过期时间（Unix 秒）。"
+                      "description": "結果の有効期限（Unix秒）。"
                     },
                     "error": {
                       "type": "object",
-                      "description": "失败时的错误信息。"
+                      "description": "失敗時のエラーメッセージ。"
                     },
                     "metadata": {
                       "type": "object",
-                      "description": "附加元数据。"
+                      "description": "追加のメタデータ。"
                     }
                   },
                   "required": [
@@ -1267,7 +1267,7 @@
             "headers": {}
           },
           "404": {
-            "description": "任务不存在",
+            "description": "タスクが存在しません",
             "content": {
               "application/json": {
                 "schema": {
@@ -1291,18 +1291,18 @@
     },
     "/v1/videos/{task_id}/content": {
       "get": {
-        "summary": "获取视频内容",
+        "summary": "動画コンテンツの取得",
         "deprecated": false,
-        "description": "获取已完成视频任务的视频文件内容。\n\n此接口会代理返回视频文件流。",
+        "description": "完了した動画タスクの動画ファイルの内容を取得します。\n\nこのインターフェースは、動画ファイルストリームをプロキシ経由で返します。",
         "operationId": "getVideoContent",
         "tags": [
-          "视频生成Sora兼容格式"
+          "動画生成Sora互換フォーマット"
         ],
         "parameters": [
           {
             "name": "task_id",
             "in": "path",
-            "description": "视频任务 ID",
+            "description": "ビデオタスク ID",
             "required": true,
             "example": "video-abc123",
             "schema": {
@@ -1312,7 +1312,7 @@
         ],
         "responses": {
           "200": {
-            "description": "成功获取视频内容",
+            "description": "動画コンテンツの取得に成功しました",
             "content": {
               "video/mp4": {
                 "schema": {
@@ -1324,7 +1324,7 @@
             "headers": {}
           },
           "404": {
-            "description": "视频不存在或未完成",
+            "description": "ビデオが存在しないか、または生成が完了していません。",
             "content": {
               "application/json": {
                 "schema": {
@@ -1348,12 +1348,12 @@
     },
     "/kling/v1/videos/text2video": {
       "post": {
-        "summary": "Kling 文生视频",
+        "summary": "Kling テキストからの動画生成",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/ja/video-generation-sora-compatible-format/create-video)）。\n\n使用 Kling 模型从文本描述生成视频。\n\n支持的模型：kling-v1, kling-v1-5 等",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nKling モデルを使用して、テキスト記述から動画を生成します。\n\n対応モデル：kling-v1, kling-v1-5 など",
         "operationId": "createKlingText2Video",
         "tags": [
-          "视频生成Kling格式"
+          "動画生成Kling形式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1375,7 +1375,7 @@
         },
         "responses": {
           "200": {
-            "description": "成功创建视频生成任务",
+            "description": "動画生成タスクの作成に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -1386,7 +1386,7 @@
             "headers": {}
           },
           "400": {
-            "description": "请求参数错误",
+            "description": "リクエストパラメータのエラー",
             "content": {
               "application/json": {
                 "schema": {
@@ -1410,18 +1410,18 @@
     },
     "/kling/v1/videos/text2video/{task_id}": {
       "get": {
-        "summary": "获取 Kling 文生视频任务状态",
+        "summary": "Kling Text-to-Videoタスクの状態を取得",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/ja/video-generation-sora-compatible-format/create-video)）。\n\n查询 Kling 文生视频任务的状态和结果。",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nKling の Text-to-Video タスクの状態と結果を照会します。",
         "operationId": "getKlingText2Video",
         "tags": [
-          "视频生成Kling格式"
+          "動画生成Kling形式"
         ],
         "parameters": [
           {
             "name": "task_id",
             "in": "path",
-            "description": "任务 ID",
+            "description": "タスクID",
             "required": true,
             "example": "task-abc123",
             "schema": {
@@ -1431,7 +1431,7 @@
         ],
         "responses": {
           "200": {
-            "description": "成功获取任务状态",
+            "description": "タスクステータスの取得に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -1442,7 +1442,7 @@
             "headers": {}
           },
           "404": {
-            "description": "任务不存在",
+            "description": "タスクが存在しません",
             "content": {
               "application/json": {
                 "schema": {
@@ -1466,12 +1466,12 @@
     },
     "/kling/v1/videos/image2video": {
       "post": {
-        "summary": "Kling 图生视频",
+        "summary": "Kling イメージ動画生成",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/ja/video-generation-sora-compatible-format/create-video)）。\n\n使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nKling モデルを使用して画像から動画を生成します。\n\nimage パラメータを介した画像 URL または Base64 エンコードされた画像データの入力に対応しています。",
         "operationId": "createKlingImage2Video",
         "tags": [
-          "视频生成Kling格式"
+          "動画生成Kling形式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1493,7 +1493,7 @@
         },
         "responses": {
           "200": {
-            "description": "成功创建视频生成任务",
+            "description": "動画生成タスクの作成に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -1504,7 +1504,7 @@
             "headers": {}
           },
           "400": {
-            "description": "请求参数错误",
+            "description": "リクエストパラメータのエラー",
             "content": {
               "application/json": {
                 "schema": {
@@ -1528,18 +1528,18 @@
     },
     "/kling/v1/videos/image2video/{task_id}": {
       "get": {
-        "summary": "获取 Kling 图生视频任务状态",
+        "summary": "Kling イメージからの動画生成タスクの状態を取得",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/ja/video-generation-sora-compatible-format/create-video)）。\n\n查询 Kling 图生视频任务的状态和结果。",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nKling イメージからの動画生成タスクの状態と結果を照会します。",
         "operationId": "getKlingImage2Video",
         "tags": [
-          "视频生成Kling格式"
+          "動画生成Kling形式"
         ],
         "parameters": [
           {
             "name": "task_id",
             "in": "path",
-            "description": "任务 ID",
+            "description": "タスクID",
             "required": true,
             "example": "task-abc123",
             "schema": {
@@ -1549,7 +1549,7 @@
         ],
         "responses": {
           "200": {
-            "description": "成功获取任务状态",
+            "description": "タスクステータスの取得に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -1560,7 +1560,7 @@
             "headers": {}
           },
           "404": {
-            "description": "任务不存在",
+            "description": "タスクが存在しません",
             "content": {
               "application/json": {
                 "schema": {
@@ -1584,11 +1584,11 @@
     },
     "/api/v3/contents/generations/tasks": {
       "post": {
-        "summary": "创建视频（Seedance）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/ja/video-generation-sora-compatible-format/create-video)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "summary": "動画の生成（Seedance）",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意、アドバンスドモードにおけるマルチメディア入力配列。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` 内のメディアフィールドは、URL文字列の直接入力と、`{ \"url\": \"https://example.com/ref.mp4\" }` のようなオブジェクト形式の両方をサポートしています。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "视频生成Seedance火山方舟"
+          "動画生成Seedance火山方舟"
         ],
         "requestBody": {
           "required": true,
@@ -1604,12 +1604,12 @@
                   "model": {
                     "type": "string",
                     "example": "doubao-seedance-2-0-260128",
-                    "description": "必填。模型名称。"
+                    "description": "必須。モデル名。"
                   },
                   "prompt": {
                     "type": "string",
                     "example": "参考素材生成一段剧情短视频",
-                    "description": "必填。视频生成主描述，不能为空。"
+                    "description": "必須。動画生成のメイン説明です。空にすることはできません。"
                   },
                   "content": {
                     "type": "array",
@@ -1684,52 +1684,52 @@
                         }
                       }
                     },
-                    "description": "可选。高级模式下的多媒体输入数组；复杂参考场景推荐使用。"
+                    "description": "任意。アドバンスドモードにおけるマルチメディア入力の配列です。複雑な参照シナリオでの使用を推奨します。"
                   },
                   "function_mode": {
                     "type": "string",
-                    "description": "可选。高级功能模式，如 `omni_reference` 用于全能参考。"
+                    "description": "任意。高度な機能モードです。全般的なリファレンス用の `omni_reference` などがあります。"
                   },
                   "mode": {
                     "type": "string",
-                    "description": "可选。兼容模式字段，如 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`。"
+                    "description": "任意。`t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material` などの互換モードフィールドです。"
                   },
                   "image_url": {
                     "type": "string",
-                    "description": "可选。单张参考图 URL。"
+                    "description": "任意。単一の参照画像URL。"
                   },
                   "image_urls": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "可选。多张参考图 URL 列表。"
+                    "description": "任意。複数の参照画像URLのリスト。"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "可选。兼容参考输入字段。"
+                    "description": "任意。互換性のためのリファレンス入力フィールドです。"
                   },
                   "end_image_url": {
                     "type": "string",
-                    "description": "可选。末帧参考图 URL。"
+                    "description": "任意。最終フレームの参照画像の URL。"
                   },
                   "last_image_url": {
                     "type": "string",
-                    "description": "可选。末帧参考图 URL 别名。"
+                    "description": "オプション。最終フレームの参照画像URLのエイリアス。"
                   },
                   "video_urls": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "可选。参考视频 URL 列表。"
+                    "description": "任意。参照用動画URLのリスト。"
                   },
                   "audio_urls": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "可选。参考音频 URL 列表。"
+                    "description": "任意。参照オーディオURLのリスト。"
                   },
                   "seconds": {
                     "oneOf": [
@@ -1740,7 +1740,7 @@
                         "type": "string"
                       }
                     ],
-                    "description": "可选。视频时长，秒；与 `duration` 兼容。"
+                    "description": "オプション。動画の長さ（秒）。`duration` と互換性があります。"
                   },
                   "duration": {
                     "oneOf": [
@@ -1751,39 +1751,39 @@
                         "type": "string"
                       }
                     ],
-                    "description": "可选。视频时长，秒；与 `seconds` 兼容。"
+                    "description": "オプション。動画の長さ（秒）。`seconds` と互換性があります。"
                   },
                   "aspect_ratio": {
                     "type": "string",
-                    "description": "可选。画幅比例，如 `16:9`。"
+                    "description": "任意。アスペクト比（例：`16:9`）。"
                   },
                   "ratio": {
                     "type": "string",
-                    "description": "可选。画幅比例别名，如 `16:9`。"
+                    "description": "任意。アスペクト比のエイリアス（例：`16:9`）。"
                   },
                   "size": {
                     "type": "string",
-                    "description": "可选。分辨率或尺寸兼容字段。"
+                    "description": "任意。解像度またはサイズ互換フィールド。"
                   },
                   "quality": {
                     "type": "string",
-                    "description": "可选。生成质量配置。"
+                    "description": "任意。生成品質の設定。"
                   },
                   "resolution": {
                     "type": "string",
-                    "description": "可选。输出分辨率。"
+                    "description": "任意。出力解像度。"
                   },
                   "fps": {
                     "type": "number",
-                    "description": "可选。帧率。"
+                    "description": "任意。フレームレート。"
                   },
                   "generate_audio": {
                     "type": "boolean",
-                    "description": "可选。是否生成音频。"
+                    "description": "任意。オーディオを生成するかどうか。"
                   },
                   "watermark": {
                     "type": "boolean",
-                    "description": "可选。是否添加水印。"
+                    "description": "任意。ウォーターマークを追加するかどうか。"
                   }
                 }
               },
@@ -1825,7 +1825,7 @@
         },
         "responses": {
           "200": {
-            "description": "任务创建成功",
+            "description": "タスクの作成に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -1837,11 +1837,11 @@
                     "id": {
                       "type": "string",
                       "example": "task_xxx",
-                      "description": "任务 ID。"
+                      "description": "タスク ID。"
                     },
                     "status": {
                       "type": "string",
-                      "description": "任务状态。",
+                      "description": "タスクのステータス。",
                       "enum": [
                         "queued",
                         "running",
@@ -1851,7 +1851,7 @@
                     },
                     "created_at": {
                       "type": "string",
-                      "description": "创建时间（Unix 秒）。"
+                      "description": "作成日時（Unix秒）。"
                     }
                   }
                 }
@@ -1868,11 +1868,11 @@
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
-        "summary": "查询任务（Seedance）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/ja/video-generation-sora-compatible-format/create-video)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "summary": "タスクの照会（Seedance）",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意、アドバンスドモードにおけるマルチメディア入力配列。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` 内のメディアフィールドは、URL文字列の直接入力と、`{ \"url\": \"https://example.com/ref.mp4\" }` のようなオブジェクト形式の両方をサポートしています。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "视频生成Seedance火山方舟"
+          "動画生成Seedance火山方舟"
         ],
         "parameters": [
           {
@@ -1887,7 +1887,7 @@
         ],
         "responses": {
           "200": {
-            "description": "查询成功",
+            "description": "照会に成功しました",
             "content": {
               "application/json": {
                 "schema": {
@@ -1895,7 +1895,7 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "任务 ID。"
+                      "description": "タスク ID。"
                     },
                     "model": {
                       "type": "string"
@@ -1908,7 +1908,7 @@
                         "succeeded",
                         "failed"
                       ],
-                      "description": "任务状态。"
+                      "description": "タスクのステータス。"
                     },
                     "error": {
                       "type": "object",
@@ -1924,7 +1924,7 @@
                     },
                     "created_at": {
                       "type": "integer",
-                      "description": "创建时间（Unix 秒）。"
+                      "description": "作成日時（Unix秒）。"
                     },
                     "updated_at": {
                       "type": "integer"
@@ -1966,11 +1966,11 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "创建视频（Veo3格式）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/ja/video-generation-sora-compatible-format/create-video)）。\n\n该接口专题页仅用于说明 Veo 原生格式与当前网关支持状态。\n\n当前 Veo 系列对外请使用 OpenAI Sora 兼容模式：`POST /v1/videos`。\n\nGoogle 原生模式路径预留为：`POST /v1beta/models/{model}:predictLongRunning`。当前网关尚未接通 Veo 原生任务分发链路，因此按原生 `instances/parameters` 请求体调用暂不支持。",
+        "summary": "動画の作成（Veo3形式）",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nこの API 特集ページは、Veo のネイティブ形式と現在のゲートウェイのサポート状況を説明するためのものです。\n\n現在の Veo シリーズの外部利用については、OpenAI Sora 互換モード（`POST /v1/videos`）を使用してください。\n\nGoogle ネイティブモードのパスは `POST /v1beta/models/{model}:predictLongRunning` として予約されています。現在、ゲートウェイは Veo ネイティブタスク配信リンクに接続されていないため、ネイティブの `instances/parameters` リクエストボディによる呼び出しはサポートされていません。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "视频生成Veo3格式"
+          "動画生成Veo3形式"
         ],
         "parameters": [
           {
@@ -1995,7 +1995,7 @@
                 "veo3.1-pro-4k"
               ]
             },
-            "description": "Veo 模型名称。"
+            "description": "Veo モデル名。"
           }
         ],
         "requestBody": {
@@ -2017,11 +2017,11 @@
                         "prompt": {
                           "type": "string",
                           "example": "A cinematic aerial shot of a modern city at sunrise",
-                          "description": "生成提示词"
+                          "description": "プロンプトを生成"
                         },
                         "referenceImages": {
                           "type": "array",
-                          "description": "可选。1~3 张参考图，使用 Google 原生 `inlineData` 或文件 URI 结构。",
+                          "description": "省略可能。1〜3枚の参照画像。Googleネイティブの `inlineData` またはファイルURI構造を使用します。",
                           "items": {
                             "type": "object",
                             "properties": {
@@ -2111,7 +2111,7 @@
         },
         "responses": {
           "200": {
-            "description": "预留中的成功响应结构。当前仅作协议说明，不支持实际调用。",
+            "description": "予約済みの成功レスポンス構造です。現在はプロトコルの説明用であり、実際の呼び出しはサポートされていません。",
             "content": {
               "application/json": {
                 "schema": {
@@ -2123,7 +2123,7 @@
                     "name": {
                       "type": "string",
                       "example": "models/veo3.1-fast/operations/abc123",
-                      "description": "operation name，用于后续状态查询。"
+                      "description": "operation name。後続のステータス照会に使用されます。"
                     }
                   }
                 }
@@ -2140,11 +2140,11 @@
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "查询任务（Veo3格式）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/ja/video-generation-sora-compatible-format/create-video)）。\n\n该接口专题页仅用于说明 Veo 原生查询协议。\n\n当前 Veo 系列请改用 `/v1/videos` 统一接口进行创建与查询。\n\n下述 `operation_name` 查询结构仅作为预留协议说明保留，暂不支持实际调用。",
+        "summary": "タスクの照会（Veo3形式）",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nこのインターフェース専用ページは、Veo ネイティブクエリプロトコルの説明のみを目的としています。\n\n現在の Veo シリーズについては、代わりに `/v1/videos` 統合インターフェースを使用して作成およびクエリを行ってください。\n\n以下の `operation_name` クエリ構造は予約プロトコルの説明として保持されているものであり、現時点では実際の呼び出しには対応していません。",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "视频生成Veo3格式"
+          "動画生成Veo3形式"
         ],
         "parameters": [
           {
@@ -2155,12 +2155,12 @@
               "type": "string",
               "example": "models/veo3.1-fast/operations/abc123"
             },
-            "description": "创建接口返回的完整 operation name。调用时需对 `/` 做 URL 编码。"
+            "description": "作成 API が返した完全な operation name です。呼び出し時には `/` を URL エンコードする必要があります。"
           }
         ],
         "responses": {
           "200": {
-            "description": "预留中的查询响应结构。当前仅作协议说明，不支持实际调用。",
+            "description": "予約済みのクエリレスポンス構造です。現在はプロトコルの説明のみであり、実際の呼び出しには対応していません。",
             "content": {
               "application/json": {
                 "schema": {
@@ -2172,15 +2172,15 @@
                   "properties": {
                     "name": {
                       "type": "string",
-                      "description": "操作名称，与创建接口返回的 `name` 一致。"
+                      "description": "操作名です。作成APIのレスポンスに含まれる `name` と一致します。"
                     },
                     "done": {
                       "type": "boolean",
-                      "description": "任务是否完成。"
+                      "description": "タスクが完了したかどうか。"
                     },
                     "response": {
                       "type": "object",
-                      "description": "成功完成后的结果对象。",
+                      "description": "正常に完了した後の結果オブジェクト。",
                       "properties": {
                         "generatedVideos": {
                           "type": "array",
@@ -2193,7 +2193,7 @@
                                   "uri": {
                                     "type": "string",
                                     "format": "uri",
-                                    "description": "生成成功后的视频地址。"
+                                    "description": "生成に成功した後の動画のURL。"
                                   }
                                 }
                               }
@@ -2204,11 +2204,11 @@
                     },
                     "error": {
                       "type": "object",
-                      "description": "失败时的错误信息。",
+                      "description": "失敗時のエラーメッセージ。",
                       "properties": {
                         "message": {
                           "type": "string",
-                          "description": "错误描述。"
+                          "description": "エラーの説明。"
                         }
                       }
                     }
@@ -2249,20 +2249,20 @@
             "properties": {
               "message": {
                 "type": "string",
-                "description": "错误信息"
+                "description": "エラーメッセージ"
               },
               "type": {
                 "type": "string",
-                "description": "错误类型"
+                "description": "エラータイプ"
               },
               "param": {
                 "type": "string",
-                "description": "相关参数",
+                "description": "関連パラメータ",
                 "nullable": true
               },
               "code": {
                 "type": "string",
-                "description": "错误代码",
+                "description": "エラーコード",
                 "nullable": true
               }
             }
@@ -2274,15 +2274,15 @@
         "properties": {
           "prompt_tokens": {
             "type": "integer",
-            "description": "提示词 Token 数"
+            "description": "プロンプトのトークン数"
           },
           "completion_tokens": {
             "type": "integer",
-            "description": "补全 Token 数"
+            "description": "完了トークン数"
           },
           "total_tokens": {
             "type": "integer",
-            "description": "总 Token 数"
+            "description": "合計トークン数"
           },
           "prompt_tokens_details": {
             "type": "object",
@@ -2322,21 +2322,21 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "模型 ID",
+            "description": "モデル ID",
             "example": "gpt-4"
           },
           "object": {
             "type": "string",
-            "description": "对象类型",
+            "description": "オブジェクト型",
             "example": "model"
           },
           "created": {
             "type": "integer",
-            "description": "创建时间戳"
+            "description": "作成タイムスタンプ"
           },
           "owned_by": {
             "type": "string",
-            "description": "模型所有者",
+            "description": "モデル所有者",
             "example": "openai"
           }
         }
@@ -2410,7 +2410,7 @@
               "tool",
               "developer"
             ],
-            "description": "消息角色"
+            "description": "メッセージロール"
           },
           "content": {
             "oneOf": [
@@ -2424,11 +2424,11 @@
                 }
               }
             ],
-            "description": "消息内容"
+            "description": "メッセージ内容"
           },
           "name": {
             "type": "string",
-            "description": "发送者名称"
+            "description": "送信者名"
           },
           "tool_calls": {
             "type": "array",
@@ -2438,11 +2438,11 @@
           },
           "tool_call_id": {
             "type": "string",
-            "description": "工具调用 ID（用于 tool 角色消息）"
+            "description": "ツール呼び出し ID（tool ロールのメッセージ用）"
           },
           "reasoning_content": {
             "type": "string",
-            "description": "推理内容"
+            "description": "推論内容"
           }
         }
       },
@@ -2467,7 +2467,7 @@
             "properties": {
               "url": {
                 "type": "string",
-                "description": "图片 URL 或 base64"
+                "description": "画像の URL または base64"
               },
               "detail": {
                 "type": "string",
@@ -2484,7 +2484,7 @@
             "properties": {
               "data": {
                 "type": "string",
-                "description": "Base64 编码的音频数据"
+                "description": "Base64でエンコードされたオーディオデータ"
               },
               "format": {
                 "type": "string",
@@ -2560,7 +2560,7 @@
               },
               "parameters": {
                 "type": "object",
-                "description": "JSON Schema 格式的参数定义",
+                "description": "JSON Schema 形式のパラメータ定義",
                 "properties": {}
               }
             }
@@ -2580,7 +2580,7 @@
           },
           "json_schema": {
             "type": "object",
-            "description": "JSON Schema 定义",
+            "description": "JSON Schema の定義",
             "properties": {}
           }
         }
@@ -2594,7 +2594,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型 ID",
+            "description": "モデル ID",
             "example": "gpt-4"
           },
           "messages": {
@@ -2602,32 +2602,32 @@
             "items": {
               "$ref": "#/components/schemas/Message"
             },
-            "description": "对话消息列表"
+            "description": "対話メッセージ一覧"
           },
           "temperature": {
             "type": "number",
             "minimum": 0,
             "maximum": 2,
             "default": 1,
-            "description": "采样温度"
+            "description": "サンプリング温度"
           },
           "top_p": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
             "default": 1,
-            "description": "核采样参数"
+            "description": "核サンプリングパラメータ"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "default": 1,
-            "description": "生成数量"
+            "description": "生成数"
           },
           "stream": {
             "type": "boolean",
             "default": false,
-            "description": "是否流式响应"
+            "description": "ストリームレスポンスにするかどうか"
           },
           "stream_options": {
             "type": "object",
@@ -2649,15 +2649,15 @@
                 }
               }
             ],
-            "description": "停止序列"
+            "description": "停止シーケンス"
           },
           "max_tokens": {
             "type": "integer",
-            "description": "最大生成 Token 数"
+            "description": "最大生成トークン数"
           },
           "max_completion_tokens": {
             "type": "integer",
-            "description": "最大补全 Token 数"
+            "description": "最大生成トークン数"
           },
           "presence_penalty": {
             "type": "number",
@@ -2728,7 +2728,7 @@
               "medium",
               "high"
             ],
-            "description": "推理强度 (用于支持推理的模型)"
+            "description": "推論の強さ (推論対応モデル用)"
           },
           "modalities": {
             "type": "array",
@@ -2963,7 +2963,7 @@
             "type": "string"
           },
           "input": {
-            "description": "输入内容，可以是字符串或消息数组",
+            "description": "入力内容。文字列またはメッセージの配列を指定できます。",
             "oneOf": [
               {
                 "type": "string"
@@ -3141,7 +3141,7 @@
             "type": "string"
           },
           "input": {
-            "description": "输入内容，可以是字符串或消息数组",
+            "description": "入力内容。文字列またはメッセージの配列を指定できます。",
             "oneOf": [
               {
                 "type": "string"
@@ -3462,7 +3462,7 @@
                 }
               }
             ],
-            "description": "要嵌入的文本"
+            "description": "埋め込むテキスト"
           },
           "encoding_format": {
             "type": "string",
@@ -3474,7 +3474,7 @@
           },
           "dimensions": {
             "type": "integer",
-            "description": "输出向量维度"
+            "description": "出力ベクトルの次元数"
           }
         }
       },
@@ -3534,7 +3534,7 @@
           },
           "prompt": {
             "type": "string",
-            "description": "图像描述"
+            "description": "画像の説明"
           },
           "n": {
             "type": "integer",
@@ -3649,7 +3649,7 @@
           "file": {
             "type": "string",
             "format": "binary",
-            "description": "音频文件"
+            "description": "音声ファイル"
           },
           "model": {
             "type": "string",
@@ -3657,7 +3657,7 @@
           },
           "language": {
             "type": "string",
-            "description": "ISO-639-1 语言代码"
+            "description": "ISO-639-1言語コード"
           },
           "prompt": {
             "type": "string"
@@ -3735,7 +3735,7 @@
           },
           "input": {
             "type": "string",
-            "description": "要转换的文本",
+            "description": "変換対象のテキスト",
             "maxLength": 4096
           },
           "voice": {
@@ -3783,7 +3783,7 @@
           },
           "query": {
             "type": "string",
-            "description": "查询文本"
+            "description": "クエリテキスト"
           },
           "documents": {
             "type": "array",
@@ -3798,11 +3798,11 @@
                 }
               ]
             },
-            "description": "要重排序的文档列表"
+            "description": "再ランキング対象のドキュメントリスト"
           },
           "top_n": {
             "type": "integer",
-            "description": "返回前 N 个结果"
+            "description": "上位 N 件の結果を返す"
           },
           "return_documents": {
             "type": "boolean",
@@ -4047,66 +4047,66 @@
       },
       "VideoRequest": {
         "type": "object",
-        "description": "视频生成请求",
+        "description": "動画生成リクエスト",
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型/风格 ID",
+            "description": "モデル/スタイルID",
             "example": "kling-v1"
           },
           "prompt": {
             "type": "string",
-            "description": "文本描述提示词",
+            "description": "テキスト記述プロンプト",
             "example": "宇航员站起身走了"
           },
           "image": {
             "type": "string",
-            "description": "图片输入 (URL 或 Base64)",
+            "description": "画像入力 (URL または Base64)",
             "example": "https://example.com/image.jpg"
           },
           "duration": {
             "type": "number",
-            "description": "视频时长（秒）",
+            "description": "動画の長さ（秒）",
             "example": 5
           },
           "width": {
             "type": "integer",
-            "description": "视频宽度",
+            "description": "ビデオの幅",
             "example": 1280
           },
           "height": {
             "type": "integer",
-            "description": "视频高度",
+            "description": "動画の高さ",
             "example": 720
           },
           "fps": {
             "type": "integer",
-            "description": "视频帧率",
+            "description": "ビデオフレームレート",
             "example": 30
           },
           "seed": {
             "type": "integer",
-            "description": "随机种子",
+            "description": "ランダムシード",
             "example": 20231234
           },
           "n": {
             "type": "integer",
-            "description": "生成视频数量",
+            "description": "生成ビデオ数",
             "example": 1
           },
           "response_format": {
             "type": "string",
-            "description": "响应格式",
+            "description": "レスポンス形式",
             "example": "url"
           },
           "user": {
             "type": "string",
-            "description": "用户标识",
+            "description": "ユーザー識別子",
             "example": "user-1234"
           },
           "metadata": {
             "type": "object",
-            "description": "扩展参数 (如 negative_prompt, style, quality_level 等)",
+            "description": "拡張パラメータ (negative_prompt, style, quality_level など)",
             "additionalProperties": true,
             "properties": {}
           }
@@ -4114,32 +4114,32 @@
       },
       "VideoResponse": {
         "type": "object",
-        "description": "视频生成任务提交响应",
+        "description": "動画生成タスク送信レスポンス",
         "properties": {
           "task_id": {
             "type": "string",
-            "description": "任务 ID",
+            "description": "タスクID",
             "example": "abcd1234efgh"
           },
           "status": {
             "type": "string",
-            "description": "任务状态",
+            "description": "タスクステータス",
             "example": "queued"
           }
         }
       },
       "VideoTaskResponse": {
         "type": "object",
-        "description": "视频任务状态查询响应",
+        "description": "動画タスクステータス照会レスポンス",
         "properties": {
           "task_id": {
             "type": "string",
-            "description": "任务 ID",
+            "description": "タスクID",
             "example": "abcd1234efgh"
           },
           "status": {
             "type": "string",
-            "description": "任务状态",
+            "description": "タスクステータス",
             "enum": [
               "queued",
               "in_progress",
@@ -4150,12 +4150,12 @@
           },
           "url": {
             "type": "string",
-            "description": "视频资源 URL（成功时）",
+            "description": "動画リソースのURL（成功時）",
             "example": "https://example.com/video.mp4"
           },
           "format": {
             "type": "string",
-            "description": "视频格式",
+            "description": "動画形式",
             "example": "mp4"
           },
           "metadata": {
@@ -4168,76 +4168,76 @@
       },
       "VideoTaskMetadata": {
         "type": "object",
-        "description": "视频任务元数据",
+        "description": "動画タスクメタデータ",
         "properties": {
           "duration": {
             "type": "number",
-            "description": "实际生成的视频时长",
+            "description": "実際に生成された動画の長さ",
             "example": 5
           },
           "fps": {
             "type": "integer",
-            "description": "实际帧率",
+            "description": "実際のフレームレート",
             "example": 30
           },
           "width": {
             "type": "integer",
-            "description": "实际宽度",
+            "description": "実際の幅",
             "example": 1280
           },
           "height": {
             "type": "integer",
-            "description": "实际高度",
+            "description": "実際の高さ",
             "example": 720
           },
           "seed": {
             "type": "integer",
-            "description": "使用的随机种子",
+            "description": "使用される乱数シード",
             "example": 20231234
           }
         }
       },
       "VideoTaskError": {
         "type": "object",
-        "description": "视频任务错误信息",
+        "description": "ビデオタスクのエラーメッセージ",
         "properties": {
           "code": {
             "type": "integer",
-            "description": "错误码"
+            "description": "エラーコード"
           },
           "message": {
             "type": "string",
-            "description": "错误信息"
+            "description": "エラーメッセージ"
           }
         }
       },
       "OpenAIVideo": {
         "type": "object",
-        "description": "OpenAI 兼容的视频对象",
+        "description": "OpenAI 互換のビデオオブジェクト",
         "properties": {
           "id": {
             "type": "string",
-            "description": "视频 ID",
+            "description": "ビデオ ID",
             "example": "video-abc123"
           },
           "task_id": {
             "type": "string",
-            "description": "任务 ID (兼容旧接口)",
+            "description": "タスクID (旧インターフェース互換)",
             "deprecated": true
           },
           "object": {
             "type": "string",
-            "description": "对象类型",
+            "description": "オブジェクト型",
             "example": "video"
           },
           "model": {
             "type": "string",
-            "description": "使用的模型",
+            "description": "使用されるモデル",
             "example": "sora"
           },
           "status": {
             "type": "string",
-            "description": "任务状态",
+            "description": "タスクステータス",
             "enum": [
               "queued",
               "in_progress",
@@ -4248,39 +4248,39 @@
           },
           "progress": {
             "type": "integer",
-            "description": "进度百分比",
+            "description": "進捗率",
             "example": 100
           },
           "created_at": {
             "type": "integer",
-            "description": "创建时间戳"
+            "description": "作成タイムスタンプ"
           },
           "completed_at": {
             "type": "integer",
-            "description": "完成时间戳"
+            "description": "完了タイムスタンプ"
           },
           "expires_at": {
             "type": "integer",
-            "description": "过期时间戳"
+            "description": "有効期限タイムスタンプ"
           },
           "seconds": {
             "type": "string",
-            "description": "视频时长"
+            "description": "動画の長さ"
           },
           "size": {
             "type": "string",
-            "description": "视频尺寸"
+            "description": "動画サイズ"
           },
           "remixed_from_video_id": {
             "type": "string",
-            "description": "源视频 ID（如果是基于其他视频生成）"
+            "description": "ソースビデオID（他のビデオに基づいて生成された場合）"
           },
           "error": {
             "$ref": "#/components/schemas/OpenAIVideoError"
           },
           "metadata": {
             "type": "object",
-            "description": "额外元数据",
+            "description": "追加のメタデータ",
             "additionalProperties": true,
             "properties": {}
           }
@@ -4288,15 +4288,15 @@
       },
       "OpenAIVideoError": {
         "type": "object",
-        "description": "OpenAI 视频错误信息",
+        "description": "OpenAI ビデオエラー情報",
         "properties": {
           "message": {
             "type": "string",
-            "description": "错误信息"
+            "description": "エラーメッセージ"
           },
           "code": {
             "type": "string",
-            "description": "错误码"
+            "description": "エラーコード"
           }
         }
       },
@@ -4481,25 +4481,25 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "使用 Bearer Token 认证。\n格式: `Authorization: Bearer sk-xxxxxx`"
+        "description": "Bearer Token を使用して認証します。\n形式: `Authorization: Bearer sk-xxxxxx`"
       },
       "SessionAuth": {
         "type": "apiKey",
         "in": "cookie",
         "name": "session",
-        "description": "Session认证，通过登录接口获取"
+        "description": "セッション認証。ログインAPI経由で取得します。"
       },
       "AccessToken": {
         "type": "apiKey",
         "in": "header",
         "name": "Authorization",
-        "description": "Access token auth format: Bearer {access_token}, generated via /api/user/token."
+        "description": "アクセストークン認証。形式: Bearer {access_token}。`/api/user/token` エンドポイント経由で生成されます。"
       },
       "NewApiUser": {
         "type": "apiKey",
         "in": "header",
         "name": "New-Api-User",
-        "description": "用户ID请求头，必须与当前登录用户ID匹配，使用Session或AccessToken认证时必须提供"
+        "description": "ユーザーIDリクエストヘッダー。現在のログインユーザーIDと一致する必要があります。SessionまたはAccessToken認証を使用する場合は必須です。"
       }
     }
   },
@@ -4510,31 +4510,31 @@
   ],
   "tags": [
     {
-      "name": "OpenAI格式(Chat)"
+      "name": "OpenAI形式 (Chat)"
     },
     {
-      "name": "OpenAI格式(Responses)"
+      "name": "OpenAI形式 (Responses)"
     },
     {
-      "name": "图片生成Gemini格式"
+      "name": "画像生成Gemini形式"
     },
     {
-      "name": "图片生成OpenAI DALL-E格式"
+      "name": "画像生成OpenAI DALL-E形式"
     },
     {
-      "name": "获取模型列表"
+      "name": "モデル一覧の取得"
     },
     {
-      "name": "视频生成Kling格式"
+      "name": "動画生成Kling形式"
     },
     {
-      "name": "视频生成Seedance火山方舟"
+      "name": "動画生成Seedance火山方舟"
     },
     {
-      "name": "视频生成Sora兼容格式"
+      "name": "動画生成Sora互換フォーマット"
     },
     {
-      "name": "视频生成Veo3格式"
+      "name": "動画生成Veo3形式"
     }
   ],
   "x-doc-drift-summary": {

@@ -1,0 +1,23 @@
+---
+title: "AI-Generated Integration Code"
+description: "This page explains how to use \"Copy Page\" directly on documentation pages to have AI generate runnable invocation code."
+---
+
+## Recommended Practices
+
+1. Open the target API page and click "Copy Page".
+2. Send the entire copied page content to the AI.
+3. Specify the programming language, business parameters, and response handling method to the AI.
+4. Ask the AI to generate complete request code, error handling, and asynchronous task polling logic (if the API involves task queries).
+5. Return to the documentation or test page to verify that field names, paths, and authentication methods are consistent.
+
+## Prompt Suggestions
+
+> The following content is the complete page content that I copied directly from the API documentation page.
+> Please generate runnable invocation code based on this content.
+> Requirements:
+> 1. Use Bearer Token for authentication
+> 2. Use https://api.aiid.edu.kg/v1 for Base URL
+> 3. Keep the complete request body and error handling
+> 4. Use comments to indicate the model, API Key, and business parameters that need to be replaced
+> 5. If this is a long-running task API, also generate an example for querying the task status.

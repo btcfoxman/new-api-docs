@@ -1,0 +1,28 @@
+---
+title: "Online Debugging"
+description: "This page explains how to debug APIs directly within the documentation page instead of writing business code first."
+---
+
+## Usage
+
+1. Open the target API page and click `试一试`
+2. Fill in `api_key`
+3. Fill in the path parameters, query parameters, or request body as required by the API
+4. Send the request and view the response
+
+## Debugging Tips
+
+- Start by verifying a minimum viable request
+- For long-running task APIs, first confirm the `task_id` or `operation_name` in the creation response
+- For file upload APIs, ensure that `multipart/form-data` and the file field name are correct
+- If it fails, check the HTTP status code, `error.code`, and `error.message` first
+
+## Working with AI-Generated Code
+
+It is recommended to verify a minimum viable request on the current API page first, then use "Copy Page" to send the entire page content to the AI for code generation.
+
+This allows you to confirm the following beforehand:
+
+- The path and authentication method are correct
+- The current parameter schema is executable
+- Which query identifiers need to be saved for asynchronous task APIs

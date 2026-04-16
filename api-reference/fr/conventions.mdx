@@ -1,0 +1,82 @@
+---
+title: "Conventions d'appel"
+description: "Instructions concernant l'authentification, la structure des erreurs, les énumérations courantes et la consultation des tâches asynchrones."
+---
+
+## Méthodes d'authentification
+
+Toutes les interfaces publiques utilisent par défaut Bearer Token :
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+Adresse de base :
+
+```text
+https://api.aiid.edu.kg/v1
+```
+
+Bien que les chemins diffèrent pour certaines interfaces au format natif ou spécifiques à un modèle, elles utilisent toujours la même méthode d'authentification par clé API.
+
+## Structure d'erreur
+
+Lors du dépannage de requêtes ayant échoué, concentrez-vous en priorité sur :
+
+- Code d'état HTTP
+- `error.code`
+- `error.message`
+
+Structure typique :
+
+```json
+{
+  "error": {
+    "code": "invalid_request_error",
+    "message": "the reason why error occurred"
+  }
+}
+```
+
+## Codes d'état courants
+
+| HTTP | Signification | Suggestion |
+|---|---|---|
+| 400 | Paramètres de requête invalides | Vérifier les champs obligatoires, le nom du modèle et les paramètres de chemin |
+| 401 | Échec de l'authentification | Vérifier si la clé API est valide |
+| 404 | Chemin ou tâche inexistant | Vérifier le chemin de la requête et l'ID de la tâche |
+| 429 | Limite de débit atteinte | Réduire la fréquence ou réessayer |
+| 500 | Erreur interne du serveur | Enregistrer la requête et réessayer ou contacter le support |
+
+## Énumérations d'état courantes
+
+Énumération des rôles courants :
+
+- `system`
+- `user`
+- `assistant`
+
+États courants des tâches longues :
+
+- `queued`
+- `running`
+- `succeeded`
+- `failed`
+- `in_progress`
+- `completed`
+
+Les champs d'état renvoyés par les différentes interfaces vidéo peuvent varier légèrement, mais la sémantique tourne autour de « En attente / En cours / Terminé / Échec ».
+
+## Requête de tâche asynchrone
+
+La documentation publique actuelle se concentre principalement sur la « requête active des résultats de tâche », les méthodes courantes incluent :
+
+- `GET /v1/videos/{task_id}`
+- `GET /api/v3/contents/generations/tasks/{task_id}`
+- `GET /v1beta/{operation_name}`
+
+Suggestions d'intégration :
+
+- Implémenter des mécanismes de retry et d'exponential backoff pour les requêtes de tâches
+- Persister `task_id` ou `operation_name`
+- La consultation des résultats sert de mécanisme de secours pour le suivi des tâches asynchrones

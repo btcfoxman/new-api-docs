@@ -1,0 +1,26 @@
+---
+title: "Быстрый старт"
+description: "Эта страница предназначена для пользователей раздела справочника API; цель — как можно быстрее отправить первый проверяемый запрос."
+---
+
+## Необходимая информация
+
+- Base URL：`https://api.aiid.edu.kg/v1`
+- Заголовок авторизации: `Authorization: Bearer YOUR_API_KEY`
+- Рекомендуемая отправная точка: `POST /v1/chat/completions`
+
+## Пример минимального запроса
+
+```bash
+curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer YOUR_API_KEY"   -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "hello"}]
+  }'
+```
+
+## Контрольный список перед обращением к другим интерфейсам
+
+- Заменен ли корректный Base URL
+- Указан ли Bearer Token
+- Используется ли формат запроса, требуемый страницей интерфейса
+- Сохранены ли `task_id` или `operation_name`, необходимые для запроса статуса видеозадачи
