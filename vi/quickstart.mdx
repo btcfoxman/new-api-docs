@@ -5,9 +5,9 @@ description: "Lấy API Key, thay thế Base URL và thực hiện yêu cầu đ
 
 ## Bước 1: Lấy API Key
 
-1. Đăng nhập vào [Console API Chuhaiying](https://www.google.com/search?q=https://aiid.edu.kg/console)
+1. Đăng nhập vào [bảng điều khiển 出海营 API](https://aiid.edu.kg/console)
 2. Truy cập trang Token để tạo API Key
-3. Sử dụng thông qua https://www.google.com/search?q=`Authorization: Bearer YOUR_API_KEY` trong các bước tiếp theo
+3. Sau đó sử dụng thông qua `Authorization: Bearer YOUR_API_KEY`
 
 ## Bước 2: Cấu hình Base URL
 
@@ -57,9 +57,9 @@ curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application
 ## Kiến nghị tích hợp
 
 - Các dự án mới nên ưu tiên bắt đầu từ giao diện tương thích OpenAI
-- Chỉnh sửa hình ảnh cần lưu ý các yêu cầu về https://www.google.com/search?q=`multipart/form-data` và trường tệp
-- Giao diện tác vụ video nên lưu https://www.google.com/search?q=`task_id` hoặc `operation_name` trước khi truy vấn
-- Khi gỡ lỗi thất bại, ưu tiên kiểm tra mã trạng thái HTTP, https://www.google.com/search?q=`error.code` và `error.message`
+- Khi chỉnh sửa ảnh, cần đặc biệt lưu ý `multipart/form-data` và yêu cầu đối với trường tệp
+- Với API tác vụ video, cần lưu trước `task_id` hoặc `operation_name` rồi mới truy vấn
+- Khi gỡ lỗi thất bại, hãy ưu tiên kiểm tra mã trạng thái HTTP, `error.code` và `error.message`
 
 ## Bước tiếp theo
 

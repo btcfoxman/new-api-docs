@@ -245,7 +245,7 @@
       "post": {
         "summary": "Hình ảnh Gemini (Nano Banana)",
         "deprecated": false,
-        "description": "Tạo hình ảnh với Gemini.\n\nDòng Nano Banana hỗ trợ định dạng OpenAI Dall-E (chi tiết xem tại liên kết [Tạo hình ảnh/định dạng OpenAI Dall-E](https://www.google.com/search?q=#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)).",
+        "description": "Tạo hình ảnh với Gemini.\n\nDòng Nano Banana hỗ trợ định dạng OpenAI Dall-E (xem chi tiết tại liên kết [Tạo ảnh/định dạng OpenAI Dall-E](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)).",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "Tạo hình ảnh/Định dạng Gemini"
@@ -1350,7 +1350,7 @@
       "post": {
         "summary": "Kling Chuyển văn bản thành video",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nSử dụng mô hình Kling để tạo video từ mô tả văn bản.\n\nCác mô hình hỗ trợ: kling-v1, kling-v1-5, v.v.",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nSử dụng mô hình Kling để tạo video từ mô tả văn bản.\n\nCác mô hình hỗ trợ: kling-v1, kling-v1-5, v.v.",
         "operationId": "createKlingText2Video",
         "tags": [
           "Tạo video/Định dạng Kling"
@@ -1412,7 +1412,7 @@
       "get": {
         "summary": "Lấy trạng thái tác vụ chuyển văn bản thành video của Kling",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ chuyển văn bản thành video của Kling.",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ chuyển văn bản thành video của Kling.",
         "operationId": "getKlingText2Video",
         "tags": [
           "Tạo video/Định dạng Kling"
@@ -1468,7 +1468,7 @@
       "post": {
         "summary": "Kling Chuyển hình ảnh thành video",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nSử dụng mô hình Kling để tạo video từ hình ảnh.\n\nHỗ trợ truyền URL hình ảnh hoặc dữ liệu hình ảnh mã hóa Base64 thông qua tham số image.",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nSử dụng mô hình Kling để tạo video từ hình ảnh.\n\nHỗ trợ truyền URL hình ảnh hoặc dữ liệu hình ảnh mã hóa Base64 thông qua tham số image.",
         "operationId": "createKlingImage2Video",
         "tags": [
           "Tạo video/Định dạng Kling"
@@ -1530,7 +1530,7 @@
       "get": {
         "summary": "Lấy trạng thái nhiệm vụ tạo video từ hình ảnh của Kling",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ tạo video từ hình ảnh Kling.",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ tạo video từ hình ảnh Kling.",
         "operationId": "getKlingImage2Video",
         "tags": [
           "Tạo video/Định dạng Kling"
@@ -1585,7 +1585,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "Tạo video (Seedance)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: Tùy chọn, mảng đầu vào đa phương tiện trong chế độ nâng cao.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- Các trường phương tiện trong `content` hỗ trợ truyền trực tiếp chuỗi URL hoặc định dạng đối tượng, ví dụ: `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: Tùy chọn, mảng đầu vào đa phương tiện trong chế độ nâng cao.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- Các trường phương tiện trong `content` hỗ trợ truyền trực tiếp chuỗi URL hoặc định dạng đối tượng, ví dụ: `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
           "Tạo video/SeedanceVolcano Ark"
@@ -1869,7 +1869,7 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "Truy vấn tác vụ (Seedance)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: Tùy chọn, mảng đầu vào đa phương tiện trong chế độ nâng cao.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- Các trường phương tiện trong `content` hỗ trợ truyền trực tiếp chuỗi URL hoặc định dạng đối tượng, ví dụ: `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: Tùy chọn, mảng đầu vào đa phương tiện trong chế độ nâng cao.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- Các trường phương tiện trong `content` hỗ trợ truyền trực tiếp chuỗi URL hoặc định dạng đối tượng, ví dụ: `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
           "Tạo video/SeedanceVolcano Ark"
@@ -1967,7 +1967,7 @@
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
         "summary": "Tạo video (định dạng Veo3)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề API này chỉ dùng để giải thích định dạng gốc của Veo và trạng thái hỗ trợ hiện tại của gateway.\n\nĐối với dòng Veo hiện tại, vui lòng sử dụng chế độ tương thích OpenAI Sora cho bên ngoài: `POST /v1/videos`.\n\nĐường dẫn chế độ gốc của Google được dành riêng là: `POST /v1beta/models/{model}:predictLongRunning`. Gateway hiện tại chưa kết nối với luồng phân phối tác vụ gốc của Veo, do đó tạm thời chưa hỗ trợ gọi theo thân yêu cầu `instances/parameters` gốc.",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề API này chỉ dùng để giải thích định dạng gốc của Veo và trạng thái hỗ trợ hiện tại của gateway.\n\nĐối với dòng Veo hiện tại, vui lòng sử dụng chế độ tương thích OpenAI Sora cho bên ngoài: `POST /v1/videos`.\n\nĐường dẫn chế độ gốc của Google được dành riêng là: `POST /v1beta/models/{model}:predictLongRunning`. Gateway hiện tại chưa kết nối với luồng phân phối tác vụ gốc của Veo, do đó tạm thời chưa hỗ trợ gọi theo thân yêu cầu `instances/parameters` gốc.",
         "operationId": "create_veo3_google_native_task",
         "tags": [
           "Tạo video/định dạng Veo3"
@@ -2141,7 +2141,7 @@
     "/v1beta/{operation_name}": {
       "get": {
         "summary": "Truy vấn nhiệm vụ (định dạng Veo3)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề giao diện này chỉ dùng để giải thích giao thức truy vấn gốc của Veo.\n\nĐối với dòng Veo hiện tại, vui lòng chuyển sang sử dụng giao diện thống nhất `/v1/videos` để tạo và truy vấn.\n\nCấu trúc truy vấn `operation_name` dưới đây chỉ được giữ lại dưới dạng giải thích giao thức dự phòng, hiện chưa hỗ trợ gọi thực tế.",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề giao diện này chỉ dùng để giải thích giao thức truy vấn gốc của Veo.\n\nĐối với dòng Veo hiện tại, vui lòng chuyển sang sử dụng giao diện thống nhất `/v1/videos` để tạo và truy vấn.\n\nCấu trúc truy vấn `operation_name` dưới đây chỉ được giữ lại dưới dạng giải thích giao thức dự phòng, hiện chưa hỗ trợ gọi thực tế.",
         "operationId": "query_veo3_google_native_task",
         "tags": [
           "Tạo video/định dạng Veo3"

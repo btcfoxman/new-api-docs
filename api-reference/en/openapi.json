@@ -245,7 +245,7 @@
       "post": {
         "summary": "Gemini Images (Nano Banana)",
         "deprecated": false,
-        "description": "Gemini image generation.\n\nThe Nano Banana series supports OpenAI Dall-E format (for details, see the link [Image Generation/OpenAI Dall-E Format](https://www.google.com/search?q=#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)).",
+        "description": "Gemini image generation.\n\nThe Nano Banana series supports the OpenAI Dall-E format (see [Image Generation/OpenAI Dall-E Format](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F) for details).",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "Image Generation/Gemini Format"
@@ -1350,7 +1350,7 @@
       "post": {
         "summary": "Kling Text-to-Video",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nUse the Kling model to generate videos from text descriptions.\n\nSupported models: kling-v1, kling-v1-5, etc.",
+        "description": "This series supports the OpenAI video generation format (see [Video Generation/Sora Compatible Formats](/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nUse the Kling model to generate videos from text descriptions.\n\nSupported models: kling-v1, kling-v1-5, etc.",
         "operationId": "createKlingText2Video",
         "tags": [
           "Video Generation/Kling Format"
@@ -1412,7 +1412,7 @@
       "get": {
         "summary": "Get Kling text-to-video task status",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nQuery the status and results of the Kling text-to-video task.",
+        "description": "This series supports the OpenAI video generation format (see [Video Generation/Sora Compatible Formats](/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nQuery the status and results of the Kling text-to-video task.",
         "operationId": "getKlingText2Video",
         "tags": [
           "Video Generation/Kling Format"
@@ -1468,7 +1468,7 @@
       "post": {
         "summary": "Kling Image-to-Video",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nGenerate videos from images using the Kling model.\n\nSupports passing image URLs or Base64-encoded image data via the `image` parameter.",
+        "description": "This series supports the OpenAI video generation format (see [Video Generation/Sora Compatible Formats](/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nGenerate videos from images using the Kling model.\n\nSupports passing image URLs or Base64-encoded image data via the `image` parameter.",
         "operationId": "createKlingImage2Video",
         "tags": [
           "Video Generation/Kling Format"
@@ -1530,7 +1530,7 @@
       "get": {
         "summary": "Get Kling image-to-video task status",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nQuery the status and results of the Kling image-to-video task.",
+        "description": "This series supports the OpenAI video generation format (see [Video Generation/Sora Compatible Formats](/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nQuery the status and results of the Kling image-to-video task.",
         "operationId": "getKlingImage2Video",
         "tags": [
           "Video Generation/Kling Format"
@@ -1585,7 +1585,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "Create Video (Seedance)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional. Multimedia input array for advanced mode.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- Media fields in `content` support passing URL strings directly as well as object notation, such as `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "This series supports the OpenAI video generation format (see [Video Generation/Sora Compatible Formats](/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional. Multimedia input array for advanced mode.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- Media fields in `content` support passing URL strings directly as well as object notation, such as `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
           "Video Generation/Seedance Volcengine Ark"
@@ -1869,7 +1869,7 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "Query Task (Seedance)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional. Multimedia input array for advanced mode.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- Media fields in `content` support passing URL strings directly as well as object notation, such as `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "This series supports the OpenAI video generation format (see [Video Generation/Sora Compatible Formats](/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional. Multimedia input array for advanced mode.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- Media fields in `content` support passing URL strings directly as well as object notation, such as `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
           "Video Generation/Seedance Volcengine Ark"
@@ -1966,8 +1966,8 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "Create video ([[KEEP_0]]3 format)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nThis interface topic page is intended only to explain the Veo native format and the current gateway support status.\n\nFor the current Veo series, please use the OpenAI Sora compatibility mode for external requests: `POST /v1/videos`.\n\nThe Google native mode path is reserved as: `POST /v1beta/models/{model}:predictLongRunning`. The current gateway has not yet connected to the Veo native task distribution link; therefore, calls using the native `instances/parameters` request body are currently not supported.",
+        "summary": "Create video (Veo3 format)",
+        "description": "This series supports the OpenAI video generation format (see [Video Generation/Sora Compatible Formats](/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nThis interface topic page is intended only to explain the Veo native format and the current gateway support status.\n\nFor the current Veo series, please use the OpenAI Sora compatibility mode for external requests: `POST /v1/videos`.\n\nThe Google native mode path is reserved as: `POST /v1beta/models/{model}:predictLongRunning`. The current gateway has not yet connected to the Veo native task distribution link; therefore, calls using the native `instances/parameters` request body are currently not supported.",
         "operationId": "create_veo3_google_native_task",
         "tags": [
           "Video Generation/Veo3 Format"
@@ -2140,8 +2140,8 @@
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "Query Task ([[KEEP_0]]3 Format)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nThis interface topic page is intended solely to explain the Veo native query protocol.\n\nFor the current Veo series, please use the `/v1/videos` unified interface for creation and queries instead.\n\nThe following `operation_name` query structure is retained for reserved protocol documentation only and does not currently support actual calls.",
+        "summary": "Query task (Veo3 format)",
+        "description": "This series supports the OpenAI video generation format (see [Video Generation/Sora Compatible Formats](/api-reference/en/video-generation-sora-compatible-format/create-video) for details).\n\nThis interface topic page is intended solely to explain the Veo native query protocol.\n\nFor the current Veo series, please use the `/v1/videos` unified interface for creation and queries instead.\n\nThe following `operation_name` query structure is retained for reserved protocol documentation only and does not currently support actual calls.",
         "operationId": "query_veo3_google_native_task",
         "tags": [
           "Video Generation/Veo3 Format"

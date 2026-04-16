@@ -245,7 +245,7 @@
       "post": {
         "summary": "Gemini 圖片(Nano Banana)",
         "deprecated": false,
-        "description": "Gemini 圖片生成。\n\nNano Banana系列支援OpenAI Dall-E格式（詳見連結 [圖片生成/OpenAI Dall-E格式](https://www.google.com/search?q=#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)）。",
+        "description": "Gemini 圖片生成。\n\nNano Banana系列支援OpenAI Dall-E 格式（詳見連結 [圖片生成/OpenAI Dall-E 格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)）。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "圖片生成/Gemini 格式"
@@ -1966,7 +1966,7 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "建立影片（[[KEEP_0]]3 格式）",
+        "summary": "建立影片（Veo3 格式）",
         "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n該介面專題頁僅用於說明 Veo 原生格式與目前閘道支援狀態。\n\n目前 Veo 系列對外請使用 OpenAI Sora 相容模式：`POST /v1/videos`。\n\nGoogle 原生模式路徑預留為：`POST /v1beta/models/{model}:predictLongRunning`。目前閘道尚未接通 Veo 原生任務分發鏈路，因此按原生 `instances/parameters` 請求體呼叫暫不支援。",
         "operationId": "create_veo3_google_native_task",
         "tags": [

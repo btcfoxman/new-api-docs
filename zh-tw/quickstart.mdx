@@ -5,9 +5,9 @@ description: "獲取 API Key、替換 Base URL 並發送首個請求。"
 
 ## 第一步：獲取 API Key
 
-1. 登入 [出海營 API 控制台](https://www.google.com/search?q=https://aiid.edu.kg/console)
+1. 登入 [出海營 API 控制台](https://aiid.edu.kg/console)
 2. 進入令牌頁面建立 API Key
-3. 後續透過 https://www.google.com/search?q=`Authorization: Bearer YOUR_API_KEY` 使用
+3. 後續透過 `Authorization: Bearer YOUR_API_KEY` 使用
 
 ## 第二步：配置 Base URL
 
@@ -57,9 +57,9 @@ curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application
 ## 接入建議
 
 - 新專案優先從 OpenAI 相容介面開始
-- 圖片編輯必須注意 https://www.google.com/search?q=`multipart/form-data` 與檔案欄位要求
-- 影片任務介面應先儲存 https://www.google.com/search?q=`task_id` 或 `operation_name` 再查詢
-- 除錯失敗時優先查看 HTTP 狀態碼、https://www.google.com/search?q=`error.code` 和 `error.message`
+- 圖片編輯必須注意 `multipart/form-data` 與檔案欄位要求
+- 影片任務介面應先儲存 `task_id` 或 `operation_name` 再查詢
+- 偵錯失敗時優先查看 HTTP 狀態碼、`error.code` 和 `error.message`
 
 ## 下一步
 
