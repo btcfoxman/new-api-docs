@@ -245,10 +245,10 @@
       "post": {
         "summary": "Hình ảnh Gemini (Nano Banana)",
         "deprecated": false,
-        "description": "Tạo hình ảnh với Gemini.\n\nDòng Nano Banana hỗ trợ định dạng OpenAI Dall-E (xem chi tiết tại liên kết [Tạo ảnh/định dạng OpenAI Dall-E](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%2FOpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)).",
+        "description": "Tạo hình ảnh với Gemini.\n\nDòng Nano Banana hỗ trợ định dạng OpenAI Dall-E (xem liên kết [Tạo hình ảnh theo định dạng OpenAI Dall-E](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%20OpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)).",
         "operationId": "geminiRelayV1Beta",
         "tags": [
-          "Tạo hình ảnh/Định dạng Gemini"
+          "Tạo hình ảnh định dạng Gemini"
         ],
         "parameters": [
           {
@@ -377,7 +377,7 @@
         "description": "OpenAI API tạo hình ảnh định dạng Dall-E.",
         "operationId": "createImageGeneration",
         "tags": [
-          "Tạo ảnh/định dạng Dall-E OpenAI"
+          "Tạo hình ảnh theo định dạng Dall-E của OpenAI"
         ],
         "parameters": [],
         "requestBody": {
@@ -484,7 +484,7 @@
         "description": "OpenAI API chỉnh sửa hình ảnh định dạng Dall-E.",
         "operationId": "createImageEdit",
         "tags": [
-          "Tạo ảnh/định dạng Dall-E OpenAI"
+          "Tạo hình ảnh theo định dạng Dall-E của OpenAI"
         ],
         "parameters": [],
         "requestBody": {
@@ -575,7 +575,7 @@
         "description": "Interface tạo video định dạng tương thích với OpenAI Sora. Hỗ trợ chế độ tạo video từ văn bản (text-to-video) và tạo video tham chiếu từ hình ảnh/video.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video (tải xuống)\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`: Danh sách tác vụ\n- `POST /v1/videos/{video_id}/remix`: Chỉnh sửa video lớp thứ hai / remix\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json` (khi tạo tác vụ)\n\n1. Gọi `POST /v1/videos` để tạo tác vụ và nhận `id`.\n2. Kiểm tra vòng lặp (polling) `GET /v1/videos/{id}` cho đến khi `status=completed` hoặc `failed`.\n3. Sau khi `completed`, ưu tiên sử dụng `video_url` trong kết quả trả về; nếu cần tải xuống thống nhất qua gateway, có thể gọi `GET /v1/videos/{id}/content`.\n\n## 3.1 Tham số cốt lõi\n\n- `model: string` (Bắt buộc)\n- Mô tả: Tên mô hình video cần gọi.\n- Ví dụ: `sora-2`, `doubao-seedance-2-0-260128`\n\n- `prompt: string` (Khuyên dùng)\n- Mô tả: Mô tả chính để tạo video. Phải truyền tham số này ngay cả khi sử dụng `content`, không được để trống.\n- Ví dụ: `第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string` (Tùy chọn)\n- Mô tả: Thời lượng mục tiêu. Chọn một trong hai giữa tham số này và `duration`, nếu truyền cả hai thì thông thường sẽ căn cứ theo kết quả phân tích của gateway.\n- Ví dụ: `8`\n\n- `size: string` (Tùy chọn)\n- Mô tả: Độ phân giải đầu ra, thường dùng `宽x高`.\n- Ví dụ: `720x1280`, `1280x720`\n\n- `mode: string` (Tùy chọn)\n- Mô tả: Chế độ tạo, nếu không truyền mặc định là `t2v`. Các chế độ khác nhau có yêu cầu khác nhau về tham số tài liệu (assets).\n- Ví dụ: `t2v`, `i2v`, `i2v_first_last`, `reference_material`\n\n## 3.2 Tham số tương thích chung\n\n- `aspect_ratio` hoặc `ratio`: Tỷ lệ khung hình.\n- `duration`: Bí danh thời lượng (có thể chọn một trong hai với `seconds`).\n- `quality` hoặc `resolution`: Tham số liên quan đến độ phân giải.\n- `fps`: Tốc độ khung hình.\n- `function_mode`: Chế độ chức năng tùy chọn, dùng để kích hoạt các hành vi cụ thể (ví dụ: `omni_reference` biểu thị ngữ nghĩa tham chiếu toàn năng).\n\n## 3.3 Tham số tài liệu tham chiếu\n\n- `input_reference`: Đối tượng nhập tham chiếu chuẩn.\n- Mô tả: Chỉ hỗ trợ định dạng chuỗi URL, không hỗ trợ định dạng đối tượng.\n- Ví dụ đúng: `\"input_reference\": \"https://example.com/ref.png\"`\n- Ví dụ sai: `\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`: Tham chiếu hình ảnh.\n- Mô tả: `image_url` thường dùng cho đơn ảnh; `image_urls` dùng cho đa ảnh hoặc tham chiếu toàn năng.\n\n- `end_image_url` / `last_image_url`: Tham chiếu khung hình cuối.\n- Mô tả: Thường kết hợp với `mode=i2v_first_last`, biểu thị khung hình kết thúc video.\n\n- `video_urls`: Danh sách tham chiếu video.\n- Mô tả: Thường dùng trong các kịch bản tham chiếu toàn năng `reference_material` hoặc `content`.\n\n- `audio_urls`: Danh sách tham chiếu âm thanh.\n- Mô tả: Dùng để tham chiếu phong cách nhạc nền/thuyết minh (có hiệu lực hay không tùy thuộc vào khả năng của mô hình).\n\n- `reference_images`: Tham chiếu đa ảnh.\n- Mô tả: Thường dùng trong chế độ tham chiếu đa khung hình/đa ảnh.\n\nLưu ý: Các mô hình khác nhau có yêu cầu khác nhau về trường tài liệu, nên truyền tham số theo phần \"Chế độ và tham số đầu vào tối thiểu\" bên dưới.\n\n## 3.4 Chế độ content nâng cao (khuyên dùng cho các kịch bản tham chiếu phức tạp)\n\nCó thể truyền trực tiếp mảng `content`:\n- `type=text`: Chỉ lệnh văn bản.\n- `type=image_url|video_url|audio_url`: Đầu vào đa phương tiện.\n- Hỗ trợ `name` để tham chiếu tài nguyên trong văn bản thông qua `@名称`.\n\nRàng buộc bắt buộc:\n- Khi sử dụng `content`, `prompt` vẫn phải được truyền và không được để trống.\n\nCách viết tương thích:\n- `image_url/video_url/audio_url` có thể là một chuỗi hoặc đối tượng `{ \"url\": \"https://...\" }`.\n- `role` có thể sử dụng `material`, cũng tương thích với `reference_image/reference_video/reference_audio`.\n\nCó thể mang theo đồng thời:\n- `generate_audio: boolean`\n- `watermark: boolean`\n\nGiải thích bổ sung:\n- `generate_audio=true`: Yêu cầu mô hình đồng thời tạo âm thanh (chỉ có hiệu lực với các mô hình hỗ trợ khả năng này).\n- `watermark=false`: Yêu cầu tắt hình mờ (việc có hiệu lực thực tế hay không phụ thuộc vào mô hình và chính sách kênh).\n- `name`: Bí danh tài nguyên, nên để giống với `@名称` trong `text` để mô hình liên kết chính xác tài nguyên.\n\nCác họ mô hình khác nhau có sự khác biệt lớn về hỗ trợ tham số, nên chọn tham số theo bảng dưới đây:\n\n| Họ mô hình | Tên mô hình phổ biến (ví dụ) | Tham số đầu vào tối thiểu đề xuất | Tham số mở rộng thường dùng | Lưu ý |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | Nhạy cảm nhất với `mode`; không phải tất cả phiên bản đều hỗ trợ `reference_material`. |\n| Sora Phổ biến | `sora-2` `sora-2-pro` và `*-stable/*-official` | `model + prompt` | `seconds/size`, nên bổ sung `input_reference` (chuỗi URL) | Khi fallback đa kênh, yêu cầu về hình ảnh có thể khác nhau, nên chuẩn bị hình ảnh tham chiếu để tăng tỷ lệ thành công. |\n| Sora Thời lượng đặt trước | `sora2-landscape-10s` `sora2-pro-portrait-25s`, v.v. | `model + prompt` | `image_url/input_reference` | Thời lượng và hướng thường do tên mô hình quyết định, `seconds/ratio` chỉ có hiệu lực khi mô hình cho phép. |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | Các mô hình loại `i2v/r2v` thường cần hình ảnh hoặc tài nguyên tham chiếu; loại `t2v` thường có thể dùng thuần văn bản. |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`, cũng như các trường chính thức như `image/image_list` | Đã tương thích với ngữ nghĩa đường dẫn chính thức (text2video/image2video/multi-image2video) và thống nhất vào `/v1/videos`; không cung cấp khả năng mở rộng video ra bên ngoài. |\n| Mô hình mở rộng tổng hợp | `happyhorse*` `grok-imagine-1.0-video*`, v.v. | `model + prompt` | `seconds/size/content` | Các trường hỗ trợ cụ thể phụ thuộc vào việc triển khai mô hình và kênh, nên ưu tiên sử dụng các trường tiêu chuẩn, nếu thiếu mới dùng `content`. |\n\nGiải thích:\n1. Nếu bạn sử dụng mô hình bí danh ổn định (như `*-stable`, `*-official`), lớp dưới có thể tự động chuyển đổi kênh, vui lòng cố gắng truyền \"tham số tương thích đa kênh\" (`prompt + model + seconds/duration + size/ratio + 必要参考图`).\n2. Đối với các kịch bản đa chất liệu phức tạp (Hình ảnh + Video + Âm thanh + @Tên), ưu tiên sử dụng `content` để có khả năng tương thích cao nhất.\n3. Nếu tài liệu mô hình không ghi rõ hỗ trợ một trường cụ thể, vui lòng chạy thử với \"tham số đầu vào tối thiểu\" trước, sau đó mới dần dần thêm các tham số mở rộng.\n\n### 4.1 Bổ sung chế độ chính thức của Kling\n\n- `mode=t2v`: Văn bản sang video\n- `mode=i2v`: Hình ảnh sang video (yêu cầu `image` hoặc `image_url`)\n- `mode=multi_i2v`: Tham chiếu nhiều hình ảnh (yêu cầu `image_list` hoặc nhiều `image_urls`)\n- `mode=extend`: Không hỗ trợ (tính năng kéo dài video tạm thời chưa cung cấp khả năng `/v1/videos` ra bên ngoài)\n\nCác tham số chính thức phổ biến có thể được truyền trực tiếp trong body request của `/v1/videos`:\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Bổ sung chế độ video Grok\n\nTham số đề xuất:\n- `model`: Ví dụ `grok-video-3`\n- `prompt`\n- `ratio` hoặc `aspect_ratio`\n- `resolution` hoặc `size`\n- `seconds` hoặc `duration`\n- `image` / `image_url` / `input_reference` (Tham chiếu hình ảnh đơn)\n- `reference_images` / `reference_image_urls` (Tham chiếu nhiều hình ảnh, ngữ nghĩa `reference-to-video` chính thức)\n- `mode` (tùy chọn): `image-to-video`, `reference-to-video`\n\nRàng buộc:\n- Không hỗ trợ `mode=edit-video` / `mode=extend-video` (Chỉnh sửa và kéo dài video tạm thời không cung cấp ra bên ngoài).\n- `image/input_reference` và `reference_images` không thể truyền cùng lúc.\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v` (tương đương `i2v_first`)\n- Tham số đầu vào tối thiểu: `model + prompt + image_url` (hoặc chuỗi URL `input_reference`)\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images` (thông thường 1~4 ảnh)\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- Đối với các kịch bản phức tạp, khuyến nghị sử dụng `content + function_mode=omni_reference`\n- Mô tả: Khi truyền `function_mode=omni_reference`, ngay cả khi không truyền `mode=reference_material` một cách rõ ràng, hệ thống vẫn sẽ xử lý theo ngữ nghĩa tham chiếu toàn năng.",
         "operationId": "createVideo",
         "tags": [
-          "Định dạng tương thích với tạo video/Sora"
+          "视频生成 Sora兼容格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1173,7 +1173,7 @@
         "description": "Giao diện truy vấn trạng thái tác vụ video tương thích với OpenAI.\n\nTrả về thông tin trạng thái chi tiết của tác vụ video.",
         "operationId": "getVideo",
         "tags": [
-          "Định dạng tương thích với tạo video/Sora"
+          "视频生成 Sora兼容格式"
         ],
         "parameters": [
           {
@@ -1293,7 +1293,7 @@
       "get": {
         "summary": "Lấy nội dung video",
         "deprecated": false,
-        "description": "Lấy nội dung tệp video của các tác vụ video đã hoàn thành.\n\nGiao diện này sẽ đóng vai trò proxy để trả về luồng tệp video (video file stream).",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nLấy nội dung tệp video của các tác vụ video đã hoàn thành.\n\nGiao diện này sẽ đóng vai trò proxy để trả về luồng tệp video (video file stream).",
         "operationId": "getVideoContent",
         "tags": [
           "Định dạng tương thích với tạo video/Sora"
@@ -1588,7 +1588,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: Tùy chọn, mảng đầu vào đa phương tiện trong chế độ nâng cao.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- Các trường phương tiện trong `content` hỗ trợ truyền trực tiếp chuỗi URL hoặc định dạng đối tượng, ví dụ: `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "Tạo video/SeedanceVolcano Ark"
+          "Tạo video Seedance Volcengine Ark"
         ],
         "requestBody": {
           "required": true,
@@ -1872,7 +1872,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: Tùy chọn, mảng đầu vào đa phương tiện trong chế độ nâng cao.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- Các trường phương tiện trong `content` hỗ trợ truyền trực tiếp chuỗi URL hoặc định dạng đối tượng, ví dụ: `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "Tạo video/SeedanceVolcano Ark"
+          "Tạo video Seedance Volcengine Ark"
         ],
         "parameters": [
           {
@@ -1970,7 +1970,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề API này chỉ dùng để giải thích định dạng gốc của Veo và trạng thái hỗ trợ hiện tại của gateway.\n\nĐối với dòng Veo hiện tại, vui lòng sử dụng chế độ tương thích OpenAI Sora cho bên ngoài: `POST /v1/videos`.\n\nĐường dẫn chế độ gốc của Google được dành riêng là: `POST /v1beta/models/{model}:predictLongRunning`. Gateway hiện tại chưa kết nối với luồng phân phối tác vụ gốc của Veo, do đó tạm thời chưa hỗ trợ gọi theo thân yêu cầu `instances/parameters` gốc.",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "Tạo video/định dạng Veo3"
+          "Định dạng Veo3 cho tạo video"
         ],
         "parameters": [
           {
@@ -2144,7 +2144,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề giao diện này chỉ dùng để giải thích giao thức truy vấn gốc của Veo.\n\nĐối với dòng Veo hiện tại, vui lòng chuyển sang sử dụng giao diện thống nhất `/v1/videos` để tạo và truy vấn.\n\nCấu trúc truy vấn `operation_name` dưới đây chỉ được giữ lại dưới dạng giải thích giao thức dự phòng, hiện chưa hỗ trợ gọi thực tế.",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "Tạo video/định dạng Veo3"
+          "Định dạng Veo3 cho tạo video"
         ],
         "parameters": [
           {
@@ -4516,10 +4516,10 @@
       "name": "Định dạng OpenAI (Responses)"
     },
     {
-      "name": "Tạo hình ảnh/Định dạng Gemini"
+      "name": "Tạo hình ảnh định dạng Gemini"
     },
     {
-      "name": "Tạo ảnh/định dạng Dall-E OpenAI"
+      "name": "Tạo hình ảnh theo định dạng Dall-E của OpenAI"
     },
     {
       "name": "Lấy danh sách mô hình"
@@ -4531,10 +4531,10 @@
       "name": "Định dạng tương thích với tạo video/Sora"
     },
     {
-      "name": "Tạo video/SeedanceVolcano Ark"
+      "name": "Tạo video Seedance Volcengine Ark"
     },
     {
-      "name": "Tạo video/định dạng Veo3"
+      "name": "Định dạng Veo3 cho tạo video"
     }
   ],
   "x-doc-drift-summary": {
