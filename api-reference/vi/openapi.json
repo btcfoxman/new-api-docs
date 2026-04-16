@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Tài liệu tham khảo API của Chương trình Toàn cầu hóa",
+    "title": "Overseas API Reference",
     "version": "1.0.0",
-    "description": "Public AI Gateway API Reference"
+    "description": "Tài liệu API Overseas"
   },
   "servers": [
     {
@@ -13,18 +13,18 @@
   "paths": {
     "/v1/models": {
       "get": {
-        "summary": "Lấy danh sách mô hình",
+        "summary": "获取模型列表",
         "deprecated": false,
-        "description": "Lấy danh sách các mô hình hiện có sẵn.\n\nTự động nhận dạng định dạng phản hồi dựa trên tiêu đề yêu cầu (request header):\n- Trả về định dạng Anthropic khi bao gồm các tiêu đề `x-api-key` và `anthropic-version`\n- Trả về định dạng Gemini khi bao gồm tiêu đề `x-goog-api-key` hoặc tham số truy vấn `key`\n- Các trường hợp khác trả về định dạng OpenAI",
+        "description": "获取当前可用的模型列表。\n\n根据请求头自动识别返回格式：\n- 包含 `x-api-key` 和 `anthropic-version` 头时返回 Anthropic 格式\n- 包含 `x-goog-api-key` 头或 `key` 查询参数时返回 Gemini 格式\n- 其他情况返回 OpenAI 格式",
         "operationId": "listModels",
         "tags": [
-          "Lấy danh sách mô hình"
+          "获取模型列表"
         ],
         "parameters": [
           {
             "name": "key",
             "in": "query",
-            "description": "Google API Key (dùng cho định dạng Gemini)",
+            "description": "Google API Key (用于 Gemini 格式)",
             "required": false,
             "schema": {
               "type": "string"
@@ -33,7 +33,7 @@
           {
             "name": "x-api-key",
             "in": "header",
-            "description": "Anthropic API Key (dùng cho định dạng Claude)",
+            "description": "Anthropic API Key (用于 Claude 格式)",
             "required": false,
             "example": "",
             "schema": {
@@ -43,7 +43,7 @@
           {
             "name": "anthropic-version",
             "in": "header",
-            "description": "Phiên bản Anthropic API",
+            "description": "Anthropic API 版本",
             "required": false,
             "example": "",
             "schema": {
@@ -54,7 +54,7 @@
           {
             "name": "x-goog-api-key",
             "in": "header",
-            "description": "Google API Key (dùng cho định dạng Gemini)",
+            "description": "Google API Key (用于 Gemini 格式)",
             "required": false,
             "example": "",
             "schema": {
@@ -64,7 +64,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lấy danh sách mô hình thành công",
+            "description": "成功获取模型列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -75,7 +75,7 @@
             "headers": {}
           },
           "401": {
-            "description": "Xác thực thất bại",
+            "description": "认证失败",
             "content": {
               "application/json": {
                 "schema": {
@@ -99,17 +99,17 @@
     },
     "/v1beta/models": {
       "get": {
-        "summary": "Lấy định dạng Gemini",
+        "summary": "Gemini 格式获取",
         "deprecated": false,
-        "description": "Trả về danh sách các mô hình hiện có ở định dạng Gemini API",
+        "description": "以 Gemini API 格式返回可用模型列表",
         "operationId": "listModelsGemini",
         "tags": [
-          "Lấy danh sách mô hình"
+          "获取模型列表"
         ],
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Lấy danh sách mô hình thành công",
+            "description": "成功获取模型列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -133,12 +133,12 @@
     },
     "/v1/chat/completions": {
       "post": {
-        "summary": "Tạo cuộc hội thoại chat",
+        "summary": "创建聊天对话",
         "deprecated": false,
-        "description": "Tạo phản hồi của mô hình dựa trên lịch sử hội thoại. Hỗ trợ phản hồi dạng truyền trực tuyến (streaming) và không truyền trực tuyến.\n\nTương thích với OpenAI Chat Completions API.",
+        "description": "根据对话历史创建模型响应。支持流式和非流式响应。\n\n兼容 OpenAI Chat Completions API。",
         "operationId": "createChatCompletion",
         "tags": [
-          "Định dạng OpenAI (Chat)"
+          "OpenAI格式(Chat)"
         ],
         "parameters": [],
         "requestBody": {
@@ -153,7 +153,7 @@
         },
         "responses": {
           "200": {
-            "description": "Phản hồi tạo thành công",
+            "description": "成功创建响应",
             "content": {
               "application/json": {
                 "schema": {
@@ -164,7 +164,7 @@
             "headers": {}
           },
           "400": {
-            "description": "Tham số yêu cầu bị lỗi",
+            "description": "请求参数错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -175,7 +175,7 @@
             "headers": {}
           },
           "429": {
-            "description": "Giới hạn tỷ lệ yêu cầu",
+            "description": "请求频率限制",
             "content": {
               "application/json": {
                 "schema": {
@@ -199,12 +199,12 @@
     },
     "/v1/responses": {
       "post": {
-        "summary": "Tạo phản hồi (OpenAI Responses API)",
+        "summary": "创建响应 (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API, dùng để tạo phản hồi từ mô hình.\nHỗ trợ các tính năng như hội thoại đa vòng, gọi công cụ, suy luận.",
+        "description": "OpenAI Responses API，用于创建模型响应。\n支持多轮对话、工具调用、推理等功能。",
         "operationId": "createResponse",
         "tags": [
-          "Định dạng OpenAI (Responses)"
+          "OpenAI格式(Responses)"
         ],
         "parameters": [],
         "requestBody": {
@@ -219,7 +219,7 @@
         },
         "responses": {
           "200": {
-            "description": "Phản hồi tạo thành công",
+            "description": "成功创建响应",
             "content": {
               "application/json": {
                 "schema": {
@@ -243,18 +243,18 @@
     },
     "/v1beta/models/{model}:generateContent": {
       "post": {
-        "summary": "Hình ảnh Gemini (Nano Banana)",
+        "summary": "Gemini 图片(Nano Banana)",
         "deprecated": false,
-        "description": "Tạo hình ảnh với Gemini.\n\nDòng Nano Banana hỗ trợ định dạng Dall-E của OpenAI (xem liên kết [Tạo ảnh theo định dạng DALL-E của OpenAI](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).",
+        "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成OpenAI DALL-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)）。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
-          "Định dạng Gemini cho tạo ảnh"
+          "图片生成Gemini格式"
         ],
         "parameters": [
           {
             "name": "model",
             "in": "path",
-            "description": "Tên mô hình",
+            "description": "模型名称",
             "required": true,
             "example": "gemini-3-pro-image-preview",
             "schema": {
@@ -348,7 +348,7 @@
         },
         "responses": {
           "200": {
-            "description": "Thành công",
+            "description": "成功",
             "content": {
               "application/json": {
                 "schema": {
@@ -372,12 +372,12 @@
     },
     "/v1/images/generations": {
       "post": {
-        "summary": "Tạo hình ảnh (tương thích OpenAI Dall-E)",
+        "summary": "生成图像（OpenAI Dall-E兼容）",
         "deprecated": false,
-        "description": "OpenAI API tạo hình ảnh định dạng Dall-E.",
+        "description": "OpenAI Dall-E格式图片生成接口。",
         "operationId": "createImageGeneration",
         "tags": [
-          "Tạo ảnh OpenAI định dạng DALL-E"
+          "图片生成OpenAI DALL-E格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -389,21 +389,21 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Tên mô hình",
+                    "description": "模型名称",
                     "example": "dall-e-3"
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Prompt tạo ảnh"
+                    "description": "生图提示词"
                   },
                   "n": {
                     "type": "integer",
-                    "description": "Số lượng tạo",
+                    "description": "生成数量",
                     "default": 1
                   },
                   "size": {
                     "type": "string",
-                    "description": "Kích thước hình ảnh",
+                    "description": "图像尺寸",
                     "enum": [
                       "1024x1024",
                       "1024x1792",
@@ -412,7 +412,7 @@
                   },
                   "quality": {
                     "type": "string",
-                    "description": "Chất lượng tạo ảnh",
+                    "description": "生图质量",
                     "enum": [
                       "standard",
                       "hd"
@@ -420,7 +420,7 @@
                   },
                   "style": {
                     "type": "string",
-                    "description": "Phong cách",
+                    "description": "风格",
                     "enum": [
                       "vivid",
                       "natural"
@@ -428,7 +428,7 @@
                   },
                   "response_format": {
                     "type": "string",
-                    "description": "Định dạng phản hồi",
+                    "description": "返回格式",
                     "enum": [
                       "url",
                       "b64_json"
@@ -436,7 +436,7 @@
                   },
                   "user": {
                     "type": "string",
-                    "description": "ID người dùng"
+                    "description": "用户标识"
                   }
                 },
                 "required": [
@@ -455,7 +455,7 @@
         },
         "responses": {
           "200": {
-            "description": "Tạo hình ảnh thành công",
+            "description": "成功生成图像",
             "content": {
               "application/json": {
                 "schema": {
@@ -479,12 +479,12 @@
     },
     "/v1/images/edits": {
       "post": {
-        "summary": "Chỉnh sửa hình ảnh (tương thích OpenAI Dall-E)",
+        "summary": "编辑图像（OpenAI Dall-E兼容）",
         "deprecated": false,
-        "description": "OpenAI API chỉnh sửa hình ảnh định dạng Dall-E.",
+        "description": "OpenAI Dall-E格式图片编辑接口。",
         "operationId": "createImageEdit",
         "tags": [
-          "Tạo ảnh OpenAI định dạng DALL-E"
+          "图片生成OpenAI DALL-E格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -501,16 +501,16 @@
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Hình ảnh cần chỉnh sửa"
+                    "description": "需编辑的图片"
                   },
                   "mask": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Ảnh mặt nạ tùy chọn"
+                    "description": "可选遮罩图"
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Chỉnh sửa câu lệnh"
+                    "description": "编辑提示词"
                   },
                   "n": {
                     "type": "integer",
@@ -546,7 +546,7 @@
         },
         "responses": {
           "200": {
-            "description": "Tạo hình ảnh thành công",
+            "description": "成功生成图像",
             "content": {
               "application/json": {
                 "schema": {
@@ -570,12 +570,12 @@
     },
     "/v1/videos": {
       "post": {
-        "summary": "Tạo video",
+        "summary": "创建视频",
         "deprecated": false,
-        "description": "Interface tạo video định dạng tương thích với OpenAI Sora. Hỗ trợ chế độ tạo video từ văn bản (text-to-video) và tạo video tham chiếu từ hình ảnh/video.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video (tải xuống)\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`: Danh sách tác vụ\n- `POST /v1/videos/{video_id}/remix`: Chỉnh sửa video lớp thứ hai / remix\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json` (khi tạo tác vụ)\n\n1. Gọi `POST /v1/videos` để tạo tác vụ và nhận `id`.\n2. Kiểm tra vòng lặp (polling) `GET /v1/videos/{id}` cho đến khi `status=completed` hoặc `failed`.\n3. Sau khi `completed`, ưu tiên sử dụng `video_url` trong kết quả trả về; nếu cần tải xuống thống nhất qua gateway, có thể gọi `GET /v1/videos/{id}/content`.\n\n## 3.1 Tham số cốt lõi\n\n- `model: string` (Bắt buộc)\n- Mô tả: Tên mô hình video cần gọi.\n- Ví dụ: `sora-2`, `doubao-seedance-2-0-260128`\n\n- `prompt: string` (Khuyên dùng)\n- Mô tả: Mô tả chính để tạo video. Phải truyền tham số này ngay cả khi sử dụng `content`, không được để trống.\n- Ví dụ: `第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string` (Tùy chọn)\n- Mô tả: Thời lượng mục tiêu. Chọn một trong hai giữa tham số này và `duration`, nếu truyền cả hai thì thông thường sẽ căn cứ theo kết quả phân tích của gateway.\n- Ví dụ: `8`\n\n- `size: string` (Tùy chọn)\n- Mô tả: Độ phân giải đầu ra, thường dùng `宽x高`.\n- Ví dụ: `720x1280`, `1280x720`\n\n- `mode: string` (Tùy chọn)\n- Mô tả: Chế độ tạo, nếu không truyền mặc định là `t2v`. Các chế độ khác nhau có yêu cầu khác nhau về tham số tài liệu (assets).\n- Ví dụ: `t2v`, `i2v`, `i2v_first_last`, `reference_material`\n\n## 3.2 Tham số tương thích chung\n\n- `aspect_ratio` hoặc `ratio`: Tỷ lệ khung hình.\n- `duration`: Bí danh thời lượng (có thể chọn một trong hai với `seconds`).\n- `quality` hoặc `resolution`: Tham số liên quan đến độ phân giải.\n- `fps`: Tốc độ khung hình.\n- `function_mode`: Chế độ chức năng tùy chọn, dùng để kích hoạt các hành vi cụ thể (ví dụ: `omni_reference` biểu thị ngữ nghĩa tham chiếu toàn năng).\n\n## 3.3 Tham số tài liệu tham chiếu\n\n- `input_reference`: Đối tượng nhập tham chiếu chuẩn.\n- Mô tả: Chỉ hỗ trợ định dạng chuỗi URL, không hỗ trợ định dạng đối tượng.\n- Ví dụ đúng: `\"input_reference\": \"https://example.com/ref.png\"`\n- Ví dụ sai: `\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`: Tham chiếu hình ảnh.\n- Mô tả: `image_url` thường dùng cho đơn ảnh; `image_urls` dùng cho đa ảnh hoặc tham chiếu toàn năng.\n\n- `end_image_url` / `last_image_url`: Tham chiếu khung hình cuối.\n- Mô tả: Thường kết hợp với `mode=i2v_first_last`, biểu thị khung hình kết thúc video.\n\n- `video_urls`: Danh sách tham chiếu video.\n- Mô tả: Thường dùng trong các kịch bản tham chiếu toàn năng `reference_material` hoặc `content`.\n\n- `audio_urls`: Danh sách tham chiếu âm thanh.\n- Mô tả: Dùng để tham chiếu phong cách nhạc nền/thuyết minh (có hiệu lực hay không tùy thuộc vào khả năng của mô hình).\n\n- `reference_images`: Tham chiếu đa ảnh.\n- Mô tả: Thường dùng trong chế độ tham chiếu đa khung hình/đa ảnh.\n\nLưu ý: Các mô hình khác nhau có yêu cầu khác nhau về trường tài liệu, nên truyền tham số theo phần \"Chế độ và tham số đầu vào tối thiểu\" bên dưới.\n\n## 3.4 Chế độ content nâng cao (khuyên dùng cho các kịch bản tham chiếu phức tạp)\n\nCó thể truyền trực tiếp mảng `content`:\n- `type=text`: Chỉ lệnh văn bản.\n- `type=image_url|video_url|audio_url`: Đầu vào đa phương tiện.\n- Hỗ trợ `name` để tham chiếu tài nguyên trong văn bản thông qua `@名称`.\n\nRàng buộc bắt buộc:\n- Khi sử dụng `content`, `prompt` vẫn phải được truyền và không được để trống.\n\nCách viết tương thích:\n- `image_url/video_url/audio_url` có thể là một chuỗi hoặc đối tượng `{ \"url\": \"https://...\" }`.\n- `role` có thể sử dụng `material`, cũng tương thích với `reference_image/reference_video/reference_audio`.\n\nCó thể mang theo đồng thời:\n- `generate_audio: boolean`\n- `watermark: boolean`\n\nGiải thích bổ sung:\n- `generate_audio=true`: Yêu cầu mô hình đồng thời tạo âm thanh (chỉ có hiệu lực với các mô hình hỗ trợ khả năng này).\n- `watermark=false`: Yêu cầu tắt hình mờ (việc có hiệu lực thực tế hay không phụ thuộc vào mô hình và chính sách kênh).\n- `name`: Bí danh tài nguyên, nên để giống với `@名称` trong `text` để mô hình liên kết chính xác tài nguyên.\n\nCác họ mô hình khác nhau có sự khác biệt lớn về hỗ trợ tham số, nên chọn tham số theo bảng dưới đây:\n\n| Họ mô hình | Tên mô hình phổ biến (ví dụ) | Tham số đầu vào tối thiểu đề xuất | Tham số mở rộng thường dùng | Lưu ý |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | Nhạy cảm nhất với `mode`; không phải tất cả phiên bản đều hỗ trợ `reference_material`. |\n| Sora Phổ biến | `sora-2` `sora-2-pro` và `*-stable/*-official` | `model + prompt` | `seconds/size`, nên bổ sung `input_reference` (chuỗi URL) | Khi fallback đa kênh, yêu cầu về hình ảnh có thể khác nhau, nên chuẩn bị hình ảnh tham chiếu để tăng tỷ lệ thành công. |\n| Sora Thời lượng đặt trước | `sora2-landscape-10s` `sora2-pro-portrait-25s`, v.v. | `model + prompt` | `image_url/input_reference` | Thời lượng và hướng thường do tên mô hình quyết định, `seconds/ratio` chỉ có hiệu lực khi mô hình cho phép. |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | Các mô hình loại `i2v/r2v` thường cần hình ảnh hoặc tài nguyên tham chiếu; loại `t2v` thường có thể dùng thuần văn bản. |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`, cũng như các trường chính thức như `image/image_list` | Đã tương thích với ngữ nghĩa đường dẫn chính thức (text2video/image2video/multi-image2video) và thống nhất vào `/v1/videos`; không cung cấp khả năng mở rộng video ra bên ngoài. |\n| Mô hình mở rộng tổng hợp | `happyhorse*` `grok-imagine-1.0-video*`, v.v. | `model + prompt` | `seconds/size/content` | Các trường hỗ trợ cụ thể phụ thuộc vào việc triển khai mô hình và kênh, nên ưu tiên sử dụng các trường tiêu chuẩn, nếu thiếu mới dùng `content`. |\n\nGiải thích:\n1. Nếu bạn sử dụng mô hình bí danh ổn định (như `*-stable`, `*-official`), lớp dưới có thể tự động chuyển đổi kênh, vui lòng cố gắng truyền \"tham số tương thích đa kênh\" (`prompt + model + seconds/duration + size/ratio + 必要参考图`).\n2. Đối với các kịch bản đa chất liệu phức tạp (Hình ảnh + Video + Âm thanh + @Tên), ưu tiên sử dụng `content` để có khả năng tương thích cao nhất.\n3. Nếu tài liệu mô hình không ghi rõ hỗ trợ một trường cụ thể, vui lòng chạy thử với \"tham số đầu vào tối thiểu\" trước, sau đó mới dần dần thêm các tham số mở rộng.\n\n### 4.1 Bổ sung chế độ chính thức của Kling\n\n- `mode=t2v`: Văn bản sang video\n- `mode=i2v`: Hình ảnh sang video (yêu cầu `image` hoặc `image_url`)\n- `mode=multi_i2v`: Tham chiếu nhiều hình ảnh (yêu cầu `image_list` hoặc nhiều `image_urls`)\n- `mode=extend`: Không hỗ trợ (tính năng kéo dài video tạm thời chưa cung cấp khả năng `/v1/videos` ra bên ngoài)\n\nCác tham số chính thức phổ biến có thể được truyền trực tiếp trong body request của `/v1/videos`:\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Bổ sung chế độ video Grok\n\nTham số đề xuất:\n- `model`: Ví dụ `grok-video-3`\n- `prompt`\n- `ratio` hoặc `aspect_ratio`\n- `resolution` hoặc `size`\n- `seconds` hoặc `duration`\n- `image` / `image_url` / `input_reference` (Tham chiếu hình ảnh đơn)\n- `reference_images` / `reference_image_urls` (Tham chiếu nhiều hình ảnh, ngữ nghĩa `reference-to-video` chính thức)\n- `mode` (tùy chọn): `image-to-video`, `reference-to-video`\n\nRàng buộc:\n- Không hỗ trợ `mode=edit-video` / `mode=extend-video` (Chỉnh sửa và kéo dài video tạm thời không cung cấp ra bên ngoài).\n- `image/input_reference` và `reference_images` không thể truyền cùng lúc.\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v` (tương đương `i2v_first`)\n- Tham số đầu vào tối thiểu: `model + prompt + image_url` (hoặc chuỗi URL `input_reference`)\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images` (thông thường 1~4 ảnh)\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- Đối với các kịch bản phức tạp, khuyến nghị sử dụng `content + function_mode=omni_reference`\n- Mô tả: Khi truyền `function_mode=omni_reference`, ngay cả khi không truyền `mode=reference_material` một cách rõ ràng, hệ thống vẫn sẽ xử lý theo ngữ nghĩa tham chiếu toàn năng.",
+        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容（下载）\n\n当前对外不提供：\n- `GET /v1/videos`：任务列表\n- `POST /v1/videos/{video_id}/remix`：视频二次编辑 / remix\n\n标准鉴权头：\n- `Content-Type: application/json`（创建任务时）\n\n1. 调用 `POST /v1/videos` 创建任务，拿到 `id`。\n2. 轮询 `GET /v1/videos/{id}`，直到 `status=completed` 或 `failed`。\n3. `completed` 后优先使用返回中的 `video_url`；如需网关统一下载可调用 `GET /v1/videos/{id}/content`。\n\n## 3.1 核心参数\n\n- `model: string`（必填）\n- 说明：要调用的视频模型名称。\n- 示例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推荐）\n- 说明：视频生成主描述。使用 `content` 时也必须传，不能为空。\n- 示例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（可选）\n- 说明：目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。\n- 示例：`8`\n\n- `size: string`（可选）\n- 说明：输出分辨率，常用 `宽x高`。\n- 示例：`720x1280`、`1280x720`\n\n- `mode: string`（可选）\n- 说明：生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。\n- 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 通用兼容参数\n\n- `aspect_ratio` 或 `ratio`：宽高比。\n- `duration`：时长别名（与 `seconds` 二选一即可）。\n- `quality` 或 `resolution`：清晰度相关参数。\n- `fps`：帧率。\n- `function_mode`：可选功能模式，用于触发特定行为（如 `omni_reference` 表示全能参考语义）。\n\n## 3.3 参考素材参数\n\n- `input_reference`：标准参考输入对象。\n- 说明：仅支持字符串 URL 写法，不支持对象写法。\n- 正确示例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 错误示例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：图片参考。\n- 说明：`image_url` 常用于单图；`image_urls` 用于多图或全能参考。\n\n- `end_image_url` / `last_image_url`：末帧参考。\n- 说明：通常与 `mode=i2v_first_last` 搭配，表示视频结束画面。\n\n- `video_urls`：视频参考列表。\n- 说明：常用于 `reference_material` 或 `content` 全能参考场景。\n\n- `audio_urls`：音频参考列表。\n- 说明：用于背景音乐/旁白风格参考（是否生效取决于模型能力）。\n\n- `reference_images`：多图参考。\n- 说明：常用于多帧/多图参考模式。\n\n说明：不同模型对素材字段要求不同，建议按下文“模式与最小入参”传参。\n\n## 3.4 content 高级模式（推荐给复杂参考场景）\n\n可直接传 `content` 数组：\n- `type=text`：文本指令。\n- `type=image_url|video_url|audio_url`：媒体输入。\n- 支持 `name` 用于在文本中通过 `@名称` 指代素材。\n\n必填约束：\n- 使用 `content` 时，`prompt` 仍必须传且不能为空。\n\n兼容写法：\n- `image_url/video_url/audio_url` 可为字符串，或对象 `{ \"url\": \"https://...\" }`。\n- `role` 可使用 `material`，也兼容 `reference_image/reference_video/reference_audio`。\n\n可同时携带：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n补充说明：\n- `generate_audio=true`：请求模型同时生成音频（仅支持该能力的模型会生效）。\n- `watermark=false`：请求关闭水印（实际是否生效取决于模型与渠道策略）。\n- `name`：素材别名，建议与 `text` 中 `@名称` 一致，便于模型准确关联素材。\n\n不同模型族对参数支持差异较大，建议按下表选参：\n\n| 模型族 | 常见模型名（示例） | 推荐最小入参 | 常用扩展参数 | 注意事项 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | 对 `mode` 最敏感；并非所有版本都支持 `reference_material`。 |\n| Sora 通用 | `sora-2` `sora-2-pro` 及 `*-stable/*-official` | `model + prompt` | `seconds/size`，建议补 `input_reference`（字符串 URL） | 多渠道 fallback 时，是否要求图片可能不同，建议准备参考图提高成功率。 |\n| Sora 时长预置 | `sora2-landscape-10s` `sora2-pro-portrait-25s` 等 | `model + prompt` | `image_url/input_reference` | 时长和方向通常由模型名决定，`seconds/ratio` 仅在模型允许时生效。 |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` 类模型通常需要参考图或参考素材；`t2v` 类通常可纯文本。 |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`，以及 `image/image_list` 等官方字段 | 已兼容官方路径语义（text2video/image2video/multi-image2video）并统一到 `/v1/videos`；不提供视频延长对外能力。 |\n| 聚合扩展模型 | `happyhorse*` `grok-imagine-1.0-video*` 等 | `model + prompt` | `seconds/size/content` | 具体支持字段依赖模型与渠道实现，建议优先使用标准字段，不足再用 `content`。 |\n\n说明：\n1. 若你使用稳定别名模型（如 `*-stable`、`*-official`），底层可能自动切换渠道，请尽量传“跨渠道兼容参数”（`prompt + model + seconds/duration + size/ratio + 必要参考图`）。\n2. 复杂多素材场景（图+视频+音频+@名称）优先使用 `content`，兼容性最高。\n3. 若模型文档未明确支持某字段，请按“最小入参”先跑通，再逐步增加扩展参数。\n\n### 4.1 Kling 官方模式补充\n\n- `mode=t2v`：文生视频\n- `mode=i2v`：图生视频（需 `image` 或 `image_url`）\n- `mode=multi_i2v`：多图参考（需 `image_list` 或多张 `image_urls`）\n- `mode=extend`：不支持（视频延长暂不提供 `/v1/videos` 对外能力）\n\n常见官方参数可直接放在 `/v1/videos` 请求体中透传：\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok 视频模式补充\n\n推荐参数：\n- `model`：如 `grok-video-3`\n- `prompt`\n- `ratio` 或 `aspect_ratio`\n- `resolution` 或 `size`\n- `seconds` 或 `duration`\n- `image` / `image_url` / `input_reference`（单图参考）\n- `reference_images` / `reference_image_urls`（多图参考，官方 `reference-to-video` 语义）\n- `mode`（可选）：`image-to-video`、`reference-to-video`\n\n约束：\n- 不支持 `mode=edit-video` / `mode=extend-video`（视频编辑与延长暂不对外）。\n- `image/input_reference` 与 `reference_images` 不能同时传。\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`（等同 `i2v_first`）\n- 最小入参：`model + prompt + image_url`（或 `input_reference` 字符串 URL）\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`（通常 1~4 张）\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 复杂场景更推荐用 `content + function_mode=omni_reference`\n- 说明：当传 `function_mode=omni_reference` 时，即使未显式传 `mode=reference_material`，也会按全能参考语义处理。",
         "operationId": "createVideo",
         "tags": [
-          "Định dạng tương thích Sora cho tạo video"
+          "视频生成Sora兼容格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -587,7 +587,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Tên của mô hình video cần gọi. Ví dụ: `sora-2`, `doubao-seedance-2-0-260128`",
+                    "description": "要调用的视频模型名称。 示例：`sora-2`、`doubao-seedance-2-0-260128`",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -619,16 +619,16 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Mô tả chính để tạo video. Phải truyền tham số này ngay cả khi sử dụng `content`, không được để trống. Ví dụ: `第一人称视角果茶广告，节奏轻快`"
+                    "description": "视频生成主描述。使用 `content` 时也必须传，不能为空。 示例：`第一人称视角果茶广告，节奏轻快`"
                   },
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Cổng vào cho một ảnh đơn, một số chế độ tương thích sẽ được ánh xạ tới `images`."
+                    "description": "单图入口，部分兼容模式会映射到 images。"
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "Alias thời lượng (có thể chọn một trong hai với `seconds`)."
+                    "description": "时长别名（与 `seconds` 二选一即可）。"
                   },
                   "width": {
                     "type": "integer",
@@ -643,7 +643,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "Tốc độ khung hình."
+                    "description": "帧率。"
                   },
                   "seed": {
                     "type": "integer",
@@ -668,30 +668,30 @@
                   "metadata": {
                     "type": "object",
                     "additionalProperties": true,
-                    "description": "Container trường mở rộng động. Một số lượng lớn các trường đặc thù của mô hình được giải tuần tự hóa từ đây."
+                    "description": "动态扩展字段容器。大量模型特有字段从这里反序列化。"
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Chế độ tạo, mặc định là `t2v` nếu không truyền vào. Các chế độ khác nhau có yêu cầu khác nhau về tham số tài liệu. Ví dụ: `t2v`, `i2v`, `i2v_first_last`, `reference_material`"
+                    "description": "生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
                   },
                   "images": {
                     "type": "array",
-                    "description": "Cổng vào hợp nhất cho nhiều hình ảnh. Sẽ được sử dụng bởi Vidu, Seedance, Veo, v.v.",
+                    "description": "统一多图入口。Vidu、Seedance、Veo 等会使用。",
                     "items": {
                       "type": "string"
                     }
                   },
                   "size": {
                     "type": "string",
-                    "description": "Độ phân giải đầu ra, thường dùng `宽x高`. Ví dụ: `720x1280`, `1280x720`"
+                    "description": "输出分辨率，常用 `宽x高`。 示例：`720x1280`、`1280x720`"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Thời lượng mục tiêu. Chọn một trong hai với `duration`, nếu truyền cả hai thì thông thường kết quả phân giải của gateway sẽ được áp dụng. Ví dụ: `8`"
+                    "description": "目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。 示例：`8`"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Đối tượng đầu vào tham chiếu tiêu chuẩn."
+                    "description": "标准参考输入对象。"
                   }
                 },
                 "required": [
@@ -706,7 +706,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Tên của mô hình video cần gọi. Ví dụ: `sora-2`, `doubao-seedance-2-0-260128`",
+                    "description": "要调用的视频模型名称。 示例：`sora-2`、`doubao-seedance-2-0-260128`",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -738,16 +738,16 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Mô tả chính để tạo video. Phải truyền tham số này ngay cả khi sử dụng `content`, không được để trống. Ví dụ: `第一人称视角果茶广告，节奏轻快`"
+                    "description": "视频生成主描述。使用 `content` 时也必须传，不能为空。 示例：`第一人称视角果茶广告，节奏轻快`"
                   },
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Cổng vào cho một ảnh đơn, một số chế độ tương thích sẽ được ánh xạ tới `images`."
+                    "description": "单图入口，部分兼容模式会映射到 images。"
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "Alias thời lượng (có thể chọn một trong hai với `seconds`)."
+                    "description": "时长别名（与 `seconds` 二选一即可）。"
                   },
                   "width": {
                     "type": "integer",
@@ -762,7 +762,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "Tốc độ khung hình."
+                    "description": "帧率。"
                   },
                   "seed": {
                     "type": "integer",
@@ -787,30 +787,30 @@
                   "metadata": {
                     "type": "object",
                     "additionalProperties": true,
-                    "description": "Container trường mở rộng động. Một số lượng lớn các trường đặc thù của mô hình được giải tuần tự hóa từ đây."
+                    "description": "动态扩展字段容器。大量模型特有字段从这里反序列化。"
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Chế độ tạo, mặc định là `t2v` nếu không truyền vào. Các chế độ khác nhau có yêu cầu khác nhau về tham số tài liệu. Ví dụ: `t2v`, `i2v`, `i2v_first_last`, `reference_material`"
+                    "description": "生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
                   },
                   "images": {
                     "type": "array",
-                    "description": "Cổng vào hợp nhất cho nhiều hình ảnh. Sẽ được sử dụng bởi Vidu, Seedance, Veo, v.v.",
+                    "description": "统一多图入口。Vidu、Seedance、Veo 等会使用。",
                     "items": {
                       "type": "string"
                     }
                   },
                   "size": {
                     "type": "string",
-                    "description": "Độ phân giải đầu ra, thường dùng `宽x高`. Ví dụ: `720x1280`, `1280x720`"
+                    "description": "输出分辨率，常用 `宽x高`。 示例：`720x1280`、`1280x720`"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Thời lượng mục tiêu. Chọn một trong hai với `duration`, nếu truyền cả hai thì thông thường kết quả phân giải của gateway sẽ được áp dụng. Ví dụ: `8`"
+                    "description": "目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。 示例：`8`"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Đối tượng đầu vào tham chiếu tiêu chuẩn."
+                    "description": "标准参考输入对象。"
                   }
                 },
                 "required": [
@@ -895,7 +895,7 @@
                   }
                 },
                 "seedance_reference_material": {
-                  "summary": "Seedance Chế độ tham chiếu toàn năng (reference_material)",
+                  "summary": "Seedance 全能参考模式(reference_material)",
                   "value": {
                     "model": "doubao-seedance-1-0-lite-i2v-250428",
                     "mode": "reference_material",
@@ -915,7 +915,7 @@
                   }
                 },
                 "seedance_volc_content": {
-                  "summary": "Chế độ content Seedance Volcengine Ark",
+                  "summary": "Seedance 火山方舟 content 模式",
                   "value": {
                     "model": "doubao-seedance-1-0-lite-i2v-250428",
                     "mode": "reference_material",
@@ -934,7 +934,7 @@
                   }
                 },
                 "veo_first_last_frame": {
-                  "summary": "Veo Chế độ khung hình đầu và cuối",
+                  "summary": "Veo 首尾帧模式",
                   "value": {
                     "model": "veo3.1-fast",
                     "prompt": "A smooth transition from first frame to last frame, cinematic motion",
@@ -947,7 +947,7 @@
                   }
                 },
                 "veo_reference_images_1to3": {
-                  "summary": "Chế độ Veo 1~3 ảnh tham chiếu",
+                  "summary": "Veo 1~3张参考图模式",
                   "value": {
                     "model": "veo3.1-fast",
                     "prompt": "Use reference style and character consistency for a short ad clip",
@@ -959,7 +959,7 @@
                   }
                 },
                 "kling_text2video": {
-                  "summary": "Kling Chuyển văn bản thành video",
+                  "summary": "Kling 文生视频",
                   "value": {
                     "model": "kling-video",
                     "prompt": "A cat playing piano in the garden",
@@ -972,7 +972,7 @@
                   }
                 },
                 "kling_image2video": {
-                  "summary": "Kling Chuyển hình ảnh thành video",
+                  "summary": "Kling 图生视频",
                   "value": {
                     "model": "kling-video",
                     "prompt": "A cat playing piano in the garden",
@@ -986,7 +986,7 @@
                   }
                 },
                 "grok_reference_video": {
-                  "summary": "Chế độ video Grok",
+                  "summary": "Grok 视频模式",
                   "value": {
                     "model": "grok-video-3",
                     "prompt": "A dramatic cinematic shot with fast motion and rich lighting",
@@ -998,7 +998,7 @@
                   }
                 },
                 "vidu_img2video": {
-                  "summary": "Vidu Chuyển hình ảnh thành video",
+                  "summary": "Vidu 图生视频",
                   "value": {
                     "model": "vidu2.0",
                     "prompt": "A stylish ad clip from a product still image",
@@ -1010,7 +1010,7 @@
                   }
                 },
                 "vidu_first_tail": {
-                  "summary": "Chế độ khung hình đầu và cuối Vidu",
+                  "summary": "Vidu 首尾帧模式",
                   "value": {
                     "model": "vidu2.0",
                     "prompt": "A smooth shot from start frame to end frame",
@@ -1023,7 +1023,7 @@
                   }
                 },
                 "vidu_reference": {
-                  "summary": "Chế độ đa ảnh tham chiếu Vidu",
+                  "summary": "Vidu 多参考图模式",
                   "value": {
                     "model": "vidu2.0",
                     "prompt": "Maintain product style and character consistency",
@@ -1037,7 +1037,7 @@
                   }
                 },
                 "hailuo_text2video": {
-                  "summary": "Hailuo Chuyển văn bản thành video",
+                  "summary": "Hailuo 文生视频",
                   "value": {
                     "model": "hailuo-video",
                     "prompt": "A cinematic travel shot over the coastline",
@@ -1051,7 +1051,7 @@
         },
         "responses": {
           "200": {
-            "description": "Đã tạo tác vụ video thành công",
+            "description": "成功创建视频任务",
             "content": {
               "application/json": {
                 "schema": {
@@ -1059,11 +1059,11 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "ID nhiệm vụ (dùng để truy vấn/tải xuống sau này)."
+                      "description": "任务 ID（后续查询/下载使用）。"
                     },
                     "task_id": {
                       "type": "string",
-                      "description": "Tương thích với giao diện cũ (Sắp ngừng hỗ trợ)"
+                      "description": "兼容旧接口 待废弃"
                     },
                     "object": {
                       "type": "string"
@@ -1073,7 +1073,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "description": "Trạng thái nhiệm vụ.",
+                      "description": "任务状态。",
                       "enum": [
                         "queued",
                         "in_progress",
@@ -1083,15 +1083,15 @@
                     },
                     "progress": {
                       "type": "integer",
-                      "description": "Tiến độ (0~100, giá trị xấp xỉ)."
+                      "description": "进度（0~100，近似值）。"
                     },
                     "created_at": {
                       "type": "integer",
-                      "description": "Thời gian tạo (giây Unix)."
+                      "description": "创建时间（Unix 秒）。"
                     },
                     "completed_at": {
                       "type": "integer",
-                      "description": "Thời gian hoàn thành."
+                      "description": "完成时间。"
                     },
                     "expires_at": {
                       "type": "integer"
@@ -1114,11 +1114,11 @@
                     },
                     "video_url": {
                       "type": "string",
-                      "description": "Địa chỉ video có thể tải xuống trực tiếp."
+                      "description": "可直接下载的视频地址。"
                     },
                     "url": {
                       "type": "string",
-                      "description": "Một số mô hình/kênh có thể trả về trường này dưới dạng địa chỉ kết quả."
+                      "description": "部分模型/渠道可能返回该字段作为结果地址。"
                     }
                   },
                   "required": [
@@ -1144,7 +1144,7 @@
             "headers": {}
           },
           "400": {
-            "description": "Tham số yêu cầu bị lỗi",
+            "description": "请求参数错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -1168,18 +1168,18 @@
     },
     "/v1/videos/{task_id}": {
       "get": {
-        "summary": "Lấy trạng thái tác vụ video",
+        "summary": "获取视频任务状态",
         "deprecated": false,
-        "description": "Giao diện truy vấn trạng thái tác vụ video tương thích với OpenAI.\n\nTrả về thông tin trạng thái chi tiết của tác vụ video.",
+        "description": "OpenAI 兼容的视频任务状态查询接口。\n\n返回视频任务的详细状态信息。",
         "operationId": "getVideo",
         "tags": [
-          "Định dạng tương thích Sora cho tạo video"
+          "视频生成Sora兼容格式"
         ],
         "parameters": [
           {
             "name": "task_id",
             "in": "path",
-            "description": "ID tác vụ video",
+            "description": "视频任务 ID",
             "required": true,
             "example": "sora-2-123456",
             "schema": {
@@ -1189,7 +1189,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lấy trạng thái tác vụ video thành công",
+            "description": "成功获取视频任务状态",
             "content": {
               "application/json": {
                 "schema": {
@@ -1219,28 +1219,28 @@
                     "video_url": {
                       "type": "string",
                       "format": "uri",
-                      "description": "Địa chỉ URL của video kết quả. Các mô hình khác nhau có thể trả về `video_url` hoặc `url`, chọn một trong hai."
+                      "description": "视频结果地址。不同模型可能返回 `video_url` 或 `url`，二者取其一。"
                     },
                     "url": {
                       "type": "string",
                       "format": "uri",
-                      "description": "Địa chỉ URL của video kết quả. Các mô hình khác nhau có thể trả về `url` hoặc `video_url`, chọn một trong hai."
+                      "description": "视频结果地址。不同模型可能返回 `url` 或 `video_url`，二者取其一。"
                     },
                     "completed_at": {
                       "type": "integer",
-                      "description": "Thời gian hoàn tất (giây Unix)."
+                      "description": "完成时间（Unix 秒）。"
                     },
                     "expires_at": {
                       "type": "integer",
-                      "description": "Thời gian hết hạn của kết quả (Unix giây)."
+                      "description": "结果过期时间（Unix 秒）。"
                     },
                     "error": {
                       "type": "object",
-                      "description": "Thông báo lỗi khi thất bại."
+                      "description": "失败时的错误信息。"
                     },
                     "metadata": {
                       "type": "object",
-                      "description": "Siêu dữ liệu bổ sung."
+                      "description": "附加元数据。"
                     }
                   },
                   "required": [
@@ -1267,7 +1267,7 @@
             "headers": {}
           },
           "404": {
-            "description": "Nhiệm vụ không tồn tại",
+            "description": "任务不存在",
             "content": {
               "application/json": {
                 "schema": {
@@ -1291,18 +1291,18 @@
     },
     "/v1/videos/{task_id}/content": {
       "get": {
-        "summary": "Lấy nội dung video",
+        "summary": "获取视频内容",
         "deprecated": false,
-        "description": "Lấy nội dung tệp video của các tác vụ video đã hoàn thành.\n\nGiao diện này sẽ đóng vai trò proxy để trả về luồng tệp video (video file stream).",
+        "description": "获取已完成视频任务的视频文件内容。\n\n此接口会代理返回视频文件流。",
         "operationId": "getVideoContent",
         "tags": [
-          "Định dạng tương thích Sora cho tạo video"
+          "视频生成Sora兼容格式"
         ],
         "parameters": [
           {
             "name": "task_id",
             "in": "path",
-            "description": "ID tác vụ video",
+            "description": "视频任务 ID",
             "required": true,
             "example": "video-abc123",
             "schema": {
@@ -1312,7 +1312,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lấy nội dung video thành công",
+            "description": "成功获取视频内容",
             "content": {
               "video/mp4": {
                 "schema": {
@@ -1324,7 +1324,7 @@
             "headers": {}
           },
           "404": {
-            "description": "Video không tồn tại hoặc chưa hoàn thành",
+            "description": "视频不存在或未完成",
             "content": {
               "application/json": {
                 "schema": {
@@ -1348,12 +1348,12 @@
     },
     "/kling/v1/videos/text2video": {
       "post": {
-        "summary": "Kling Chuyển văn bản thành video",
+        "summary": "Kling 文生视频",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích Sora cho tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nSử dụng mô hình Kling để tạo video từ mô tả văn bản.\n\nCác mô hình hỗ trợ: kling-v1, kling-v1-5, v.v.",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)）。\n\n使用 Kling 模型从文本描述生成视频。\n\n支持的模型：kling-v1, kling-v1-5 等",
         "operationId": "createKlingText2Video",
         "tags": [
-          "Định dạng Kling tạo video"
+          "视频生成Kling格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1375,7 +1375,7 @@
         },
         "responses": {
           "200": {
-            "description": "Đã tạo tác vụ tạo video thành công",
+            "description": "成功创建视频生成任务",
             "content": {
               "application/json": {
                 "schema": {
@@ -1386,7 +1386,7 @@
             "headers": {}
           },
           "400": {
-            "description": "Tham số yêu cầu bị lỗi",
+            "description": "请求参数错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -1410,18 +1410,18 @@
     },
     "/kling/v1/videos/text2video/{task_id}": {
       "get": {
-        "summary": "Lấy trạng thái tác vụ chuyển văn bản thành video của Kling",
+        "summary": "获取 Kling 文生视频任务状态",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích Sora cho tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ chuyển văn bản thành video của Kling.",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)）。\n\n查询 Kling 文生视频任务的状态和结果。",
         "operationId": "getKlingText2Video",
         "tags": [
-          "Định dạng Kling tạo video"
+          "视频生成Kling格式"
         ],
         "parameters": [
           {
             "name": "task_id",
             "in": "path",
-            "description": "ID nhiệm vụ",
+            "description": "任务 ID",
             "required": true,
             "example": "task-abc123",
             "schema": {
@@ -1431,7 +1431,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lấy trạng thái nhiệm vụ thành công",
+            "description": "成功获取任务状态",
             "content": {
               "application/json": {
                 "schema": {
@@ -1442,7 +1442,7 @@
             "headers": {}
           },
           "404": {
-            "description": "Nhiệm vụ không tồn tại",
+            "description": "任务不存在",
             "content": {
               "application/json": {
                 "schema": {
@@ -1466,12 +1466,12 @@
     },
     "/kling/v1/videos/image2video": {
       "post": {
-        "summary": "Kling Chuyển hình ảnh thành video",
+        "summary": "Kling 图生视频",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích Sora cho tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nSử dụng mô hình Kling để tạo video từ hình ảnh.\n\nHỗ trợ truyền URL hình ảnh hoặc dữ liệu hình ảnh mã hóa Base64 thông qua tham số image.",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)）。\n\n使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。",
         "operationId": "createKlingImage2Video",
         "tags": [
-          "Định dạng Kling tạo video"
+          "视频生成Kling格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1493,7 +1493,7 @@
         },
         "responses": {
           "200": {
-            "description": "Đã tạo tác vụ tạo video thành công",
+            "description": "成功创建视频生成任务",
             "content": {
               "application/json": {
                 "schema": {
@@ -1504,7 +1504,7 @@
             "headers": {}
           },
           "400": {
-            "description": "Tham số yêu cầu bị lỗi",
+            "description": "请求参数错误",
             "content": {
               "application/json": {
                 "schema": {
@@ -1528,18 +1528,18 @@
     },
     "/kling/v1/videos/image2video/{task_id}": {
       "get": {
-        "summary": "Lấy trạng thái nhiệm vụ tạo video từ hình ảnh của Kling",
+        "summary": "获取 Kling 图生视频任务状态",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích Sora cho tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ tạo video từ hình ảnh Kling.",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)）。\n\n查询 Kling 图生视频任务的状态和结果。",
         "operationId": "getKlingImage2Video",
         "tags": [
-          "Định dạng Kling tạo video"
+          "视频生成Kling格式"
         ],
         "parameters": [
           {
             "name": "task_id",
             "in": "path",
-            "description": "ID nhiệm vụ",
+            "description": "任务 ID",
             "required": true,
             "example": "task-abc123",
             "schema": {
@@ -1549,7 +1549,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lấy trạng thái nhiệm vụ thành công",
+            "description": "成功获取任务状态",
             "content": {
               "application/json": {
                 "schema": {
@@ -1560,7 +1560,7 @@
             "headers": {}
           },
           "404": {
-            "description": "Nhiệm vụ không tồn tại",
+            "description": "任务不存在",
             "content": {
               "application/json": {
                 "schema": {
@@ -1584,11 +1584,11 @@
     },
     "/api/v3/contents/generations/tasks": {
       "post": {
-        "summary": "Tạo video (Seedance)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích Sora cho tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: Tùy chọn, mảng đầu vào đa phương tiện trong chế độ nâng cao.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- Các trường phương tiện trong `content` hỗ trợ truyền trực tiếp chuỗi URL hoặc định dạng đối tượng, ví dụ: `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "summary": "创建视频（Seedance）",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "Tạo videoSeedanceVolcengine Ark"
+          "视频生成Seedance火山方舟"
         ],
         "requestBody": {
           "required": true,
@@ -1604,12 +1604,12 @@
                   "model": {
                     "type": "string",
                     "example": "doubao-seedance-2-0-260128",
-                    "description": "Bắt buộc. Tên mô hình."
+                    "description": "必填。模型名称。"
                   },
                   "prompt": {
                     "type": "string",
                     "example": "参考素材生成一段剧情短视频",
-                    "description": "Bắt buộc. Mô tả chính để tạo video, không được để trống."
+                    "description": "必填。视频生成主描述，不能为空。"
                   },
                   "content": {
                     "type": "array",
@@ -1684,52 +1684,52 @@
                         }
                       }
                     },
-                    "description": "Tùy chọn. Mảng đầu vào đa phương tiện ở chế độ nâng cao; khuyên dùng cho các kịch bản tham chiếu phức tạp."
+                    "description": "可选。高级模式下的多媒体输入数组；复杂参考场景推荐使用。"
                   },
                   "function_mode": {
                     "type": "string",
-                    "description": "Tùy chọn. Chế độ tính năng nâng cao, chẳng hạn như `omni_reference` dùng để tham khảo toàn diện."
+                    "description": "可选。高级功能模式，如 `omni_reference` 用于全能参考。"
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Tùy chọn. Các trường chế độ tương thích, chẳng hạn như `t2v`, `i2v`, `i2v_first_last`, `reference_images`, `reference_material`."
+                    "description": "可选。兼容模式字段，如 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`。"
                   },
                   "image_url": {
                     "type": "string",
-                    "description": "Tùy chọn. URL của một ảnh tham chiếu duy nhất."
+                    "description": "可选。单张参考图 URL。"
                   },
                   "image_urls": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "Tùy chọn. Danh sách URL của nhiều ảnh tham chiếu."
+                    "description": "可选。多张参考图 URL 列表。"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Tùy chọn. Tương thích với các trường nhập liệu tham chiếu."
+                    "description": "可选。兼容参考输入字段。"
                   },
                   "end_image_url": {
                     "type": "string",
-                    "description": "Tùy chọn. URL hình ảnh tham chiếu cho khung hình cuối."
+                    "description": "可选。末帧参考图 URL。"
                   },
                   "last_image_url": {
                     "type": "string",
-                    "description": "Tùy chọn. Alias URL của hình ảnh tham chiếu khung hình cuối."
+                    "description": "可选。末帧参考图 URL 别名。"
                   },
                   "video_urls": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "Tùy chọn. Danh sách URL video tham chiếu."
+                    "description": "可选。参考视频 URL 列表。"
                   },
                   "audio_urls": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "Tùy chọn. Danh sách URL âm thanh tham chiếu."
+                    "description": "可选。参考音频 URL 列表。"
                   },
                   "seconds": {
                     "oneOf": [
@@ -1740,7 +1740,7 @@
                         "type": "string"
                       }
                     ],
-                    "description": "Tùy chọn. Thời lượng video, tính bằng giây; tương thích với `duration`."
+                    "description": "可选。视频时长，秒；与 `duration` 兼容。"
                   },
                   "duration": {
                     "oneOf": [
@@ -1751,39 +1751,39 @@
                         "type": "string"
                       }
                     ],
-                    "description": "Tùy chọn. Thời lượng video, tính bằng giây; tương thích với `seconds`."
+                    "description": "可选。视频时长，秒；与 `seconds` 兼容。"
                   },
                   "aspect_ratio": {
                     "type": "string",
-                    "description": "Tùy chọn. Tỷ lệ khung hình, ví dụ: `16:9`."
+                    "description": "可选。画幅比例，如 `16:9`。"
                   },
                   "ratio": {
                     "type": "string",
-                    "description": "Tùy chọn. Biệt danh của tỷ lệ khung hình, ví dụ: `16:9`."
+                    "description": "可选。画幅比例别名，如 `16:9`。"
                   },
                   "size": {
                     "type": "string",
-                    "description": "Tùy chọn. Trường tương thích với độ phân giải hoặc kích thước."
+                    "description": "可选。分辨率或尺寸兼容字段。"
                   },
                   "quality": {
                     "type": "string",
-                    "description": "Tùy chọn. Cấu hình chất lượng tạo."
+                    "description": "可选。生成质量配置。"
                   },
                   "resolution": {
                     "type": "string",
-                    "description": "Tùy chọn. Độ phân giải đầu ra."
+                    "description": "可选。输出分辨率。"
                   },
                   "fps": {
                     "type": "number",
-                    "description": "Tùy chọn. Tốc độ khung hình."
+                    "description": "可选。帧率。"
                   },
                   "generate_audio": {
                     "type": "boolean",
-                    "description": "Tùy chọn. Có tạo âm thanh hay không."
+                    "description": "可选。是否生成音频。"
                   },
                   "watermark": {
                     "type": "boolean",
-                    "description": "Tùy chọn. Có thêm hình mờ (watermark) hay không."
+                    "description": "可选。是否添加水印。"
                   }
                 }
               },
@@ -1825,7 +1825,7 @@
         },
         "responses": {
           "200": {
-            "description": "Tạo nhiệm vụ thành công",
+            "description": "任务创建成功",
             "content": {
               "application/json": {
                 "schema": {
@@ -1837,11 +1837,11 @@
                     "id": {
                       "type": "string",
                       "example": "task_xxx",
-                      "description": "ID của tác vụ."
+                      "description": "任务 ID。"
                     },
                     "status": {
                       "type": "string",
-                      "description": "Trạng thái nhiệm vụ.",
+                      "description": "任务状态。",
                       "enum": [
                         "queued",
                         "running",
@@ -1851,7 +1851,7 @@
                     },
                     "created_at": {
                       "type": "string",
-                      "description": "Thời gian tạo (giây Unix)."
+                      "description": "创建时间（Unix 秒）。"
                     }
                   }
                 }
@@ -1868,11 +1868,11 @@
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
-        "summary": "Truy vấn tác vụ (Seedance)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích Sora cho tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: Tùy chọn, mảng đầu vào đa phương tiện trong chế độ nâng cao.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- Các trường phương tiện trong `content` hỗ trợ truyền trực tiếp chuỗi URL hoặc định dạng đối tượng, ví dụ: `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "summary": "查询任务（Seedance）",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "Tạo videoSeedanceVolcengine Ark"
+          "视频生成Seedance火山方舟"
         ],
         "parameters": [
           {
@@ -1887,7 +1887,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Truy vấn thành công",
+            "description": "查询成功",
             "content": {
               "application/json": {
                 "schema": {
@@ -1895,7 +1895,7 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "ID của tác vụ."
+                      "description": "任务 ID。"
                     },
                     "model": {
                       "type": "string"
@@ -1908,7 +1908,7 @@
                         "succeeded",
                         "failed"
                       ],
-                      "description": "Trạng thái nhiệm vụ."
+                      "description": "任务状态。"
                     },
                     "error": {
                       "type": "object",
@@ -1924,7 +1924,7 @@
                     },
                     "created_at": {
                       "type": "integer",
-                      "description": "Thời gian tạo (giây Unix)."
+                      "description": "创建时间（Unix 秒）。"
                     },
                     "updated_at": {
                       "type": "integer"
@@ -1966,11 +1966,11 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "Tạo video (định dạng Veo3)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích Sora cho tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề API này chỉ dùng để giải thích định dạng gốc của Veo và trạng thái hỗ trợ hiện tại của gateway.\n\nĐối với dòng Veo hiện tại, vui lòng sử dụng chế độ tương thích OpenAI Sora cho bên ngoài: `POST /v1/videos`.\n\nĐường dẫn chế độ gốc của Google được dành riêng là: `POST /v1beta/models/{model}:predictLongRunning`. Gateway hiện tại chưa kết nối với luồng phân phối tác vụ gốc của Veo, do đó tạm thời chưa hỗ trợ gọi theo thân yêu cầu `instances/parameters` gốc.",
+        "summary": "创建视频（Veo3格式）",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)）。\n\n该接口专题页仅用于说明 Veo 原生格式与当前网关支持状态。\n\n当前 Veo 系列对外请使用 OpenAI Sora 兼容模式：`POST /v1/videos`。\n\nGoogle 原生模式路径预留为：`POST /v1beta/models/{model}:predictLongRunning`。当前网关尚未接通 Veo 原生任务分发链路，因此按原生 `instances/parameters` 请求体调用暂不支持。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "Định dạng video tạo sinh Veo3"
+          "视频生成Veo3格式"
         ],
         "parameters": [
           {
@@ -1995,7 +1995,7 @@
                 "veo3.1-pro-4k"
               ]
             },
-            "description": "Tên mô hình Veo."
+            "description": "Veo 模型名称。"
           }
         ],
         "requestBody": {
@@ -2017,11 +2017,11 @@
                         "prompt": {
                           "type": "string",
                           "example": "A cinematic aerial shot of a modern city at sunrise",
-                          "description": "Tạo từ gợi ý"
+                          "description": "生成提示词"
                         },
                         "referenceImages": {
                           "type": "array",
-                          "description": "Tùy chọn. 1~3 hình ảnh tham chiếu, sử dụng cấu trúc `inlineData` gốc của Google hoặc URI tệp.",
+                          "description": "可选。1~3 张参考图，使用 Google 原生 `inlineData` 或文件 URI 结构。",
                           "items": {
                             "type": "object",
                             "properties": {
@@ -2111,7 +2111,7 @@
         },
         "responses": {
           "200": {
-            "description": "Cấu trúc phản hồi thành công đang được bảo lưu. Hiện tại chỉ dùng để mô tả giao thức, không hỗ trợ gọi thực tế.",
+            "description": "预留中的成功响应结构。当前仅作协议说明，不支持实际调用。",
             "content": {
               "application/json": {
                 "schema": {
@@ -2123,7 +2123,7 @@
                     "name": {
                       "type": "string",
                       "example": "models/veo3.1-fast/operations/abc123",
-                      "description": "operation name, dùng để truy vấn trạng thái sau này."
+                      "description": "operation name，用于后续状态查询。"
                     }
                   }
                 }
@@ -2140,11 +2140,11 @@
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "Truy vấn nhiệm vụ (định dạng Veo3)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích Sora cho tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề giao diện này chỉ dùng để giải thích giao thức truy vấn gốc của Veo.\n\nĐối với dòng Veo hiện tại, vui lòng chuyển sang sử dụng giao diện thống nhất `/v1/videos` để tạo và truy vấn.\n\nCấu trúc truy vấn `operation_name` dưới đây chỉ được giữ lại dưới dạng giải thích giao thức dự phòng, hiện chưa hỗ trợ gọi thực tế.",
+        "summary": "查询任务（Veo3格式）",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)）。\n\n该接口专题页仅用于说明 Veo 原生查询协议。\n\n当前 Veo 系列请改用 `/v1/videos` 统一接口进行创建与查询。\n\n下述 `operation_name` 查询结构仅作为预留协议说明保留，暂不支持实际调用。",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "Định dạng video tạo sinh Veo3"
+          "视频生成Veo3格式"
         ],
         "parameters": [
           {
@@ -2155,12 +2155,12 @@
               "type": "string",
               "example": "models/veo3.1-fast/operations/abc123"
             },
-            "description": "Tên operation đầy đủ được trả về bởi API khởi tạo. Khi gọi, cần thực hiện mã hóa URL cho `/`."
+            "description": "创建接口返回的完整 operation name。调用时需对 `/` 做 URL 编码。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Cấu trúc phản hồi truy vấn đang được dự phòng. Hiện tại chỉ dùng để mô tả giao thức, chưa hỗ trợ gọi thực tế.",
+            "description": "预留中的查询响应结构。当前仅作协议说明，不支持实际调用。",
             "content": {
               "application/json": {
                 "schema": {
@@ -2172,15 +2172,15 @@
                   "properties": {
                     "name": {
                       "type": "string",
-                      "description": "Tên thao tác, nhất quán với `name` được trả về bởi giao diện tạo."
+                      "description": "操作名称，与创建接口返回的 `name` 一致。"
                     },
                     "done": {
                       "type": "boolean",
-                      "description": "Nhiệm vụ đã hoàn thành hay chưa."
+                      "description": "任务是否完成。"
                     },
                     "response": {
                       "type": "object",
-                      "description": "Đối tượng kết quả sau khi hoàn tất thành công.",
+                      "description": "成功完成后的结果对象。",
                       "properties": {
                         "generatedVideos": {
                           "type": "array",
@@ -2193,7 +2193,7 @@
                                   "uri": {
                                     "type": "string",
                                     "format": "uri",
-                                    "description": "Đường dẫn URL của video sau khi tạo thành công."
+                                    "description": "生成成功后的视频地址。"
                                   }
                                 }
                               }
@@ -2204,11 +2204,11 @@
                     },
                     "error": {
                       "type": "object",
-                      "description": "Thông báo lỗi khi thất bại.",
+                      "description": "失败时的错误信息。",
                       "properties": {
                         "message": {
                           "type": "string",
-                          "description": "Mô tả lỗi."
+                          "description": "错误描述。"
                         }
                       }
                     }
@@ -2249,20 +2249,20 @@
             "properties": {
               "message": {
                 "type": "string",
-                "description": "Thông báo lỗi"
+                "description": "错误信息"
               },
               "type": {
                 "type": "string",
-                "description": "Loại lỗi"
+                "description": "错误类型"
               },
               "param": {
                 "type": "string",
-                "description": "Các tham số liên quan",
+                "description": "相关参数",
                 "nullable": true
               },
               "code": {
                 "type": "string",
-                "description": "Mã lỗi",
+                "description": "错误代码",
                 "nullable": true
               }
             }
@@ -2274,15 +2274,15 @@
         "properties": {
           "prompt_tokens": {
             "type": "integer",
-            "description": "Số lượng Token của lời nhắc"
+            "description": "提示词 Token 数"
           },
           "completion_tokens": {
             "type": "integer",
-            "description": "Số Token hoàn thiện"
+            "description": "补全 Token 数"
           },
           "total_tokens": {
             "type": "integer",
-            "description": "Tổng số Token"
+            "description": "总 Token 数"
           },
           "prompt_tokens_details": {
             "type": "object",
@@ -2322,21 +2322,21 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "ID mô hình",
+            "description": "模型 ID",
             "example": "gpt-4"
           },
           "object": {
             "type": "string",
-            "description": "Loại đối tượng",
+            "description": "对象类型",
             "example": "model"
           },
           "created": {
             "type": "integer",
-            "description": "Thời điểm tạo"
+            "description": "创建时间戳"
           },
           "owned_by": {
             "type": "string",
-            "description": "Chủ sở hữu mô hình",
+            "description": "模型所有者",
             "example": "openai"
           }
         }
@@ -2410,7 +2410,7 @@
               "tool",
               "developer"
             ],
-            "description": "Vai trò tin nhắn"
+            "description": "消息角色"
           },
           "content": {
             "oneOf": [
@@ -2424,11 +2424,11 @@
                 }
               }
             ],
-            "description": "Nội dung tin nhắn"
+            "description": "消息内容"
           },
           "name": {
             "type": "string",
-            "description": "Tên người gửi"
+            "description": "发送者名称"
           },
           "tool_calls": {
             "type": "array",
@@ -2438,11 +2438,11 @@
           },
           "tool_call_id": {
             "type": "string",
-            "description": "ID của lệnh gọi công cụ (dùng cho tin nhắn vai trò tool)"
+            "description": "工具调用 ID（用于 tool 角色消息）"
           },
           "reasoning_content": {
             "type": "string",
-            "description": "Nội dung suy luận"
+            "description": "推理内容"
           }
         }
       },
@@ -2467,7 +2467,7 @@
             "properties": {
               "url": {
                 "type": "string",
-                "description": "URL hình ảnh hoặc base64"
+                "description": "图片 URL 或 base64"
               },
               "detail": {
                 "type": "string",
@@ -2484,7 +2484,7 @@
             "properties": {
               "data": {
                 "type": "string",
-                "description": "Dữ liệu âm thanh được mã hóa Base64"
+                "description": "Base64 编码的音频数据"
               },
               "format": {
                 "type": "string",
@@ -2560,7 +2560,7 @@
               },
               "parameters": {
                 "type": "object",
-                "description": "Định nghĩa tham số theo định dạng JSON Schema",
+                "description": "JSON Schema 格式的参数定义",
                 "properties": {}
               }
             }
@@ -2580,7 +2580,7 @@
           },
           "json_schema": {
             "type": "object",
-            "description": "Định nghĩa JSON Schema",
+            "description": "JSON Schema 定义",
             "properties": {}
           }
         }
@@ -2594,7 +2594,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "ID mô hình",
+            "description": "模型 ID",
             "example": "gpt-4"
           },
           "messages": {
@@ -2602,32 +2602,32 @@
             "items": {
               "$ref": "#/components/schemas/Message"
             },
-            "description": "Danh sách tin nhắn hội thoại"
+            "description": "对话消息列表"
           },
           "temperature": {
             "type": "number",
             "minimum": 0,
             "maximum": 2,
             "default": 1,
-            "description": "Nhiệt độ lấy mẫu"
+            "description": "采样温度"
           },
           "top_p": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
             "default": 1,
-            "description": "Tham số Nucleus Sampling"
+            "description": "核采样参数"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "default": 1,
-            "description": "Số lượng tạo"
+            "description": "生成数量"
           },
           "stream": {
             "type": "boolean",
             "default": false,
-            "description": "Có phản hồi dạng luồng (streaming) hay không"
+            "description": "是否流式响应"
           },
           "stream_options": {
             "type": "object",
@@ -2649,15 +2649,15 @@
                 }
               }
             ],
-            "description": "Chuỗi dừng"
+            "description": "停止序列"
           },
           "max_tokens": {
             "type": "integer",
-            "description": "Số lượng Token tạo ra tối đa"
+            "description": "最大生成 Token 数"
           },
           "max_completion_tokens": {
             "type": "integer",
-            "description": "Số Token hoàn thiện tối đa"
+            "description": "最大补全 Token 数"
           },
           "presence_penalty": {
             "type": "number",
@@ -2728,7 +2728,7 @@
               "medium",
               "high"
             ],
-            "description": "Cường độ suy luận (dùng cho các mô hình hỗ trợ suy luận)"
+            "description": "推理强度 (用于支持推理的模型)"
           },
           "modalities": {
             "type": "array",
@@ -2963,7 +2963,7 @@
             "type": "string"
           },
           "input": {
-            "description": "Nội dung nhập vào, có thể là một chuỗi hoặc một mảng các tin nhắn",
+            "description": "输入内容，可以是字符串或消息数组",
             "oneOf": [
               {
                 "type": "string"
@@ -3141,7 +3141,7 @@
             "type": "string"
           },
           "input": {
-            "description": "Nội dung nhập vào, có thể là một chuỗi hoặc một mảng các tin nhắn",
+            "description": "输入内容，可以是字符串或消息数组",
             "oneOf": [
               {
                 "type": "string"
@@ -3462,7 +3462,7 @@
                 }
               }
             ],
-            "description": "Văn bản cần nhúng"
+            "description": "要嵌入的文本"
           },
           "encoding_format": {
             "type": "string",
@@ -3474,7 +3474,7 @@
           },
           "dimensions": {
             "type": "integer",
-            "description": "Kích thước vector đầu ra"
+            "description": "输出向量维度"
           }
         }
       },
@@ -3534,7 +3534,7 @@
           },
           "prompt": {
             "type": "string",
-            "description": "Mô tả hình ảnh"
+            "description": "图像描述"
           },
           "n": {
             "type": "integer",
@@ -3649,7 +3649,7 @@
           "file": {
             "type": "string",
             "format": "binary",
-            "description": "Tệp âm thanh"
+            "description": "音频文件"
           },
           "model": {
             "type": "string",
@@ -3657,7 +3657,7 @@
           },
           "language": {
             "type": "string",
-            "description": "Mã ngôn ngữ ISO-639-1"
+            "description": "ISO-639-1 语言代码"
           },
           "prompt": {
             "type": "string"
@@ -3735,7 +3735,7 @@
           },
           "input": {
             "type": "string",
-            "description": "Văn bản cần chuyển đổi",
+            "description": "要转换的文本",
             "maxLength": 4096
           },
           "voice": {
@@ -3783,7 +3783,7 @@
           },
           "query": {
             "type": "string",
-            "description": "Văn bản truy vấn"
+            "description": "查询文本"
           },
           "documents": {
             "type": "array",
@@ -3798,11 +3798,11 @@
                 }
               ]
             },
-            "description": "Danh sách các tài liệu cần sắp xếp lại"
+            "description": "要重排序的文档列表"
           },
           "top_n": {
             "type": "integer",
-            "description": "Trả về N kết quả đầu tiên"
+            "description": "返回前 N 个结果"
           },
           "return_documents": {
             "type": "boolean",
@@ -4047,66 +4047,66 @@
       },
       "VideoRequest": {
         "type": "object",
-        "description": "Yêu cầu tạo video",
+        "description": "视频生成请求",
         "properties": {
           "model": {
             "type": "string",
-            "description": "ID Mô hình/Phong cách",
+            "description": "模型/风格 ID",
             "example": "kling-v1"
           },
           "prompt": {
             "type": "string",
-            "description": "Lời nhắc mô tả văn bản",
+            "description": "文本描述提示词",
             "example": "宇航员站起身走了"
           },
           "image": {
             "type": "string",
-            "description": "Đầu vào hình ảnh (URL hoặc Base64)",
+            "description": "图片输入 (URL 或 Base64)",
             "example": "https://example.com/image.jpg"
           },
           "duration": {
             "type": "number",
-            "description": "Thời lượng video (giây)",
+            "description": "视频时长（秒）",
             "example": 5
           },
           "width": {
             "type": "integer",
-            "description": "Chiều rộng video",
+            "description": "视频宽度",
             "example": 1280
           },
           "height": {
             "type": "integer",
-            "description": "Chiều cao video",
+            "description": "视频高度",
             "example": 720
           },
           "fps": {
             "type": "integer",
-            "description": "Tốc độ khung hình video",
+            "description": "视频帧率",
             "example": 30
           },
           "seed": {
             "type": "integer",
-            "description": "Seed ngẫu nhiên",
+            "description": "随机种子",
             "example": 20231234
           },
           "n": {
             "type": "integer",
-            "description": "Số lượng video đã tạo",
+            "description": "生成视频数量",
             "example": 1
           },
           "response_format": {
             "type": "string",
-            "description": "Định dạng phản hồi",
+            "description": "响应格式",
             "example": "url"
           },
           "user": {
             "type": "string",
-            "description": "ID người dùng",
+            "description": "用户标识",
             "example": "user-1234"
           },
           "metadata": {
             "type": "object",
-            "description": "Tham số mở rộng (như negative_prompt, style, quality_level, v.v.)",
+            "description": "扩展参数 (如 negative_prompt, style, quality_level 等)",
             "additionalProperties": true,
             "properties": {}
           }
@@ -4114,32 +4114,32 @@
       },
       "VideoResponse": {
         "type": "object",
-        "description": "Phản hồi gửi nhiệm vụ tạo video",
+        "description": "视频生成任务提交响应",
         "properties": {
           "task_id": {
             "type": "string",
-            "description": "ID nhiệm vụ",
+            "description": "任务 ID",
             "example": "abcd1234efgh"
           },
           "status": {
             "type": "string",
-            "description": "Trạng thái nhiệm vụ",
+            "description": "任务状态",
             "example": "queued"
           }
         }
       },
       "VideoTaskResponse": {
         "type": "object",
-        "description": "Phản hồi truy vấn trạng thái tác vụ video",
+        "description": "视频任务状态查询响应",
         "properties": {
           "task_id": {
             "type": "string",
-            "description": "ID nhiệm vụ",
+            "description": "任务 ID",
             "example": "abcd1234efgh"
           },
           "status": {
             "type": "string",
-            "description": "Trạng thái nhiệm vụ",
+            "description": "任务状态",
             "enum": [
               "queued",
               "in_progress",
@@ -4150,12 +4150,12 @@
           },
           "url": {
             "type": "string",
-            "description": "URL tài nguyên video (khi thành công)",
+            "description": "视频资源 URL（成功时）",
             "example": "https://example.com/video.mp4"
           },
           "format": {
             "type": "string",
-            "description": "Định dạng video",
+            "description": "视频格式",
             "example": "mp4"
           },
           "metadata": {
@@ -4168,76 +4168,76 @@
       },
       "VideoTaskMetadata": {
         "type": "object",
-        "description": "Metadata của tác vụ video",
+        "description": "视频任务元数据",
         "properties": {
           "duration": {
             "type": "number",
-            "description": "Thời lượng video thực tế được tạo",
+            "description": "实际生成的视频时长",
             "example": 5
           },
           "fps": {
             "type": "integer",
-            "description": "Tốc độ khung hình thực tế",
+            "description": "实际帧率",
             "example": 30
           },
           "width": {
             "type": "integer",
-            "description": "Chiều rộng thực tế",
+            "description": "实际宽度",
             "example": 1280
           },
           "height": {
             "type": "integer",
-            "description": "Chiều cao thực tế",
+            "description": "实际高度",
             "example": 720
           },
           "seed": {
             "type": "integer",
-            "description": "Seed ngẫu nhiên được sử dụng",
+            "description": "使用的随机种子",
             "example": 20231234
           }
         }
       },
       "VideoTaskError": {
         "type": "object",
-        "description": "Thông báo lỗi tác vụ video",
+        "description": "视频任务错误信息",
         "properties": {
           "code": {
             "type": "integer",
-            "description": "Mã lỗi"
+            "description": "错误码"
           },
           "message": {
             "type": "string",
-            "description": "Thông báo lỗi"
+            "description": "错误信息"
           }
         }
       },
       "OpenAIVideo": {
         "type": "object",
-        "description": "Đối tượng video tương thích OpenAI",
+        "description": "OpenAI 兼容的视频对象",
         "properties": {
           "id": {
             "type": "string",
-            "description": "ID Video",
+            "description": "视频 ID",
             "example": "video-abc123"
           },
           "task_id": {
             "type": "string",
-            "description": "ID nhiệm vụ (tương thích với giao diện cũ)",
+            "description": "任务 ID (兼容旧接口)",
             "deprecated": true
           },
           "object": {
             "type": "string",
-            "description": "Loại đối tượng",
+            "description": "对象类型",
             "example": "video"
           },
           "model": {
             "type": "string",
-            "description": "Mô hình được sử dụng",
+            "description": "使用的模型",
             "example": "sora"
           },
           "status": {
             "type": "string",
-            "description": "Trạng thái nhiệm vụ",
+            "description": "任务状态",
             "enum": [
               "queued",
               "in_progress",
@@ -4248,39 +4248,39 @@
           },
           "progress": {
             "type": "integer",
-            "description": "Phần trăm tiến độ",
+            "description": "进度百分比",
             "example": 100
           },
           "created_at": {
             "type": "integer",
-            "description": "Thời điểm tạo"
+            "description": "创建时间戳"
           },
           "completed_at": {
             "type": "integer",
-            "description": "Dấu thời gian hoàn thành"
+            "description": "完成时间戳"
           },
           "expires_at": {
             "type": "integer",
-            "description": "Dấu thời gian hết hạn"
+            "description": "过期时间戳"
           },
           "seconds": {
             "type": "string",
-            "description": "Thời lượng video"
+            "description": "视频时长"
           },
           "size": {
             "type": "string",
-            "description": "Kích thước video"
+            "description": "视频尺寸"
           },
           "remixed_from_video_id": {
             "type": "string",
-            "description": "ID video nguồn (nếu được tạo dựa trên video khác)"
+            "description": "源视频 ID（如果是基于其他视频生成）"
           },
           "error": {
             "$ref": "#/components/schemas/OpenAIVideoError"
           },
           "metadata": {
             "type": "object",
-            "description": "Siêu dữ liệu bổ sung",
+            "description": "额外元数据",
             "additionalProperties": true,
             "properties": {}
           }
@@ -4288,15 +4288,15 @@
       },
       "OpenAIVideoError": {
         "type": "object",
-        "description": "Thông báo lỗi video OpenAI",
+        "description": "OpenAI 视频错误信息",
         "properties": {
           "message": {
             "type": "string",
-            "description": "Thông báo lỗi"
+            "description": "错误信息"
           },
           "code": {
             "type": "string",
-            "description": "Mã lỗi"
+            "description": "错误码"
           }
         }
       },
@@ -4481,25 +4481,25 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "Sử dụng xác thực Bearer Token.\nĐịnh dạng: `Authorization: Bearer sk-xxxxxx`"
+        "description": "使用 Bearer Token 认证。\n格式: `Authorization: Bearer sk-xxxxxx`"
       },
       "SessionAuth": {
         "type": "apiKey",
         "in": "cookie",
         "name": "session",
-        "description": "Xác thực Session, được lấy thông qua API đăng nhập"
+        "description": "Session认证，通过登录接口获取"
       },
       "AccessToken": {
         "type": "apiKey",
         "in": "header",
         "name": "Authorization",
-        "description": "Xác thực Access Token, định dạng: Bearer {access_token}, được tạo thông qua API /api/user/token"
+        "description": "Access token auth format: Bearer {access_token}, generated via /api/user/token."
       },
       "NewApiUser": {
         "type": "apiKey",
         "in": "header",
         "name": "New-Api-User",
-        "description": "Header yêu cầu ID người dùng, phải khớp với ID người dùng hiện đang đăng nhập, bắt buộc cung cấp khi sử dụng xác thực Session hoặc AccessToken"
+        "description": "用户ID请求头，必须与当前登录用户ID匹配，使用Session或AccessToken认证时必须提供"
       }
     }
   },
@@ -4510,31 +4510,31 @@
   ],
   "tags": [
     {
-      "name": "Định dạng OpenAI (Chat)"
+      "name": "OpenAI格式(Chat)"
     },
     {
-      "name": "Định dạng OpenAI (Responses)"
+      "name": "OpenAI格式(Responses)"
     },
     {
-      "name": "Định dạng Gemini cho tạo ảnh"
+      "name": "图片生成Gemini格式"
     },
     {
-      "name": "Tạo ảnh OpenAI định dạng DALL-E"
+      "name": "图片生成OpenAI DALL-E格式"
     },
     {
-      "name": "Lấy danh sách mô hình"
+      "name": "获取模型列表"
     },
     {
-      "name": "Định dạng Kling tạo video"
+      "name": "视频生成Kling格式"
     },
     {
-      "name": "Tạo videoSeedanceVolcengine Ark"
+      "name": "视频生成Seedance火山方舟"
     },
     {
-      "name": "Định dạng tương thích Sora cho tạo video"
+      "name": "视频生成Sora兼容格式"
     },
     {
-      "name": "Định dạng video tạo sinh Veo3"
+      "name": "视频生成Veo3格式"
     }
   ],
   "x-doc-drift-summary": {

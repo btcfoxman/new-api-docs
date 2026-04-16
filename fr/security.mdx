@@ -1,31 +1,31 @@
 ---
-title: "Authentification et sécurité"
-description: "Sécurisez vos jetons API et vos données"
+title: "鉴权与安全"
+description: "保护您的 API 令牌与数据安全"
 ---
 
-## Authentification (Authentication)
+## 令牌验证 (Authentication)
 
-API utilise le mécanisme standard Bearer Token pour l'authentification.
+出海营 API 使用标准的 Bearer Token 机制进行身份验证。
 
-### Format du Header
+### Header 格式
 ```text
 Authorization: Bearer YOUR_API_KEY
 ```
 
-## Spécifications de sécurité des jetons
+## 令牌安全规范
 
-### 1. Principe du moindre privilège
-Si vous distribuez une clé API à des partenaires externes, veuillez restreindre les éléments suivants pour cette clé dans la console :
-- **Portée du modèle** : autoriser uniquement l'appel de modèles spécifiques.
-- **Délai d'expiration** : définir une expiration à court terme pour réduire les risques.
-- **Liste blanche d'IP** : restreindre les adresses IP des appelants.
+### 1. 最小权限原则
+如果您将 API Key 分发给外部合作方，请在控制台为该 Key 限制特定的：
+- **模型范围**：仅允许调用特定模型。
+- **过期时间**：设置短期失效以降低风险。
+- **IP 白名单**：限制调用方的 IP 地址。
 
-### 2. Interdiction stricte du codage en dur côté client
-N'inscrivez jamais directement le jeton `sk-` dans le code JavaScript frontal ou dans une application mobile. Tous les appels API doivent transiter par un serveur backend ou être générés via notre système de distribution sécurisé sous forme de jetons à court terme.
+### 2. 严禁客户端硬编码
+切勿在前端 JavaScript 或移动端 App 代码中直接写入 `sk-` 令牌。所有 API 调用应由后端服务器中转，或者通过我们的安全分发系统生成短期令牌。
 
-### 3. Confidentialité des données
-Nous ne stockons pas le contenu de vos conversations. API agit uniquement en tant que nœud de transit haute performance ; le contenu des conversations circule en mémoire et est transmis directement au fournisseur de services sous-jacent.
+### 3. 数据隐私
+我们不会存储您的对话内容。API 仅作为高性能中转节点，对话内容会在内存中流转并直接透传给底层服务商。
 
-## Surveillance et audit
+## 监控与审计
 
-Vous pouvez surveiller en temps réel les détails de chaque appel API sur la page « Logs » de la console. Pour toute question relative à la sécurité, veuillez envoyer un e-mail à support@aiid.edu.kg.
+您可以在控制台的“日志”页面实时监控每一笔 API 调用的详情。如有安全疑问，请发送邮件至 support@aiid.edu.kg。

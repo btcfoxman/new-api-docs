@@ -1,31 +1,29 @@
 ---
-title: "Mã gọi API do AI tạo"
-description: "Bạn không cần phải tự tách đường dẫn giao diện, cấu trúc body yêu cầu và phản hồi. Chỉ cần sử dụng tính năng \"Sao chép trang\" trực tiếp trên trang tài liệu và gửi toàn bộ nội dung cho AI."
+title: "AI 生成调用代码"
+description: "你无需手工拆接口链接、请求体和响应结构。直接在文档页使用“复制页面”，把整页内容发给 AI 即可。"
 ---
 
-## Quy trình đề xuất
+## 推荐流程
 
-1. Mở trang API mục tiêu, nhấp vào "Sao chép trang" ở góc trên bên phải hoặc trong menu ngữ cảnh.
-2. Gửi trực tiếp toàn bộ nội dung trang đã sao chép cho GPT, Claude hoặc các mô hình tạo mã khác.
-3. Chỉ cần bổ sung ngôn ngữ mục tiêu, tham số nghiệp vụ và cách xử lý phản hồi mong muốn; không cần tự tay sắp xếp lại đường dẫn API, body yêu cầu và cấu trúc phản hồi.
-4. Sau khi đưa mã đã tạo vào dự án local, hãy quay lại trang tài liệu để đối chiếu Base URL, phương thức xác thực và các trường bắt buộc.
+1. 打开目标接口页，点击页面右上角或上下文操作中的“复制页面”。
+2. 将复制得到的整页内容直接发给 GPT、Claude 或其他代码生成模型。
+3. 只补充你的目标语言、业务参数和需要的返回处理方式，无需手工再整理接口路径、请求体和响应结构。
+4. 将生成代码放回本地项目后，再回到文档页核对 Base URL、鉴权方式和必填字段。
 
-## Gợi ý Prompt
+## 提示词建议
 
-```text
-以下内容是我从 API 文档页直接复制的完整页面内容。
-请基于这些内容生成 Python/Node.js/Go 调用代码。
-要求：
-1. 使用 Bearer Token 鉴权
-2. Base URL 使用 https://api.aiid.edu.kg/v1
-3. 保留完整请求体和错误处理
-4. 用注释标明需要替换的 model、API Key 和业务参数
-5. 若该接口是异步任务接口，补上查询任务结果的示例
-```
+> 以下内容是我从 API 文档页直接复制的完整页面内容。
+> 请基于这些内容生成 Python/Node.js/Go 调用代码。
+> 要求：
+> 1. 使用 Bearer Token 鉴权
+> 2. Base URL 使用 https://api.aiid.edu.kg/v1
+> 3. 保留完整请求体和错误处理
+> 4. 用注释标明需要替换的 model、API Key 和业务参数
+> 5. 若该接口是异步任务接口，补上查询任务结果的示例
 
-## Kiểm tra trước khi bàn giao
+## 交付前检查
 
-- Đã điền đúng Base URL chưa
-- Đã sử dụng đúng đường dẫn API chưa
-- Đã kèm theo `Authorization: Bearer YOUR_API_KEY` chưa
-- Đã truyền các trường bắt buộc theo yêu cầu của tài liệu chưa
+- 是否填写了正确的 Base URL
+- 是否使用了正确的接口路径
+- 是否带上了 `Authorization: Bearer YOUR_API_KEY`
+- 是否按文档要求传了必填字段

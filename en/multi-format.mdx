@@ -1,11 +1,11 @@
 ---
-title: "Multi-protocol and Multi-format Integration Guide"
-description: "This project supports multiple protocols. To reduce integration costs, the public documentation prioritizes a unified format while retaining a limited number of model-native or specialized formats."
+title: "多协议与多格式接入说明"
+description: "当前项目不是只有一种协议。为降低接入成本，公开文档优先提供统一格式；同时保留少量模型原生格式或专用格式。"
 ---
 
-## 1. OpenAI Compatible Format
+## 1. OpenAI 兼容格式
 
-Recommended for most new integration scenarios:
+适合大多数新接入场景，优先考虑：
 
 - `POST /v1/chat/completions`
 - `POST /v1/responses`
@@ -14,37 +14,37 @@ Recommended for most new integration scenarios:
 - `POST /v1/videos`
 - `GET /v1/videos/{task_id}`
 
-Features:
-- Mature SDK ecosystem
-- Consistent field styling
-- Ideal for switching between multiple models
+特点：
+- SDK 生态成熟
+- 字段风格统一
+- 适合多模型切换
 
-## 2. Model Native Format
+## 2. 模型原生格式
 
-Expose native interfaces when the model requires dedicated fields, specific task structures, or native query protocols:
+当模型本身需要专用字段、专用任务结构或原生查询协议时，公开原生接口：
 
 - Seedance：`/api/v3/contents/generations/tasks`
-- Veo3: `/v1beta/models/{model}:predictLongRunning` and `/v1beta/{operation_name}`
-- Gemini Image Generation: `/v1beta/models/{model}:generateContent`
+- Veo3：`/v1beta/models/{model}:predictLongRunning` 和 `/v1beta/{operation_name}`
+- Gemini 图片生成：`/v1beta/models/{model}:generateContent`
 
-Best for:
-- Large number of model-specific fields
-- Requires native request body structure
-- Needs to remain close to the upstream official format
+适合：
+- 模型特有字段较多
+- 需要原生请求体结构
+- 需要保持与上游官方格式接近
 
-## 3. Model-Specific Video Interface
+## 3. 模型专用视频接口
 
-A few model-specific interfaces are currently available, such as:
+当前还公开少量模型专用接口，例如：
 
 - `POST /kling/v1/videos/text2video`
 - `POST /kling/v1/videos/image2video`
-Best for:
-- Existing integrations based on the specific model protocol
-- Requires specific parameter modes for that model
+适合：
+- 已经基于对应模型专用协议集成
+- 需要使用该模型专用参数模式
 
-## 4. Selection Recommendations
+## 4. 选择建议
 
-1. Prioritize using OpenAI compatible format for new projects.
-2. Switch to the native format only if the compatible format cannot cover model-specific fields.
-3. Long-running task interfaces should clearly distinguish between "Create API" and "Query API," and save `task_id` or `operation_name`.
-4. When multiple invocation formats exist for the same model, refer to the supported fields on the corresponding API page; do not mix request body formats.
+1. 新项目优先使用 OpenAI 兼容格式。
+2. 如果兼容格式无法覆盖模型特有字段，再切换到原生格式。
+3. 长任务接口应明确区分“创建接口”和“查询接口”，保存 `task_id` 或 `operation_name`。
+4. 同一模型存在多种调用格式时，以对应接口页的支持字段为准，不要混用请求体。

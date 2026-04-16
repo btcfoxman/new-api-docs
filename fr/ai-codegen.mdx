@@ -1,31 +1,29 @@
 ---
-title: "Générer le code d'appel par IA"
-description: "Plus besoin d'extraire manuellement les URL d'interface, les corps de requête ou les structures de réponse. Utilisez simplement « Copier la page » sur la documentation et envoyez l'intégralité du contenu à l'IA."
+title: "AI 生成调用代码"
+description: "你无需手工拆接口链接、请求体和响应结构。直接在文档页使用“复制页面”，把整页内容发给 AI 即可。"
 ---
 
-## Flux de travail recommandé
+## 推荐流程
 
-1. Ouvrez la page de l'API cible et cliquez sur « Copier la page » en haut à droite ou dans les actions contextuelles.
-2. Envoyez le contenu complet de la page copiée directement à GPT, Claude ou tout autre modèle de génération de code.
-3. Précisez simplement votre langage cible, les paramètres métier et le traitement des réponses souhaité ; il n'est pas nécessaire de restructurer manuellement les chemins d'accès, le corps de la requête ou la structure de la réponse.
-4. Après avoir intégré le code généré dans votre projet local, revenez à la documentation pour vérifier le Base URL, la méthode d'authentification et les champs obligatoires.
+1. 打开目标接口页，点击页面右上角或上下文操作中的“复制页面”。
+2. 将复制得到的整页内容直接发给 GPT、Claude 或其他代码生成模型。
+3. 只补充你的目标语言、业务参数和需要的返回处理方式，无需手工再整理接口路径、请求体和响应结构。
+4. 将生成代码放回本地项目后，再回到文档页核对 Base URL、鉴权方式和必填字段。
 
-## Conseils de prompt
+## 提示词建议
 
-```text
-以下内容是我从 API 文档页直接复制的完整页面内容。
-请基于这些内容生成 Python/Node.js/Go 调用代码。
-要求：
-1. 使用 Bearer Token 鉴权
-2. Base URL 使用 https://api.aiid.edu.kg/v1
-3. 保留完整请求体和错误处理
-4. 用注释标明需要替换的 model、API Key 和业务参数
-5. 若该接口是异步任务接口，补上查询任务结果的示例
-```
+> 以下内容是我从 API 文档页直接复制的完整页面内容。
+> 请基于这些内容生成 Python/Node.js/Go 调用代码。
+> 要求：
+> 1. 使用 Bearer Token 鉴权
+> 2. Base URL 使用 https://api.aiid.edu.kg/v1
+> 3. 保留完整请求体和错误处理
+> 4. 用注释标明需要替换的 model、API Key 和业务参数
+> 5. 若该接口是异步任务接口，补上查询任务结果的示例
 
-## Vérification avant livraison
+## 交付前检查
 
-- Le Base URL correct est-il renseigné ?
-- Le chemin de l'interface utilisé est-il correct ?
-- Le `Authorization: Bearer YOUR_API_KEY` est-il inclus ?
-- Les champs obligatoires ont-ils été transmis conformément à la documentation ?
+- 是否填写了正确的 Base URL
+- 是否使用了正确的接口路径
+- 是否带上了 `Authorization: Bearer YOUR_API_KEY`
+- 是否按文档要求传了必填字段

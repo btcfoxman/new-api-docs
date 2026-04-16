@@ -39,7 +39,7 @@ client = OpenAI(
 
 response = client.chat.completions.create(
     model="gpt-4o",
-    messages=[{"role": "user", "content": "你好，请给我一个快速接入建议"}],
+    messages=[{"role": "user", "content": "Hello, what can you do?"}],
 )
 
 print(response.choices[0].message.content)

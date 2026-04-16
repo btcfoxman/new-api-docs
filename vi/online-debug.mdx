@@ -1,22 +1,22 @@
 ---
-title: "Gỡ lỗi trực tuyến"
-description: "Bạn có thể gửi yêu cầu trực tiếp trong API Playground ngay trên trang tài liệu mà không cần viết mã trước."
+title: "在线调试"
+description: "你可以直接在文档页的 API Playground 中发起请求，无需先写代码。"
 ---
 
-## Các bước thực hiện
+## 使用步骤
 
-1. Mở trang API mục tiêu, nhấp vào `试一试`.
-2. Điền `api_key` vào trong trang. Giá trị này chỉ được lưu cục bộ trong trình duyệt hiện tại, không đồng bộ lên máy chủ và không chia sẻ giữa các thành viên trong nhóm.
-3. Điền tham số đường dẫn (path parameters), tham số truy vấn (query parameters) hoặc thân yêu cầu (request body) theo yêu cầu của API.
-4. Nhấp vào `发送` để xem kết quả phản hồi và thông tin lỗi.
+1. 打开目标接口页，点击 `试一试`。
+2. 在页面内填写 `api_key`。该值只保存在当前浏览器本地，不会同步到服务器，也不会在团队成员之间共享。
+3. 根据接口要求填写路径参数、查询参数或请求体。
+4. 点击 `发送`，查看返回结果与错误信息。
 
-## Gợi ý gỡ lỗi
+## 调试建议
 
-- Trước tiên, hãy xác nhận xem Base URL, đường dẫn API và tên mô hình đã chính xác chưa.
-- Đối với các API tác vụ dài, hãy ưu tiên ghi lại `task_id` hoặc `operation_name` được trả về, sau đó mới gọi API truy vấn.
-- Nếu API hỗ trợ nhiều chế độ tham số, hãy ưu tiên sử dụng thân yêu cầu mẫu trong tài liệu để xác thực các tham số khả dụng tối thiểu.
+- 先确认 Base URL、接口路径和模型名称是否正确。
+- 对长任务接口，优先记录返回的 `task_id` 或 `operation_name`，再调用查询接口。
+- 若接口支持多个参数模式，优先使用文档示例请求体验证最小可用参数。
 
-## Sử dụng kết hợp với mã do AI tạo
+## 与 AI 生成代码配合使用
 
-Nên hoàn thành việc xác thực yêu cầu khả dụng tối thiểu trên trang tài liệu trước, sau đó nhấp vào "Sao chép trang" và gửi toàn bộ nội dung trang cho AI để tạo mã gọi chính thức.
-Bằng cách này, nội dung trang API mà AI nhận được đã được bạn xác nhận thủ công, giúp đường dẫn, phương thức xác thực và chế độ tham số ít bị lỗi hơn.
+建议先在文档页完成一次最小可用请求验证，再点击“复制页面”，把整页内容发给 AI 生成正式调用代码。
+这样 AI 拿到的是已经过人工确认的接口页面内容，路径、鉴权方式和参数模式更不容易出错。

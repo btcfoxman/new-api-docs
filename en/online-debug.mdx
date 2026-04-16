@@ -1,22 +1,22 @@
 ---
-title: "Online Debugging"
-description: "You can initiate requests directly in the API Playground on the documentation page without writing any code first."
+title: "在线调试"
+description: "你可以直接在文档页的 API Playground 中发起请求，无需先写代码。"
 ---
 
-## Usage Steps
+## 使用步骤
 
-1. Open the target API page and click `试一试`.
-2. Fill in `api_key` on the page. This value is only saved locally in the current browser; it will not be synced to the server or shared among team members.
-3. Fill in path parameters, query parameters, or the request body as required by the API.
-4. Click `发送` to view the response results and error messages.
+1. 打开目标接口页，点击 `试一试`。
+2. 在页面内填写 `api_key`。该值只保存在当前浏览器本地，不会同步到服务器，也不会在团队成员之间共享。
+3. 根据接口要求填写路径参数、查询参数或请求体。
+4. 点击 `发送`，查看返回结果与错误信息。
 
-## Debugging Suggestions
+## 调试建议
 
-- First, confirm whether the Base URL, API path, and model name are correct.
-- For long-running task APIs, prioritize recording the returned `task_id` or `operation_name` before calling the query API.
-- If the API supports multiple parameter patterns, prioritize using the documentation's example request body to verify the minimum viable parameters.
+- 先确认 Base URL、接口路径和模型名称是否正确。
+- 对长任务接口，优先记录返回的 `task_id` 或 `operation_name`，再调用查询接口。
+- 若接口支持多个参数模式，优先使用文档示例请求体验证最小可用参数。
 
-## Using with AI-Generated Code
+## 与 AI 生成代码配合使用
 
-It is recommended to first complete a minimum viable request verification on the documentation page, then click "Copy Page" and send the entire page content to the AI to generate the formal invocation code.
-This ensures the AI receives API page content that has been manually confirmed by you, making errors in paths, authentication methods, and parameter patterns less likely.
+建议先在文档页完成一次最小可用请求验证，再点击“复制页面”，把整页内容发给 AI 生成正式调用代码。
+这样 AI 拿到的是已经过人工确认的接口页面内容，路径、鉴权方式和参数模式更不容易出错。

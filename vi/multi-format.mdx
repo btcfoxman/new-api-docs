@@ -1,11 +1,11 @@
 ---
-title: "Hướng dẫn truy cập đa giao thức và đa định dạng"
-description: "Dự án hiện tại không chỉ có một giao thức duy nhất. Để giảm chi phí tích hợp, tài liệu công khai ưu tiên cung cấp định dạng thống nhất; đồng thời vẫn giữ lại một số ít định dạng gốc của mô hình hoặc định dạng chuyên dụng."
+title: "多协议与多格式接入说明"
+description: "当前项目不是只有一种协议。为降低接入成本，公开文档优先提供统一格式；同时保留少量模型原生格式或专用格式。"
 ---
 
-## 1. Định dạng tương thích OpenAI
+## 1. OpenAI 兼容格式
 
-Phù hợp với hầu hết các kịch bản tích hợp mới, nên ưu tiên cân nhắc:
+适合大多数新接入场景，优先考虑：
 
 - `POST /v1/chat/completions`
 - `POST /v1/responses`
@@ -14,37 +14,37 @@ Phù hợp với hầu hết các kịch bản tích hợp mới, nên ưu tiên
 - `POST /v1/videos`
 - `GET /v1/videos/{task_id}`
 
-Đặc điểm:
-- Hệ sinh thái SDK trưởng thành
-- Phong cách các trường thống nhất
-- Phù hợp để chuyển đổi giữa nhiều mô hình
+特点：
+- SDK 生态成熟
+- 字段风格统一
+- 适合多模型切换
 
-## 2. Định dạng gốc của mô hình
+## 2. 模型原生格式
 
-Khi bản thân mô hình yêu cầu các trường chuyên dụng, cấu trúc nhiệm vụ chuyên dụng hoặc giao thức truy vấn gốc, hãy công khai giao diện gốc:
+当模型本身需要专用字段、专用任务结构或原生查询协议时，公开原生接口：
 
 - Seedance：`/api/v3/contents/generations/tasks`
-- Veo3: `/v1beta/models/{model}:predictLongRunning` và `/v1beta/{operation_name}`
-- Gemini tạo hình ảnh: `/v1beta/models/{model}:generateContent`
+- Veo3：`/v1beta/models/{model}:predictLongRunning` 和 `/v1beta/{operation_name}`
+- Gemini 图片生成：`/v1beta/models/{model}:generateContent`
 
-Phù hợp cho:
-- Có nhiều trường đặc thù của mô hình
-- Cần cấu trúc body request gốc
-- Cần duy trì sự gần gũi với định dạng chính thức của thượng nguồn (upstream)
+适合：
+- 模型特有字段较多
+- 需要原生请求体结构
+- 需要保持与上游官方格式接近
 
-## 3. Giao diện video chuyên dụng của mô hình
+## 3. 模型专用视频接口
 
-Hiện tại vẫn công khai một số ít giao diện chuyên dụng của mô hình, ví dụ:
+当前还公开少量模型专用接口，例如：
 
 - `POST /kling/v1/videos/text2video`
 - `POST /kling/v1/videos/image2video`
-Phù hợp cho:
-- Đã tích hợp dựa trên giao thức chuyên dụng của mô hình tương ứng
-- Cần sử dụng chế độ tham số chuyên dụng của mô hình đó
+适合：
+- 已经基于对应模型专用协议集成
+- 需要使用该模型专用参数模式
 
-## 4. Gợi ý lựa chọn
+## 4. 选择建议
 
-1. Các dự án mới ưu tiên sử dụng định dạng tương thích OpenAI.
-2. Nếu định dạng tương thích không thể bao quát các trường đặc thù của mô hình, hãy chuyển sang định dạng gốc.
-3. Giao diện nhiệm vụ dài nên phân biệt rõ ràng giữa "Giao diện tạo" và "Giao diện truy vấn
-4. Khi một mô hình có nhiều định dạng gọi, hãy căn cứ vào các trường được hỗ trợ trên trang giao diện tương ứng, không dùng lẫn lộn body request.
+1. 新项目优先使用 OpenAI 兼容格式。
+2. 如果兼容格式无法覆盖模型特有字段，再切换到原生格式。
+3. 长任务接口应明确区分“创建接口”和“查询接口”，保存 `task_id` 或 `operation_name`。
+4. 同一模型存在多种调用格式时，以对应接口页的支持字段为准，不要混用请求体。

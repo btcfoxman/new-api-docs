@@ -1,13 +1,13 @@
 ---
-title: "快速上手"
-description: "獲取 API Key、替換 Base URL 並發送首個請求。"
+title: "快速开始"
+description: "获取 API Key、替换 Base URL 并发起首个请求。"
 ---
 
-## 第一步：獲取 API Key
+## 第一步：获取 API Key
 
-1. 登入 [出海營 API 控制台](https://aiid.edu.kg/console)
-2. 進入令牌頁面建立 API Key
-3. 後續透過 `Authorization: Bearer YOUR_API_KEY` 使用
+1. 登录 [出海营 API 控制台](https://aiid.edu.kg/console)
+2. 进入令牌页面创建 API Key
+3. 后续通过 `Authorization: Bearer YOUR_API_KEY` 使用
 
 ## 第二步：配置 Base URL
 
@@ -15,17 +15,17 @@ description: "獲取 API Key、替換 Base URL 並發送首個請求。"
 API_BASE_URL="https://api.aiid.edu.kg/v1"
 ```
 
-如果現有用戶端預設寫的是：
+如果现有客户端默认写的是：
 
 - `https://api.openai.com`
 - `https://api.openai.com/v1`
 
-則分別替換為：
+则分别替换为：
 
 - `https://api.aiid.edu.kg`
 - `https://api.aiid.edu.kg/v1`
 
-## 第三步：發起第一個請求
+## 第三步：发起第一个请求
 
 ### Python
 
@@ -39,7 +39,7 @@ client = OpenAI(
 
 response = client.chat.completions.create(
     model="gpt-4o",
-    messages=[{"role": "user", "content": "你好，请给我一个快速接入建议"}],
+    messages=[{"role": "user", "content": "Hello, what can you do?"}],
 )
 
 print(response.choices[0].message.content)
@@ -54,15 +54,15 @@ curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application
   }'
 ```
 
-## 接入建議
+## 接入建议
 
-- 新專案優先從 OpenAI 相容介面開始
-- 圖片編輯必須注意 `multipart/form-data` 與檔案欄位要求
-- 影片任務介面應先儲存 `task_id` 或 `operation_name` 再查詢
-- 偵錯失敗時優先查看 HTTP 狀態碼、`error.code` 和 `error.message`
+- 新项目优先从 OpenAI 兼容接口开始
+- 图片编辑必须注意 `multipart/form-data` 与文件字段要求
+- 视频任务接口应先保存 `task_id` 或 `operation_name` 再查询
+- 调试失败时优先看 HTTP 状态码、`error.code` 和 `error.message`
 
 ## 下一步
 
-- 線上除錯：見  `zh-tw/online-debug%60
-- AI 生成呼叫程式碼：見  `zh-tw/ai-codegen%60
-- 模型分組與能力：見  `zh-tw/models%60
+- 在线调试：见 `cn/online-debug`
+- AI 生成调用代码：见 `cn/ai-codegen`
+- 模型分组与能力：见 `cn/models`

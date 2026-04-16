@@ -25,15 +25,6 @@
             "tab": "API Reference",
             "groups": [
               {
-                "group": "Overview",
-                "pages": [
-                  "api-reference/en/conventions",
-                  "api-reference/en/quickstart",
-                  "api-reference/en/online-debug",
-                  "api-reference/en/ai-codegen"
-                ]
-              },
-              {
                 "group": "API",
                 "openapi": {
                   "source": "api-reference/en/openapi.json",
@@ -201,15 +192,6 @@
             "tab": "API 參考",
             "groups": [
               {
-                "group": "概覽",
-                "pages": [
-                  "api-reference/zh-tw/conventions",
-                  "api-reference/zh-tw/quickstart",
-                  "api-reference/zh-tw/online-debug",
-                  "api-reference/zh-tw/ai-codegen"
-                ]
-              },
-              {
                 "group": "API",
                 "openapi": {
                   "source": "api-reference/zh-tw/openapi.json",
@@ -288,15 +270,6 @@
           {
             "tab": "Référence API",
             "groups": [
-              {
-                "group": "Aperçu",
-                "pages": [
-                  "api-reference/fr/conventions",
-                  "api-reference/fr/quickstart",
-                  "api-reference/fr/online-debug",
-                  "api-reference/fr/ai-codegen"
-                ]
-              },
               {
                 "group": "API",
                 "openapi": {
@@ -377,15 +350,6 @@
             "tab": "API リファレンス",
             "groups": [
               {
-                "group": "概要",
-                "pages": [
-                  "api-reference/ja/conventions",
-                  "api-reference/ja/quickstart",
-                  "api-reference/ja/online-debug",
-                  "api-reference/ja/ai-codegen"
-                ]
-              },
-              {
                 "group": "API",
                 "openapi": {
                   "source": "api-reference/ja/openapi.json",
@@ -465,15 +429,6 @@
             "tab": "Справочник API",
             "groups": [
               {
-                "group": "Обзор",
-                "pages": [
-                  "api-reference/ru/conventions",
-                  "api-reference/ru/quickstart",
-                  "api-reference/ru/online-debug",
-                  "api-reference/ru/ai-codegen"
-                ]
-              },
-              {
                 "group": "API",
                 "openapi": {
                   "source": "api-reference/ru/openapi.json",
@@ -552,15 +507,6 @@
           {
             "tab": "Tài liệu API",
             "groups": [
-              {
-                "group": "Tổng quan",
-                "pages": [
-                  "api-reference/vi/conventions",
-                  "api-reference/vi/quickstart",
-                  "api-reference/vi/online-debug",
-                  "api-reference/vi/ai-codegen"
-                ]
-              },
               {
                 "group": "API",
                 "openapi": {
