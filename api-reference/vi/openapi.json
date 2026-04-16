@@ -1,0 +1,4546 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tài liệu tham khảo API của Chương trình Toàn cầu hóa",
+    "version": "1.0.0",
+    "description": "Public AI Gateway API Reference"
+  },
+  "servers": [
+    {
+      "url": "https://api.aiid.edu.kg"
+    }
+  ],
+  "paths": {
+    "/v1/models": {
+      "get": {
+        "summary": "Lấy danh sách mô hình",
+        "deprecated": false,
+        "description": "Lấy danh sách các mô hình hiện có sẵn.\n\nTự động nhận dạng định dạng phản hồi dựa trên tiêu đề yêu cầu (request header):\n- Trả về định dạng Anthropic khi bao gồm các tiêu đề `x-api-key` và `anthropic-version`\n- Trả về định dạng Gemini khi bao gồm tiêu đề `x-goog-api-key` hoặc tham số truy vấn `key`\n- Các trường hợp khác trả về định dạng OpenAI",
+        "operationId": "listModels",
+        "tags": [
+          "Lấy danh sách mô hình"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "description": "Google API Key (dùng cho định dạng Gemini)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "description": "Anthropic API Key (dùng cho định dạng Claude)",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "anthropic-version",
+            "in": "header",
+            "description": "Phiên bản Anthropic API",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string",
+              "example": "2023-06-01"
+            }
+          },
+          {
+            "name": "x-goog-api-key",
+            "in": "header",
+            "description": "Google API Key (dùng cho định dạng Gemini)",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lấy danh sách mô hình thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelsResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "description": "Xác thực thất bại",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/v1beta/models": {
+      "get": {
+        "summary": "Lấy định dạng Gemini",
+        "deprecated": false,
+        "description": "Trả về danh sách các mô hình hiện có ở định dạng Gemini API",
+        "operationId": "listModelsGemini",
+        "tags": [
+          "Lấy danh sách mô hình"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lấy danh sách mô hình thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeminiModelsResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "Tạo cuộc hội thoại chat",
+        "deprecated": false,
+        "description": "Tạo phản hồi của mô hình dựa trên lịch sử hội thoại. Hỗ trợ phản hồi dạng truyền trực tuyến (streaming) và không truyền trực tuyến.\n\nTương thích với OpenAI Chat Completions API.",
+        "operationId": "createChatCompletion",
+        "tags": [
+          "Định dạng OpenAI (Chat)"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Phản hồi tạo thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Tham số yêu cầu bị lỗi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "429": {
+            "description": "Giới hạn tỷ lệ yêu cầu",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/v1/responses": {
+      "post": {
+        "summary": "Tạo phản hồi (OpenAI Responses API)",
+        "deprecated": false,
+        "description": "OpenAI Responses API, dùng để tạo phản hồi từ mô hình.\nHỗ trợ các tính năng như hội thoại đa vòng, gọi công cụ, suy luận.",
+        "operationId": "createResponse",
+        "tags": [
+          "Định dạng OpenAI (Responses)"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResponsesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Phản hồi tạo thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponsesResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/v1beta/models/{model}:generateContent": {
+      "post": {
+        "summary": "Hình ảnh Gemini (Nano Banana)",
+        "deprecated": false,
+        "description": "Tạo hình ảnh với Gemini.\n\nDòng Nano Banana hỗ trợ định dạng OpenAI Dall-E (chi tiết xem tại liên kết [Tạo hình ảnh/định dạng OpenAI Dall-E](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).",
+        "operationId": "geminiRelayV1Beta",
+        "tags": [
+          "Tạo hình ảnh/Định dạng Gemini"
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "description": "Tên mô hình",
+            "required": true,
+            "example": "gemini-3-pro-image-preview",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "contents": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string"
+                        },
+                        "parts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "text": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "generationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "responseModalities": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "imageConfig": {
+                        "type": "object",
+                        "properties": {
+                          "aspectRatio": {
+                            "type": "string"
+                          },
+                          "imageSize": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "responseModalities"
+                    ]
+                  }
+                },
+                "required": [
+                  "contents",
+                  "generationConfig"
+                ]
+              },
+              "example": {
+                "contents": [
+                  {
+                    "role": "user",
+                    "parts": [
+                      {
+                        "text": "draw a cat"
+                      }
+                    ]
+                  }
+                ],
+                "generationConfig": {
+                  "responseModalities": [
+                    "TEXT",
+                    "IMAGE"
+                  ],
+                  "imageConfig": {
+                    "aspectRatio": "16:9",
+                    "imageSize": "4K"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeminiResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/v1/images/generations": {
+      "post": {
+        "summary": "Tạo hình ảnh (tương thích OpenAI Dall-E)",
+        "deprecated": false,
+        "description": "OpenAI API tạo hình ảnh định dạng Dall-E.",
+        "operationId": "createImageGeneration",
+        "tags": [
+          "Tạo hình ảnh/Định dạng OpenAI Dall-E"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "Tên mô hình",
+                    "example": "dall-e-3"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "Prompt tạo ảnh"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "description": "Số lượng tạo",
+                    "default": 1
+                  },
+                  "size": {
+                    "type": "string",
+                    "description": "Kích thước hình ảnh",
+                    "enum": [
+                      "1024x1024",
+                      "1024x1792",
+                      "1792x1024"
+                    ]
+                  },
+                  "quality": {
+                    "type": "string",
+                    "description": "Chất lượng tạo ảnh",
+                    "enum": [
+                      "standard",
+                      "hd"
+                    ]
+                  },
+                  "style": {
+                    "type": "string",
+                    "description": "Phong cách",
+                    "enum": [
+                      "vivid",
+                      "natural"
+                    ]
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "description": "Định dạng phản hồi",
+                    "enum": [
+                      "url",
+                      "b64_json"
+                    ]
+                  },
+                  "user": {
+                    "type": "string",
+                    "description": "ID người dùng"
+                  }
+                },
+                "required": [
+                  "model",
+                  "prompt"
+                ]
+              },
+              "example": {
+                "model": "dall-e-3",
+                "prompt": "A cute baby sea otter",
+                "n": 1,
+                "size": "1024x1024"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tạo hình ảnh thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/v1/images/edits": {
+      "post": {
+        "summary": "Chỉnh sửa hình ảnh (tương thích OpenAI Dall-E)",
+        "deprecated": false,
+        "description": "OpenAI API chỉnh sửa hình ảnh định dạng Dall-E.",
+        "operationId": "createImageEdit",
+        "tags": [
+          "Tạo hình ảnh/Định dạng OpenAI Dall-E"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "dall-e-2"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Hình ảnh cần chỉnh sửa"
+                  },
+                  "mask": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Ảnh mặt nạ tùy chọn"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "Chỉnh sửa câu lệnh"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "default": 1
+                  },
+                  "size": {
+                    "type": "string",
+                    "enum": [
+                      "256x256",
+                      "512x512",
+                      "1024x1024"
+                    ]
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "enum": [
+                      "url",
+                      "b64_json"
+                    ]
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "model",
+                  "image",
+                  "prompt"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tạo hình ảnh thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/v1/videos": {
+      "post": {
+        "summary": "Tạo video",
+        "deprecated": false,
+        "description": "Interface tạo video định dạng tương thích với OpenAI Sora. Hỗ trợ chế độ tạo video từ văn bản (text-to-video) và tạo video tham chiếu từ hình ảnh/video.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video (tải xuống)\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`: Danh sách tác vụ\n- `POST /v1/videos/{video_id}/remix`: Chỉnh sửa video lớp thứ hai / remix\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json` (khi tạo tác vụ)\n\n1. Gọi `POST /v1/videos` để tạo tác vụ và nhận `id`.\n2. Kiểm tra vòng lặp (polling) `GET /v1/videos/{id}` cho đến khi `status=completed` hoặc `failed`.\n3. Sau khi `completed`, ưu tiên sử dụng `video_url` trong kết quả trả về; nếu cần tải xuống thống nhất qua gateway, có thể gọi `GET /v1/videos/{id}/content`.\n\n## 3.1 Tham số cốt lõi\n\n- `model: string` (Bắt buộc)\n- Mô tả: Tên mô hình video cần gọi.\n- Ví dụ: `sora-2`, `doubao-seedance-2-0-260128`\n\n- `prompt: string` (Khuyên dùng)\n- Mô tả: Mô tả chính để tạo video. Phải truyền tham số này ngay cả khi sử dụng `content`, không được để trống.\n- Ví dụ: `第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string` (Tùy chọn)\n- Mô tả: Thời lượng mục tiêu. Chọn một trong hai giữa tham số này và `duration`, nếu truyền cả hai thì thông thường sẽ căn cứ theo kết quả phân tích của gateway.\n- Ví dụ: `8`\n\n- `size: string` (Tùy chọn)\n- Mô tả: Độ phân giải đầu ra, thường dùng `宽x高`.\n- Ví dụ: `720x1280`, `1280x720`\n\n- `mode: string` (Tùy chọn)\n- Mô tả: Chế độ tạo, nếu không truyền mặc định là `t2v`. Các chế độ khác nhau có yêu cầu khác nhau về tham số tài liệu (assets).\n- Ví dụ: `t2v`, `i2v`, `i2v_first_last`, `reference_material`\n\n## 3.2 Tham số tương thích chung\n\n- `aspect_ratio` hoặc `ratio`: Tỷ lệ khung hình.\n- `duration`: Bí danh thời lượng (có thể chọn một trong hai với `seconds`).\n- `quality` hoặc `resolution`: Tham số liên quan đến độ phân giải.\n- `fps`: Tốc độ khung hình.\n- `function_mode`: Chế độ chức năng tùy chọn, dùng để kích hoạt các hành vi cụ thể (ví dụ: `omni_reference` biểu thị ngữ nghĩa tham chiếu toàn năng).\n\n## 3.3 Tham số tài liệu tham chiếu\n\n- `input_reference`: Đối tượng nhập tham chiếu chuẩn.\n- Mô tả: Chỉ hỗ trợ định dạng chuỗi URL, không hỗ trợ định dạng đối tượng.\n- Ví dụ đúng: `\"input_reference\": \"https://example.com/ref.png\"`\n- Ví dụ sai: `\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`: Tham chiếu hình ảnh.\n- Mô tả: `image_url` thường dùng cho đơn ảnh; `image_urls` dùng cho đa ảnh hoặc tham chiếu toàn năng.\n\n- `end_image_url` / `last_image_url`: Tham chiếu khung hình cuối.\n- Mô tả: Thường kết hợp với `mode=i2v_first_last`, biểu thị khung hình kết thúc video.\n\n- `video_urls`: Danh sách tham chiếu video.\n- Mô tả: Thường dùng trong các kịch bản tham chiếu toàn năng `reference_material` hoặc `content`.\n\n- `audio_urls`: Danh sách tham chiếu âm thanh.\n- Mô tả: Dùng để tham chiếu phong cách nhạc nền/thuyết minh (có hiệu lực hay không tùy thuộc vào khả năng của mô hình).\n\n- `reference_images`: Tham chiếu đa ảnh.\n- Mô tả: Thường dùng trong chế độ tham chiếu đa khung hình/đa ảnh.\n\nLưu ý: Các mô hình khác nhau có yêu cầu khác nhau về trường tài liệu, nên truyền tham số theo phần \"Chế độ và tham số đầu vào tối thiểu\" bên dưới.\n\n## 3.4 Chế độ content nâng cao (khuyên dùng cho các kịch bản tham chiếu phức tạp)\n\nCó thể truyền trực tiếp mảng `content`:\n- `type=text`: Chỉ lệnh văn bản.\n- `type=image_url|video_url|audio_url`: Đầu vào đa phương tiện.\n- Hỗ trợ `name` để tham chiếu tài nguyên trong văn bản thông qua `@名称`.\n\nRàng buộc bắt buộc:\n- Khi sử dụng `content`, `prompt` vẫn phải được truyền và không được để trống.\n\nCách viết tương thích:\n- `image_url/video_url/audio_url` có thể là một chuỗi hoặc đối tượng `{ \"url\": \"https://...\" }`.\n- `role` có thể sử dụng `material`, cũng tương thích với `reference_image/reference_video/reference_audio`.\n\nCó thể mang theo đồng thời:\n- `generate_audio: boolean`\n- `watermark: boolean`\n\nGiải thích bổ sung:\n- `generate_audio=true`: Yêu cầu mô hình đồng thời tạo âm thanh (chỉ có hiệu lực với các mô hình hỗ trợ khả năng này).\n- `watermark=false`: Yêu cầu tắt hình mờ (việc có hiệu lực thực tế hay không phụ thuộc vào mô hình và chính sách kênh).\n- `name`: Bí danh tài nguyên, nên để giống với `@名称` trong `text` để mô hình liên kết chính xác tài nguyên.\n\nCác họ mô hình khác nhau có sự khác biệt lớn về hỗ trợ tham số, nên chọn tham số theo bảng dưới đây:\n\n| Họ mô hình | Tên mô hình phổ biến (ví dụ) | Tham số đầu vào tối thiểu đề xuất | Tham số mở rộng thường dùng | Lưu ý |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | Nhạy cảm nhất với `mode`; không phải tất cả phiên bản đều hỗ trợ `reference_material`. |\n| Sora Phổ biến | `sora-2` `sora-2-pro` và `*-stable/*-official` | `model + prompt` | `seconds/size`, nên bổ sung `input_reference` (chuỗi URL) | Khi fallback đa kênh, yêu cầu về hình ảnh có thể khác nhau, nên chuẩn bị hình ảnh tham chiếu để tăng tỷ lệ thành công. |\n| Sora Thời lượng đặt trước | `sora2-landscape-10s` `sora2-pro-portrait-25s`, v.v. | `model + prompt` | `image_url/input_reference` | Thời lượng và hướng thường do tên mô hình quyết định, `seconds/ratio` chỉ có hiệu lực khi mô hình cho phép. |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | Các mô hình loại `i2v/r2v` thường cần hình ảnh hoặc tài nguyên tham chiếu; loại `t2v` thường có thể dùng thuần văn bản. |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`, cũng như các trường chính thức như `image/image_list` | Đã tương thích với ngữ nghĩa đường dẫn chính thức (text2video/image2video/multi-image2video) và thống nhất vào `/v1/videos`; không cung cấp khả năng mở rộng video ra bên ngoài. |\n| Mô hình mở rộng tổng hợp | `happyhorse*` `grok-imagine-1.0-video*`, v.v. | `model + prompt` | `seconds/size/content` | Các trường hỗ trợ cụ thể phụ thuộc vào việc triển khai mô hình và kênh, nên ưu tiên sử dụng các trường tiêu chuẩn, nếu thiếu mới dùng `content`. |\n\nGiải thích:\n1. Nếu bạn sử dụng mô hình bí danh ổn định (như `*-stable`, `*-official`), lớp dưới có thể tự động chuyển đổi kênh, vui lòng cố gắng truyền \"tham số tương thích đa kênh\" (`prompt + model + seconds/duration + size/ratio + 必要参考图`).\n2. Đối với các kịch bản đa chất liệu phức tạp (Hình ảnh + Video + Âm thanh + @Tên), ưu tiên sử dụng `content` để có khả năng tương thích cao nhất.\n3. Nếu tài liệu mô hình không ghi rõ hỗ trợ một trường cụ thể, vui lòng chạy thử với \"tham số đầu vào tối thiểu\" trước, sau đó mới dần dần thêm các tham số mở rộng.\n\n### 4.1 Bổ sung chế độ chính thức của Kling\n\n- `mode=t2v`: Văn bản sang video\n- `mode=i2v`: Hình ảnh sang video (yêu cầu `image` hoặc `image_url`)\n- `mode=multi_i2v`: Tham chiếu nhiều hình ảnh (yêu cầu `image_list` hoặc nhiều `image_urls`)\n- `mode=extend`: Không hỗ trợ (tính năng kéo dài video tạm thời chưa cung cấp khả năng `/v1/videos` ra bên ngoài)\n\nCác tham số chính thức phổ biến có thể được truyền trực tiếp trong body request của `/v1/videos`:\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Bổ sung chế độ video Grok\n\nTham số đề xuất:\n- `model`: Ví dụ `grok-video-3`\n- `prompt`\n- `ratio` hoặc `aspect_ratio`\n- `resolution` hoặc `size`\n- `seconds` hoặc `duration`\n- `image` / `image_url` / `input_reference` (Tham chiếu hình ảnh đơn)\n- `reference_images` / `reference_image_urls` (Tham chiếu nhiều hình ảnh, ngữ nghĩa `reference-to-video` chính thức)\n- `mode` (tùy chọn): `image-to-video`, `reference-to-video`\n\nRàng buộc:\n- Không hỗ trợ `mode=edit-video` / `mode=extend-video` (Chỉnh sửa và kéo dài video tạm thời không cung cấp ra bên ngoài).\n- `image/input_reference` và `reference_images` không thể truyền cùng lúc.\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v` (tương đương `i2v_first`)\n- Tham số đầu vào tối thiểu: `model + prompt + image_url` (hoặc chuỗi URL `input_reference`)\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images` (thông thường 1~4 ảnh)\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- Đối với các kịch bản phức tạp, khuyến nghị sử dụng `content + function_mode=omni_reference`\n- Mô tả: Khi truyền `function_mode=omni_reference`, ngay cả khi không truyền `mode=reference_material` một cách rõ ràng, hệ thống vẫn sẽ xử lý theo ngữ nghĩa tham chiếu toàn năng.",
+        "operationId": "createVideo",
+        "tags": [
+          "Tạo video/Định dạng tương thích Sora"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "Tên của mô hình video cần gọi. Ví dụ: `sora-2`, `doubao-seedance-2-0-260128`",
+                    "enum": [
+                      "sora-2",
+                      "sora-2-pro",
+                      "doubao-seedance-1-0-lite-i2v-250428",
+                      "doubao-seedance-1-0-lite-t2v-250428",
+                      "doubao-seedance-1-0-pro-250528",
+                      "doubao-seedance-1-0-pro-fast-251015",
+                      "doubao-seedance-1-5-pro-251215",
+                      "doubao-seedance-2-0-260128",
+                      "doubao-seedance-2-0-fast-260128",
+                      "veo3",
+                      "veo3-fast",
+                      "veo3-fast-frames",
+                      "veo3-frames",
+                      "veo3-pro",
+                      "veo3-pro-frames",
+                      "veo3.1",
+                      "veo3.1-4k",
+                      "veo3.1-components",
+                      "veo3.1-fast",
+                      "veo3.1-pro",
+                      "veo3.1-pro-4k",
+                      "kling-video",
+                      "grok-video-3",
+                      "vidu2.0",
+                      "hailuo-video"
+                    ],
+                    "example": "sora-2"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "Mô tả chính để tạo video. Phải truyền tham số này ngay cả khi sử dụng `content`, không được để trống. Ví dụ: `第一人称视角果茶广告，节奏轻快`"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Cổng vào cho một ảnh đơn, một số chế độ tương thích sẽ được ánh xạ tới `images`."
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "Alias thời lượng (có thể chọn một trong hai với `seconds`)."
+                  },
+                  "width": {
+                    "type": "integer",
+                    "example": 512,
+                    "description": "Video width"
+                  },
+                  "height": {
+                    "type": "integer",
+                    "example": 512,
+                    "description": "Video height"
+                  },
+                  "fps": {
+                    "type": "integer",
+                    "example": 30,
+                    "description": "Tốc độ khung hình."
+                  },
+                  "seed": {
+                    "type": "integer",
+                    "example": 20231234,
+                    "description": "Random seed"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Number of videos to generate"
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "example": "url",
+                    "description": "Response format"
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "user-1234",
+                    "description": "User identifier"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Container trường mở rộng động. Một số lượng lớn các trường đặc thù của mô hình được giải tuần tự hóa từ đây."
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "Chế độ tạo, mặc định là `t2v` nếu không truyền vào. Các chế độ khác nhau có yêu cầu khác nhau về tham số tài liệu. Ví dụ: `t2v`, `i2v`, `i2v_first_last`, `reference_material`"
+                  },
+                  "images": {
+                    "type": "array",
+                    "description": "Cổng vào hợp nhất cho nhiều hình ảnh. Sẽ được sử dụng bởi Vidu, Seedance, Veo, v.v.",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "size": {
+                    "type": "string",
+                    "description": "Độ phân giải đầu ra, thường dùng `宽x高`. Ví dụ: `720x1280`, `1280x720`"
+                  },
+                  "seconds": {
+                    "type": "string",
+                    "description": "Thời lượng mục tiêu. Chọn một trong hai với `duration`, nếu truyền cả hai thì thông thường kết quả phân giải của gateway sẽ được áp dụng. Ví dụ: `8`"
+                  },
+                  "input_reference": {
+                    "type": "string",
+                    "description": "Đối tượng đầu vào tham chiếu tiêu chuẩn."
+                  }
+                },
+                "required": [
+                  "model",
+                  "prompt"
+                ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "Tên của mô hình video cần gọi. Ví dụ: `sora-2`, `doubao-seedance-2-0-260128`",
+                    "enum": [
+                      "sora-2",
+                      "sora-2-pro",
+                      "doubao-seedance-1-0-lite-i2v-250428",
+                      "doubao-seedance-1-0-lite-t2v-250428",
+                      "doubao-seedance-1-0-pro-250528",
+                      "doubao-seedance-1-0-pro-fast-251015",
+                      "doubao-seedance-1-5-pro-251215",
+                      "doubao-seedance-2-0-260128",
+                      "doubao-seedance-2-0-fast-260128",
+                      "veo3",
+                      "veo3-fast",
+                      "veo3-fast-frames",
+                      "veo3-frames",
+                      "veo3-pro",
+                      "veo3-pro-frames",
+                      "veo3.1",
+                      "veo3.1-4k",
+                      "veo3.1-components",
+                      "veo3.1-fast",
+                      "veo3.1-pro",
+                      "veo3.1-pro-4k",
+                      "kling-video",
+                      "grok-video-3",
+                      "vidu2.0",
+                      "hailuo-video"
+                    ],
+                    "example": "sora-2"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "Mô tả chính để tạo video. Phải truyền tham số này ngay cả khi sử dụng `content`, không được để trống. Ví dụ: `第一人称视角果茶广告，节奏轻快`"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Cổng vào cho một ảnh đơn, một số chế độ tương thích sẽ được ánh xạ tới `images`."
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "Alias thời lượng (có thể chọn một trong hai với `seconds`)."
+                  },
+                  "width": {
+                    "type": "integer",
+                    "example": 512,
+                    "description": "Video width"
+                  },
+                  "height": {
+                    "type": "integer",
+                    "example": 512,
+                    "description": "Video height"
+                  },
+                  "fps": {
+                    "type": "integer",
+                    "example": 30,
+                    "description": "Tốc độ khung hình."
+                  },
+                  "seed": {
+                    "type": "integer",
+                    "example": 20231234,
+                    "description": "Random seed"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "example": 1,
+                    "description": "Number of videos to generate"
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "example": "url",
+                    "description": "Response format"
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "user-1234",
+                    "description": "User identifier"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Container trường mở rộng động. Một số lượng lớn các trường đặc thù của mô hình được giải tuần tự hóa từ đây."
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "Chế độ tạo, mặc định là `t2v` nếu không truyền vào. Các chế độ khác nhau có yêu cầu khác nhau về tham số tài liệu. Ví dụ: `t2v`, `i2v`, `i2v_first_last`, `reference_material`"
+                  },
+                  "images": {
+                    "type": "array",
+                    "description": "Cổng vào hợp nhất cho nhiều hình ảnh. Sẽ được sử dụng bởi Vidu, Seedance, Veo, v.v.",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "size": {
+                    "type": "string",
+                    "description": "Độ phân giải đầu ra, thường dùng `宽x高`. Ví dụ: `720x1280`, `1280x720`"
+                  },
+                  "seconds": {
+                    "type": "string",
+                    "description": "Thời lượng mục tiêu. Chọn một trong hai với `duration`, nếu truyền cả hai thì thông thường kết quả phân giải của gateway sẽ được áp dụng. Ví dụ: `8`"
+                  },
+                  "input_reference": {
+                    "type": "string",
+                    "description": "Đối tượng đầu vào tham chiếu tiêu chuẩn."
+                  }
+                },
+                "required": [
+                  "model",
+                  "prompt"
+                ]
+              },
+              "examples": {
+                "openai_t2v": {
+                  "summary": "OpenAI t2v (prompt/model)",
+                  "value": {
+                    "model": "sora-2",
+                    "prompt": "A cinematic drone shot over snowy mountains at sunrise",
+                    "seconds": "8",
+                    "size": "1280x720",
+                    "response_format": "url"
+                  }
+                },
+                "openai_i2v_input_reference": {
+                  "summary": "OpenAI i2v (input_reference)",
+                  "value": {
+                    "model": "sora-2",
+                    "prompt": "A cinematic drone shot over snowy mountains at sunrise",
+                    "input_reference": {
+                      "image_url": "https://example.com/input.jpg"
+                    },
+                    "seconds": "8",
+                    "size": "1280x720",
+                    "response_format": "url"
+                  }
+                },
+                "openai_alias_compat": {
+                  "summary": "Alias兼容 (image_url/duration/aspect_ratio)",
+                  "value": {
+                    "model": "sora-2",
+                    "prompt": "A cinematic drone shot over snowy mountains at sunrise",
+                    "image_url": "https://example.com/input.jpg",
+                    "duration": "8",
+                    "aspect_ratio": "16:9",
+                    "response_format": "url"
+                  }
+                },
+                "seedance_i2v_first": {
+                  "summary": "Seedance i2v_first",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-i2v-250428",
+                    "mode": "i2v_first",
+                    "prompt": "A panda skateboarding in a city street, cinematic",
+                    "image_urls": [
+                      "https://example.com/first.jpg"
+                    ],
+                    "seconds": "5",
+                    "size": "1280x720"
+                  }
+                },
+                "seedance_i2v_first_last": {
+                  "summary": "Seedance i2v_first_last",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-i2v-250428",
+                    "mode": "i2v_first_last",
+                    "prompt": "A camera moves from first frame to last frame naturally",
+                    "image_urls": [
+                      "https://example.com/first.jpg"
+                    ],
+                    "end_image_url": "https://example.com/last.jpg",
+                    "seconds": "5",
+                    "size": "1280x720"
+                  }
+                },
+                "seedance_reference_images": {
+                  "summary": "Seedance reference_images",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-i2v-250428",
+                    "mode": "reference_images",
+                    "prompt": "Stylized short video keeping character consistency",
+                    "reference_images": [
+                      "https://example.com/ref-1.jpg",
+                      "https://example.com/ref-2.jpg"
+                    ],
+                    "seconds": "5",
+                    "size": "1280x720"
+                  }
+                },
+                "seedance_reference_material": {
+                  "summary": "Seedance Chế độ tham chiếu toàn năng (reference_material)",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-i2v-250428",
+                    "mode": "reference_material",
+                    "prompt": "Blend image and short reference video into a coherent cinematic clip",
+                    "reference_images": [
+                      "https://example.com/ref-1.jpg",
+                      "https://example.com/ref-2.jpg"
+                    ],
+                    "video_urls": [
+                      "https://example.com/ref-video.mp4"
+                    ],
+                    "audio_urls": [
+                      "https://example.com/ref-audio.mp3"
+                    ],
+                    "seconds": "5",
+                    "size": "1280x720"
+                  }
+                },
+                "seedance_volc_content": {
+                  "summary": "Chế độ content Seedance Volcengine Ark",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-i2v-250428",
+                    "mode": "reference_material",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic teaser video with fast-paced action cuts"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": "https://example.com/ref-1.jpg"
+                      }
+                    ],
+                    "seconds": "5",
+                    "size": "1280x720"
+                  }
+                },
+                "veo_first_last_frame": {
+                  "summary": "Veo Chế độ khung hình đầu và cuối",
+                  "value": {
+                    "model": "veo3.1-fast",
+                    "prompt": "A smooth transition from first frame to last frame, cinematic motion",
+                    "image_urls": [
+                      "https://example.com/first-frame.jpg"
+                    ],
+                    "end_image_url": "https://example.com/last-frame.jpg",
+                    "seconds": "8",
+                    "size": "1280x720"
+                  }
+                },
+                "veo_reference_images_1to3": {
+                  "summary": "Chế độ Veo 1~3 ảnh tham chiếu",
+                  "value": {
+                    "model": "veo3.1-fast",
+                    "prompt": "Use reference style and character consistency for a short ad clip",
+                    "reference_images": [
+                      "https://example.com/ref-1.jpg"
+                    ],
+                    "seconds": "8",
+                    "size": "1280x720"
+                  }
+                },
+                "kling_text2video": {
+                  "summary": "Kling Chuyển văn bản thành video",
+                  "value": {
+                    "model": "kling-video",
+                    "prompt": "A cat playing piano in the garden",
+                    "duration": 5,
+                    "size": "1280x720",
+                    "metadata": {
+                      "negative_prompt": "blurry, low quality",
+                      "mode": "std"
+                    }
+                  }
+                },
+                "kling_image2video": {
+                  "summary": "Kling Chuyển hình ảnh thành video",
+                  "value": {
+                    "model": "kling-video",
+                    "prompt": "A cat playing piano in the garden",
+                    "image": "https://example.com/input.jpg",
+                    "duration": 5,
+                    "size": "1280x720",
+                    "metadata": {
+                      "negative_prompt": "blurry, low quality",
+                      "mode": "std"
+                    }
+                  }
+                },
+                "grok_reference_video": {
+                  "summary": "Chế độ video Grok",
+                  "value": {
+                    "model": "grok-video-3",
+                    "prompt": "A dramatic cinematic shot with fast motion and rich lighting",
+                    "reference_images": [
+                      "https://example.com/ref-1.jpg"
+                    ],
+                    "seconds": "8",
+                    "aspect_ratio": "16:9"
+                  }
+                },
+                "vidu_img2video": {
+                  "summary": "Vidu Chuyển hình ảnh thành video",
+                  "value": {
+                    "model": "vidu2.0",
+                    "prompt": "A stylish ad clip from a product still image",
+                    "images": [
+                      "https://example.com/product.jpg"
+                    ],
+                    "duration": 5,
+                    "size": "1080p"
+                  }
+                },
+                "vidu_first_tail": {
+                  "summary": "Chế độ khung hình đầu và cuối Vidu",
+                  "value": {
+                    "model": "vidu2.0",
+                    "prompt": "A smooth shot from start frame to end frame",
+                    "images": [
+                      "https://example.com/start.jpg",
+                      "https://example.com/end.jpg"
+                    ],
+                    "duration": 5,
+                    "size": "1080p"
+                  }
+                },
+                "vidu_reference": {
+                  "summary": "Chế độ đa ảnh tham chiếu Vidu",
+                  "value": {
+                    "model": "vidu2.0",
+                    "prompt": "Maintain product style and character consistency",
+                    "images": [
+                      "https://example.com/ref-1.jpg",
+                      "https://example.com/ref-2.jpg",
+                      "https://example.com/ref-3.jpg"
+                    ],
+                    "duration": 5,
+                    "size": "1080p"
+                  }
+                },
+                "hailuo_text2video": {
+                  "summary": "Hailuo Chuyển văn bản thành video",
+                  "value": {
+                    "model": "hailuo-video",
+                    "prompt": "A cinematic travel shot over the coastline",
+                    "duration": 6,
+                    "size": "1280x720"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Đã tạo tác vụ video thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "ID nhiệm vụ (dùng để truy vấn/tải xuống sau này)."
+                    },
+                    "task_id": {
+                      "type": "string",
+                      "description": "Tương thích với giao diện cũ (Sắp ngừng hỗ trợ)"
+                    },
+                    "object": {
+                      "type": "string"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Trạng thái nhiệm vụ.",
+                      "enum": [
+                        "queued",
+                        "in_progress",
+                        "completed",
+                        "failed"
+                      ]
+                    },
+                    "progress": {
+                      "type": "integer",
+                      "description": "Tiến độ (0~100, giá trị xấp xỉ)."
+                    },
+                    "created_at": {
+                      "type": "integer",
+                      "description": "Thời gian tạo (giây Unix)."
+                    },
+                    "completed_at": {
+                      "type": "integer",
+                      "description": "Thời gian hoàn thành."
+                    },
+                    "expires_at": {
+                      "type": "integer"
+                    },
+                    "seconds": {
+                      "type": "string"
+                    },
+                    "size": {
+                      "type": "string"
+                    },
+                    "remixed_from_video_id": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "video_url": {
+                      "type": "string",
+                      "description": "Địa chỉ video có thể tải xuống trực tiếp."
+                    },
+                    "url": {
+                      "type": "string",
+                      "description": "Một số mô hình/kênh có thể trả về trường này dưới dạng địa chỉ kết quả."
+                    }
+                  },
+                  "required": [
+                    "created_at",
+                    "id",
+                    "model",
+                    "object",
+                    "progress",
+                    "status"
+                  ]
+                },
+                "example": {
+                  "id": "video_abc123",
+                  "object": "video",
+                  "model": "sora-2",
+                  "status": "queued",
+                  "progress": 0,
+                  "created_at": 1764347090922,
+                  "seconds": "8"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Tham số yêu cầu bị lỗi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "Lấy trạng thái tác vụ video",
+        "deprecated": false,
+        "description": "Giao diện truy vấn trạng thái tác vụ video tương thích với OpenAI.\n\nTrả về thông tin trạng thái chi tiết của tác vụ video.",
+        "operationId": "getVideo",
+        "tags": [
+          "Tạo video/Định dạng tương thích Sora"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "description": "ID tác vụ video",
+            "required": true,
+            "example": "sora-2-123456",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lấy trạng thái tác vụ video thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "progress": {
+                      "type": "integer"
+                    },
+                    "created_at": {
+                      "type": "integer"
+                    },
+                    "seconds": {
+                      "type": "string"
+                    },
+                    "video_url": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "Địa chỉ URL của video kết quả. Các mô hình khác nhau có thể trả về `video_url` hoặc `url`, chọn một trong hai."
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "Địa chỉ URL của video kết quả. Các mô hình khác nhau có thể trả về `url` hoặc `video_url`, chọn một trong hai."
+                    },
+                    "completed_at": {
+                      "type": "integer",
+                      "description": "Thời gian hoàn tất (giây Unix)."
+                    },
+                    "expires_at": {
+                      "type": "integer",
+                      "description": "Thời gian hết hạn của kết quả (Unix giây)."
+                    },
+                    "error": {
+                      "type": "object",
+                      "description": "Thông báo lỗi khi thất bại."
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "description": "Siêu dữ liệu bổ sung."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "object",
+                    "model",
+                    "status",
+                    "progress",
+                    "created_at",
+                    "seconds"
+                  ]
+                },
+                "example": {
+                  "id": "sora-2-123456",
+                  "object": "video",
+                  "model": "sora-2",
+                  "status": "queued",
+                  "progress": 0,
+                  "created_at": 1764347090922,
+                  "seconds": "8"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "Nhiệm vụ không tồn tại",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/v1/videos/{task_id}/content": {
+      "get": {
+        "summary": "Lấy nội dung video",
+        "deprecated": false,
+        "description": "Lấy nội dung tệp video của các tác vụ video đã hoàn thành.\n\nGiao diện này sẽ đóng vai trò proxy để trả về luồng tệp video (video file stream).",
+        "operationId": "getVideoContent",
+        "tags": [
+          "Tạo video/Định dạng tương thích Sora"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "description": "ID tác vụ video",
+            "required": true,
+            "example": "video-abc123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lấy nội dung video thành công",
+            "content": {
+              "video/mp4": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "Video không tồn tại hoặc chưa hoàn thành",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/kling/v1/videos/text2video": {
+      "post": {
+        "summary": "Kling Chuyển văn bản thành video",
+        "deprecated": false,
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).\n\nSử dụng mô hình Kling để tạo video từ mô tả văn bản.\n\nCác mô hình hỗ trợ: kling-v1, kling-v1-5, v.v.",
+        "operationId": "createKlingText2Video",
+        "tags": [
+          "Tạo video/Định dạng Kling"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoRequest"
+              },
+              "example": {
+                "model": "kling-v1",
+                "prompt": "宇航员站起身走了",
+                "duration": 5,
+                "width": 1280,
+                "height": 720,
+                "fps": 30
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Đã tạo tác vụ tạo video thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Tham số yêu cầu bị lỗi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/kling/v1/videos/text2video/{task_id}": {
+      "get": {
+        "summary": "Lấy trạng thái tác vụ chuyển văn bản thành video của Kling",
+        "deprecated": false,
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).\n\nTruy vấn trạng thái và kết quả của tác vụ chuyển văn bản thành video của Kling.",
+        "operationId": "getKlingText2Video",
+        "tags": [
+          "Tạo video/Định dạng Kling"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "description": "ID nhiệm vụ",
+            "required": true,
+            "example": "task-abc123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lấy trạng thái nhiệm vụ thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "Nhiệm vụ không tồn tại",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/kling/v1/videos/image2video": {
+      "post": {
+        "summary": "Kling Chuyển hình ảnh thành video",
+        "deprecated": false,
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).\n\nSử dụng mô hình Kling để tạo video từ hình ảnh.\n\nHỗ trợ truyền URL hình ảnh hoặc dữ liệu hình ảnh mã hóa Base64 thông qua tham số image.",
+        "operationId": "createKlingImage2Video",
+        "tags": [
+          "Tạo video/Định dạng Kling"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoRequest"
+              },
+              "example": {
+                "model": "kling-v1",
+                "prompt": "人物转身走开",
+                "image": "https://example.com/image.jpg",
+                "duration": 5,
+                "width": 1280,
+                "height": 720
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Đã tạo tác vụ tạo video thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Tham số yêu cầu bị lỗi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/kling/v1/videos/image2video/{task_id}": {
+      "get": {
+        "summary": "Lấy trạng thái nhiệm vụ tạo video từ hình ảnh của Kling",
+        "deprecated": false,
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).\n\nTruy vấn trạng thái và kết quả của tác vụ tạo video từ hình ảnh Kling.",
+        "operationId": "getKlingImage2Video",
+        "tags": [
+          "Tạo video/Định dạng Kling"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "description": "ID nhiệm vụ",
+            "required": true,
+            "example": "task-abc123",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lấy trạng thái nhiệm vụ thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "Nhiệm vụ không tồn tại",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": []
+      }
+    },
+    "/api/v3/contents/generations/tasks": {
+      "post": {
+        "summary": "Tạo video (Seedance)",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: Tùy chọn, mảng đầu vào đa phương tiện trong chế độ nâng cao.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- Các trường phương tiện trong `content` hỗ trợ truyền trực tiếp chuỗi URL hoặc định dạng đối tượng, ví dụ: `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "operationId": "create__seedance__task",
+        "tags": [
+          "Tạo video/SeedanceVolcano Ark"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "model",
+                  "prompt"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "doubao-seedance-2-0-260128",
+                    "description": "Bắt buộc. Tên mô hình."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "example": "参考素材生成一段剧情短视频",
+                    "description": "Bắt buộc. Mô tả chính để tạo video, không được để trống."
+                  },
+                  "content": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "type"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "text",
+                            "image_url",
+                            "video_url",
+                            "audio_url"
+                          ]
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "image_url": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "video_url": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "audio_url": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "description": "Tùy chọn. Mảng đầu vào đa phương tiện ở chế độ nâng cao; khuyên dùng cho các kịch bản tham chiếu phức tạp."
+                  },
+                  "function_mode": {
+                    "type": "string",
+                    "description": "Tùy chọn. Chế độ tính năng nâng cao, chẳng hạn như `omni_reference` dùng để tham khảo toàn diện."
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "Tùy chọn. Các trường chế độ tương thích, chẳng hạn như `t2v`, `i2v`, `i2v_first_last`, `reference_images`, `reference_material`."
+                  },
+                  "image_url": {
+                    "type": "string",
+                    "description": "Tùy chọn. URL của một ảnh tham chiếu duy nhất."
+                  },
+                  "image_urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tùy chọn. Danh sách URL của nhiều ảnh tham chiếu."
+                  },
+                  "input_reference": {
+                    "type": "string",
+                    "description": "Tùy chọn. Tương thích với các trường nhập liệu tham chiếu."
+                  },
+                  "end_image_url": {
+                    "type": "string",
+                    "description": "Tùy chọn. URL hình ảnh tham chiếu cho khung hình cuối."
+                  },
+                  "last_image_url": {
+                    "type": "string",
+                    "description": "Tùy chọn. Alias URL của hình ảnh tham chiếu khung hình cuối."
+                  },
+                  "video_urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tùy chọn. Danh sách URL video tham chiếu."
+                  },
+                  "audio_urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tùy chọn. Danh sách URL âm thanh tham chiếu."
+                  },
+                  "seconds": {
+                    "oneOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "description": "Tùy chọn. Thời lượng video, tính bằng giây; tương thích với `duration`."
+                  },
+                  "duration": {
+                    "oneOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "description": "Tùy chọn. Thời lượng video, tính bằng giây; tương thích với `seconds`."
+                  },
+                  "aspect_ratio": {
+                    "type": "string",
+                    "description": "Tùy chọn. Tỷ lệ khung hình, ví dụ: `16:9`."
+                  },
+                  "ratio": {
+                    "type": "string",
+                    "description": "Tùy chọn. Biệt danh của tỷ lệ khung hình, ví dụ: `16:9`."
+                  },
+                  "size": {
+                    "type": "string",
+                    "description": "Tùy chọn. Trường tương thích với độ phân giải hoặc kích thước."
+                  },
+                  "quality": {
+                    "type": "string",
+                    "description": "Tùy chọn. Cấu hình chất lượng tạo."
+                  },
+                  "resolution": {
+                    "type": "string",
+                    "description": "Tùy chọn. Độ phân giải đầu ra."
+                  },
+                  "fps": {
+                    "type": "number",
+                    "description": "Tùy chọn. Tốc độ khung hình."
+                  },
+                  "generate_audio": {
+                    "type": "boolean",
+                    "description": "Tùy chọn. Có tạo âm thanh hay không."
+                  },
+                  "watermark": {
+                    "type": "boolean",
+                    "description": "Tùy chọn. Có thêm hình mờ (watermark) hay không."
+                  }
+                }
+              },
+              "example": {
+                "model": "doubao-seedance-2-0-260128",
+                "prompt": "参考素材生成一段剧情短视频",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "@角色A 在咖啡馆和 @角色B 聊天，@背景视频 作为场景，配上 @背景音乐 --ratio 16:9 --dur 10"
+                  },
+                  {
+                    "type": "image_url",
+                    "image_url": "https://example.com/characterA.jpg",
+                    "role": "material",
+                    "name": "角色A"
+                  },
+                  {
+                    "type": "image_url",
+                    "image_url": "https://example.com/characterB.jpg",
+                    "role": "material",
+                    "name": "角色B"
+                  },
+                  {
+                    "type": "video_url",
+                    "video_url": "https://example.com/cafe-scene.mp4",
+                    "role": "material",
+                    "name": "背景视频"
+                  },
+                  {
+                    "type": "audio_url",
+                    "audio_url": "https://example.com/bgm.mp3",
+                    "name": "背景音乐"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tạo nhiệm vụ thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "task_xxx",
+                      "description": "ID của tác vụ."
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Trạng thái nhiệm vụ.",
+                      "enum": [
+                        "queued",
+                        "running",
+                        "succeeded",
+                        "failed"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "Thời gian tạo (giây Unix)."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v3/contents/generations/tasks/{task_id}": {
+      "get": {
+        "summary": "Truy vấn tác vụ (Seedance)",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: Tùy chọn, mảng đầu vào đa phương tiện trong chế độ nâng cao.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- Các trường phương tiện trong `content` hỗ trợ truyền trực tiếp chuỗi URL hoặc định dạng đối tượng, ví dụ: `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "operationId": "query__seedance__task",
+        "tags": [
+          "Tạo video/SeedanceVolcano Ark"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "?? ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Truy vấn thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "ID của tác vụ."
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "queued",
+                        "running",
+                        "succeeded",
+                        "failed"
+                      ],
+                      "description": "Trạng thái nhiệm vụ."
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "created_at": {
+                      "type": "integer",
+                      "description": "Thời gian tạo (giây Unix)."
+                    },
+                    "updated_at": {
+                      "type": "integer"
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "video_url": {
+                          "type": "string"
+                        },
+                        "last_frame_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "usage": {
+                      "type": "object",
+                      "properties": {
+                        "completion_tokens": {
+                          "type": "integer"
+                        },
+                        "total_tokens": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1beta/models/{model}:predictLongRunning": {
+      "post": {
+        "summary": "Tạo video (định dạng Veo3)",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).\n\nTrang chuyên đề API này chỉ dùng để giải thích định dạng gốc của Veo và trạng thái hỗ trợ hiện tại của gateway.\n\nĐối với dòng Veo hiện tại, vui lòng sử dụng chế độ tương thích OpenAI Sora cho bên ngoài: `POST /v1/videos`.\n\nĐường dẫn chế độ gốc của Google được dành riêng là: `POST /v1beta/models/{model}:predictLongRunning`. Gateway hiện tại chưa kết nối với luồng phân phối tác vụ gốc của Veo, do đó tạm thời chưa hỗ trợ gọi theo thân yêu cầu `instances/parameters` gốc.",
+        "operationId": "create_veo3_google_native_task",
+        "tags": [
+          "Tạo video/định dạng Veo3"
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "veo3.1-fast",
+              "enum": [
+                "veo3",
+                "veo3-fast",
+                "veo3-fast-frames",
+                "veo3-frames",
+                "veo3-pro",
+                "veo3-pro-frames",
+                "veo3.1",
+                "veo3.1-4k",
+                "veo3.1-components",
+                "veo3.1-fast",
+                "veo3.1-pro",
+                "veo3.1-pro-4k"
+              ]
+            },
+            "description": "Tên mô hình Veo."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "instances"
+                ],
+                "properties": {
+                  "instances": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "prompt": {
+                          "type": "string",
+                          "example": "A cinematic aerial shot of a modern city at sunrise",
+                          "description": "Tạo từ gợi ý"
+                        },
+                        "referenceImages": {
+                          "type": "array",
+                          "description": "Tùy chọn. 1~3 hình ảnh tham chiếu, sử dụng cấu trúc `inlineData` gốc của Google hoặc URI tệp.",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "image": {
+                                "type": "object",
+                                "properties": {
+                                  "inlineData": {
+                                    "type": "object",
+                                    "properties": {
+                                      "mimeType": {
+                                        "type": "string",
+                                        "example": "image/png"
+                                      },
+                                      "data": {
+                                        "type": "string",
+                                        "example": "BASE64_IMAGE_DATA"
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "referenceType": {
+                                "type": "string",
+                                "example": "asset"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "aspectRatio": {
+                        "type": "string",
+                        "enum": [
+                          "16:9",
+                          "1:1",
+                          "9:16"
+                        ],
+                        "default": "16:9"
+                      },
+                      "durationSeconds": {
+                        "type": "integer",
+                        "enum": [
+                          5,
+                          6,
+                          8,
+                          10
+                        ],
+                        "default": 5
+                      },
+                      "resolution": {
+                        "type": "string",
+                        "example": "720p"
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "instances": [
+                  {
+                    "prompt": "A cinematic aerial shot of a modern city at sunrise",
+                    "referenceImages": [
+                      {
+                        "image": {
+                          "inlineData": {
+                            "mimeType": "image/png",
+                            "data": "BASE64_IMAGE_DATA"
+                          }
+                        },
+                        "referenceType": "asset"
+                      }
+                    ]
+                  }
+                ],
+                "parameters": {
+                  "aspectRatio": "16:9",
+                  "durationSeconds": 5,
+                  "resolution": "720p"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cấu trúc phản hồi thành công đang được bảo lưu. Hiện tại chỉ dùng để mô tả giao thức, không hỗ trợ gọi thực tế.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "models/veo3.1-fast/operations/abc123",
+                      "description": "operation name, dùng để truy vấn trạng thái sau này."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1beta/{operation_name}": {
+      "get": {
+        "summary": "Truy vấn nhiệm vụ (định dạng Veo3)",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Tạo video/Định dạng tương thích Sora](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).\n\nTrang chuyên đề giao diện này chỉ dùng để giải thích giao thức truy vấn gốc của Veo.\n\nĐối với dòng Veo hiện tại, vui lòng chuyển sang sử dụng giao diện thống nhất `/v1/videos` để tạo và truy vấn.\n\nCấu trúc truy vấn `operation_name` dưới đây chỉ được giữ lại dưới dạng giải thích giao thức dự phòng, hiện chưa hỗ trợ gọi thực tế.",
+        "operationId": "query_veo3_google_native_task",
+        "tags": [
+          "Tạo video/định dạng Veo3"
+        ],
+        "parameters": [
+          {
+            "name": "operation_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "models/veo3.1-fast/operations/abc123"
+            },
+            "description": "Tên operation đầy đủ được trả về bởi API khởi tạo. Khi gọi, cần thực hiện mã hóa URL cho `/`."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cấu trúc phản hồi truy vấn đang được dự phòng. Hiện tại chỉ dùng để mô tả giao thức, chưa hỗ trợ gọi thực tế.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "done"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Tên thao tác, nhất quán với `name` được trả về bởi giao diện tạo."
+                    },
+                    "done": {
+                      "type": "boolean",
+                      "description": "Nhiệm vụ đã hoàn thành hay chưa."
+                    },
+                    "response": {
+                      "type": "object",
+                      "description": "Đối tượng kết quả sau khi hoàn tất thành công.",
+                      "properties": {
+                        "generatedVideos": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "video": {
+                                "type": "object",
+                                "properties": {
+                                  "uri": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "description": "Đường dẫn URL của video sau khi tạo thành công."
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "error": {
+                      "type": "object",
+                      "description": "Thông báo lỗi khi thất bại.",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "description": "Mô tả lỗi."
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "name": "models/veo3.1-fast/operations/abc123",
+                  "done": true,
+                  "response": {
+                    "generatedVideos": [
+                      {
+                        "video": {
+                          "uri": "https://example.com/generated-video.mp4"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Thông báo lỗi"
+              },
+              "type": {
+                "type": "string",
+                "description": "Loại lỗi"
+              },
+              "param": {
+                "type": "string",
+                "description": "Các tham số liên quan",
+                "nullable": true
+              },
+              "code": {
+                "type": "string",
+                "description": "Mã lỗi",
+                "nullable": true
+              }
+            }
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "Số lượng Token của lời nhắc"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "Số Token hoàn thiện"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Tổng số Token"
+          },
+          "prompt_tokens_details": {
+            "type": "object",
+            "properties": {
+              "cached_tokens": {
+                "type": "integer"
+              },
+              "text_tokens": {
+                "type": "integer"
+              },
+              "audio_tokens": {
+                "type": "integer"
+              },
+              "image_tokens": {
+                "type": "integer"
+              }
+            }
+          },
+          "completion_tokens_details": {
+            "type": "object",
+            "properties": {
+              "text_tokens": {
+                "type": "integer"
+              },
+              "audio_tokens": {
+                "type": "integer"
+              },
+              "reasoning_tokens": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "Model": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID mô hình",
+            "example": "gpt-4"
+          },
+          "object": {
+            "type": "string",
+            "description": "Loại đối tượng",
+            "example": "model"
+          },
+          "created": {
+            "type": "integer",
+            "description": "Thời điểm tạo"
+          },
+          "owned_by": {
+            "type": "string",
+            "description": "Chủ sở hữu mô hình",
+            "example": "openai"
+          }
+        }
+      },
+      "ModelsResponse": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "example": "list"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Model"
+            }
+          }
+        }
+      },
+      "GeminiModelsResponse": {
+        "type": "object",
+        "properties": {
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "models/gemini-pro"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "displayName": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "inputTokenLimit": {
+                  "type": "integer"
+                },
+                "outputTokenLimit": {
+                  "type": "integer"
+                },
+                "supportedGenerationMethods": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool",
+              "developer"
+            ],
+            "description": "Vai trò tin nhắn"
+          },
+          "content": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MessageContent"
+                }
+              }
+            ],
+            "description": "Nội dung tin nhắn"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tên người gửi"
+          },
+          "tool_calls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "ID của lệnh gọi công cụ (dùng cho tin nhắn vai trò tool)"
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "Nội dung suy luận"
+          }
+        }
+      },
+      "MessageContent": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image_url",
+              "input_audio",
+              "file",
+              "video_url"
+            ]
+          },
+          "text": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "URL hình ảnh hoặc base64"
+              },
+              "detail": {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "high",
+                  "auto"
+                ]
+              }
+            }
+          },
+          "input_audio": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "Dữ liệu âm thanh được mã hóa Base64"
+              },
+              "format": {
+                "type": "string",
+                "enum": [
+                  "wav",
+                  "mp3"
+                ]
+              }
+            }
+          },
+          "file": {
+            "type": "object",
+            "properties": {
+              "filename": {
+                "type": "string"
+              },
+              "file_data": {
+                "type": "string"
+              },
+              "file_id": {
+                "type": "string"
+              }
+            }
+          },
+          "video_url": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ToolCall": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "example": "function"
+          },
+          "function": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "arguments": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Tool": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "function"
+          },
+          "function": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "parameters": {
+                "type": "object",
+                "description": "Định nghĩa tham số theo định dạng JSON Schema",
+                "properties": {}
+              }
+            }
+          }
+        }
+      },
+      "ResponseFormat": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "json_object",
+              "json_schema"
+            ]
+          },
+          "json_schema": {
+            "type": "object",
+            "description": "Định nghĩa JSON Schema",
+            "properties": {}
+          }
+        }
+      },
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "ID mô hình",
+            "example": "gpt-4"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            },
+            "description": "Danh sách tin nhắn hội thoại"
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2,
+            "default": 1,
+            "description": "Nhiệt độ lấy mẫu"
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 1,
+            "description": "Tham số Nucleus Sampling"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1,
+            "description": "Số lượng tạo"
+          },
+          "stream": {
+            "type": "boolean",
+            "default": false,
+            "description": "Có phản hồi dạng luồng (streaming) hay không"
+          },
+          "stream_options": {
+            "type": "object",
+            "properties": {
+              "include_usage": {
+                "type": "boolean"
+              }
+            }
+          },
+          "stop": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Chuỗi dừng"
+          },
+          "max_tokens": {
+            "type": "integer",
+            "description": "Số lượng Token tạo ra tối đa"
+          },
+          "max_completion_tokens": {
+            "type": "integer",
+            "description": "Số Token hoàn thiện tối đa"
+          },
+          "presence_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "default": 0
+          },
+          "frequency_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "default": 0
+          },
+          "logit_bias": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            },
+            "properties": {}
+          },
+          "user": {
+            "type": "string"
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            }
+          },
+          "tool_choice": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "auto",
+                  "required"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "function": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/ResponseFormat"
+          },
+          "seed": {
+            "type": "integer"
+          },
+          "reasoning_effort": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "Cường độ suy luận (dùng cho các mô hình hỗ trợ suy luận)"
+          },
+          "modalities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "text",
+                "audio"
+              ]
+            }
+          },
+          "audio": {
+            "type": "object",
+            "properties": {
+              "voice": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "chat.completion"
+          },
+          "created": {
+            "type": "integer"
+          },
+          "model": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "integer"
+                },
+                "message": {
+                  "$ref": "#/components/schemas/Message"
+                },
+                "finish_reason": {
+                  "type": "string",
+                  "enum": [
+                    "stop",
+                    "length",
+                    "tool_calls",
+                    "content_filter"
+                  ]
+                }
+              }
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          },
+          "system_fingerprint": {
+            "type": "string"
+          }
+        }
+      },
+      "ChatCompletionStreamResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "chat.completion.chunk"
+          },
+          "created": {
+            "type": "integer"
+          },
+          "model": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "integer"
+                },
+                "delta": {
+                  "type": "object",
+                  "properties": {
+                    "role": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "reasoning_content": {
+                      "type": "string"
+                    },
+                    "tool_calls": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ToolCall"
+                      }
+                    }
+                  }
+                },
+                "finish_reason": {
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "CompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "prompt": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "max_tokens": {
+            "type": "integer"
+          },
+          "temperature": {
+            "type": "number"
+          },
+          "top_p": {
+            "type": "number"
+          },
+          "n": {
+            "type": "integer"
+          },
+          "stream": {
+            "type": "boolean"
+          },
+          "stop": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "suffix": {
+            "type": "string"
+          },
+          "echo": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CompletionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "text_completion"
+          },
+          "created": {
+            "type": "integer"
+          },
+          "model": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "index": {
+                  "type": "integer"
+                },
+                "finish_reason": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "ResponsesRequest": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "input": {
+            "description": "Nội dung nhập vào, có thể là một chuỗi hoặc một mảng các tin nhắn",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            ]
+          },
+          "instructions": {
+            "type": "string"
+          },
+          "max_output_tokens": {
+            "type": "integer"
+          },
+          "temperature": {
+            "type": "number"
+          },
+          "top_p": {
+            "type": "number"
+          },
+          "stream": {
+            "type": "boolean"
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "tool_choice": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {}
+              }
+            ]
+          },
+          "reasoning": {
+            "type": "object",
+            "properties": {
+              "effort": {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              },
+              "summary": {
+                "type": "string"
+              }
+            }
+          },
+          "previous_response_id": {
+            "type": "string"
+          },
+          "truncation": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "disabled"
+            ]
+          }
+        }
+      },
+      "ResponsesResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "response"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed",
+              "in_progress",
+              "incomplete"
+            ]
+          },
+          "model": {
+            "type": "string"
+          },
+          "output": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string"
+                      },
+                      "text": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "ResponsesCompactionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "response.compaction"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "output": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          },
+          "error": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      },
+      "ResponsesCompactionRequest": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "input": {
+            "description": "Nội dung nhập vào, có thể là một chuỗi hoặc một mảng các tin nhắn",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            ]
+          },
+          "instructions": {
+            "type": "string"
+          },
+          "previous_response_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponsesStreamResponse": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/ResponsesResponse"
+          },
+          "delta": {
+            "type": "string"
+          },
+          "item": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      },
+      "ClaudeRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages",
+          "max_tokens"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "example": "claude-3-opus-20240229"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClaudeMessage"
+            }
+          },
+          "system": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            ]
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "top_p": {
+            "type": "number"
+          },
+          "top_k": {
+            "type": "integer"
+          },
+          "stream": {
+            "type": "boolean"
+          },
+          "stop_sequences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "input_schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "tool_choice": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "auto",
+                      "any",
+                      "tool"
+                    ]
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "thinking": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "enabled",
+                  "disabled"
+                ]
+              },
+              "budget_tokens": {
+                "type": "integer"
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "user_id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ClaudeMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ]
+          },
+          "content": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "text",
+                        "image",
+                        "tool_use",
+                        "tool_result"
+                      ]
+                    },
+                    "text": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "base64",
+                            "url"
+                          ]
+                        },
+                        "media_type": {
+                          "type": "string"
+                        },
+                        "data": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "input": {
+                      "type": "object",
+                      "properties": {}
+                    },
+                    "tool_use_id": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "ClaudeResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "example": "message"
+          },
+          "role": {
+            "type": "string",
+            "example": "assistant"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "model": {
+            "type": "string"
+          },
+          "stop_reason": {
+            "type": "string",
+            "enum": [
+              "end_turn",
+              "max_tokens",
+              "stop_sequence",
+              "tool_use"
+            ]
+          },
+          "usage": {
+            "type": "object",
+            "properties": {
+              "input_tokens": {
+                "type": "integer"
+              },
+              "output_tokens": {
+                "type": "integer"
+              },
+              "cache_creation_input_tokens": {
+                "type": "integer"
+              },
+              "cache_read_input_tokens": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "EmbeddingRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "example": "text-embedding-ada-002"
+          },
+          "input": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Văn bản cần nhúng"
+          },
+          "encoding_format": {
+            "type": "string",
+            "enum": [
+              "float",
+              "base64"
+            ],
+            "default": "float"
+          },
+          "dimensions": {
+            "type": "integer",
+            "description": "Kích thước vector đầu ra"
+          }
+        }
+      },
+      "EmbeddingResponse": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "example": "list"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "object": {
+                  "type": "string",
+                  "example": "embedding"
+                },
+                "index": {
+                  "type": "integer"
+                },
+                "embedding": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "model": {
+            "type": "string"
+          },
+          "usage": {
+            "type": "object",
+            "properties": {
+              "prompt_tokens": {
+                "type": "integer"
+              },
+              "total_tokens": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "ImageGenerationRequest": {
+        "type": "object",
+        "required": [
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "example": "dall-e-3"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Mô tả hình ảnh"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 1
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "256x256",
+              "512x512",
+              "1024x1024",
+              "1792x1024",
+              "1024x1792"
+            ],
+            "default": "1024x1024"
+          },
+          "quality": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "hd"
+            ],
+            "default": "standard"
+          },
+          "style": {
+            "type": "string",
+            "enum": [
+              "vivid",
+              "natural"
+            ],
+            "default": "vivid"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "default": "url"
+          },
+          "user": {
+            "type": "string"
+          }
+        }
+      },
+      "ImageEditRequest": {
+        "type": "object",
+        "required": [
+          "image",
+          "prompt"
+        ],
+        "properties": {
+          "image": {
+            "type": "string",
+            "format": "binary"
+          },
+          "mask": {
+            "type": "string",
+            "format": "binary"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "n": {
+            "type": "integer"
+          },
+          "size": {
+            "type": "string"
+          },
+          "response_format": {
+            "type": "string"
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "b64_json": {
+                  "type": "string"
+                },
+                "revised_prompt": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AudioTranscriptionRequest": {
+        "type": "object",
+        "required": [
+          "file",
+          "model"
+        ],
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Tệp âm thanh"
+          },
+          "model": {
+            "type": "string",
+            "example": "whisper-1"
+          },
+          "language": {
+            "type": "string",
+            "description": "Mã ngôn ngữ ISO-639-1"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "json",
+              "text",
+              "srt",
+              "verbose_json",
+              "vtt"
+            ],
+            "default": "json"
+          },
+          "temperature": {
+            "type": "number"
+          },
+          "timestamp_granularities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "word",
+                "segment"
+              ]
+            }
+          }
+        }
+      },
+      "AudioTranslationRequest": {
+        "type": "object",
+        "required": [
+          "file",
+          "model"
+        ],
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary"
+          },
+          "model": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "response_format": {
+            "type": "string"
+          },
+          "temperature": {
+            "type": "number"
+          }
+        }
+      },
+      "AudioTranscriptionResponse": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "SpeechRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input",
+          "voice"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "example": "tts-1"
+          },
+          "input": {
+            "type": "string",
+            "description": "Văn bản cần chuyển đổi",
+            "maxLength": 4096
+          },
+          "voice": {
+            "type": "string",
+            "enum": [
+              "alloy",
+              "echo",
+              "fable",
+              "onyx",
+              "nova",
+              "shimmer"
+            ]
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "mp3",
+              "opus",
+              "aac",
+              "flac",
+              "wav",
+              "pcm"
+            ],
+            "default": "mp3"
+          },
+          "speed": {
+            "type": "number",
+            "minimum": 0.25,
+            "maximum": 4,
+            "default": 1
+          }
+        }
+      },
+      "RerankRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "query",
+          "documents"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "example": "rerank-english-v2.0"
+          },
+          "query": {
+            "type": "string",
+            "description": "Văn bản truy vấn"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {}
+                }
+              ]
+            },
+            "description": "Danh sách các tài liệu cần sắp xếp lại"
+          },
+          "top_n": {
+            "type": "integer",
+            "description": "Trả về N kết quả đầu tiên"
+          },
+          "return_documents": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "RerankResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "integer"
+                },
+                "relevance_score": {
+                  "type": "number"
+                },
+                "document": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      },
+      "ModerationRequest": {
+        "type": "object",
+        "required": [
+          "input"
+        ],
+        "properties": {
+          "input": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "model": {
+            "type": "string",
+            "example": "text-moderation-latest"
+          }
+        }
+      },
+      "ModerationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "flagged": {
+                  "type": "boolean"
+                },
+                "categories": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "category_scores": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "GeminiRequest": {
+        "type": "object",
+        "properties": {
+          "contents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "model"
+                  ]
+                },
+                "parts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "inlineData": {
+                        "type": "object",
+                        "properties": {
+                          "mimeType": {
+                            "type": "string"
+                          },
+                          "data": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "generationConfig": {
+            "type": "object",
+            "properties": {
+              "temperature": {
+                "type": "number"
+              },
+              "topP": {
+                "type": "number"
+              },
+              "topK": {
+                "type": "integer"
+              },
+              "maxOutputTokens": {
+                "type": "integer"
+              },
+              "stopSequences": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "safetySettings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string"
+                },
+                "threshold": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "systemInstruction": {
+            "type": "object",
+            "properties": {
+              "parts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "GeminiResponse": {
+        "type": "object",
+        "properties": {
+          "candidates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "role": {
+                      "type": "string"
+                    },
+                    "parts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {}
+                      }
+                    }
+                  }
+                },
+                "finishReason": {
+                  "type": "string"
+                },
+                "safetyRatings": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          },
+          "usageMetadata": {
+            "type": "object",
+            "properties": {
+              "promptTokenCount": {
+                "type": "integer"
+              },
+              "candidatesTokenCount": {
+                "type": "integer"
+              },
+              "totalTokenCount": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "VideoRequest": {
+        "type": "object",
+        "description": "Yêu cầu tạo video",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "ID Mô hình/Phong cách",
+            "example": "kling-v1"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Lời nhắc mô tả văn bản",
+            "example": "宇航员站起身走了"
+          },
+          "image": {
+            "type": "string",
+            "description": "Đầu vào hình ảnh (URL hoặc Base64)",
+            "example": "https://example.com/image.jpg"
+          },
+          "duration": {
+            "type": "number",
+            "description": "Thời lượng video (giây)",
+            "example": 5
+          },
+          "width": {
+            "type": "integer",
+            "description": "Chiều rộng video",
+            "example": 1280
+          },
+          "height": {
+            "type": "integer",
+            "description": "Chiều cao video",
+            "example": 720
+          },
+          "fps": {
+            "type": "integer",
+            "description": "Tốc độ khung hình video",
+            "example": 30
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Seed ngẫu nhiên",
+            "example": 20231234
+          },
+          "n": {
+            "type": "integer",
+            "description": "Số lượng video đã tạo",
+            "example": 1
+          },
+          "response_format": {
+            "type": "string",
+            "description": "Định dạng phản hồi",
+            "example": "url"
+          },
+          "user": {
+            "type": "string",
+            "description": "ID người dùng",
+            "example": "user-1234"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Tham số mở rộng (như negative_prompt, style, quality_level, v.v.)",
+            "additionalProperties": true,
+            "properties": {}
+          }
+        }
+      },
+      "VideoResponse": {
+        "type": "object",
+        "description": "Phản hồi gửi nhiệm vụ tạo video",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "ID nhiệm vụ",
+            "example": "abcd1234efgh"
+          },
+          "status": {
+            "type": "string",
+            "description": "Trạng thái nhiệm vụ",
+            "example": "queued"
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "description": "Phản hồi truy vấn trạng thái tác vụ video",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "ID nhiệm vụ",
+            "example": "abcd1234efgh"
+          },
+          "status": {
+            "type": "string",
+            "description": "Trạng thái nhiệm vụ",
+            "enum": [
+              "queued",
+              "in_progress",
+              "completed",
+              "failed"
+            ],
+            "example": "completed"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL tài nguyên video (khi thành công)",
+            "example": "https://example.com/video.mp4"
+          },
+          "format": {
+            "type": "string",
+            "description": "Định dạng video",
+            "example": "mp4"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/VideoTaskMetadata"
+          },
+          "error": {
+            "$ref": "#/components/schemas/VideoTaskError"
+          }
+        }
+      },
+      "VideoTaskMetadata": {
+        "type": "object",
+        "description": "Metadata của tác vụ video",
+        "properties": {
+          "duration": {
+            "type": "number",
+            "description": "Thời lượng video thực tế được tạo",
+            "example": 5
+          },
+          "fps": {
+            "type": "integer",
+            "description": "Tốc độ khung hình thực tế",
+            "example": 30
+          },
+          "width": {
+            "type": "integer",
+            "description": "Chiều rộng thực tế",
+            "example": 1280
+          },
+          "height": {
+            "type": "integer",
+            "description": "Chiều cao thực tế",
+            "example": 720
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Seed ngẫu nhiên được sử dụng",
+            "example": 20231234
+          }
+        }
+      },
+      "VideoTaskError": {
+        "type": "object",
+        "description": "Thông báo lỗi tác vụ video",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Mã lỗi"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông báo lỗi"
+          }
+        }
+      },
+      "OpenAIVideo": {
+        "type": "object",
+        "description": "Đối tượng video tương thích OpenAI",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID Video",
+            "example": "video-abc123"
+          },
+          "task_id": {
+            "type": "string",
+            "description": "ID nhiệm vụ (tương thích với giao diện cũ)",
+            "deprecated": true
+          },
+          "object": {
+            "type": "string",
+            "description": "Loại đối tượng",
+            "example": "video"
+          },
+          "model": {
+            "type": "string",
+            "description": "Mô hình được sử dụng",
+            "example": "sora"
+          },
+          "status": {
+            "type": "string",
+            "description": "Trạng thái nhiệm vụ",
+            "enum": [
+              "queued",
+              "in_progress",
+              "completed",
+              "failed"
+            ],
+            "example": "completed"
+          },
+          "progress": {
+            "type": "integer",
+            "description": "Phần trăm tiến độ",
+            "example": 100
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "Thời điểm tạo"
+          },
+          "completed_at": {
+            "type": "integer",
+            "description": "Dấu thời gian hoàn thành"
+          },
+          "expires_at": {
+            "type": "integer",
+            "description": "Dấu thời gian hết hạn"
+          },
+          "seconds": {
+            "type": "string",
+            "description": "Thời lượng video"
+          },
+          "size": {
+            "type": "string",
+            "description": "Kích thước video"
+          },
+          "remixed_from_video_id": {
+            "type": "string",
+            "description": "ID video nguồn (nếu được tạo dựa trên video khác)"
+          },
+          "error": {
+            "$ref": "#/components/schemas/OpenAIVideoError"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Siêu dữ liệu bổ sung",
+            "additionalProperties": true,
+            "properties": {}
+          }
+        }
+      },
+      "OpenAIVideoError": {
+        "type": "object",
+        "description": "Thông báo lỗi video OpenAI",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Thông báo lỗi"
+          },
+          "code": {
+            "type": "string",
+            "description": "Mã lỗi"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {}
+        }
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {}
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string"
+          },
+          "group": {
+            "type": "string"
+          },
+          "quota": {
+            "type": "integer"
+          },
+          "used_quota": {
+            "type": "integer"
+          },
+          "request_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "Channel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "models": {
+            "type": "string"
+          },
+          "groups": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "weight": {
+            "type": "integer"
+          },
+          "base_url": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          }
+        }
+      },
+      "Token": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "expired_time": {
+            "type": "integer"
+          },
+          "remain_quota": {
+            "type": "integer"
+          },
+          "unlimited_quota": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Redemption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "quota": {
+            "type": "integer"
+          },
+          "created_time": {
+            "type": "integer"
+          },
+          "redeemed_time": {
+            "type": "integer"
+          }
+        }
+      },
+      "Log": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "responses": {},
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Sử dụng xác thực Bearer Token.\nĐịnh dạng: `Authorization: Bearer sk-xxxxxx`"
+      },
+      "SessionAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "session",
+        "description": "Xác thực Session, được lấy thông qua API đăng nhập"
+      },
+      "AccessToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Xác thực Access Token, định dạng: Bearer {access_token}, được tạo thông qua API /api/user/token"
+      },
+      "NewApiUser": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "New-Api-User",
+        "description": "Header yêu cầu ID người dùng, phải khớp với ID người dùng hiện đang đăng nhập, bắt buộc cung cấp khi sử dụng xác thực Session hoặc AccessToken"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Định dạng OpenAI (Chat)"
+    },
+    {
+      "name": "Định dạng OpenAI (Responses)"
+    },
+    {
+      "name": "Tạo hình ảnh/Định dạng Gemini"
+    },
+    {
+      "name": "Tạo ảnh/định dạng Dall-E OpenAI"
+    },
+    {
+      "name": "Lấy danh sách mô hình"
+    },
+    {
+      "name": "Tạo video/định dạng Kling"
+    },
+    {
+      "name": "Định dạng tương thích với tạo video/Sora"
+    },
+    {
+      "name": "Tạo video/SeedanceVolcano Ark"
+    },
+    {
+      "name": "Tạo video/định dạng Veo3"
+    }
+  ],
+  "x-doc-drift-summary": {
+    "total_issues": 0,
+    "affected_operations": 0,
+    "affected_paths": 0,
+    "type_counts": {}
+  }
+}

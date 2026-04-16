@@ -19,6 +19,72 @@
   "navigation": {
     "languages": [
       {
+        "language": "en",
+        "tabs": [
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api-reference/en/conventions",
+                  "api-reference/en/quickstart",
+                  "api-reference/en/online-debug",
+                  "api-reference/en/ai-codegen"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/en/openapi.json",
+                  "directory": "api-reference/en"
+                }
+              }
+            ]
+          },
+          {
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "en/overview",
+                  "en/quickstart",
+                  "en/security"
+                ]
+              },
+              {
+                "group": "Developer Guide",
+                "pages": [
+                  "en/base-spec",
+                  "en/error-codes",
+                  "en/models",
+                  "en/multi-format"
+                ]
+              },
+              {
+                "group": "Usage Tips",
+                "pages": [
+                  "en/online-debug",
+                  "en/ai-codegen"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "en/tools-cursor",
+                  "en/tools-claude-code",
+                  "en/tools-windsurf",
+                  "en/sdk-python",
+                  "en/sdk-nodejs",
+                  "en/sdk-go"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
         "language": "cn",
         "tabs": [
           {
@@ -78,6 +144,336 @@
                   "cn/sdk-python",
                   "cn/sdk-nodejs",
                   "cn/sdk-go"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "zh-Hant",
+        "tabs": [
+          {
+            "tab": "API 參考",
+            "groups": [
+              {
+                "group": "概覽",
+                "pages": [
+                  "api-reference/zh-tw/conventions",
+                  "api-reference/zh-tw/quickstart",
+                  "api-reference/zh-tw/online-debug",
+                  "api-reference/zh-tw/ai-codegen"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/zh-tw/openapi.json",
+                  "directory": "api-reference/zh-tw"
+                }
+              }
+            ]
+          },
+          {
+            "tab": "開發文檔",
+            "groups": [
+              {
+                "group": "快速開始",
+                "pages": [
+                  "zh-tw/overview",
+                  "zh-tw/quickstart",
+                  "zh-tw/security"
+                ]
+              },
+              {
+                "group": "開發指南",
+                "pages": [
+                  "zh-tw/base-spec",
+                  "zh-tw/error-codes",
+                  "zh-tw/models",
+                  "zh-tw/multi-format"
+                ]
+              },
+              {
+                "group": "使用說明",
+                "pages": [
+                  "zh-tw/online-debug",
+                  "zh-tw/ai-codegen"
+                ]
+              },
+              {
+                "group": "整合與工具",
+                "pages": [
+                  "zh-tw/tools-cursor",
+                  "zh-tw/tools-claude-code",
+                  "zh-tw/tools-windsurf",
+                  "zh-tw/sdk-python",
+                  "zh-tw/sdk-nodejs",
+                  "zh-tw/sdk-go"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "tabs": [
+          {
+            "tab": "Référence API",
+            "groups": [
+              {
+                "group": "Aperçu",
+                "pages": [
+                  "api-reference/fr/conventions",
+                  "api-reference/fr/quickstart",
+                  "api-reference/fr/online-debug",
+                  "api-reference/fr/ai-codegen"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/fr/openapi.json",
+                  "directory": "api-reference/fr"
+                }
+              }
+            ]
+          },
+          {
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Démarrage",
+                "pages": [
+                  "fr/overview",
+                  "fr/quickstart",
+                  "fr/security"
+                ]
+              },
+              {
+                "group": "Guide développeur",
+                "pages": [
+                  "fr/base-spec",
+                  "fr/error-codes",
+                  "fr/models",
+                  "fr/multi-format"
+                ]
+              },
+              {
+                "group": "Aide",
+                "pages": [
+                  "fr/online-debug",
+                  "fr/ai-codegen"
+                ]
+              },
+              {
+                "group": "Outils",
+                "pages": [
+                  "fr/tools-cursor",
+                  "fr/tools-claude-code",
+                  "fr/tools-windsurf",
+                  "fr/sdk-python",
+                  "fr/sdk-nodejs",
+                  "fr/sdk-go"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "ja",
+        "tabs": [
+          {
+            "tab": "API リファレンス",
+            "groups": [
+              {
+                "group": "概要",
+                "pages": [
+                  "api-reference/ja/conventions",
+                  "api-reference/ja/quickstart",
+                  "api-reference/ja/online-debug",
+                  "api-reference/ja/ai-codegen"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/ja/openapi.json",
+                  "directory": "api-reference/ja"
+                }
+              }
+            ]
+          },
+          {
+            "tab": "ガイド",
+            "groups": [
+              {
+                "group": "開始",
+                "pages": [
+                  "ja/overview",
+                  "ja/quickstart",
+                  "ja/security"
+                ]
+              },
+              {
+                "group": "開発ガイド",
+                "pages": [
+                  "ja/base-spec",
+                  "ja/error-codes",
+                  "ja/models",
+                  "ja/multi-format"
+                ]
+              },
+              {
+                "group": "ヘルプ",
+                "pages": [
+                  "ja/online-debug",
+                  "ja/ai-codegen"
+                ]
+              },
+              {
+                "group": "ツール",
+                "pages": [
+                  "ja/tools-cursor",
+                  "ja/tools-claude-code",
+                  "ja/tools-windsurf",
+                  "ja/sdk-python",
+                  "ja/sdk-nodejs",
+                  "ja/sdk-go"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "ru",
+        "tabs": [
+          {
+            "tab": "Справочник API",
+            "groups": [
+              {
+                "group": "Обзор",
+                "pages": [
+                  "api-reference/ru/conventions",
+                  "api-reference/ru/quickstart",
+                  "api-reference/ru/online-debug",
+                  "api-reference/ru/ai-codegen"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/ru/openapi.json",
+                  "directory": "api-reference/ru"
+                }
+              }
+            ]
+          },
+          {
+            "tab": "Руководства",
+            "groups": [
+              {
+                "group": "Начало работы",
+                "pages": [
+                  "ru/overview",
+                  "ru/quickstart",
+                  "ru/security"
+                ]
+              },
+              {
+                "group": "Руководство разработчика",
+                "pages": [
+                  "ru/base-spec",
+                  "ru/error-codes",
+                  "ru/models",
+                  "ru/multi-format"
+                ]
+              },
+              {
+                "group": "Справка",
+                "pages": [
+                  "ru/online-debug",
+                  "ru/ai-codegen"
+                ]
+              },
+              {
+                "group": "Инструменты",
+                "pages": [
+                  "ru/tools-cursor",
+                  "ru/tools-claude-code",
+                  "ru/tools-windsurf",
+                  "ru/sdk-python",
+                  "ru/sdk-nodejs",
+                  "ru/sdk-go"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "vi",
+        "tabs": [
+          {
+            "tab": "Tài liệu API",
+            "groups": [
+              {
+                "group": "Tổng quan",
+                "pages": [
+                  "api-reference/vi/conventions",
+                  "api-reference/vi/quickstart",
+                  "api-reference/vi/online-debug",
+                  "api-reference/vi/ai-codegen"
+                ]
+              },
+              {
+                "group": "API",
+                "openapi": {
+                  "source": "api-reference/vi/openapi.json",
+                  "directory": "api-reference/vi"
+                }
+              }
+            ]
+          },
+          {
+            "tab": "Hướng dẫn",
+            "groups": [
+              {
+                "group": "Bắt đầu",
+                "pages": [
+                  "vi/overview",
+                  "vi/quickstart",
+                  "vi/security"
+                ]
+              },
+              {
+                "group": "Hướng dẫn phát triển",
+                "pages": [
+                  "vi/base-spec",
+                  "vi/error-codes",
+                  "vi/models",
+                  "vi/multi-format"
+                ]
+              },
+              {
+                "group": "Trợ giúp",
+                "pages": [
+                  "vi/online-debug",
+                  "vi/ai-codegen"
+                ]
+              },
+              {
+                "group": "Công cụ",
+                "pages": [
+                  "vi/tools-cursor",
+                  "vi/tools-claude-code",
+                  "vi/tools-windsurf",
+                  "vi/sdk-python",
+                  "vi/sdk-nodejs",
+                  "vi/sdk-go"
                 ]
               }
             ]
