@@ -1,8 +1,8 @@
 ---
-title: "Base Spec"
-description: "Base URL, timeout, retry guidance"
+title: "Quy chuẩn cơ bản"
+description: "Base URL, thời gian chờ và kiến nghị thử lại"
 ---
 
-- Base URL: `https://api.aiid.edu.kg/v1`
-- Timeout: 30s recommended
-- Retry: exponential backoff for `429/503`
+- Base URL：`https://api.aiid.edu.kg/v1`
+- Thời gian chờ (timeout) khuyến nghị: 30 giây
+- `429/503` Sử dụng thử lại với cơ chế lũy thừa (exponential backoff)

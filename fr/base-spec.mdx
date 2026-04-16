@@ -1,8 +1,8 @@
 ---
-title: "Base Spec"
-description: "Base URL, timeout, retry guidance"
+title: "Spécifications de base"
+description: "Base URL, recommandations concernant les délais d'expiration et les tentatives"
 ---
 
-- Base URL: `https://api.aiid.edu.kg/v1`
-- Timeout: 30s recommended
-- Retry: exponential backoff for `429/503`
+- Base URL：`https://api.aiid.edu.kg/v1`
+- Délai d'expiration suggéré : 30 secondes
+- `429/503` utilise un mécanisme de nouvelle tentative avec recul exponentiel

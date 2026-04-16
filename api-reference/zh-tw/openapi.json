@@ -18,7 +18,7 @@
         "description": "獲取目前可用的模型列表。\n\n根據請求標頭自動辨識傳回格式：\n- 包含 `x-api-key` 與 `anthropic-version` 標頭時傳回 Anthropic 格式\n- 包含 `x-goog-api-key` 標頭或 `key` 查詢參數時傳回 Gemini 格式\n- 其他情況傳回 OpenAI 格式",
         "operationId": "listModels",
         "tags": [
-          "获取模型列表"
+          "取得模型清單"
         ],
         "parameters": [
           {
@@ -104,7 +104,7 @@
         "description": "以 Gemini API 格式傳回可用模型清單",
         "operationId": "listModelsGemini",
         "tags": [
-          "获取模型列表"
+          "取得模型清單"
         ],
         "parameters": [],
         "responses": {
@@ -138,7 +138,7 @@
         "description": "根據對話歷史建立模型回應。支援串流與非串流回應。\n\n相容於 OpenAI Chat Completions API。",
         "operationId": "createChatCompletion",
         "tags": [
-          "OpenAI格式(Chat)"
+          "OpenAI格式 (Chat)"
         ],
         "parameters": [],
         "requestBody": {
@@ -204,7 +204,7 @@
         "description": "OpenAI Responses API，用於建立模型回應。\n支援多輪對話、工具呼叫、推理等功能。",
         "operationId": "createResponse",
         "tags": [
-          "OpenAI格式(Responses)"
+          "OpenAI格式 (Responses)"
         ],
         "parameters": [],
         "requestBody": {
@@ -248,7 +248,7 @@
         "description": "Gemini 圖片生成。\n\nNano Banana系列支援OpenAI Dall-E格式（詳見連結 [圖片生成/OpenAI Dall-E格式](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)）。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
-          "图片生成/Gemini格式"
+          "圖片生成/Gemini 格式"
         ],
         "parameters": [
           {
@@ -377,7 +377,7 @@
         "description": "OpenAI Dall-E 格式圖片生成介面。",
         "operationId": "createImageGeneration",
         "tags": [
-          "图片生成/OpenAI Dall-E格式"
+          "圖片生成/OpenAI Dall-E 格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -484,7 +484,7 @@
         "description": "OpenAI Dall-E 格式圖片編輯介面。",
         "operationId": "createImageEdit",
         "tags": [
-          "图片生成/OpenAI Dall-E格式"
+          "圖片生成/OpenAI Dall-E 格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -572,10 +572,10 @@
       "post": {
         "summary": "建立影片",
         "deprecated": false,
-        "description": "OpenAI Sora 相容格式的影片生成介面。支援文字生成影片與圖片/影片參考生成模式。\n\n- `POST /v1/videos`：建立影片任務\n- `GET /v1/videos/{video_id}`：查詢任務狀態\n- `GET /v1/videos/{video_id}/content`：獲取影片二進位內容（下載）\n\n標準鑑權標頭：\n- `Content-Type: application/json`（建立任務時）\n\n1. 呼叫 `POST /v1/videos` 建立任務，取得 `id`。\n2. 輪詢 `GET /v1/videos/{id}`，直到 `status=completed` 或 `failed`。\n3. `completed` 後優先使用回傳內容中的 `video_url`；如需閘道統一下載可呼叫 `GET /v1/videos/{id}/content`。\n\n## 3.1 核心參數\n\n- `model: string`（必填）\n- 說明：要呼叫的影片模型名稱。\n- 範例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推薦）\n- 說明：影片生成主描述。使用 `content` 時也必須傳送，不能為空。\n- 範例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（選填）\n- 說明：目標時長。與 `duration` 二選一，若同時傳送通常以閘道解析結果為準。\n- 範例：`8`\n\n- `size: string`（選填）\n- 說明：輸出解析度，常用 `宽x高`。\n- 範例：`720x1280`、`1280x720`\n\n- `mode: string`（選填）\n- 說明：生成模式，不傳送預設為 `t2v`。不同模式對素材參數要求不同。\n- 範例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 通用相容參數\n\n- `aspect_ratio` 或 `ratio`：寬高比。\n- `duration`：時長別名（與 `seconds` 二選一即可）。\n- `quality` 或 `resolution`：解析度相關參數。\n- `fps`：影格率。\n- `function_mode`：可選功能模式，用於觸發特定行為（如 `omni_reference` 表示全能參考語義）。\n\n## 3.3 參考素材參數\n\n- `input_reference`：標準參考輸入物件。\n- 說明：僅支援字串 URL 寫法，不支援物件寫法。\n- 正確範例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 錯誤範例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：圖片參考。\n- 說明：`image_url` 常用於單圖；`image_urls` 用於多圖或全能參考。\n\n- `end_image_url` / `last_image_url`：末格參考。\n- 說明：通常與 `mode=i2v_first_last` 搭配，表示影片結束畫面。\n\n- `video_urls`：影片參考列表。\n- 說明：常用於 `reference_material` 或 `content` 全能參考場景。\n\n- `audio_urls`：音訊參考列表。\n- 說明：用於背景音樂/旁白風格參考（是否生效取決於模型能力）。\n\n- `reference_images`：多圖參考。\n- 說明：常用於多格/多圖參考模式。\n\n說明：不同模型對素材欄位要求不同，建議依下文「模式與最小入參」傳遞參數。\n\n## 3.4 content 進階模式（推薦給複雜參考場景）\n\n可直接傳入 `content` 陣列：\n- `type=text`：文字指令。\n- `type=image_url|video_url|audio_url`：媒體輸入。\n- 支援 `name`，用於在文字中透過 `@名称` 指代素材。\n\n必填限制：\n- 使用 `content` 時，`prompt` 仍必須傳入且不能為空。\n\n相容寫法：\n- `image_url/video_url/audio_url` 可為字串，或物件 `{ \"url\": \"https://...\" }`。\n- `role` 可使用 `material`，也相容 `reference_image/reference_video/reference_audio`。\n\n可同時攜帶：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n補充說明：\n- `generate_audio=true`：請求模型同時生成音訊（僅支援該能力的模型才會生效）。\n- `watermark=false`：請求關閉浮水印（實際是否生效取決於模型與管道策略）。\n- `name`：素材別名，建議與 `text` 中的 `@名称` 一致，便於模型準確關聯素材。\n\n不同模型族群對參數的支援差異較大，建議參考下表選擇參數：\n\n| 模型族群 | 常見模型名稱（範例） | 建議最小傳入參數 | 常用擴充參數 | 注意事項 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | 對 `mode` 最敏感；並非所有版本都支援 `reference_material`。 |\n| Sora 通用 | `sora-2` `sora-2-pro` 及 `*-stable/*-official` | `model + prompt` | `seconds/size`，建議補上 `input_reference`（字串 URL） | 多管道 fallback 時，是否要求圖片可能不同，建議準備參考圖以提高成功率。 |\n| Sora 時長預設 | `sora2-landscape-10s` `sora2-pro-portrait-25s` 等 | `model + prompt` | `image_url/input_reference` | 時長和方向通常由模型名稱決定，`seconds/ratio` 僅在模型允許時生效。 |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` 類模型通常需要參考圖或參考素材；`t2v` 類通常可使用純文字。 |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`，以及 `image/image_list` 等官方欄位 | 已相容官方路徑語義（text2video/image2video/multi-image2video）並統一到 `/v1/videos`；不提供影片延長對外能力。 |\n| 聚合擴充模型 | `happyhorse*` `grok-imagine-1.0-video*` 等 | `model + prompt` | `seconds/size/content` | 具體支援的欄位取決於模型與管道實作，建議優先使用標準欄位，不足時再使用 `content`。 |\n\n說明：\n1. 若您使用穩定別名模型（如 `*-stable`、`*-official`），底層可能會自動切換管道，請儘量傳入「跨管道相容參數」（`prompt + model + seconds/duration + size/ratio + 必要参考图`）。\n2. 複雜多素材場景（圖+影片+音訊+@名稱）優先使用 `content`，相容性最高。\n3. 若模型文件未明確支援某欄位，請按「最小入參」先跑通，再逐步增加擴充參數。\n\n### 4.1 Kling 官方模式補充\n\n- `mode=t2v`：文生影片\n- `mode=i2v`：圖生影片（需 `image` 或 `image_url`）\n- `mode=multi_i2v`：多圖參考（需 `image_list` 或多張 `image_urls`）\n- `mode=extend`：不支援（影片延長暫不提供 `/v1/videos` 對外能力）\n\n常見官方參數可直接放在 `/v1/videos` 請求體中透傳：\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok 影片模式補充\n\n推薦參數：\n- `model`：如 `grok-video-3`\n- `prompt`\n- `ratio` 或 `aspect_ratio`\n- `resolution` 或 `size`\n- `seconds` 或 `duration`\n- `image` / `image_url` / `input_reference`（單圖參考）\n- `reference_images` / `reference_image_urls`（多圖參考，官方 `reference-to-video` 語意）\n- `mode`（選填）：`image-to-video`、`reference-to-video`\n\n約束：\n- 不支援 `mode=edit-video` / `mode=extend-video`（影片編輯與延長暫不對外）。\n- `image/input_reference` 與 `reference_images` 不能同時傳送。\n\n- `mode=t2v`\n- 最小輸入參數：`model + prompt`\n\n- `mode=i2v`（等同 `i2v_first`）\n- 最小入參：`model + prompt + image_url`（或 `input_reference` 字串 URL）\n\n- `mode=i2v_first_last`\n- 最小輸入參數：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小輸入參數：`model + prompt + reference_images`（通常為 1~4 張）\n\n- `mode=reference_material`\n- 最小輸入參數：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 複雜場景更推薦使用 `content + function_mode=omni_reference`\n- 說明：當傳入 `function_mode=omni_reference` 時，即使未顯式傳入 `mode=reference_material`，也會按全能參考語義處理。",
+        "description": "OpenAI Sora 相容格式的影片生成介面。支援文字生成影片與圖片/影片參考生成模式。\n\n- `POST /v1/videos`：建立影片任務\n- `GET /v1/videos/{video_id}`：查詢任務狀態\n- `GET /v1/videos/{video_id}/content`：獲取影片二進位內容（下載）\n\n目前不對外提供：\n- `GET /v1/videos`：任務清單\n- `POST /v1/videos/{video_id}/remix`：影片二次編輯 / remix\n\n標準鑑權標頭：\n- `Content-Type: application/json`（建立任務時）\n\n1. 呼叫 `POST /v1/videos` 建立任務，取得 `id`。\n2. 輪詢 `GET /v1/videos/{id}`，直到 `status=completed` 或 `failed`。\n3. `completed` 後優先使用回傳內容中的 `video_url`；如需閘道統一下載可呼叫 `GET /v1/videos/{id}/content`。\n\n## 3.1 核心參數\n\n- `model: string`（必填）\n- 說明：要呼叫的影片模型名稱。\n- 範例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推薦）\n- 說明：影片生成主描述。使用 `content` 時也必須傳送，不能為空。\n- 範例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（選填）\n- 說明：目標時長。與 `duration` 二選一，若同時傳送通常以閘道解析結果為準。\n- 範例：`8`\n\n- `size: string`（選填）\n- 說明：輸出解析度，常用 `宽x高`。\n- 範例：`720x1280`、`1280x720`\n\n- `mode: string`（選填）\n- 說明：生成模式，不傳送預設為 `t2v`。不同模式對素材參數要求不同。\n- 範例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 通用相容參數\n\n- `aspect_ratio` 或 `ratio`：寬高比。\n- `duration`：時長別名（與 `seconds` 二選一即可）。\n- `quality` 或 `resolution`：解析度相關參數。\n- `fps`：影格率。\n- `function_mode`：可選功能模式，用於觸發特定行為（如 `omni_reference` 表示全能參考語義）。\n\n## 3.3 參考素材參數\n\n- `input_reference`：標準參考輸入物件。\n- 說明：僅支援字串 URL 寫法，不支援物件寫法。\n- 正確範例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 錯誤範例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：圖片參考。\n- 說明：`image_url` 常用於單圖；`image_urls` 用於多圖或全能參考。\n\n- `end_image_url` / `last_image_url`：末格參考。\n- 說明：通常與 `mode=i2v_first_last` 搭配，表示影片結束畫面。\n\n- `video_urls`：影片參考列表。\n- 說明：常用於 `reference_material` 或 `content` 全能參考場景。\n\n- `audio_urls`：音訊參考列表。\n- 說明：用於背景音樂/旁白風格參考（是否生效取決於模型能力）。\n\n- `reference_images`：多圖參考。\n- 說明：常用於多格/多圖參考模式。\n\n說明：不同模型對素材欄位要求不同，建議依下文「模式與最小入參」傳遞參數。\n\n## 3.4 content 進階模式（推薦給複雜參考場景）\n\n可直接傳入 `content` 陣列：\n- `type=text`：文字指令。\n- `type=image_url|video_url|audio_url`：媒體輸入。\n- 支援 `name`，用於在文字中透過 `@名称` 指代素材。\n\n必填限制：\n- 使用 `content` 時，`prompt` 仍必須傳入且不能為空。\n\n相容寫法：\n- `image_url/video_url/audio_url` 可為字串，或物件 `{ \"url\": \"https://...\" }`。\n- `role` 可使用 `material`，也相容 `reference_image/reference_video/reference_audio`。\n\n可同時攜帶：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n補充說明：\n- `generate_audio=true`：請求模型同時生成音訊（僅支援該能力的模型才會生效）。\n- `watermark=false`：請求關閉浮水印（實際是否生效取決於模型與管道策略）。\n- `name`：素材別名，建議與 `text` 中的 `@名称` 一致，便於模型準確關聯素材。\n\n不同模型族群對參數的支援差異較大，建議參考下表選擇參數：\n\n| 模型族群 | 常見模型名稱（範例） | 建議最小傳入參數 | 常用擴充參數 | 注意事項 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | 對 `mode` 最敏感；並非所有版本都支援 `reference_material`。 |\n| Sora 通用 | `sora-2` `sora-2-pro` 及 `*-stable/*-official` | `model + prompt` | `seconds/size`，建議補上 `input_reference`（字串 URL） | 多管道 fallback 時，是否要求圖片可能不同，建議準備參考圖以提高成功率。 |\n| Sora 時長預設 | `sora2-landscape-10s` `sora2-pro-portrait-25s` 等 | `model + prompt` | `image_url/input_reference` | 時長和方向通常由模型名稱決定，`seconds/ratio` 僅在模型允許時生效。 |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` 類模型通常需要參考圖或參考素材；`t2v` 類通常可使用純文字。 |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`，以及 `image/image_list` 等官方欄位 | 已相容官方路徑語義（text2video/image2video/multi-image2video）並統一到 `/v1/videos`；不提供影片延長對外能力。 |\n| 聚合擴充模型 | `happyhorse*` `grok-imagine-1.0-video*` 等 | `model + prompt` | `seconds/size/content` | 具體支援的欄位取決於模型與管道實作，建議優先使用標準欄位，不足時再使用 `content`。 |\n\n說明：\n1. 若您使用穩定別名模型（如 `*-stable`、`*-official`），底層可能會自動切換管道，請儘量傳入「跨管道相容參數」（`prompt + model + seconds/duration + size/ratio + 必要参考图`）。\n2. 複雜多素材場景（圖+影片+音訊+@名稱）優先使用 `content`，相容性最高。\n3. 若模型文件未明確支援某欄位，請按「最小入參」先跑通，再逐步增加擴充參數。\n\n### 4.1 Kling 官方模式補充\n\n- `mode=t2v`：文生影片\n- `mode=i2v`：圖生影片（需 `image` 或 `image_url`）\n- `mode=multi_i2v`：多圖參考（需 `image_list` 或多張 `image_urls`）\n- `mode=extend`：不支援（影片延長暫不提供 `/v1/videos` 對外能力）\n\n常見官方參數可直接放在 `/v1/videos` 請求體中透傳：\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok 影片模式補充\n\n推薦參數：\n- `model`：如 `grok-video-3`\n- `prompt`\n- `ratio` 或 `aspect_ratio`\n- `resolution` 或 `size`\n- `seconds` 或 `duration`\n- `image` / `image_url` / `input_reference`（單圖參考）\n- `reference_images` / `reference_image_urls`（多圖參考，官方 `reference-to-video` 語意）\n- `mode`（選填）：`image-to-video`、`reference-to-video`\n\n約束：\n- 不支援 `mode=edit-video` / `mode=extend-video`（影片編輯與延長暫不對外）。\n- `image/input_reference` 與 `reference_images` 不能同時傳送。\n\n- `mode=t2v`\n- 最小輸入參數：`model + prompt`\n\n- `mode=i2v`（等同 `i2v_first`）\n- 最小入參：`model + prompt + image_url`（或 `input_reference` 字串 URL）\n\n- `mode=i2v_first_last`\n- 最小輸入參數：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小輸入參數：`model + prompt + reference_images`（通常為 1~4 張）\n\n- `mode=reference_material`\n- 最小輸入參數：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 複雜場景更推薦使用 `content + function_mode=omni_reference`\n- 說明：當傳入 `function_mode=omni_reference` 時，即使未顯式傳入 `mode=reference_material`，也會按全能參考語義處理。",
         "operationId": "createVideo",
         "tags": [
-          "视频生成/Sora兼容格式"
+          "影片生成/Sora相容格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1173,7 +1173,7 @@
         "description": "OpenAI 相容的影片任務狀態查詢介面。\n\n傳回影片任務的詳細狀態資訊。",
         "operationId": "getVideo",
         "tags": [
-          "视频生成/Sora兼容格式"
+          "影片生成/Sora相容格式"
         ],
         "parameters": [
           {
@@ -1296,7 +1296,7 @@
         "description": "獲取已完成影片任務的影片檔案內容。\n\n此介面會代理回傳影片檔案串流。",
         "operationId": "getVideoContent",
         "tags": [
-          "视频生成/Sora兼容格式"
+          "影片生成/Sora相容格式"
         ],
         "parameters": [
           {
@@ -1350,10 +1350,10 @@
       "post": {
         "summary": "Kling 文字生成影片",
         "deprecated": false,
-        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90%20Sora%20%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n使用 Kling 模型從文字描述生成影片。\n\n支援的模型：kling-v1, kling-v1-5 等",
+        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n使用 Kling 模型從文字描述生成影片。\n\n支援的模型：kling-v1, kling-v1-5 等",
         "operationId": "createKlingText2Video",
         "tags": [
-          "视频生成/Kling格式"
+          "影片生成/Kling格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1412,10 +1412,10 @@
       "get": {
         "summary": "獲取 Kling 文字生成影片任務狀態",
         "deprecated": false,
-        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90%20Sora%20%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n查詢 Kling 文字生成影片任務的狀態與結果。",
+        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n查詢 Kling 文字生成影片任務的狀態與結果。",
         "operationId": "getKlingText2Video",
         "tags": [
-          "视频生成/Kling格式"
+          "影片生成/Kling格式"
         ],
         "parameters": [
           {
@@ -1468,10 +1468,10 @@
       "post": {
         "summary": "Kling 圖生影片",
         "deprecated": false,
-        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90%20Sora%20%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n使用 Kling 模型從圖片生成影片。\n\n支援透過 image 參數傳入圖片 URL 或 Base64 編碼的圖片資料。",
+        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n使用 Kling 模型從圖片生成影片。\n\n支援透過 image 參數傳入圖片 URL 或 Base64 編碼的圖片資料。",
         "operationId": "createKlingImage2Video",
         "tags": [
-          "视频生成/Kling格式"
+          "影片生成/Kling格式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1530,10 +1530,10 @@
       "get": {
         "summary": "獲取 Kling 圖生影片任務狀態",
         "deprecated": false,
-        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90%20Sora%20%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n查詢 Kling 圖生影音任務的狀態與結果。",
+        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n查詢 Kling 圖生影音任務的狀態與結果。",
         "operationId": "getKlingImage2Video",
         "tags": [
-          "视频生成/Kling格式"
+          "影片生成/Kling格式"
         ],
         "parameters": [
           {
@@ -1585,10 +1585,10 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "建立影片（Seedance）",
-        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90%20Sora%20%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n用於建立影片生成任務，並透過任務 ID 查詢狀態與結果。\n\n建立任務核心欄位：\n- `model`：必填，模型名稱。\n- `prompt`：必填，影片生成主描述。\n- `content`：選填，進階模式下的多媒體輸入陣列。\n- `function_mode`：選填，常用於全能參考等進階模式。\n\n相容入參：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼叫細節：\n- 當 `mode=reference_material` 或 `function_mode=omni_reference` 時，建議透過 `content` 傳遞文字與參考素材。\n- `content` 中的媒體欄位支援直接傳送 URL 字串，也支援物件寫法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 會影響最終生成配置。\n\n查詢結果關注欄位：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n用於建立影片生成任務，並透過任務 ID 查詢狀態與結果。\n\n建立任務核心欄位：\n- `model`：必填，模型名稱。\n- `prompt`：必填，影片生成主描述。\n- `content`：選填，進階模式下的多媒體輸入陣列。\n- `function_mode`：選填，常用於全能參考等進階模式。\n\n相容入參：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼叫細節：\n- 當 `mode=reference_material` 或 `function_mode=omni_reference` 時，建議透過 `content` 傳遞文字與參考素材。\n- `content` 中的媒體欄位支援直接傳送 URL 字串，也支援物件寫法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 會影響最終生成配置。\n\n查詢結果關注欄位：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "视频生成/Seedance火山方舟"
+          "影片生成/Seedance火山方舟"
         ],
         "requestBody": {
           "required": true,
@@ -1603,7 +1603,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "example": "doubao-seedance-1-0-lite-i2v-250428",
+                    "example": "doubao-seedance-2-0-260128",
                     "description": "必填。模型名稱。"
                   },
                   "prompt": {
@@ -1869,10 +1869,10 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "查詢任務（Seedance）",
-        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90%20Sora%20%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n用於建立影片生成任務，並透過任務 ID 查詢狀態與結果。\n\n建立任務核心欄位：\n- `model`：必填，模型名稱。\n- `prompt`：必填，影片生成主描述。\n- `content`：選填，進階模式下的多媒體輸入陣列。\n- `function_mode`：選填，常用於全能參考等進階模式。\n\n相容入參：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼叫細節：\n- 當 `mode=reference_material` 或 `function_mode=omni_reference` 時，建議透過 `content` 傳遞文字與參考素材。\n- `content` 中的媒體欄位支援直接傳送 URL 字串，也支援物件寫法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 會影響最終生成配置。\n\n查詢結果關注欄位：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n用於建立影片生成任務，並透過任務 ID 查詢狀態與結果。\n\n建立任務核心欄位：\n- `model`：必填，模型名稱。\n- `prompt`：必填，影片生成主描述。\n- `content`：選填，進階模式下的多媒體輸入陣列。\n- `function_mode`：選填，常用於全能參考等進階模式。\n\n相容入參：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼叫細節：\n- 當 `mode=reference_material` 或 `function_mode=omni_reference` 時，建議透過 `content` 傳遞文字與參考素材。\n- `content` 中的媒體欄位支援直接傳送 URL 字串，也支援物件寫法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 會影響最終生成配置。\n\n查詢結果關注欄位：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "视频生成/Seedance火山方舟"
+          "影片生成/Seedance火山方舟"
         ],
         "parameters": [
           {
@@ -1967,10 +1967,10 @@
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
         "summary": "建立影片（[[KEEP_0]]3 格式）",
-        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90%20Sora%20%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n該介面專題頁僅用於說明 Veo 原生格式與目前閘道支援狀態。\n\n目前 Veo 系列對外請使用 OpenAI Sora 相容模式：`POST /v1/videos`。\n\nGoogle 原生模式路徑預留為：`POST /v1beta/models/{model}:predictLongRunning`。目前閘道尚未接通 Veo 原生任務分發鏈路，因此按原生 `instances/parameters` 請求體呼叫暫不支援。",
+        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n該介面專題頁僅用於說明 Veo 原生格式與目前閘道支援狀態。\n\n目前 Veo 系列對外請使用 OpenAI Sora 相容模式：`POST /v1/videos`。\n\nGoogle 原生模式路徑預留為：`POST /v1beta/models/{model}:predictLongRunning`。目前閘道尚未接通 Veo 原生任務分發鏈路，因此按原生 `instances/parameters` 請求體呼叫暫不支援。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "视频生成/Veo3格式"
+          "影片生成/Veo3格式"
         ],
         "parameters": [
           {
@@ -2141,10 +2141,10 @@
     "/v1beta/{operation_name}": {
       "get": {
         "summary": "查詢任務（Veo3格式）",
-        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90%20Sora%20%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n本介面專題頁面僅用於說明 Veo 原生查詢協定。\n\n目前的 Veo 系列請改用 `/v1/videos` 統一介面進行建立與查詢。\n\n下述 `operation_name` 查詢結構僅作為預留協定說明保留，暫不支援實際呼叫。",
+        "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n本介面專題頁面僅用於說明 Veo 原生查詢協定。\n\n目前的 Veo 系列請改用 `/v1/videos` 統一介面進行建立與查詢。\n\n下述 `operation_name` 查詢結構僅作為預留協定說明保留，暫不支援實際呼叫。",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "视频生成/Veo3格式"
+          "影片生成/Veo3格式"
         ],
         "parameters": [
           {

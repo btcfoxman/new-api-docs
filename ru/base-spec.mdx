@@ -1,8 +1,8 @@
 ---
-title: "Base Spec"
-description: "Base URL, timeout, retry guidance"
+title: "Базовые спецификации"
+description: "Base URL, рекомендации по таймаутам и повторным попыткам"
 ---
 
-- Base URL: `https://api.aiid.edu.kg/v1`
-- Timeout: 30s recommended
-- Retry: exponential backoff for `429/503`
+- Base URL：`https://api.aiid.edu.kg/v1`
+- Рекомендуемое время ожидания: 30 секунд
+- `429/503` используйте повторные попытки с экспоненциальной задержкой

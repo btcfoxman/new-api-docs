@@ -1,6 +1,72 @@
 ---
-title: "Overview"
-description: "Unified AI API gateway"
+title: "Обзор сервиса"
+description: "Текущая документация на китайском языке основывается на фактических открытых интерфейсах `new-api`. При этом в ней сохранен упрощенный обзор продукта, что позволяет сначала изучить его возможности, а затем перейти к страницам конкретных API."
 ---
 
-Overseas API provides unified access to chat, image, video, and multimodal endpoints.
+<CardGroup cols={2}>
+  <Card title="Единый доступ" icon="code">
+    В приоритетном порядке предоставляются форматы, совместимые с OpenAI. Для существующих приложений на базе OpenAI SDK или HTTP обычно требуется только замена Base URL и ключа API.
+  </Card>
+  <Card title="Поддержка видеопротоколов" icon="film">
+    Одновременно открыты `/v1/videos`, нативные форматы Seedance, нативные форматы Veo3, а также видеоинтерфейсы для специфических моделей.
+  </Card>
+  <Card title="Возможности обработки изображений" icon="image">
+    Предоставляются интерфейсы генерации и редактирования изображений OpenAI с сохранением специфических форматов моделей, таких как генерация изображений Gemini.
+  </Card>
+  <Card title="Запрос длительных задач" icon="clock">
+    Запросы для видео и некоторых задач генерации унифицированы с использованием ID задачи или operation name, что удобно для асинхронной интеграции и последующей проверки.
+  </Card>
+</CardGroup>
+
+## Обзор текущих доступных возможностей
+
+### Текст и ответы
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
+
+### Изображения
+- `POST /v1/images/generations`
+- `POST /v1/images/edits`
+- `POST /v1beta/models/{model}:generateContent`
+
+### Видео
+- `POST /v1/videos`
+- `GET /v1/videos/{task_id}`
+- `POST /api/v3/contents/generations/tasks`
+- `GET /api/v3/contents/generations/tasks/{task_id}`
+- `POST /v1beta/models/{model}:predictLongRunning`
+- `GET /v1beta/{operation_name}`
+- Видеоинтерфейсы для специфических моделей, таких как Kling
+
+## Текущие публичные семейства моделей
+### Nano Banana
+- Всего 7 публичных моделей
+- `nano-banana`、`nano-banana-2`、`nano-banana-2-2k`、`nano-banana-2-4k`、`nano-banana-pro`、`nano-banana-pro-2k`、`nano-banana-pro-4k`
+
+### Sora
+- Всего 2 публичные модели
+- `sora-2`、`sora-2-pro`
+
+### Veo
+- Всего 12 публичных моделей
+- `veo3`、`veo3-fast`、`veo3-fast-frames`、`veo3-frames`、`veo3-pro`、`veo3-pro-frames`、`veo3.1`、`veo3.1-4k`、`veo3.1-components`、`veo3.1-fast`、`veo3.1-pro`、`veo3.1-pro-4k`
+
+### Grok
+- Всего 1 публичная модель
+- `grok-video-3`
+
+### Seedance
+- Всего 7 публичных моделей
+- `doubao-seedance-1-0-lite-i2v-250428`、`doubao-seedance-1-0-lite-t2v-250428`、`doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-pro-fast-251015`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128`
+
+### Kling
+- Всего 2 публичные модели
+- `kling-video`、`kling-*`
+
+### Hailuo
+- Всего 1 публичная модель
+- `hailuo*`
+
+### Vidu
+- Всего 1 публичная модель
+- `vidu*`

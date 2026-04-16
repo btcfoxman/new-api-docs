@@ -18,7 +18,7 @@
         "description": "Retrieve a list of currently available models.\n\nThe response format is automatically identified based on the request headers:\n- Returns the Anthropic format when both `x-api-key` and `anthropic-version` headers are included\n- Returns the Gemini format when the `x-goog-api-key` header or the `key` query parameter is included\n- Returns the OpenAI format in all other cases",
         "operationId": "listModels",
         "tags": [
-          "获取模型列表"
+          "List Models"
         ],
         "parameters": [
           {
@@ -104,7 +104,7 @@
         "description": "Returns a list of available models in Gemini API format",
         "operationId": "listModelsGemini",
         "tags": [
-          "获取模型列表"
+          "List Models"
         ],
         "parameters": [],
         "responses": {
@@ -138,7 +138,7 @@
         "description": "Creates model responses based on conversation history. Supports both streaming and non-streaming responses.\n\nCompatible with OpenAI Chat Completions API.",
         "operationId": "createChatCompletion",
         "tags": [
-          "OpenAI格式(Chat)"
+          "OpenAI Format (Chat)"
         ],
         "parameters": [],
         "requestBody": {
@@ -204,7 +204,7 @@
         "description": "OpenAI Responses API, used to create model responses.\nSupports multi-turn conversations, tool calling, reasoning, and other features.",
         "operationId": "createResponse",
         "tags": [
-          "OpenAI格式(Responses)"
+          "OpenAI Format (Responses)"
         ],
         "parameters": [],
         "requestBody": {
@@ -248,7 +248,7 @@
         "description": "Gemini image generation.\n\nThe Nano Banana series supports OpenAI Dall-E format (for details, see the link [Image Generation/OpenAI Dall-E Format](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)).",
         "operationId": "geminiRelayV1Beta",
         "tags": [
-          "图片生成/Gemini格式"
+          "Image Generation/Gemini Format"
         ],
         "parameters": [
           {
@@ -377,7 +377,7 @@
         "description": "OpenAI DALL-E format image generation API.",
         "operationId": "createImageGeneration",
         "tags": [
-          "图片生成/OpenAI Dall-E格式"
+          "Image Generation/OpenAI Dall-E Format"
         ],
         "parameters": [],
         "requestBody": {
@@ -484,7 +484,7 @@
         "description": "OpenAI Dall-E format image editing API.",
         "operationId": "createImageEdit",
         "tags": [
-          "图片生成/OpenAI Dall-E格式"
+          "Image Generation/OpenAI Dall-E Format"
         ],
         "parameters": [],
         "requestBody": {
@@ -572,10 +572,10 @@
       "post": {
         "summary": "Create video",
         "deprecated": false,
-        "description": "Video generation interface compatible with OpenAI Sora. Supports text-to-video and image/video reference generation modes.\n\n- `POST /v1/videos`: Create video task\n- `GET /v1/videos/{video_id}`: Query task status\n- `GET /v1/videos/{video_id}/content`: Get video binary content (download)\n\nStandard authentication headers:\n- `Content-Type: application/json` (when creating tasks)\n\n1. Call `POST /v1/videos` to create a task and obtain `id`.\n2. Poll `GET /v1/videos/{id}` until `status=completed` or `failed`.\n3. After `completed`, prioritize using the `video_url` in the response; if unified gateway download is required, call `GET /v1/videos/{id}/content`.\n\n## 3.1 Core Parameters\n\n- `model: string` (Required)\n- Description: The name of the video model to be called.\n- Example: `sora-2`, `doubao-seedance-2-0-260128`\n\n- `prompt: string` (Recommended)\n- Description: Main description for video generation. Must be provided when using `content` and cannot be empty.\n- Example: `第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string` (Optional)\n- Description: Target duration. Mutually exclusive with `duration`; if both are provided, the gateway parsing result usually takes precedence.\n- Example: `8`\n\n- `size: string` (Optional)\n- Description: Output resolution, commonly `宽x高`.\n- Example: `720x1280`, `1280x720`\n\n- `mode: string` (Optional)\n- Description: Generation mode; defaults to `t2v` if not specified. Different modes have different requirements for asset parameters.\n- Example: `t2v`, `i2v`, `i2v_first_last`, `reference_material`\n\n## 3.2 General Compatibility Parameters\n\n- `aspect_ratio` or `ratio`: Aspect ratio.\n- `duration`: Duration alias (choose either `duration` or `seconds`).\n- `quality` or `resolution`: Resolution-related parameters.\n- `fps`: Frame rate.\n- `function_mode`: Optional function mode, used to trigger specific behaviors (e.g., `omni_reference` represents omni-reference semantics).\n\n## 3.3 Reference Material Parameters\n\n- `input_reference`: Standard reference input object.\n- Description: Only string URL format is supported; object format is not supported.\n- Correct example: `\"input_reference\": \"https://example.com/ref.png\"`\n- Incorrect example: `\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`: Image reference.\n- Description: `image_url` is commonly used for single images; `image_urls` is used for multi-image or omni-reference.\n\n- `end_image_url` / `last_image_url`: Last-frame reference.\n- Description: Usually paired with `mode=i2v_first_last` to represent the ending frame of the video.\n\n- `video_urls`: Video reference list.\n- Description: Often used in `reference_material` or `content` omni-reference scenarios.\n\n- `audio_urls`: Audio reference list.\n- Description: Used for BGM/voiceover style reference (effectiveness depends on model capabilities).\n\n- `reference_images`: Multi-image reference.\n- Description: Commonly used in multi-frame/multi-image reference modes.\n\nNote: Different models have different requirements for material fields. It is recommended to pass parameters according to the \"Mode and Minimum Input Parameters\" section below.\n\n## 3.4 content Advanced Mode (Recommended for complex reference scenarios)\n\nYou can directly pass a `content` array:\n- `type=text`: Text instructions.\n- `type=image_url|video_url|audio_url`: Media input.\n- Supports `name` for referencing assets in text via `@名称`.\n\nRequired Constraints:\n- When using `content`, `prompt` must still be passed and cannot be empty.\n\nCompatibility Syntax:\n- `image_url/video_url/audio_url` can be a string or an object `{ \"url\": \"https://...\" }`.\n- `role` can use `material`, and is also compatible with `reference_image/reference_video/reference_audio`.\n\nCan be included simultaneously:\n- `generate_audio: boolean`\n- `watermark: boolean`\n\nAdditional Notes:\n- `generate_audio=true`: Request the model to generate audio simultaneously (only takes effect for models supporting this capability).\n- `watermark=false`: Request to disable watermarks (actual effect depends on the model and channel policy).\n- `name`: Asset alias; it is recommended to be consistent with `@名称` in `text` to help the model accurately associate the asset.\n\nParameter support varies significantly across model families; it is recommended to select parameters according to the following table:\n\n| Model Family | Common Model Names (Example) | Recommended Minimum Parameters | Common Extension Parameters | Notes |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | Most sensitive to `mode`; not all versions support `reference_material`. |\n| Sora General | `sora-2`, `sora-2-pro`, and `*-stable/*-official` | `model + prompt` | `seconds/size`, recommended to include `input_reference` (string URL) | Image requirements may vary during multi-channel fallback; preparing a reference image is recommended to improve success rates. |\n| Sora Preset Duration | `sora2-landscape-10s`, `sora2-pro-portrait-25s`, etc. | `model + prompt` | `image_url/input_reference` | Duration and orientation are usually determined by the model name; `seconds/ratio` only takes effect if the model allows it. |\n| Veo | `veo3*`, `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` types usually require a reference image or asset; `t2v` types usually support pure text. |\n| Kling | `kling-video`, `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`, and official fields like `image/image_list` | Compatible with official path semantics (text2video/image2video/multi-image2video) and unified into `/v1/videos`; does not provide external video extension capabilities. |\n| Aggregated Extension Models | `happyhorse*`, `grok-imagine-1.0-video*`, etc. | `model + prompt` | `seconds/size/content` | Supported fields depend on the model and channel implementation; prioritize standard fields and use `content` only if necessary. |\n\nDescription:\n1. If you use stable alias models (such as `*-stable`, `*-official`), the underlying system may automatically switch channels; please try to pass \"cross-channel compatible parameters\" (`prompt + model + seconds/duration + size/ratio + 必要参考图`).\n2. For complex multi-asset scenarios (image + video + audio + @name), prioritize using `content` for maximum compatibility.\n3. If the model documentation does not explicitly support a specific field, please verify the workflow using \"minimum input parameters\" first, then gradually add extended parameters.\n\n### 4.1 Kling Official Mode Supplement\n\n- `mode=t2v`: Text-to-Video\n- `mode=i2v`: Image-to-Video (requires `image` or `image_url`)\n- `mode=multi_i2v`: Multi-image reference (requires `image_list` or multiple `image_urls`)\n- `mode=extend`: Not supported (video extension `/v1/videos` capabilities are not currently available externally)\n\nCommon official parameters can be passed through directly in the `/v1/videos` request body:\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok Video Mode Supplement\n\nRecommended parameters:\n- `model`: e.g., `grok-video-3`\n- `prompt`\n- `ratio` or `aspect_ratio`\n- `resolution` or `size`\n- `seconds` or `duration`\n- `image` / `image_url` / `input_reference` (Single-image reference)\n- `reference_images` / `reference_image_urls` (Multi-image reference, official `reference-to-video` semantics)\n- `mode` (Optional): `image-to-video`, `reference-to-video`\n\nConstraints:\n- `mode=edit-video` / `mode=extend-video` are not supported (video editing and extension are not yet available externally).\n- `image/input_reference` and `reference_images` cannot be passed simultaneously.\n\n- `mode=t2v`\n- Minimum input: `model + prompt`\n\n- `mode=i2v` (Equivalent to `i2v_first`)\n- Minimum input parameter: `model + prompt + image_url` (or `input_reference` string URL)\n\n- `mode=i2v_first_last`\n- Minimum input: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Minimum input: `model + prompt + reference_images` (typically 1–4 images)\n\n- `mode=reference_material`\n- Minimum input: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- `content + function_mode=omni_reference` is recommended for complex scenarios\n- Note: When `function_mode=omni_reference` is passed, it will be processed using all-in-one reference semantics even if `mode=reference_material` is not explicitly provided.",
+        "description": "Video generation interface compatible with OpenAI Sora. Supports text-to-video and image/video reference generation modes.\n\n- `POST /v1/videos`: Create video task\n- `GET /v1/videos/{video_id}`: Query task status\n- `GET /v1/videos/{video_id}/content`: Get video binary content (download)\n\nCurrently not available externally:\n- `GET /v1/videos`: Task list\n- `POST /v1/videos/{video_id}/remix`: Video secondary editing / remix\n\nStandard authentication headers:\n- `Content-Type: application/json` (when creating tasks)\n\n1. Call `POST /v1/videos` to create a task and obtain `id`.\n2. Poll `GET /v1/videos/{id}` until `status=completed` or `failed`.\n3. After `completed`, prioritize using the `video_url` in the response; if unified gateway download is required, call `GET /v1/videos/{id}/content`.\n\n## 3.1 Core Parameters\n\n- `model: string` (Required)\n- Description: The name of the video model to be called.\n- Example: `sora-2`, `doubao-seedance-2-0-260128`\n\n- `prompt: string` (Recommended)\n- Description: Main description for video generation. Must be provided when using `content` and cannot be empty.\n- Example: `第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string` (Optional)\n- Description: Target duration. Mutually exclusive with `duration`; if both are provided, the gateway parsing result usually takes precedence.\n- Example: `8`\n\n- `size: string` (Optional)\n- Description: Output resolution, commonly `宽x高`.\n- Example: `720x1280`, `1280x720`\n\n- `mode: string` (Optional)\n- Description: Generation mode; defaults to `t2v` if not specified. Different modes have different requirements for asset parameters.\n- Example: `t2v`, `i2v`, `i2v_first_last`, `reference_material`\n\n## 3.2 General Compatibility Parameters\n\n- `aspect_ratio` or `ratio`: Aspect ratio.\n- `duration`: Duration alias (choose either `duration` or `seconds`).\n- `quality` or `resolution`: Resolution-related parameters.\n- `fps`: Frame rate.\n- `function_mode`: Optional function mode, used to trigger specific behaviors (e.g., `omni_reference` represents omni-reference semantics).\n\n## 3.3 Reference Material Parameters\n\n- `input_reference`: Standard reference input object.\n- Description: Only string URL format is supported; object format is not supported.\n- Correct example: `\"input_reference\": \"https://example.com/ref.png\"`\n- Incorrect example: `\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`: Image reference.\n- Description: `image_url` is commonly used for single images; `image_urls` is used for multi-image or omni-reference.\n\n- `end_image_url` / `last_image_url`: Last-frame reference.\n- Description: Usually paired with `mode=i2v_first_last` to represent the ending frame of the video.\n\n- `video_urls`: Video reference list.\n- Description: Often used in `reference_material` or `content` omni-reference scenarios.\n\n- `audio_urls`: Audio reference list.\n- Description: Used for BGM/voiceover style reference (effectiveness depends on model capabilities).\n\n- `reference_images`: Multi-image reference.\n- Description: Commonly used in multi-frame/multi-image reference modes.\n\nNote: Different models have different requirements for material fields. It is recommended to pass parameters according to the \"Mode and Minimum Input Parameters\" section below.\n\n## 3.4 content Advanced Mode (Recommended for complex reference scenarios)\n\nYou can directly pass a `content` array:\n- `type=text`: Text instructions.\n- `type=image_url|video_url|audio_url`: Media input.\n- Supports `name` for referencing assets in text via `@名称`.\n\nRequired Constraints:\n- When using `content`, `prompt` must still be passed and cannot be empty.\n\nCompatibility Syntax:\n- `image_url/video_url/audio_url` can be a string or an object `{ \"url\": \"https://...\" }`.\n- `role` can use `material`, and is also compatible with `reference_image/reference_video/reference_audio`.\n\nCan be included simultaneously:\n- `generate_audio: boolean`\n- `watermark: boolean`\n\nAdditional Notes:\n- `generate_audio=true`: Request the model to generate audio simultaneously (only takes effect for models supporting this capability).\n- `watermark=false`: Request to disable watermarks (actual effect depends on the model and channel policy).\n- `name`: Asset alias; it is recommended to be consistent with `@名称` in `text` to help the model accurately associate the asset.\n\nParameter support varies significantly across model families; it is recommended to select parameters according to the following table:\n\n| Model Family | Common Model Names (Example) | Recommended Minimum Parameters | Common Extension Parameters | Notes |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | Most sensitive to `mode`; not all versions support `reference_material`. |\n| Sora General | `sora-2`, `sora-2-pro`, and `*-stable/*-official` | `model + prompt` | `seconds/size`, recommended to include `input_reference` (string URL) | Image requirements may vary during multi-channel fallback; preparing a reference image is recommended to improve success rates. |\n| Sora Preset Duration | `sora2-landscape-10s`, `sora2-pro-portrait-25s`, etc. | `model + prompt` | `image_url/input_reference` | Duration and orientation are usually determined by the model name; `seconds/ratio` only takes effect if the model allows it. |\n| Veo | `veo3*`, `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` types usually require a reference image or asset; `t2v` types usually support pure text. |\n| Kling | `kling-video`, `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`, and official fields like `image/image_list` | Compatible with official path semantics (text2video/image2video/multi-image2video) and unified into `/v1/videos`; does not provide external video extension capabilities. |\n| Aggregated Extension Models | `happyhorse*`, `grok-imagine-1.0-video*`, etc. | `model + prompt` | `seconds/size/content` | Supported fields depend on the model and channel implementation; prioritize standard fields and use `content` only if necessary. |\n\nDescription:\n1. If you use stable alias models (such as `*-stable`, `*-official`), the underlying system may automatically switch channels; please try to pass \"cross-channel compatible parameters\" (`prompt + model + seconds/duration + size/ratio + 必要参考图`).\n2. For complex multi-asset scenarios (image + video + audio + @name), prioritize using `content` for maximum compatibility.\n3. If the model documentation does not explicitly support a specific field, please verify the workflow using \"minimum input parameters\" first, then gradually add extended parameters.\n\n### 4.1 Kling Official Mode Supplement\n\n- `mode=t2v`: Text-to-Video\n- `mode=i2v`: Image-to-Video (requires `image` or `image_url`)\n- `mode=multi_i2v`: Multi-image reference (requires `image_list` or multiple `image_urls`)\n- `mode=extend`: Not supported (video extension `/v1/videos` capabilities are not currently available externally)\n\nCommon official parameters can be passed through directly in the `/v1/videos` request body:\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok Video Mode Supplement\n\nRecommended parameters:\n- `model`: e.g., `grok-video-3`\n- `prompt`\n- `ratio` or `aspect_ratio`\n- `resolution` or `size`\n- `seconds` or `duration`\n- `image` / `image_url` / `input_reference` (Single-image reference)\n- `reference_images` / `reference_image_urls` (Multi-image reference, official `reference-to-video` semantics)\n- `mode` (Optional): `image-to-video`, `reference-to-video`\n\nConstraints:\n- `mode=edit-video` / `mode=extend-video` are not supported (video editing and extension are not yet available externally).\n- `image/input_reference` and `reference_images` cannot be passed simultaneously.\n\n- `mode=t2v`\n- Minimum input: `model + prompt`\n\n- `mode=i2v` (Equivalent to `i2v_first`)\n- Minimum input parameter: `model + prompt + image_url` (or `input_reference` string URL)\n\n- `mode=i2v_first_last`\n- Minimum input: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Minimum input: `model + prompt + reference_images` (typically 1–4 images)\n\n- `mode=reference_material`\n- Minimum input: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- `content + function_mode=omni_reference` is recommended for complex scenarios\n- Note: When `function_mode=omni_reference` is passed, it will be processed using all-in-one reference semantics even if `mode=reference_material` is not explicitly provided.",
         "operationId": "createVideo",
         "tags": [
-          "视频生成/Sora兼容格式"
+          "Video Generation/Sora Compatible Formats"
         ],
         "parameters": [],
         "requestBody": {
@@ -1173,7 +1173,7 @@
         "description": "OpenAI compatible video task status query interface.\n\nReturns detailed status information for the video task.",
         "operationId": "getVideo",
         "tags": [
-          "视频生成/Sora兼容格式"
+          "Video Generation/Sora Compatible Formats"
         ],
         "parameters": [
           {
@@ -1296,7 +1296,7 @@
         "description": "Retrieves the video file content of a completed video task.\n\nThis endpoint returns the video file stream via proxy.",
         "operationId": "getVideoContent",
         "tags": [
-          "视频生成/Sora兼容格式"
+          "Video Generation/Sora Compatible Formats"
         ],
         "parameters": [
           {
@@ -1353,7 +1353,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nUse the Kling model to generate videos from text descriptions.\n\nSupported models: kling-v1, kling-v1-5, etc.",
         "operationId": "createKlingText2Video",
         "tags": [
-          "视频生成/Kling格式"
+          "Video Generation/Kling Format"
         ],
         "parameters": [],
         "requestBody": {
@@ -1415,7 +1415,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nQuery the status and results of the Kling text-to-video task.",
         "operationId": "getKlingText2Video",
         "tags": [
-          "视频生成/Kling格式"
+          "Video Generation/Kling Format"
         ],
         "parameters": [
           {
@@ -1471,7 +1471,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nGenerate videos from images using the Kling model.\n\nSupports passing image URLs or Base64-encoded image data via the `image` parameter.",
         "operationId": "createKlingImage2Video",
         "tags": [
-          "视频生成/Kling格式"
+          "Video Generation/Kling Format"
         ],
         "parameters": [],
         "requestBody": {
@@ -1533,7 +1533,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nQuery the status and results of the Kling image-to-video task.",
         "operationId": "getKlingImage2Video",
         "tags": [
-          "视频生成/Kling格式"
+          "Video Generation/Kling Format"
         ],
         "parameters": [
           {
@@ -1588,7 +1588,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional. Multimedia input array for advanced mode.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- Media fields in `content` support passing URL strings directly as well as object notation, such as `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "视频生成/Seedance火山方舟"
+          "Video Generation/Seedance Volcengine Ark"
         ],
         "requestBody": {
           "required": true,
@@ -1603,7 +1603,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "example": "doubao-seedance-1-0-lite-i2v-250428",
+                    "example": "doubao-seedance-2-0-260128",
                     "description": "Required. The name of the model."
                   },
                   "prompt": {
@@ -1872,7 +1872,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional. Multimedia input array for advanced mode.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- Media fields in `content` support passing URL strings directly as well as object notation, such as `{ \"url\": \"https://example.com/ref.mp4\" }`.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "视频生成/Seedance火山方舟"
+          "Video Generation/Seedance Volcengine Ark"
         ],
         "parameters": [
           {
@@ -1970,7 +1970,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nThis interface topic page is intended only to explain the Veo native format and the current gateway support status.\n\nFor the current Veo series, please use the OpenAI Sora compatibility mode for external requests: `POST /v1/videos`.\n\nThe Google native mode path is reserved as: `POST /v1beta/models/{model}:predictLongRunning`. The current gateway has not yet connected to the Veo native task distribution link; therefore, calls using the native `instances/parameters` request body are currently not supported.",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "视频生成/Veo3格式"
+          "Video Generation/Veo3 Format"
         ],
         "parameters": [
           {
@@ -2144,7 +2144,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video Generation/Sora Compatible Formats](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D) for details).\n\nThis interface topic page is intended solely to explain the Veo native query protocol.\n\nFor the current Veo series, please use the `/v1/videos` unified interface for creation and queries instead.\n\nThe following `operation_name` query structure is retained for reserved protocol documentation only and does not currently support actual calls.",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "视频生成/Veo3格式"
+          "Video Generation/Veo3 Format"
         ],
         "parameters": [
           {

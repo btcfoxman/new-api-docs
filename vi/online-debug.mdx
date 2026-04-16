@@ -1,0 +1,22 @@
+---
+title: "Gỡ lỗi trực tuyến"
+description: "Bạn có thể gửi yêu cầu trực tiếp trong API Playground ngay trên trang tài liệu mà không cần viết mã trước."
+---
+
+## Các bước thực hiện
+
+1. Mở trang API mục tiêu, nhấp vào `试一试`.
+2. Điền `api_key` vào trong trang. Giá trị này chỉ được lưu cục bộ trong trình duyệt hiện tại, không đồng bộ lên máy chủ và không chia sẻ giữa các thành viên trong nhóm.
+3. Điền tham số đường dẫn (path parameters), tham số truy vấn (query parameters) hoặc thân yêu cầu (request body) theo yêu cầu của API.
+4. Nhấp vào `发送` để xem kết quả phản hồi và thông tin lỗi.
+
+## Gợi ý gỡ lỗi
+
+- Trước tiên, hãy xác nhận xem Base URL, đường dẫn API và tên mô hình đã chính xác chưa.
+- Đối với các API tác vụ dài, hãy ưu tiên ghi lại `task_id` hoặc `operation_name` được trả về, sau đó mới gọi API truy vấn.
+- Nếu API hỗ trợ nhiều chế độ tham số, hãy ưu tiên sử dụng thân yêu cầu mẫu trong tài liệu để xác thực các tham số khả dụng tối thiểu.
+
+## Sử dụng kết hợp với mã do AI tạo
+
+Nên hoàn thành việc xác thực yêu cầu khả dụng tối thiểu trên trang tài liệu trước, sau đó nhấp vào "Sao chép trang" và gửi toàn bộ nội dung trang cho AI để tạo mã gọi chính thức.
+Bằng cách này, nội dung trang API mà AI nhận được đã được bạn xác nhận thủ công, giúp đường dẫn, phương thức xác thực và chế độ tham số ít bị lỗi hơn.

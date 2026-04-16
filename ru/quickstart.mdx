@@ -1,8 +1,68 @@
 ---
-title: "Quickstart"
-description: "Integrate in 5 minutes"
+title: "Быстрый старт"
+description: "Получите ключ API, замените Base URL и выполните свой первый запрос."
 ---
 
-1. Create API key in [Console](https://aiid.edu.kg/console).
-2. Set Base URL: `https://api.aiid.edu.kg/v1`.
-3. Send your first request.
+## Шаг 1: Получение ключа API
+
+1. Войдите в [консоль API Chuhaiying](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)
+2. Перейдите на страницу токенов, чтобы создать ключ API
+3. В дальнейшем используйте через https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D
+
+## Шаг 2: Настройка Base URL
+
+```bash
+API_BASE_URL="https://api.aiid.edu.kg/v1"
+```
+
+Если в существующем клиенте по умолчанию указано:
+
+- `https://api.openai.com`
+- `https://api.openai.com/v1`
+
+То замените их соответственно на:
+
+- `https://api.aiid.edu.kg`
+- `https://api.aiid.edu.kg/v1`
+
+## Шаг 3: Выполнение первого запроса
+
+### Python
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.aiid.edu.kg/v1",
+)
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "你好，请给我一个快速接入建议"}],
+)
+
+print(response.choices[0].message.content)
+```
+
+### cURL
+
+```bash
+curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer YOUR_API_KEY"   -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "Hello world!"}]
+  }'
+```
+
+## Рекомендации по интеграции
+
+- Для новых проектов рекомендуется начинать с интерфейсов, совместимых с OpenAI
+- При редактировании изображений необходимо учитывать требования к https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D и полям файлов
+- Для интерфейсов видеозадач следует сначала сохранить https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D или `operation_name`, а затем выполнять запрос
+- При сбое отладки в первую очередь проверьте код состояния HTTP, https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D и `error.message`
+
+## Дальнейшие шаги
+
+- Онлайн-отладка: см.  `ru/online-debug%60
+- Генерация кода вызова с помощью ИИ: см.  `ru/ai-codegen%60
+- Группы моделей и их возможности: см.  `ru/models%60

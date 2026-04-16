@@ -1,0 +1,22 @@
+---
+title: "Débogage en ligne"
+description: "Vous pouvez lancer des requêtes directement dans le Playground API de la page de documentation, sans avoir à écrire de code au préalable."
+---
+
+## Étapes d'utilisation
+
+1. Ouvrez la page de l'interface cible et cliquez sur `试一试`.
+2. Remplissez `api_key` sur la page. Cette valeur est uniquement enregistrée localement dans le navigateur actuel ; elle ne sera pas synchronisée avec le serveur ni partagée avec les membres de l'équipe.
+3. Remplissez les paramètres de chemin (path), les paramètres de requête (query) ou le corps de la requête (body) selon les exigences de l'interface.
+4. Cliquez sur `发送` pour consulter les résultats et les messages d'erreur.
+
+## Conseils de débogage
+
+- Vérifiez d'abord si Base URL, le chemin de l'interface et le nom du modèle sont corrects.
+- Pour les interfaces de tâches longues, enregistrez en priorité le `task_id` ou `operation_name` renvoyé avant d'appeler l'interface de consultation.
+- Si l'interface prend en charge plusieurs modes de paramètres, utilisez d'abord l'exemple de corps de requête de la documentation pour valider les paramètres minimaux viables.
+
+## Utilisation avec du code généré par l'IA
+
+Il est recommandé d'effectuer d'abord une validation de requête minimale viable sur la page de documentation, puis de cliquer sur « Copier la page » pour envoyer l'intégralité du contenu à l'IA afin de générer le code d'appel officiel.
+De cette façon, l'IA reçoit le contenu de la page d'interface que vous avez manuellement confirmé, ce qui réduit les risques d'erreurs sur le chemin, la méthode d'authentification et les modes de paramètres.

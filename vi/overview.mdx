@@ -1,6 +1,72 @@
 ---
-title: "Overview"
-description: "Unified AI API gateway"
+title: "Tổng quan dịch vụ"
+description: "Tài liệu tiếng Trung hiện tại dựa trên các giao diện công khai thực tế của `new-api`, đồng thời giữ lại phần tổng quan sản phẩm dễ hiểu hơn, giúp bạn nắm bắt phạm vi năng lực trước khi đi vào các trang giao diện cụ thể."
 ---
 
-Overseas API provides unified access to chat, image, video, and multimodal endpoints.
+<CardGroup cols={2}>
+  <Card title="Truy cập thống nhất" icon="code">
+    Ưu tiên cung cấp định dạng tương thích OpenAI, các ứng dụng hiện có dựa trên OpenAI SDK hoặc HTTP thường chỉ cần thay thế Base URL và Key API.
+  </Card>
+  <Card title="Đa giao thức video" icon="film">
+    Đồng thời công khai `/v1/videos`, định dạng gốc Seedance, định dạng gốc Veo3, cũng như một số giao diện video dành riêng cho mô hình.
+  </Card>
+  <Card title="Khả năng xử lý hình ảnh" icon="image">
+    Cung cấp giao diện tạo và chỉnh sửa hình ảnh OpenAI, đồng thời giữ lại các định dạng dành riêng cho mô hình như tạo hình ảnh Gemini.
+  </Card>
+  <Card title="Truy vấn tác vụ dài" icon="clock">
+    Các tác vụ video và một số tác vụ tạo nội dung sử dụng thống nhất ID tác vụ hoặc operation name để truy vấn, phù hợp cho việc tích hợp bất đồng bộ và kiểm tra lại.
+  </Card>
+</CardGroup>
+
+## Tổng quan về các khả năng công khai hiện tại
+
+### Văn bản và Phản hồi
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
+
+### Hình ảnh
+- `POST /v1/images/generations`
+- `POST /v1/images/edits`
+- `POST /v1beta/models/{model}:generateContent`
+
+### Video
+- `POST /v1/videos`
+- `GET /v1/videos/{task_id}`
+- `POST /api/v3/contents/generations/tasks`
+- `GET /api/v3/contents/generations/tasks/{task_id}`
+- `POST /v1beta/models/{model}:predictLongRunning`
+- `GET /v1beta/{operation_name}`
+- Giao diện video dành riêng cho mô hình như Kling
+
+## Các dòng mô hình công khai hiện tại
+### Nano Banana
+- Tổng cộng 7 mô hình công khai
+- `nano-banana`、`nano-banana-2`、`nano-banana-2-2k`、`nano-banana-2-4k`、`nano-banana-pro`、`nano-banana-pro-2k`、`nano-banana-pro-4k`
+
+### Sora
+- Tổng cộng 2 mô hình công khai
+- `sora-2`、`sora-2-pro`
+
+### Veo
+- Tổng cộng 12 mô hình công khai
+- `veo3`、`veo3-fast`、`veo3-fast-frames`、`veo3-frames`、`veo3-pro`、`veo3-pro-frames`、`veo3.1`、`veo3.1-4k`、`veo3.1-components`、`veo3.1-fast`、`veo3.1-pro`、`veo3.1-pro-4k`
+
+### Grok
+- Tổng cộng 1 mô hình công khai
+- `grok-video-3`
+
+### Seedance
+- Tổng cộng 7 mô hình công khai
+- `doubao-seedance-1-0-lite-i2v-250428`、`doubao-seedance-1-0-lite-t2v-250428`、`doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-pro-fast-251015`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128`
+
+### Kling
+- Tổng cộng 2 mô hình công khai
+- `kling-video`、`kling-*`
+
+### Hailuo
+- Tổng cộng 1 mô hình công khai
+- `hailuo*`
+
+### Vidu
+- Tổng cộng 1 mô hình công khai
+- `vidu*`

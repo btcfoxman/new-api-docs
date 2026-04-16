@@ -1,6 +1,50 @@
 ---
-title: "Multi-format Adaption"
-description: "OpenAI/Claude/Gemini compatibility"
+title: "Hướng dẫn truy cập đa giao thức và đa định dạng"
+description: "Dự án hiện tại không chỉ có một giao thức duy nhất. Để giảm chi phí tích hợp, tài liệu công khai ưu tiên cung cấp định dạng thống nhất; đồng thời vẫn giữ lại một số ít định dạng gốc của mô hình hoặc định dạng chuyên dụng."
 ---
 
-Keep a unified payload in your app and map protocol differences in the gateway.
+## 1. Định dạng tương thích OpenAI
+
+Phù hợp với hầu hết các kịch bản tích hợp mới, nên ưu tiên cân nhắc:
+
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
+- `POST /v1/images/generations`
+- `POST /v1/images/edits`
+- `POST /v1/videos`
+- `GET /v1/videos/{task_id}`
+
+Đặc điểm:
+- Hệ sinh thái SDK trưởng thành
+- Phong cách các trường thống nhất
+- Phù hợp để chuyển đổi giữa nhiều mô hình
+
+## 2. Định dạng gốc của mô hình
+
+Khi bản thân mô hình yêu cầu các trường chuyên dụng, cấu trúc nhiệm vụ chuyên dụng hoặc giao thức truy vấn gốc, hãy công khai giao diện gốc:
+
+- Seedance：`/api/v3/contents/generations/tasks`
+- Veo3: `/v1beta/models/{model}:predictLongRunning` và `/v1beta/{operation_name}`
+- Gemini tạo hình ảnh: `/v1beta/models/{model}:generateContent`
+
+Phù hợp cho:
+- Có nhiều trường đặc thù của mô hình
+- Cần cấu trúc body request gốc
+- Cần duy trì sự gần gũi với định dạng chính thức của thượng nguồn (upstream)
+
+## 3. Giao diện video chuyên dụng của mô hình
+
+Hiện tại vẫn công khai một số ít giao diện chuyên dụng của mô hình, ví dụ:
+
+- `POST /kling/v1/videos/text2video`
+- `POST /kling/v1/videos/image2video`
+Phù hợp cho:
+- Đã tích hợp dựa trên giao thức chuyên dụng của mô hình tương ứng
+- Cần sử dụng chế độ tham số chuyên dụng của mô hình đó
+
+## 4. Gợi ý lựa chọn
+
+1. Các dự án mới ưu tiên sử dụng định dạng tương thích OpenAI.
+2. Nếu định dạng tương thích không thể bao quát các trường đặc thù của mô hình, hãy chuyển sang định dạng gốc.
+3. Giao diện nhiệm vụ dài nên phân biệt rõ ràng giữa "Giao diện tạo" và "Giao diện truy vấn
+4. Khi một mô hình có nhiều định dạng gọi, hãy căn cứ vào các trường được hỗ trợ trên trang giao diện tương ứng, không dùng lẫn lộn body request.

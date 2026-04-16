@@ -1,6 +1,50 @@
 ---
-title: "Multi-format Adaption"
-description: "OpenAI/Claude/Gemini compatibility"
+title: "マルチプロトコルおよびマルチフォーマット対応に関する説明"
+description: "現在のプロジェクトは単一のプロトコルのみに対応しているわけではありません。導入コストを抑えるため、公開ドキュメントでは統一フォーマットを優先的に提供していますが、一部のモデル固有のネイティブ形式や専用フォーマットも併せて維持しています。"
 ---
 
-Keep a unified payload in your app and map protocol differences in the gateway.
+## 1. OpenAI 互換形式
+
+ほとんどの新規導入シナリオに適しており、優先的に検討すべきもの：
+
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
+- `POST /v1/images/generations`
+- `POST /v1/images/edits`
+- `POST /v1/videos`
+- `GET /v1/videos/{task_id}`
+
+特徴：
+- SDK エコシステムが成熟している
+- フィールド形式が統一されている
+- マルチモデルの切り替えに適している
+
+## 2. モデルネイティブ形式
+
+モデル自体に専用フィールド、専用タスク構造、またはネイティブクエリプロトコルが必要な場合は、ネイティブインターフェースを公開します：
+
+- Seedance：`/api/v3/contents/generations/tasks`
+- Veo3：`/v1beta/models/{model}:predictLongRunning` および `/v1beta/{operation_name}`
+- Gemini 画像生成：`/v1beta/models/{model}:generateContent`
+
+以下の場合に適しています：
+- モデル固有のフィールドが多い
+- ネイティブなリクエストボディ構造が必要
+- アップストリームの公式形式に近い状態を維持する必要がある
+
+## 3. モデル専用ビデオインターフェース
+
+現在、以下のような少数のモデル専用インターフェースも公開されています：
+
+- `POST /kling/v1/videos/text2video`
+- `POST /kling/v1/videos/image2video`
+以下の場合に適しています：
+- すでに対応するモデル専用プロトコルに基づいて統合されている
+- そのモデル専用のパラメータモードを使用する必要がある
+
+## 4. 選択のアドバイス
+
+1. 新規プロジェクトでは OpenAI 互換形式を優先して使用してください。
+2. 互換形式でモデル固有のフィールドをカバーできない場合に限り、ネイティブ形式に切り替えてください。
+3. 長期タスクインターフェースでは、「作成インターフェース」と「クエリインターフェース」を明確に区別し、`task_id` または `operation_name` を保存してください。
+4. 同一モデルに複数の呼び出し形式が存在する場合、対応するインターフェースページのサポートフィールドを基準とし、リクエストボディを混用しないでください。

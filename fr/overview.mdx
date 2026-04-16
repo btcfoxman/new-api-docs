@@ -1,6 +1,72 @@
 ---
-title: "Overview"
-description: "Unified AI API gateway"
+title: "Présentation du service"
+description: "La documentation actuelle en chinois se base sur les interfaces publiques réelles de `new-api`, tout en conservant une présentation orientée produit plus accessible. Cela permet de comprendre l'étendue des fonctionnalités avant de consulter les pages d'API spécifiques."
 ---
 
-Overseas API provides unified access to chat, image, video, and multimodal endpoints.
+<CardGroup cols={2}>
+  <Card title="Accès unifié" icon="code">
+    Fournissez en priorité des formats compatibles OpenAI ; les applications existantes basées sur OpenAI SDK ou HTTP n'ont généralement qu'à remplacer la clé Base URL et API.
+  </Card>
+  <Card title="Protocoles vidéo multiples" icon="film">
+    Expose simultanément `/v1/videos`, les formats natifs Seedance, les formats natifs Veo3, ainsi que certaines interfaces vidéo spécifiques aux modèles.
+  </Card>
+  <Card title="Capacités d'imagerie" icon="image">
+    Fournit des interfaces de génération et d'édition d'images OpenAI, tout en conservant les formats spécifiques aux modèles tels que la génération d'images Gemini.
+  </Card>
+  <Card title="Requête de tâches longues" icon="clock">
+    La vidéo et certaines tâches de génération utilisent uniformément l'ID de tâche ou l'operation name pour les requêtes, ce qui est idéal pour l'intégration asynchrone et le suivi.
+  </Card>
+</CardGroup>
+
+## Aperçu des capacités publiques actuelles
+
+### Texte et réponse
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
+
+### Image
+- `POST /v1/images/generations`
+- `POST /v1/images/edits`
+- `POST /v1beta/models/{model}:generateContent`
+
+### Vidéo
+- `POST /v1/videos`
+- `GET /v1/videos/{task_id}`
+- `POST /api/v3/contents/generations/tasks`
+- `GET /api/v3/contents/generations/tasks/{task_id}`
+- `POST /v1beta/models/{model}:predictLongRunning`
+- `GET /v1beta/{operation_name}`
+- Interfaces vidéo spécifiques aux modèles tels que Kling
+
+## Familles de modèles publics actuels
+### Nano Banana
+- 7 modèles publics au total
+- `nano-banana`、`nano-banana-2`、`nano-banana-2-2k`、`nano-banana-2-4k`、`nano-banana-pro`、`nano-banana-pro-2k`、`nano-banana-pro-4k`
+
+### Sora
+- 2 modèles publics au total
+- `sora-2`、`sora-2-pro`
+
+### Veo
+- 12 modèles publics au total
+- `veo3`、`veo3-fast`、`veo3-fast-frames`、`veo3-frames`、`veo3-pro`、`veo3-pro-frames`、`veo3.1`、`veo3.1-4k`、`veo3.1-components`、`veo3.1-fast`、`veo3.1-pro`、`veo3.1-pro-4k`
+
+### Grok
+- 1 modèle public au total
+- `grok-video-3`
+
+### Seedance
+- 7 modèles publics au total
+- `doubao-seedance-1-0-lite-i2v-250428`、`doubao-seedance-1-0-lite-t2v-250428`、`doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-pro-fast-251015`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128`
+
+### Kling
+- 2 modèles publics au total
+- `kling-video`、`kling-*`
+
+### Hailuo
+- 1 modèle public au total
+- `hailuo*`
+
+### Vidu
+- 1 modèle public au total
+- `vidu*`

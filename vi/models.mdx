@@ -1,10 +1,170 @@
 ---
-title: "Models"
-description: "Public model ID examples"
+title: "Ma trận mô hình và năng lực"
+description: "Trang này hiển thị các mô hình hiện có trong các giao diện công khai của `new-api`, không phải là danh sách ví dụ tĩnh."
 ---
 
-- `gpt-4o`
-- `claude-sonnet-4-20250514`
-- `qwen-image`
-- `sora`
-- `kling-v1`
+## Nhóm mô hình
+
+### Nano Banana
+
+Chủ yếu được sử dụng để tạo và chỉnh sửa hình ảnh, đồng thời hỗ trợ truy cập định dạng gốc của Gemini.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `nano-banana` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+
+
+### Sora
+
+Ưu tiên sử dụng định dạng tương thích video `/v1/videos` OpenAI, phù hợp để tích hợp video thống nhất.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `sora-2` | `/v1/videos` |
+
+| `sora-2-pro` | `/v1/videos` |
+
+
+
+### Veo
+
+Hỗ trợ song song định dạng tương thích `/v1/videos` và định dạng gốc `/v1beta/...`.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `veo3` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-4k` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-components` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro-4k` | `/v1/videos` / `/v1beta/...` |
+
+
+
+### Grok
+
+Hiện tại các mô hình tạo video đã được công khai, khuyến nghị ưu tiên truy cập thông qua giao diện video thống nhất.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `grok-video-3` | `/v1/videos` |
+
+
+
+### Seedance
+
+Hỗ trợ định dạng gốc `/api/v3/contents/generations/tasks`, đồng thời hỗ trợ truy cập tương thích thông qua `/v1/videos`.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `doubao-seedance-1-0-lite-i2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-lite-t2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-250528` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-fast-251015` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-5-pro-251215` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-fast-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+
+
+### Kling
+
+Công khai đồng thời giao diện chuyên dụng cho mô hình và cổng video thống nhất.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `kling-video` | `/kling/v1/...` / `/v1/videos` |
+
+| `kling-*` | `/kling/v1/...` / `/v1/videos` |
+
+
+
+### Hailuo
+
+Sử dụng khả năng video thống nhất để truy cập, phù hợp cho kịch bản tạo video từ văn bản (text-to-video).
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `hailuo*` | `/v1/videos` |
+
+
+
+### Vidu
+
+Chủ yếu dựa trên mô tả khả năng video thống nhất, phù hợp cho các kịch bản ảnh đơn, khung hình đầu/cuối và nhiều ảnh tham chiếu.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `vidu*` | `/v1/videos` |
+
+
+
+Để biết thông tin chi phí, vui lòng truy cập: [Trang tính phí](https://aiid.edu.kg/pricing).

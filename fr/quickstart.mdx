@@ -1,8 +1,68 @@
 ---
-title: "Quickstart"
-description: "Integrate in 5 minutes"
+title: "Démarrage rapide"
+description: "Obtenez la clé API, remplacez Base URL et lancez votre première requête."
 ---
 
-1. Create API key in [Console](https://aiid.edu.kg/console).
-2. Set Base URL: `https://api.aiid.edu.kg/v1`.
-3. Send your first request.
+## Étape 1 : Obtenir la clé API
+
+1. Connectez-vous à la [Console API Chuhaiying](https://aiid.edu.kg/console)
+2. Accédez à la page des jetons pour créer une clé API
+3. Utilisez-la ensuite via `Authorization: Bearer YOUR_API_KEY`
+
+## Étape 2 : Configurer Base URL
+
+```bash
+API_BASE_URL="https://api.aiid.edu.kg/v1"
+```
+
+Si la configuration par défaut de votre client actuel est :
+
+- `https://api.openai.com`
+- `https://api.openai.com/v1`
+
+Remplacez-les respectivement par :
+
+- `https://api.aiid.edu.kg`
+- `https://api.aiid.edu.kg/v1`
+
+## Étape 3 : Lancer la première requête
+
+### Python
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.aiid.edu.kg/v1",
+)
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "你好，请给我一个快速接入建议"}],
+)
+
+print(response.choices[0].message.content)
+```
+
+### cURL
+
+```bash
+curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer YOUR_API_KEY"   -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "Hello world!"}]
+  }'
+```
+
+## Conseils d'intégration
+
+- Pour les nouveaux projets, commencez prioritairement par l'interface compatible OpenAI
+- Pour l'édition d'images, veillez à respecter les exigences relatives à `multipart/form-data` et aux champs de fichiers
+- Pour l'interface des tâches vidéo, enregistrez d'abord le `task_id` ou le `operation_name` avant d'effectuer une requête
+- En cas d'échec du débogage, vérifiez en priorité le code d'état HTTP, `error.code` et `error.message`
+
+## Étapes suivantes
+
+- Débogage en ligne : voir `fr/online-debug%60
+- Génération de code par IA : voir `fr/ai-codegen%60
+- Groupes de modèles et capacités : voir `fr/models%60

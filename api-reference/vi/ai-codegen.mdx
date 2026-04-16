@@ -1,0 +1,25 @@
+---
+title: "Mã gọi API do AI tạo"
+description: "Trang này hướng dẫn cách sử dụng trực tiếp tính năng \"Sao chép trang\" trên trang tài liệu để AI tạo mã gọi (calling code) có thể chạy được."
+---
+
+## Cách làm khuyến nghị
+
+1. Mở trang API mục tiêu, nhấn trực tiếp vào "Sao chép trang"
+2. Gửi toàn bộ nội dung trang đã sao chép cho AI
+3. Cho AI biết ngôn ngữ bạn muốn sử dụng, các tham số nghiệp vụ và cách xử lý kết quả trả về
+4. Yêu cầu AI xuất mã yêu cầu hoàn chỉnh, xử lý lỗi và logic truy vấn tác vụ bất đồng bộ (nếu API có liên quan đến truy vấn tác vụ)
+5. Quay lại trang tài liệu hoặc trang kiểm thử để đối chiếu xem tên trường, đường dẫn và phương thức xác thực có khớp hay không
+
+## Gợi ý Prompt
+
+```text
+以下内容是我从 API 文档页直接复制的完整页面内容。
+请基于这些内容生成可运行的调用代码。
+要求：
+1. 使用 Bearer Token 鉴权
+2. Base URL 使用 https://api.aiid.edu.kg/v1
+3. 保留完整请求体和错误处理
+4. 用注释标明需要替换的 model、API Key 和业务参数
+5. 如果这是长任务接口，请同时生成任务查询示例
+```

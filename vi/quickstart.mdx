@@ -1,8 +1,68 @@
 ---
-title: "Quickstart"
-description: "Integrate in 5 minutes"
+title: "Bắt đầu nhanh"
+description: "Lấy API Key, thay thế Base URL và thực hiện yêu cầu đầu tiên."
 ---
 
-1. Create API key in [Console](https://aiid.edu.kg/console).
-2. Set Base URL: `https://api.aiid.edu.kg/v1`.
-3. Send your first request.
+## Bước 1: Lấy API Key
+
+1. Đăng nhập vào [Console API Chuhaiying](https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D)
+2. Truy cập trang Token để tạo API Key
+3. Sử dụng thông qua https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D trong các bước tiếp theo
+
+## Bước 2: Cấu hình Base URL
+
+```bash
+API_BASE_URL="https://api.aiid.edu.kg/v1"
+```
+
+Nếu client hiện tại mặc định là:
+
+- `https://api.openai.com`
+- `https://api.openai.com/v1`
+
+Thì hãy thay thế tương ứng bằng:
+
+- `https://api.aiid.edu.kg`
+- `https://api.aiid.edu.kg/v1`
+
+## Bước 3: Gửi yêu cầu đầu tiên
+
+### Python
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.aiid.edu.kg/v1",
+)
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "你好，请给我一个快速接入建议"}],
+)
+
+print(response.choices[0].message.content)
+```
+
+### cURL
+
+```bash
+curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer YOUR_API_KEY"   -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "Hello world!"}]
+  }'
+```
+
+## Kiến nghị tích hợp
+
+- Các dự án mới nên ưu tiên bắt đầu từ giao diện tương thích OpenAI
+- Chỉnh sửa hình ảnh cần lưu ý các yêu cầu về https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D và trường tệp
+- Giao diện tác vụ video nên lưu https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D hoặc `operation_name` trước khi truy vấn
+- Khi gỡ lỗi thất bại, ưu tiên kiểm tra mã trạng thái HTTP, https://www.google.com/search?q=%5B%5BKEEP_0%5D%5D và `error.message`
+
+## Bước tiếp theo
+
+- Gỡ lỗi trực tuyến: Xem  `vi/online-debug%60
+- AI tạo mã gọi lệnh: Xem  `vi/ai-codegen%60
+- Nhóm mô hình và năng lực: Xem  `vi/models%60

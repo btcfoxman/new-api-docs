@@ -1,0 +1,28 @@
+---
+title: "Gỡ lỗi trực tuyến"
+description: "Trang này hướng dẫn cách gỡ lỗi (debug) API trực tiếp trên trang tài liệu thay vì phải viết mã nghiệp vụ trước."
+---
+
+## Cách sử dụng
+
+1. Mở trang API mục tiêu và nhấp vào `试一试`
+2. Điền `api_key`
+3. Điền tham số đường dẫn (path parameters), tham số truy vấn (query parameters) hoặc thân yêu cầu (request body) theo yêu cầu của API
+4. Gửi yêu cầu và kiểm tra kết quả trả về
+
+## Trọng tâm gỡ lỗi
+
+- Xác thực yêu cầu tối thiểu khả dụng trước
+- Đối với API tác vụ dài, ưu tiên xác nhận `task_id` hoặc `operation_name` trong phản hồi khởi tạo
+- Đối với API tải lên tệp, phải xác nhận `multipart/form-data` và tên trường tệp là chính xác
+- Nếu thất bại, trước tiên hãy kiểm tra mã trạng thái HTTP, `error.code`, `error.message`
+
+## Phối hợp với mã do AI tạo
+
+Nên xác thực yêu cầu tối thiểu khả dụng trên trang API hiện tại trước, sau đó sử dụng "Sao chép trang" để gửi toàn bộ nội dung trang cho AI nhằm tạo mã.
+
+Bằng cách này, bạn có thể xác nhận trước:
+
+- Đường dẫn và phương thức xác thực là chính xác
+- Chế độ tham số hiện tại có thể thực thi được
+- Cần lưu lại mã định danh truy vấn nào cho các API tác vụ bất đồng bộ

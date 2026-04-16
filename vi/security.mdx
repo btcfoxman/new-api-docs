@@ -1,6 +1,31 @@
 ---
-title: "Authentication & Security"
-description: "API key usage guidance"
+title: "Xác thực và Bảo mật"
+description: "Bảo vệ mã thông báo API và an toàn dữ liệu của bạn"
 ---
 
-Use `Authorization: Bearer YOUR_API_KEY` for all requests.
+## Xác thực mã thông báo (Authentication)
+
+Xuất hải doanh API sử dụng cơ chế Bearer Token tiêu chuẩn để xác thực danh tính.
+
+### Định dạng Header
+```text
+Authorization: Bearer YOUR_API_KEY
+```
+
+## Quy định an toàn mã thông báo
+
+### 1. Nguyên tắc đặc quyền tối thiểu
+Nếu bạn phân phối Key API cho đối tác bên ngoài, vui lòng giới hạn các mục cụ thể cho Key đó trong bảng điều khiển:
+- **Phạm vi mô hình**: Chỉ cho phép gọi các mô hình cụ thể.
+- **Thời gian hết hạn**: Thiết lập thời gian hiệu lực ngắn để giảm thiểu rủi ro.
+- **Danh sách trắng IP**: Giới hạn địa chỉ IP của bên gọi.
+
+### 2. Nghiêm cấm mã hóa cứng ở phía máy khách
+Tuyệt đối không viết trực tiếp mã thông báo `sk-` vào mã JavaScript phía frontend hoặc ứng dụng di động. Tất cả các lệnh gọi API nên được chuyển tiếp qua máy chủ backend hoặc tạo mã thông báo ngắn hạn thông qua hệ thống phân phối an toàn của chúng tôi.
+
+### 3. Quyền riêng tư dữ liệu
+Chúng tôi không lưu trữ nội dung hội thoại của bạn. API chỉ đóng vai trò là một nút trung chuyển hiệu suất cao, nội dung hội thoại sẽ được luân chuyển trong bộ nhớ và truyền trực tiếp đến nhà cung cấp dịch vụ lớp dưới.
+
+## Giám sát và Kiểm tra
+
+Bạn có thể giám sát chi tiết từng lệnh gọi API trong thời gian thực tại trang "Nhật ký" của bảng điều khiển. Nếu có thắc mắc về bảo mật, vui lòng gửi email đến support@aiid.edu.kg.
