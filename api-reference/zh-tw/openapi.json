@@ -18,7 +18,7 @@
         "description": "獲取目前可用的模型列表。\n\n根據請求標頭自動辨識傳回格式：\n- 包含 `x-api-key` 與 `anthropic-version` 標頭時傳回 Anthropic 格式\n- 包含 `x-goog-api-key` 標頭或 `key` 查詢參數時傳回 Gemini 格式\n- 其他情況傳回 OpenAI 格式",
         "operationId": "listModels",
         "tags": [
-          "取得模型清單"
+          "獲取模型列表"
         ],
         "parameters": [
           {
@@ -104,7 +104,7 @@
         "description": "以 Gemini API 格式傳回可用模型清單",
         "operationId": "listModelsGemini",
         "tags": [
-          "取得模型清單"
+          "獲取模型列表"
         ],
         "parameters": [],
         "responses": {
@@ -1970,7 +1970,7 @@
         "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n該介面專題頁僅用於說明 Veo 原生格式與目前閘道支援狀態。\n\n目前 Veo 系列對外請使用 OpenAI Sora 相容模式：`POST /v1/videos`。\n\nGoogle 原生模式路徑預留為：`POST /v1beta/models/{model}:predictLongRunning`。目前閘道尚未接通 Veo 原生任務分發鏈路，因此按原生 `instances/parameters` 請求體呼叫暫不支援。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "影片生成/Veo3格式"
+          "影片生成/Veo3 格式"
         ],
         "parameters": [
           {
@@ -2144,7 +2144,7 @@
         "description": "該系列支援 OpenAI 影片生成格式（詳見連結 [影片生成/Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n本介面專題頁面僅用於說明 Veo 原生查詢協定。\n\n目前的 Veo 系列請改用 `/v1/videos` 統一介面進行建立與查詢。\n\n下述 `operation_name` 查詢結構僅作為預留協定說明保留，暫不支援實際呼叫。",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "影片生成/Veo3格式"
+          "影片生成/Veo3 格式"
         ],
         "parameters": [
           {

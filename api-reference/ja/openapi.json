@@ -377,7 +377,7 @@
         "description": "OpenAI Dall-E形式の画像生成APIです。",
         "operationId": "createImageGeneration",
         "tags": [
-          "画像生成 / OpenAI Dall-E形式"
+          "画像生成/OpenAI Dall-E形式"
         ],
         "parameters": [],
         "requestBody": {
@@ -484,7 +484,7 @@
         "description": "OpenAI Dall-E形式の画像編集APIです。",
         "operationId": "createImageEdit",
         "tags": [
-          "画像生成 / OpenAI Dall-E形式"
+          "画像生成/OpenAI Dall-E形式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1588,7 +1588,7 @@
         "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意、アドバンスドモードにおけるマルチメディア入力配列。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` 内のメディアフィールドは、URL文字列の直接入力と、`{ \"url\": \"https://example.com/ref.mp4\" }` のようなオブジェクト形式の両方をサポートしています。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "動画生成/Seedance火山方舟"
+          "動画生成/Seedance火山方舟（Volcengine Ark）"
         ],
         "requestBody": {
           "required": true,
@@ -1872,7 +1872,7 @@
         "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意、アドバンスドモードにおけるマルチメディア入力配列。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` 内のメディアフィールドは、URL文字列の直接入力と、`{ \"url\": \"https://example.com/ref.mp4\" }` のようなオブジェクト形式の両方をサポートしています。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "動画生成/Seedance火山方舟"
+          "動画生成/Seedance火山方舟（Volcengine Ark）"
         ],
         "parameters": [
           {
