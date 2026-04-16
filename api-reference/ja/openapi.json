@@ -245,10 +245,10 @@
       "post": {
         "summary": "Gemini 画像(Nano Banana)",
         "deprecated": false,
-        "description": "Gemini 画像生成。\n\nNano BananaシリーズはOpenAI Dall-E形式をサポートしています（詳細はリンク［[画像生成 OpenAI Dall-E形式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90%20OpenAI%20Dall-E%E6%A0%BC%E5%BC%8F)］をご覧ください）。",
+        "description": "Gemini 画像生成。\n\nNano BananaシリーズはOpenAI Dall-E形式をサポートしています（詳細は [画像生成OpenAI DALL-E形式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F) を参照してください）。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
-          "画像生成 Gemini形式"
+          "画像生成Gemini形式"
         ],
         "parameters": [
           {
@@ -377,7 +377,7 @@
         "description": "OpenAI Dall-E形式の画像生成APIです。",
         "operationId": "createImageGeneration",
         "tags": [
-          "画像生成 OpenAI Dall-E形式"
+          "画像生成OpenAI DALL-E形式"
         ],
         "parameters": [],
         "requestBody": {
@@ -484,7 +484,7 @@
         "description": "OpenAI Dall-E形式の画像編集APIです。",
         "operationId": "createImageEdit",
         "tags": [
-          "画像生成 OpenAI Dall-E形式"
+          "画像生成OpenAI DALL-E形式"
         ],
         "parameters": [],
         "requestBody": {
@@ -575,7 +575,7 @@
         "description": "OpenAI Sora 互換形式の動画生成APIです。テキストからの動画生成、および画像・動画リファレンス生成モードをサポートしています。\n\n- `POST /v1/videos`：動画タスクの作成\n- `GET /v1/videos/{video_id}`：タスクステータスの照会\n- `GET /v1/videos/{video_id}/content`：動画バイナリコンテンツの取得（ダウンロード）\n\n現在は外部に提供されていません：\n- `GET /v1/videos`：タスク一覧\n- `POST /v1/videos/{video_id}/remix`：動画の二次編集 / リミックス\n\n標準認証ヘッダー：\n- `Content-Type: application/json`（タスク作成時）\n\n1. `POST /v1/videos` を呼び出してタスクを作成し、`id` を取得します。\n2. `status=completed` または `failed` になるまで `GET /v1/videos/{id}` をポーリングします。\n3. `completed` 後は、レスポンス内の `video_url` を優先的に使用してください。ゲートウェイ経由の統一ダウンロードが必要な場合は `GET /v1/videos/{id}/content` を呼び出すことができます。\n\n## 3.1 コアパラメータ\n\n- `model: string`（必須）\n- 説明：呼び出す動画モデルの名前。\n- 例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推奨）\n- 説明：動画生成のメイン説明文。`content` を使用する場合も必須であり、空にすることはできません。\n- 例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（オプション）\n- 説明：目標の長さ。`duration` との選択式で、両方指定された場合は通常ゲートウェイの解析結果が優先されます。\n- 例：`8`\n\n- `size: string`（オプション）\n- 説明：出力解像度。一般的には `宽x高` が使用されます。\n- 例：`720x1280`、`1280x720`\n\n- `mode: string`（オプション）\n- 説明：生成モード。指定しない場合のデフォルトは `t2v` です。モードによって素材パラメータの要件が異なります。\n- 例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 共通互換パラメータ\n\n- `aspect_ratio` または `ratio`：アスペクト比。\n- `duration`：再生時間のエイリアス（`seconds` とのいずれか一方を選択）。\n- `quality` または `resolution`：解像度関連パラメータ。\n- `fps`：フレームレート。\n- `function_mode`：オプション機能モード。特定の動作をトリガーするために使用されます（例：`omni_reference` は万能参照セマンティクスを表します）。\n\n## 3.3 参照素材パラメータ\n\n- `input_reference`：標準参照入力オブジェクト。\n- 説明：文字列 URL 形式のみをサポートし、オブジェクト形式はサポートしていません。\n- 正しい例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 誤った例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：画像参照。\n- 説明：`image_url` は通常、単一の画像に使用されます。`image_urls` は複数の画像または万能参照に使用されます。\n\n- `end_image_url` / `last_image_url`：最終フレーム参照。\n- 説明：通常 `mode=i2v_first_last` と組み合わせて、動画の終了画面を表します。\n\n- `video_urls`：動画参照リスト。\n- 説明：通常 `reference_material` または `content` の万能参照シナリオで使用されます。\n\n- `audio_urls`：音声参照リスト。\n- 説明：BGMやナレーションのスタイル参照に使用されます（有効かどうかはモデルの能力に依存します）。\n\n- `reference_images`：マルチ画像参照。\n- 説明：通常、マルチフレーム/マルチ画像参照モードで使用されます。\n\n説明：モデルによって素材フィールドの要件が異なるため、以下の「モードと最小入力パラメータ」に従ってパラメータを渡すことを推奨します。\n\n## 3.4 content 高度なモード（複雑な参照シナリオに推奨）\n\n`content` 配列を直接渡すことが可能です：\n- `type=text`：テキスト指示。\n- `type=image_url|video_url|audio_url`：メディア入力。\n- テキスト内で `@名称` を使用して素材を参照するための `name` をサポートしています。\n\n必須制約：\n- `content` を使用する場合でも、`prompt` は必須であり、空にすることはできません。\n\n互換性のある記述方法：\n- `image_url/video_url/audio_url` は文字列、またはオブジェクト `{ \"url\": \"https://...\" }` として指定可能です。\n- `role` では `material` を使用でき、`reference_image/reference_video/reference_audio` にも互換性があります。\n\n同時に含めることが可能な項目：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n補足説明：\n- `generate_audio=true`：モデルに音声の同時生成をリクエストします（この機能をサポートするモデルでのみ有効）。\n- `watermark=false`：ウォーターマークのオフをリクエストします（実際に有効になるかは、モデルおよびチャネルのポリシーに依存します）。\n- `name`：素材のエイリアス。モデルが素材を正確に関連付けられるよう、`text` 内の `@名称` と一致させることを推奨します。\n\nモデルファミリーによってパラメータのサポート状況が大きく異なるため、下表に従ってパラメータを選択することを推奨します：\n\n| モデルファミリー | 主なモデル名（例） | 推奨される最小入力パラメータ | よく使われる拡張パラメータ | 注意事項 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | `mode` に対して最も敏感です。すべてのバージョンが `reference_material` をサポートしているわけではありません。 |\n| Sora 汎用 | `sora-2` `sora-2-pro` および `*-stable/*-official` | `model + prompt` | `seconds/size`。`input_reference`（文字列 URL）の追加を推奨 | マルチチャネルのフォールバック時、画像の要否が異なる場合があるため、成功率を高めるために参考画像の用意を推奨します。 |\n| Sora 長さプリセット | `sora2-landscape-10s` `sora2-pro-portrait-25s` など | `model + prompt` | `image_url/input_reference` | 長さとアスペクト比は通常モデル名によって決定され、`seconds/ratio` はモデルが許可する場合のみ有効になります。 |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` タイプのモデルは通常、参考画像や参考素材を必要とします。`t2v` タイプは通常テキストのみで可能です。 |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v` および `image/image_list` などの公式フィールド | 公式パスのセマンティクス（text2video/image2video/multi-image2video）に対応し `/v1/videos` に統合済みです。動画の延長機能は提供していません。 |\n| 統合拡張モデル | `happyhorse*` `grok-imagine-1.0-video*` など | `model + prompt` | `seconds/size/content` | 具体的な対応フィールドはモデルとチャネルの実装に依存します。標準フィールドを優先し、不足している場合に `content` を使用することを推奨します。 |\n\n説明：\n1. 固定エイリアスモデル（`*-stable`、`*-official` など）を使用する場合、基盤側でチャネルが自動的に切り替わることがあるため、可能な限り「マルチチャネル互換パラメータ」（`prompt + model + seconds/duration + size/ratio + 必要参考图`）を渡してください。\n2. 複雑なマルチ素材シーン（画像+動画+音声+@名称）では `content` を優先して使用してください。互換性が最も高くなります。\n3. モデルドキュメントで特定のフィールドのサポートが明記されていない場合は、まず「最小入力パラメータ」で疎通を確認してから、段階的に拡張パラメータを追加してください。\n\n### 4.1 Kling 公式モードの補足\n\n- `mode=t2v`：テキストから動画生成（Text-to-Video）\n- `mode=i2v`：画像から動画生成（`image` または `image_url` が必要）\n- `mode=multi_i2v`：複数画像リファレンス（`image_list` または複数の `image_urls` が必要）\n- `mode=extend`：未対応（動画の延長は現在 `/v1/videos` の外部提供を行っていません）\n\n一般的な公式パラメータは、`/v1/videos` リクエストボディに含めて直接透過的に渡すことができます：\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok 動画モードの補足\n\n推奨パラメータ：\n- `model`：例 `grok-video-3`\n- `prompt`\n- `ratio` または `aspect_ratio`\n- `resolution` または `size`\n- `seconds` または `duration`\n- `image` / `image_url` / `input_reference`（単一画像リファレンス）\n- `reference_images` / `reference_image_urls`（複数画像リファレンス、公式の `reference-to-video` セマンティクス）\n- `mode`（任意）：`image-to-video`、`reference-to-video`\n\n制約事項：\n- `mode=edit-video` / `mode=extend-video` は未対応です（動画編集および延長機能は現在外部に公開されていません）。\n- `image/input_reference` と `reference_images` を同時に渡すことはできません。\n\n- `mode=t2v`\n- 最小入力パラメータ：`model + prompt`\n\n- `mode=i2v`（`i2v_first` と同等）\n- 最小入力パラメータ：`model + prompt + image_url`（または `input_reference` 文字列 URL）\n\n- `mode=i2v_first_last`\n- 最小入力パラメータ：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入力パラメータ：`model + prompt + reference_images`（通常 1〜4枚）\n\n- `mode=reference_material`\n- 最小入力パラメータ：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 複雑なシナリオでは `content + function_mode=omni_reference` の使用を推奨します\n- 説明：`function_mode=omni_reference` を渡す際、`mode=reference_material` を明示的に渡さなくても、万能リファレンス（all-around reference）のセマンティクスとして処理されます。",
         "operationId": "createVideo",
         "tags": [
-          "视频生成 Sora兼容格式"
+          "動画生成Sora互換フォーマット"
         ],
         "parameters": [],
         "requestBody": {
@@ -1173,7 +1173,7 @@
         "description": "OpenAI 互換のビデオタスクステータス照会インターフェースです。\n\nビデオタスクの詳細なステータス情報を返します。",
         "operationId": "getVideo",
         "tags": [
-          "视频生成 Sora兼容格式"
+          "動画生成Sora互換フォーマット"
         ],
         "parameters": [
           {
@@ -1293,10 +1293,10 @@
       "get": {
         "summary": "動画コンテンツの取得",
         "deprecated": false,
-        "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n完了した動画タスクの動画ファイルの内容を取得します。\n\nこのインターフェースは、動画ファイルストリームをプロキシ経由で返します。",
+        "description": "完了した動画タスクの動画ファイルの内容を取得します。\n\nこのインターフェースは、動画ファイルストリームをプロキシ経由で返します。",
         "operationId": "getVideoContent",
         "tags": [
-          "動画生成/Sora互換フォーマット"
+          "動画生成Sora互換フォーマット"
         ],
         "parameters": [
           {
@@ -1350,10 +1350,10 @@
       "post": {
         "summary": "Kling テキストからの動画生成",
         "deprecated": false,
-        "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling モデルを使用して、テキスト記述から動画を生成します。\n\n対応モデル：kling-v1, kling-v1-5 など",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nKling モデルを使用して、テキスト記述から動画を生成します。\n\n対応モデル：kling-v1, kling-v1-5 など",
         "operationId": "createKlingText2Video",
         "tags": [
-          "動画生成/Kling形式"
+          "動画生成Kling形式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1412,10 +1412,10 @@
       "get": {
         "summary": "Kling Text-to-Videoタスクの状態を取得",
         "deprecated": false,
-        "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling の Text-to-Video タスクの状態と結果を照会します。",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nKling の Text-to-Video タスクの状態と結果を照会します。",
         "operationId": "getKlingText2Video",
         "tags": [
-          "動画生成/Kling形式"
+          "動画生成Kling形式"
         ],
         "parameters": [
           {
@@ -1468,10 +1468,10 @@
       "post": {
         "summary": "Kling イメージ動画生成",
         "deprecated": false,
-        "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling モデルを使用して画像から動画を生成します。\n\nimage パラメータを介した画像 URL または Base64 エンコードされた画像データの入力に対応しています。",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nKling モデルを使用して画像から動画を生成します。\n\nimage パラメータを介した画像 URL または Base64 エンコードされた画像データの入力に対応しています。",
         "operationId": "createKlingImage2Video",
         "tags": [
-          "動画生成/Kling形式"
+          "動画生成Kling形式"
         ],
         "parameters": [],
         "requestBody": {
@@ -1530,10 +1530,10 @@
       "get": {
         "summary": "Kling イメージからの動画生成タスクの状態を取得",
         "deprecated": false,
-        "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling イメージからの動画生成タスクの状態と結果を照会します。",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nKling イメージからの動画生成タスクの状態と結果を照会します。",
         "operationId": "getKlingImage2Video",
         "tags": [
-          "動画生成/Kling形式"
+          "動画生成Kling形式"
         ],
         "parameters": [
           {
@@ -1585,10 +1585,10 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "動画の生成（Seedance）",
-        "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意、アドバンスドモードにおけるマルチメディア入力配列。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` 内のメディアフィールドは、URL文字列の直接入力と、`{ \"url\": \"https://example.com/ref.mp4\" }` のようなオブジェクト形式の両方をサポートしています。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意、アドバンスドモードにおけるマルチメディア入力配列。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` 内のメディアフィールドは、URL文字列の直接入力と、`{ \"url\": \"https://example.com/ref.mp4\" }` のようなオブジェクト形式の両方をサポートしています。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "動画生成 Seedance火山方舟"
+          "動画生成Seedance火山方舟"
         ],
         "requestBody": {
           "required": true,
@@ -1869,10 +1869,10 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "タスクの照会（Seedance）",
-        "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意、アドバンスドモードにおけるマルチメディア入力配列。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` 内のメディアフィールドは、URL文字列の直接入力と、`{ \"url\": \"https://example.com/ref.mp4\" }` のようなオブジェクト形式の両方をサポートしています。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意、アドバンスドモードにおけるマルチメディア入力配列。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` 内のメディアフィールドは、URL文字列の直接入力と、`{ \"url\": \"https://example.com/ref.mp4\" }` のようなオブジェクト形式の両方をサポートしています。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "動画生成 Seedance火山方舟"
+          "動画生成Seedance火山方舟"
         ],
         "parameters": [
           {
@@ -1967,10 +1967,10 @@
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
         "summary": "動画の作成（Veo3形式）",
-        "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nこの API 特集ページは、Veo のネイティブ形式と現在のゲートウェイのサポート状況を説明するためのものです。\n\n現在の Veo シリーズの外部利用については、OpenAI Sora 互換モード（`POST /v1/videos`）を使用してください。\n\nGoogle ネイティブモードのパスは `POST /v1beta/models/{model}:predictLongRunning` として予約されています。現在、ゲートウェイは Veo ネイティブタスク配信リンクに接続されていないため、ネイティブの `instances/parameters` リクエストボディによる呼び出しはサポートされていません。",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nこの API 特集ページは、Veo のネイティブ形式と現在のゲートウェイのサポート状況を説明するためのものです。\n\n現在の Veo シリーズの外部利用については、OpenAI Sora 互換モード（`POST /v1/videos`）を使用してください。\n\nGoogle ネイティブモードのパスは `POST /v1beta/models/{model}:predictLongRunning` として予約されています。現在、ゲートウェイは Veo ネイティブタスク配信リンクに接続されていないため、ネイティブの `instances/parameters` リクエストボディによる呼び出しはサポートされていません。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "動画生成 Veo3形式"
+          "動画生成Veo3形式"
         ],
         "parameters": [
           {
@@ -2141,10 +2141,10 @@
     "/v1beta/{operation_name}": {
       "get": {
         "summary": "タスクの照会（Veo3形式）",
-        "description": "このシリーズはOpenAIの動画生成形式に対応しています（詳細はリンク [動画生成/Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nこのインターフェース専用ページは、Veo ネイティブクエリプロトコルの説明のみを目的としています。\n\n現在の Veo シリーズについては、代わりに `/v1/videos` 統合インターフェースを使用して作成およびクエリを行ってください。\n\n以下の `operation_name` クエリ構造は予約プロトコルの説明として保持されているものであり、現時点では実際の呼び出しには対応していません。",
+        "description": "このシリーズはOpenAI動画生成形式に対応しています（詳細はリンク「[動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video)」をご覧ください）。\n\nこのインターフェース専用ページは、Veo ネイティブクエリプロトコルの説明のみを目的としています。\n\n現在の Veo シリーズについては、代わりに `/v1/videos` 統合インターフェースを使用して作成およびクエリを行ってください。\n\n以下の `operation_name` クエリ構造は予約プロトコルの説明として保持されているものであり、現時点では実際の呼び出しには対応していません。",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "動画生成 Veo3形式"
+          "動画生成Veo3形式"
         ],
         "parameters": [
           {
@@ -4516,25 +4516,25 @@
       "name": "OpenAI形式 (Responses)"
     },
     {
-      "name": "画像生成 Gemini形式"
+      "name": "画像生成Gemini形式"
     },
     {
-      "name": "画像生成 OpenAI Dall-E形式"
+      "name": "画像生成OpenAI DALL-E形式"
     },
     {
       "name": "モデル一覧の取得"
     },
     {
-      "name": "動画生成/Kling形式"
+      "name": "動画生成Kling形式"
     },
     {
-      "name": "動画生成/Sora互換フォーマット"
+      "name": "動画生成Seedance火山方舟"
     },
     {
-      "name": "動画生成 Seedance火山方舟"
+      "name": "動画生成Sora互換フォーマット"
     },
     {
-      "name": "動画生成 Veo3形式"
+      "name": "動画生成Veo3形式"
     }
   ],
   "x-doc-drift-summary": {

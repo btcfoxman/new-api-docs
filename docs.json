@@ -82,7 +82,29 @@
               }
             ]
           }
-        ]
+        ],
+        "navbar": {
+          "links": [
+            {
+              "label": "Support",
+              "href": "mailto:support@aiid.edu.kg"
+            },
+            {
+              "label": "Pricing",
+              "href": "https://aiid.edu.kg/pricing"
+            }
+          ],
+          "primary": {
+            "type": "button",
+            "label": "Console",
+            "href": "https://aiid.edu.kg/console"
+          }
+        },
+        "footer": {
+          "socials": {
+            "telegram": "https://t.me/overseas_api"
+          }
+        }
       },
       {
         "language": "cn",
@@ -148,7 +170,29 @@
               }
             ]
           }
-        ]
+        ],
+        "navbar": {
+          "links": [
+            {
+              "label": "支持",
+              "href": "mailto:support@aiid.edu.kg"
+            },
+            {
+              "label": "价格",
+              "href": "https://aiid.edu.kg/pricing"
+            }
+          ],
+          "primary": {
+            "type": "button",
+            "label": "控制台",
+            "href": "https://aiid.edu.kg/console"
+          }
+        },
+        "footer": {
+          "socials": {
+            "telegram": "https://t.me/overseas_api"
+          }
+        }
       },
       {
         "language": "zh-Hant",
@@ -214,7 +258,29 @@
               }
             ]
           }
-        ]
+        ],
+        "navbar": {
+          "links": [
+            {
+              "label": "支援",
+              "href": "mailto:support@aiid.edu.kg"
+            },
+            {
+              "label": "價格",
+              "href": "https://aiid.edu.kg/pricing"
+            }
+          ],
+          "primary": {
+            "type": "button",
+            "label": "控制台",
+            "href": "https://aiid.edu.kg/console"
+          }
+        },
+        "footer": {
+          "socials": {
+            "telegram": "https://t.me/overseas_api"
+          }
+        }
       },
       {
         "language": "fr",
@@ -280,7 +346,29 @@
               }
             ]
           }
-        ]
+        ],
+        "navbar": {
+          "links": [
+            {
+              "label": "Support",
+              "href": "mailto:support@aiid.edu.kg"
+            },
+            {
+              "label": "Tarifs",
+              "href": "https://aiid.edu.kg/pricing"
+            }
+          ],
+          "primary": {
+            "type": "button",
+            "label": "Console",
+            "href": "https://aiid.edu.kg/console"
+          }
+        },
+        "footer": {
+          "socials": {
+            "telegram": "https://t.me/overseas_api"
+          }
+        }
       },
       {
         "language": "ja",
@@ -346,7 +434,29 @@
               }
             ]
           }
-        ]
+        ],
+        "navbar": {
+          "links": [
+            {
+              "label": "サポート",
+              "href": "mailto:support@aiid.edu.kg"
+            },
+            {
+              "label": "料金",
+              "href": "https://aiid.edu.kg/pricing"
+            }
+          ],
+          "primary": {
+            "type": "button",
+            "label": "コンソール",
+            "href": "https://aiid.edu.kg/console"
+          }
+        },
+        "footer": {
+          "socials": {
+            "telegram": "https://t.me/overseas_api"
+          }
+        }
       },
       {
         "language": "ru",
@@ -412,7 +522,29 @@
               }
             ]
           }
-        ]
+        ],
+        "navbar": {
+          "links": [
+            {
+              "label": "Поддержка",
+              "href": "mailto:support@aiid.edu.kg"
+            },
+            {
+              "label": "Тарифы",
+              "href": "https://aiid.edu.kg/pricing"
+            }
+          ],
+          "primary": {
+            "type": "button",
+            "label": "Консоль",
+            "href": "https://aiid.edu.kg/console"
+          }
+        },
+        "footer": {
+          "socials": {
+            "telegram": "https://t.me/overseas_api"
+          }
+        }
       },
       {
         "language": "vi",
@@ -478,31 +610,31 @@
               }
             ]
           }
-        ]
+        ],
+        "navbar": {
+          "links": [
+            {
+              "label": "Hỗ trợ",
+              "href": "mailto:support@aiid.edu.kg"
+            },
+            {
+              "label": "Bảng giá",
+              "href": "https://aiid.edu.kg/pricing"
+            }
+          ],
+          "primary": {
+            "type": "button",
+            "label": "Bảng điều khiển",
+            "href": "https://aiid.edu.kg/console"
+          }
+        },
+        "footer": {
+          "socials": {
+            "telegram": "https://t.me/overseas_api"
+          }
+        }
       }
     ]
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:support@aiid.edu.kg"
-      },
-      {
-        "label": "Pricing",
-        "href": "https://aiid.edu.kg/pricing"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Console",
-      "href": "https://aiid.edu.kg/console"
-    }
-  },
-  "footer": {
-    "socials": {
-      "telegram": "https://t.me/overseas_api"
-    }
   },
   "contextual": {
     "options": [
