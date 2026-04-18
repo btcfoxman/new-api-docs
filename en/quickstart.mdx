@@ -12,7 +12,7 @@ description: "Obtain your API Key, replace the Base URL, and initiate your first
 ## Step 2: Configure Base URL
 
 ```bash
-API_BASE_URL="https://api.aiid.edu.kg/v1"
+API_BASE_URL="https://api.aiid.edu.kg"
 ```
 
 If the existing client default is set to:
@@ -23,7 +23,7 @@ If the existing client default is set to:
 Then replace them with:
 
 - `https://api.aiid.edu.kg`
-- `https://api.aiid.edu.kg/v1`
+- `https://api.aiid.edu.kg`
 
 ## Step 3: Send your first request
 
@@ -34,7 +34,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://api.aiid.edu.kg/v1",
+    base_url="https://api.aiid.edu.kg",
 )
 
 response = client.chat.completions.create(

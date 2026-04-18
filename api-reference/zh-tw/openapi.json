@@ -245,7 +245,7 @@
       "post": {
         "summary": "Gemini 圖片(Nano Banana)",
         "deprecated": false,
-        "description": "Gemini 圖片生成。\n\nNano Banana系列支援OpenAI Dall-E 格式（詳見連結 [圖片生成OpenAI DALL-E 格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)）。",
+        "description": "Gemini 圖片生成。\n\nNano Banana系列支援OpenAI Dall-E 格式（詳見連結 [圖片生成OpenAI DALL-E 格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)）。\n\n補充 /v1beta/models/{model}:generateContent 的 Gemini 圖片生成欄位說明，避免公開 OpenAPI 在巢狀欄位上遺失 description。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "圖片生成 Gemini 格式"
@@ -274,7 +274,8 @@
                       "type": "object",
                       "properties": {
                         "role": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "訊息角色，常見值為 `user` 或 `model`。"
                         },
                         "parts": {
                           "type": "array",
@@ -282,13 +283,30 @@
                             "type": "object",
                             "properties": {
                               "text": {
-                                "type": "string"
+                                "type": "string",
+                                "description": "文字輸入內容。"
+                              },
+                              "inlineData": {
+                                "type": "object",
+                                "description": "內嵌二進位內容物件，適用於 base64 圖片等輸入。",
+                                "properties": {
+                                  "mimeType": {
+                                    "type": "string",
+                                    "description": "內嵌內容 MIME 類型，例如 `image/png`。"
+                                  },
+                                  "data": {
+                                    "type": "string",
+                                    "description": "Base64 編碼後的二進位資料內容。"
+                                  }
+                                }
                               }
                             }
-                          }
+                          },
+                          "description": "訊息片段陣列；文字、圖片等輸入都放在這裡。"
                         }
                       }
-                    }
+                    },
+                    "description": "必填。Gemini 輸入內容陣列，通常至少包含一則 user 訊息。"
                   },
                   "generationConfig": {
                     "type": "object",
@@ -297,23 +315,28 @@
                         "type": "array",
                         "items": {
                           "type": "string"
-                        }
+                        },
+                        "description": "回應模式清單；圖片生成通常傳 `IMAGE`。"
                       },
                       "imageConfig": {
                         "type": "object",
                         "properties": {
                           "aspectRatio": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "寬高比，例如 `16:9`、`1:1`、`9:16`。"
                           },
                           "imageSize": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "輸出解析度等級，例如 `1K`、`2K`、`4K`。"
                           }
-                        }
+                        },
+                        "description": "圖片生成配置物件。"
                       }
                     },
                     "required": [
                       "responseModalities"
-                    ]
+                    ],
+                    "description": "生成設定物件。"
                   }
                 },
                 "required": [
@@ -374,7 +397,7 @@
       "post": {
         "summary": "產生圖像（OpenAI Dall-E 相容）",
         "deprecated": false,
-        "description": "OpenAI Dall-E 格式圖片生成介面。",
+        "description": "OpenAI Dall-E 格式圖片生成介面。\n\n- `POST /v1/images/generations`：建立圖片生成任務\n\n標準鑑權標頭：\n- `Content-Type: application/json`\n\n- `model: string`：必填，對外模型名稱\n- `prompt: string`：推薦，圖片生成描述\n- `n: number`：可選，生成張數\n- `size: string`：可選，尺寸或解析度表達\n- `quality: string`：可選，品質等級\n- `response_format: string`：可選，回傳格式\n\n常用相容擴展參數：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 專用擴展參數：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana 系列\n\n對外模型：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n能力說明：\n- `nano-banana`：基礎文字生圖，也相容圖片編輯\n- `nano-banana-pro*`：更高品質版本\n- `nano-banana-2*`：更新版本系列\n- `*-2k` / `*-4k`：高解析度型號\n\n常用參數：\n- 文生圖：`model + prompt`\n- 圖片編輯：`model + prompt + image`，也相容 `image_urls`\n- 常用擴展：`n` `size` `quality` `response_format`\n\n範例：\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Seedream 系列\n\n對外模型：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n能力說明：\n- 統一按文生圖呼叫\n- 建議優先傳入標準參數：`prompt + model + size/aspect_ratio`\n\n常用參數：\n- `model + prompt`\n- 可選：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 常規圖片主模型\n\n對外主模型：\n- `kling-image`\n\n必填：\n- `model`\n- `model_name`\n\n支援的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n能力說明：\n- 文生圖：`model + model_name + prompt`\n- 圖生圖：在文生圖基礎上增加 `image`\n- 多圖生圖：傳 `subject_image_list`，或傳多張 `image_urls/images`\n- 擴圖：傳 `image` 和擴圖比例參數\n\n常用參數：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n範例：\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Omni 圖片主模型\n\n對外主模型：\n- `kling-omni-image`\n\n必填：\n- `model`\n- `model_name`\n\n支援的 `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\n常用參數：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n範例：\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling 虛擬試衣模型\n\n對外模型：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小輸入參數：\n- `model + human_image + cloth_image`\n\n說明：\n- 這兩個模型本身就是完整主模型，不需要再傳 `model_name`\n\n範例：\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageGeneration",
         "tags": [
           "圖片生成OpenAI DALL-E 格式"
@@ -389,21 +412,29 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "模型名稱",
-                    "example": "dall-e-3"
+                    "description": "對外圖片模型名稱。",
+                    "example": "dall-e-3",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "產圖提示詞"
+                    "description": "圖片生成描述。虛擬試衣模型可不傳。"
                   },
                   "n": {
                     "type": "integer",
-                    "description": "生成數量",
+                    "description": "生成張數。",
                     "default": 1
                   },
                   "size": {
                     "type": "string",
-                    "description": "圖像尺寸",
+                    "description": "尺寸或解析度表達。",
                     "enum": [
                       "1024x1024",
                       "1024x1792",
@@ -412,7 +443,7 @@
                   },
                   "quality": {
                     "type": "string",
-                    "description": "產圖品質",
+                    "description": "品質等級。",
                     "enum": [
                       "standard",
                       "hd"
@@ -428,7 +459,7 @@
                   },
                   "response_format": {
                     "type": "string",
-                    "description": "回應格式",
+                    "description": "回傳格式。",
                     "enum": [
                       "url",
                       "b64_json"
@@ -444,11 +475,66 @@
                   "prompt"
                 ]
               },
-              "example": {
-                "model": "dall-e-3",
-                "prompt": "A cute baby sea otter",
-                "n": 1,
-                "size": "1024x1024"
+              "examples": {
+                "nano_banana_text2img": {
+                  "summary": "Nano Banana 文生圖",
+                  "value": {
+                    "model": "nano-banana",
+                    "prompt": "a cute cat running in cloud",
+                    "n": 1,
+                    "size": "1024x1792"
+                  }
+                },
+                "seedream_text2img": {
+                  "summary": "Seedream 文生圖",
+                  "value": {
+                    "model": "doubao-seedream-3-0-t2i-250415",
+                    "prompt": "一张电影感海边日落人像",
+                    "size": "1536x1024",
+                    "n": 1
+                  }
+                },
+                "kling_text2img": {
+                  "summary": "Kling 文生圖",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v3",
+                    "prompt": "海边日落，电影感人像",
+                    "aspect_ratio": "16:9",
+                    "n": 1
+                  }
+                },
+                "kling_img2img": {
+                  "summary": "Kling 圖生圖",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v2-1",
+                    "prompt": "改成赛博朋克夜景风格",
+                    "image": "https://example.com/input.png",
+                    "n": 1
+                  }
+                },
+                "kling_omni_image": {
+                  "summary": "Kling Omni 圖片",
+                  "value": {
+                    "model": "kling-omni-image",
+                    "model_name": "kling-v3-omni",
+                    "prompt": "生成一张海边跳舞的图片",
+                    "element_list": [
+                      {
+                        "element_id": 835266081714884677
+                      }
+                    ]
+                  }
+                },
+                "kling_virtual_try_on": {
+                  "summary": "Kling 虛擬試衣",
+                  "value": {
+                    "model": "kolors-virtual-try-on-v1",
+                    "human_image": "https://example.com/human.jpg",
+                    "cloth_image": "https://example.com/cloth.jpg"
+                  }
+                }
               }
             }
           }
@@ -572,7 +658,7 @@
       "post": {
         "summary": "建立影片",
         "deprecated": false,
-        "description": "OpenAI Sora 相容格式的影片生成介面。支援文字生成影片與圖片/影片參考生成模式。\n\n- `POST /v1/videos`：建立影片任務\n- `GET /v1/videos/{video_id}`：查詢任務狀態\n- `GET /v1/videos/{video_id}/content`：獲取影片二進位內容（下載）\n\n目前不對外提供：\n- `GET /v1/videos`：任務清單\n- `POST /v1/videos/{video_id}/remix`：影片二次編輯 / remix\n\n標準鑑權標頭：\n- `Content-Type: application/json`（建立任務時）\n\n1. 呼叫 `POST /v1/videos` 建立任務，取得 `id`。\n2. 輪詢 `GET /v1/videos/{id}`，直到 `status=completed` 或 `failed`。\n3. `completed` 後優先使用回傳內容中的 `video_url`；如需閘道統一下載可呼叫 `GET /v1/videos/{id}/content`。\n\n## 3.1 核心參數\n\n- `model: string`（必填）\n- 說明：要呼叫的影片模型名稱。\n- 範例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推薦）\n- 說明：影片生成主描述。使用 `content` 時也必須傳送，不能為空。\n- 範例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（選填）\n- 說明：目標時長。與 `duration` 二選一，若同時傳送通常以閘道解析結果為準。\n- 範例：`8`\n\n- `size: string`（選填）\n- 說明：輸出解析度，常用 `宽x高`。\n- 範例：`720x1280`、`1280x720`\n\n- `mode: string`（選填）\n- 說明：生成模式，不傳送預設為 `t2v`。不同模式對素材參數要求不同。\n- 範例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 通用相容參數\n\n- `aspect_ratio` 或 `ratio`：寬高比。\n- `duration`：時長別名（與 `seconds` 二選一即可）。\n- `quality` 或 `resolution`：解析度相關參數。\n- `fps`：影格率。\n- `function_mode`：可選功能模式，用於觸發特定行為（如 `omni_reference` 表示全能參考語義）。\n\n## 3.3 參考素材參數\n\n- `input_reference`：標準參考輸入物件。\n- 說明：僅支援字串 URL 寫法，不支援物件寫法。\n- 正確範例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 錯誤範例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：圖片參考。\n- 說明：`image_url` 常用於單圖；`image_urls` 用於多圖或全能參考。\n\n- `end_image_url` / `last_image_url`：末格參考。\n- 說明：通常與 `mode=i2v_first_last` 搭配，表示影片結束畫面。\n\n- `video_urls`：影片參考列表。\n- 說明：常用於 `reference_material` 或 `content` 全能參考場景。\n\n- `audio_urls`：音訊參考列表。\n- 說明：用於背景音樂/旁白風格參考（是否生效取決於模型能力）。\n\n- `reference_images`：多圖參考。\n- 說明：常用於多格/多圖參考模式。\n\n說明：不同模型對素材欄位要求不同，建議依下文「模式與最小入參」傳遞參數。\n\n## 3.4 content 進階模式（推薦給複雜參考場景）\n\n可直接傳入 `content` 陣列：\n- `type=text`：文字指令。\n- `type=image_url|video_url|audio_url`：媒體輸入。\n- 支援 `name`，用於在文字中透過 `@名称` 指代素材。\n\n必填限制：\n- 使用 `content` 時，`prompt` 仍必須傳入且不能為空。\n\n相容寫法：\n- `image_url/video_url/audio_url` 可為字串，或物件 `{ \"url\": \"https://...\" }`。\n- `role` 可使用 `material`，也相容 `reference_image/reference_video/reference_audio`。\n\n可同時攜帶：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n補充說明：\n- `generate_audio=true`：請求模型同時生成音訊（僅支援該能力的模型才會生效）。\n- `watermark=false`：請求關閉浮水印（實際是否生效取決於模型與管道策略）。\n- `name`：素材別名，建議與 `text` 中的 `@名称` 一致，便於模型準確關聯素材。\n\n不同模型族群對參數的支援差異較大，建議參考下表選擇參數：\n\n| 模型族群 | 常見模型名稱（範例） | 建議最小傳入參數 | 常用擴充參數 | 注意事項 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | 對 `mode` 最敏感；並非所有版本都支援 `reference_material`。 |\n| Sora 通用 | `sora-2` `sora-2-pro` 及 `*-stable/*-official` | `model + prompt` | `seconds/size`，建議補上 `input_reference`（字串 URL） | 多管道 fallback 時，是否要求圖片可能不同，建議準備參考圖以提高成功率。 |\n| Sora 時長預設 | `sora2-landscape-10s` `sora2-pro-portrait-25s` 等 | `model + prompt` | `image_url/input_reference` | 時長和方向通常由模型名稱決定，`seconds/ratio` 僅在模型允許時生效。 |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` 類模型通常需要參考圖或參考素材；`t2v` 類通常可使用純文字。 |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`，以及 `image/image_list` 等官方欄位 | 已相容官方路徑語義（text2video/image2video/multi-image2video）並統一到 `/v1/videos`；不提供影片延長對外能力。 |\n| 聚合擴充模型 | `happyhorse*` `grok-imagine-1.0-video*` 等 | `model + prompt` | `seconds/size/content` | 具體支援的欄位取決於模型與管道實作，建議優先使用標準欄位，不足時再使用 `content`。 |\n\n說明：\n1. 若您使用穩定別名模型（如 `*-stable`、`*-official`），底層可能會自動切換管道，請儘量傳入「跨管道相容參數」（`prompt + model + seconds/duration + size/ratio + 必要参考图`）。\n2. 複雜多素材場景（圖+影片+音訊+@名稱）優先使用 `content`，相容性最高。\n3. 若模型文件未明確支援某欄位，請按「最小入參」先跑通，再逐步增加擴充參數。\n\n### 4.1 Kling 官方模式補充\n\n- `mode=t2v`：文生影片\n- `mode=i2v`：圖生影片（需 `image` 或 `image_url`）\n- `mode=multi_i2v`：多圖參考（需 `image_list` 或多張 `image_urls`）\n- `mode=extend`：不支援（影片延長暫不提供 `/v1/videos` 對外能力）\n\n常見官方參數可直接放在 `/v1/videos` 請求體中透傳：\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok 影片模式補充\n\n推薦參數：\n- `model`：如 `grok-video-3`\n- `prompt`\n- `ratio` 或 `aspect_ratio`\n- `resolution` 或 `size`\n- `seconds` 或 `duration`\n- `image` / `image_url` / `input_reference`（單圖參考）\n- `reference_images` / `reference_image_urls`（多圖參考，官方 `reference-to-video` 語意）\n- `mode`（選填）：`image-to-video`、`reference-to-video`\n\n約束：\n- 不支援 `mode=edit-video` / `mode=extend-video`（影片編輯與延長暫不對外）。\n- `image/input_reference` 與 `reference_images` 不能同時傳送。\n\n- `mode=t2v`\n- 最小輸入參數：`model + prompt`\n\n- `mode=i2v`（等同 `i2v_first`）\n- 最小入參：`model + prompt + image_url`（或 `input_reference` 字串 URL）\n\n- `mode=i2v_first_last`\n- 最小輸入參數：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小輸入參數：`model + prompt + reference_images`（通常為 1~4 張）\n\n- `mode=reference_material`\n- 最小輸入參數：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 複雜場景更推薦使用 `content + function_mode=omni_reference`\n- 說明：當傳入 `function_mode=omni_reference` 時，即使未顯式傳入 `mode=reference_material`，也會按全能參考語義處理。",
+        "description": "OpenAI Sora 相容格式的影片生成介面。支援文字生成影片與圖片/影片參考生成模式。\n\n- `POST /v1/videos`：建立影片任務\n- `GET /v1/videos/{video_id}`：查詢任務狀態\n- `GET /v1/videos/{video_id}/content`：取得影片二進位內容\n\n目前不對外提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n標準鑑權標頭：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 建立任務，取得 `id`\n2. 輪詢 `GET /v1/videos/{id}`，直到 `completed` 或 `failed`\n3. 完成後優先使用回傳中的 `video_url`\n4. 如需統一下載，呼叫 `GET /v1/videos/{id}/content`\n\n核心參數：\n- `model: string`：必填，對外模型名稱\n- `prompt: string`：建議，影片生成描述\n- `seconds: number|string`：可選，目標時長\n- `duration: number|string`：可選，時長別名\n- `size: string`：可選，輸出尺寸\n- `mode: string`：可選，常見值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用相容參數：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用擴充參數：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-fast-stable`\n- `veo3.1-fast-official`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n#### Veo 2.x / 3.1 預設模型\n\n- `veo_2_0_t2v_landscape`\n- `veo_2_0_t2v_landscape-stable`\n- `veo_2_0_t2v_portrait`\n- `veo_2_0_t2v_portrait-stable`\n- `veo_2_0_i2v_landscape`\n- `veo_2_0_i2v_landscape-stable`\n- `veo_2_0_i2v_portrait`\n- `veo_2_0_i2v_portrait-stable`\n- `veo_2_1_fast_d_15_t2v_landscape`\n- `veo_2_1_fast_d_15_t2v_landscape-stable`\n- `veo_2_1_fast_d_15_t2v_portrait`\n- `veo_2_1_fast_d_15_t2v_portrait-stable`\n- `veo_2_1_fast_d_15_i2v_landscape`\n- `veo_2_1_fast_d_15_i2v_landscape-stable`\n- `veo_2_1_fast_d_15_i2v_portrait`\n- `veo_2_1_fast_d_15_i2v_portrait-stable`\n- `veo_3_1_t2v_landscape`\n- `veo_3_1_t2v_landscape-stable`\n- `veo_3_1_t2v_portrait`\n- `veo_3_1_t2v_portrait-stable`\n- `veo_3_1_t2v_fast_landscape`\n- `veo_3_1_t2v_fast_landscape-stable`\n- `veo_3_1_t2v_fast_portrait`\n- `veo_3_1_t2v_fast_portrait-stable`\n- `veo_3_1_t2v_fast_1080p`\n- `veo_3_1_t2v_fast_1080p-stable`\n- `veo_3_1_t2v_fast_4k`\n- `veo_3_1_t2v_fast_4k-stable`\n- `veo_3_1_t2v_fast_portrait_1080p`\n- `veo_3_1_t2v_fast_portrait_1080p-stable`\n- `veo_3_1_t2v_fast_portrait_4k`\n- `veo_3_1_t2v_fast_portrait_4k-stable`\n- `veo_3_1_t2v_fast_ultra`\n- `veo_3_1_t2v_fast_ultra-stable`\n- `veo_3_1_t2v_fast_ultra_1080p`\n- `veo_3_1_t2v_fast_ultra_1080p-stable`\n- `veo_3_1_t2v_fast_ultra_4k`\n- `veo_3_1_t2v_fast_ultra_4k-stable`\n- `veo_3_1_t2v_fast_ultra_relaxed`\n- `veo_3_1_t2v_fast_ultra_relaxed-stable`\n- `veo_3_1_t2v_fast_portrait_ultra`\n- `veo_3_1_t2v_fast_portrait_ultra-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_1080p`\n- `veo_3_1_t2v_fast_portrait_ultra_1080p-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_4k`\n- `veo_3_1_t2v_fast_portrait_ultra_4k-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_relaxed`\n- `veo_3_1_t2v_fast_portrait_ultra_relaxed-stable`\n- `veo_3_1_i2v_s_landscape`\n- `veo_3_1_i2v_s_landscape-stable`\n- `veo_3_1_i2v_s_portrait`\n- `veo_3_1_i2v_s_portrait-stable`\n- `veo_3_1_i2v_s_fast_fl`\n- `veo_3_1_i2v_s_fast_fl-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl`\n- `veo_3_1_i2v_s_fast_ultra_fl-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl_1080p`\n- `veo_3_1_i2v_s_fast_ultra_fl_1080p-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl_4k`\n- `veo_3_1_i2v_s_fast_ultra_fl_4k-stable`\n- `veo_3_1_i2v_s_fast_ultra_relaxed`\n- `veo_3_1_i2v_s_fast_ultra_relaxed-stable`\n- `veo_3_1_i2v_s_fast_portrait_fl`\n- `veo_3_1_i2v_s_fast_portrait_fl-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_1080p`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_1080p-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_4k`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_4k-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_relaxed`\n- `veo_3_1_i2v_s_fast_portrait_ultra_relaxed-stable`\n- `veo_3_1_r2v_fast`\n- `veo_3_1_r2v_fast-stable`\n- `veo_3_1_r2v_fast_ultra`\n- `veo_3_1_r2v_fast_ultra-stable`\n- `veo_3_1_r2v_fast_ultra_1080p`\n- `veo_3_1_r2v_fast_ultra_1080p-stable`\n- `veo_3_1_r2v_fast_ultra_4k`\n- `veo_3_1_r2v_fast_ultra_4k-stable`\n- `veo_3_1_r2v_fast_ultra_relaxed`\n- `veo_3_1_r2v_fast_ultra_relaxed-stable`\n- `veo_3_1_r2v_fast_portrait`\n- `veo_3_1_r2v_fast_portrait-stable`\n- `veo_3_1_r2v_fast_portrait_ultra`\n- `veo_3_1_r2v_fast_portrait_ultra-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_1080p`\n- `veo_3_1_r2v_fast_portrait_ultra_1080p-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_4k`\n- `veo_3_1_r2v_fast_portrait_ultra_4k-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_relaxed`\n- `veo_3_1_r2v_fast_portrait_ultra_relaxed-stable`\n\n建議：\n- 純文字生成影片優先使用 `veo3*` / `veo3.1*` 主模型\n- 對尺寸、方向、時長有固定要求時，優先使用預設模型名稱\n- 圖生影片或參考生成影片的場景，建議明確傳入 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基礎模型：\n- `sora-2`\n- `sora-2-pro`\n- `sora-2-stable`\n- `sora-2-pro-stable`\n- `sora-2-official`\n- `sora-2-pro-official`\n\n預設模型：\n- `sora2-landscape-10s`\n- `sora2-landscape-10s-stable`\n- `sora2-landscape-10s-official`\n- `sora2-portrait-10s`\n- `sora2-portrait-10s-stable`\n- `sora2-portrait-10s-official`\n- `sora2-landscape-15s`\n- `sora2-landscape-15s-stable`\n- `sora2-landscape-15s-official`\n- `sora2-portrait-15s`\n- `sora2-portrait-15s-stable`\n- `sora2-portrait-15s-official`\n- `sora2-pro-landscape-25s`\n- `sora2-pro-landscape-25s-stable`\n- `sora2-pro-landscape-25s-official`\n- `sora2-pro-portrait-25s`\n- `sora2-pro-portrait-25s-stable`\n- `sora2-pro-portrait-25s-official`\n- `sora2-pro-landscape-hd-15s`\n- `sora2-pro-landscape-hd-15s-stable`\n- `sora2-pro-landscape-hd-15s-official`\n- `sora2-pro-portrait-hd-15s`\n- `sora2-pro-portrait-hd-15s-stable`\n- `sora2-pro-portrait-hd-15s-official`\n\n建議：\n- `sora-2*` 適合通用調用\n- `sora2-*` 預設模型適合時長、方向固定的場景\n- 需要穩定／官方策略時，直接選 `*-stable` / `*-official`\n\n### 4.3 Seedance 系列\n\n對外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-t2v-250428-official`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428-official`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-250528-official`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-0-pro-fast-251015-official`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-1-5-pro-251215-official`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-260128-official`\n- `doubao-seedance-2-0-fast-260128`\n- `doubao-seedance-2-0-fast-260128-official`\n\n建議：\n- 文生影片優先 `*-t2v-*` 或 `pro / fast`\n- 圖生影片優先 `*-i2v-*`\n- 複雜參考素材場景優先使用 `content`\n\n### 4.4 Grok 影片系列\n\n對外模型：\n- `grok-video-3`\n\n常用參數：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n### 4.5 Kling 影片主模型\n\n對外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支援的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常見 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小輸入參數：\n- 文生影片：`model + model_name + prompt + mode=t2v`\n- 圖生影片：`model + model_name + prompt + mode=i2v + image`\n- 多圖參考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 影片延長：`model + model_name + mode=extend + video_id`\n\n範例：\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小輸入參數：`model + prompt`\n\n- `mode=i2v`\n- 最小輸入參數：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小輸入參數：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小輸入參數：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小輸入參數：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`",
         "operationId": "createVideo",
         "tags": [
           "影片生成Sora相容格式"
@@ -587,7 +673,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "欲呼叫的影片模型名稱。範例：`sora-2`、`doubao-seedance-2-0-260128`",
+                    "description": "模型名稱。不同模型會觸發不同上游適配邏輯。",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -619,7 +705,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "影片生成主描述。使用 `content` 時也必須傳入，不能為空。 範例：`第一人称视角果茶广告，节奏轻快`"
+                    "description": "統一提示詞入口。大多數模型必填。"
                   },
                   "image": {
                     "type": "string",
@@ -628,7 +714,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "時長別名（與 `seconds` 二選一即可）。"
+                    "description": "統一時長入口，部分模型也接受 seconds。"
                   },
                   "width": {
                     "type": "integer",
@@ -643,7 +729,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "幀率。"
+                    "description": "Video frame rate"
                   },
                   "seed": {
                     "type": "integer",
@@ -672,7 +758,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "生成模式，未傳送時預設為 `t2v`。不同模式對素材參數的要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
+                    "description": "渠道／模式提示欄位，如 i2v_first、reference_images 等。"
                   },
                   "images": {
                     "type": "array",
@@ -683,15 +769,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "輸出解析度，常用 `宽x高`。 示例：`720x1280`、`1280x720`"
+                    "description": "統一尺寸入口，會映射為 resolution/aspect_ratio 等。"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "目標時長。與 `duration` 二選一，若同時傳入，通常以閘道解析結果為準。 範例：`8`"
+                    "description": "Sora 相容入口，執行時會回退到 duration。"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "標準參考輸入物件。"
+                    "description": "Sora/Veo 相容的參考圖輸入，可為 multipart 檔案或相容物件。"
                   }
                 },
                 "required": [
@@ -706,7 +792,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "欲呼叫的影片模型名稱。範例：`sora-2`、`doubao-seedance-2-0-260128`",
+                    "description": "模型名稱。不同模型會觸發不同上游適配邏輯。",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -738,7 +824,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "影片生成主描述。使用 `content` 時也必須傳入，不能為空。 範例：`第一人称视角果茶广告，节奏轻快`"
+                    "description": "統一提示詞入口。大多數模型必填。"
                   },
                   "image": {
                     "type": "string",
@@ -747,7 +833,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "時長別名（與 `seconds` 二選一即可）。"
+                    "description": "統一時長入口，部分模型也接受 seconds。"
                   },
                   "width": {
                     "type": "integer",
@@ -762,7 +848,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "幀率。"
+                    "description": "Video frame rate"
                   },
                   "seed": {
                     "type": "integer",
@@ -791,7 +877,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "生成模式，未傳送時預設為 `t2v`。不同模式對素材參數的要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
+                    "description": "渠道／模式提示欄位，如 i2v_first、reference_images 等。"
                   },
                   "images": {
                     "type": "array",
@@ -802,15 +888,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "輸出解析度，常用 `宽x高`。 示例：`720x1280`、`1280x720`"
+                    "description": "統一尺寸入口，會映射為 resolution/aspect_ratio 等。"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "目標時長。與 `duration` 二選一，若同時傳入，通常以閘道解析結果為準。 範例：`8`"
+                    "description": "Sora 相容入口，執行時會回退到 duration。"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "標準參考輸入物件。"
+                    "description": "Sora/Veo 相容的參考圖輸入，可為 multipart 檔案或相容物件。"
                   }
                 },
                 "required": [
@@ -1058,8 +1144,7 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string",
-                      "description": "任務 ID（供後續查詢/下載使用）。"
+                      "type": "string"
                     },
                     "task_id": {
                       "type": "string",
@@ -1073,25 +1158,25 @@
                     },
                     "status": {
                       "type": "string",
-                      "description": "任務狀態。",
+                      "description": "Should use VideoStatus constants: VideoStatusQueued, VideoStatusInProgress, VideoStatusCompleted, VideoStatusFailed",
                       "enum": [
                         "queued",
                         "in_progress",
                         "completed",
-                        "failed"
+                        "failed",
+                        "video_url",
+                        "url",
+                        "completed_at"
                       ]
                     },
                     "progress": {
-                      "type": "integer",
-                      "description": "進度（0~100，近似值）。"
+                      "type": "integer"
                     },
                     "created_at": {
-                      "type": "integer",
-                      "description": "建立時間 (Unix 秒)。"
+                      "type": "integer"
                     },
                     "completed_at": {
-                      "type": "integer",
-                      "description": "完成時間。"
+                      "type": "integer"
                     },
                     "expires_at": {
                       "type": "integer"
@@ -1111,14 +1196,6 @@
                     "metadata": {
                       "type": "object",
                       "additionalProperties": true
-                    },
-                    "video_url": {
-                      "type": "string",
-                      "description": "可直接下載的影片位址。"
-                    },
-                    "url": {
-                      "type": "string",
-                      "description": "部分模型/通路可能傳回該欄位作為結果位址。"
                     }
                   },
                   "required": [
@@ -1852,6 +1929,43 @@
                     "created_at": {
                       "type": "string",
                       "description": "建立時間 (Unix 秒)。"
+                    },
+                    "items": {
+                      "type": "string",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "任務 ID。"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "任務狀態，常見為 `queued`、`running`、`succeeded`、`failed`。"
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "description": "影片結果位址。"
+                              }
+                            }
+                          },
+                          "video_url": {
+                            "type": "string",
+                            "description": "影片結果位址。"
+                          },
+                          "error": {
+                            "type": "string",
+                            "description": "失敗時的錯誤訊息。"
+                          },
+                          "progress": {
+                            "type": "string",
+                            "description": "任務進度。"
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -1948,6 +2062,43 @@
                         },
                         "total_tokens": {
                           "type": "integer"
+                        }
+                      }
+                    },
+                    "items": {
+                      "type": "string",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "任務 ID。"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "任務狀態，常見為 `queued`、`running`、`succeeded`、`failed`。"
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "description": "影片結果位址。"
+                              }
+                            }
+                          },
+                          "video_url": {
+                            "type": "string",
+                            "description": "影片結果位址。"
+                          },
+                          "error": {
+                            "type": "string",
+                            "description": "失敗時的錯誤訊息。"
+                          },
+                          "progress": {
+                            "type": "string",
+                            "description": "任務進度。"
+                          }
                         }
                       }
                     }

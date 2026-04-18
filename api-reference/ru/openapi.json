@@ -245,7 +245,7 @@
       "post": {
         "summary": "Изображение Gemini (Nano Banana)",
         "deprecated": false,
-        "description": "Генерация изображений Gemini.\n\nСерия Nano Banana поддерживает формат OpenAI Dall-E (подробнее см. по ссылке: [Генерация изображений в формате OpenAI DALL-E](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).",
+        "description": "Генерация изображений Gemini.\n\nСерия Nano Banana поддерживает формат OpenAI Dall-E (подробнее см. по ссылке: [Генерация изображений в формате OpenAI DALL-E](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).\n\nДополнить описание полей генерации изображений Gemini для /v1beta/models/{model}:generateContent, чтобы в публичном OpenAPI не терялось description у вложенных полей.",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "Формат Gemini для генерации изображений"
@@ -274,7 +274,8 @@
                       "type": "object",
                       "properties": {
                         "role": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "Роль сообщения; распространённые значения: `user` или `model`."
                         },
                         "parts": {
                           "type": "array",
@@ -282,13 +283,30 @@
                             "type": "object",
                             "properties": {
                               "text": {
-                                "type": "string"
+                                "type": "string",
+                                "description": "Текстовое содержимое ввода."
+                              },
+                              "inlineData": {
+                                "type": "object",
+                                "description": "Объект встроенного двоичного содержимого, подходит для таких входных данных, как изображения в формате base64.",
+                                "properties": {
+                                  "mimeType": {
+                                    "type": "string",
+                                    "description": "MIME-тип встроенного содержимого, например `image/png`."
+                                  },
+                                  "data": {
+                                    "type": "string",
+                                    "description": "Содержимое двоичных данных, закодированное в Base64."
+                                  }
+                                }
                               }
                             }
-                          }
+                          },
+                          "description": "Массив фрагментов сообщения; здесь размещаются все входные данные, такие как текст, изображения и т. д."
                         }
                       }
-                    }
+                    },
+                    "description": "Обязательно. Массив входного содержимого Gemini, обычно содержит как минимум одно сообщение user."
                   },
                   "generationConfig": {
                     "type": "object",
@@ -297,23 +315,28 @@
                         "type": "array",
                         "items": {
                           "type": "string"
-                        }
+                        },
+                        "description": "Список режимов ответа; для генерации изображений обычно передают `IMAGE`."
                       },
                       "imageConfig": {
                         "type": "object",
                         "properties": {
                           "aspectRatio": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "Соотношение сторон, например `16:9`, `1:1`, `9:16`."
                           },
                           "imageSize": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "Уровень выходного разрешения, например `1K`, `2K`, `4K`."
                           }
-                        }
+                        },
+                        "description": "Объект конфигурации генерации изображений."
                       }
                     },
                     "required": [
                       "responseModalities"
-                    ]
+                    ],
+                    "description": "Создает объект конфигурации."
                   }
                 },
                 "required": [
@@ -374,7 +397,7 @@
       "post": {
         "summary": "Генерация изображений (совместимо с OpenAI Dall-E)",
         "deprecated": false,
-        "description": "OpenAI Интерфейс генерации изображений в формате Dall-E.",
+        "description": "OpenAI Интерфейс генерации изображений в формате Dall-E.\n\n- `POST /v1/images/generations`: создать задачу генерации изображения\n\nСтандартные заголовки аутентификации:\n- `Content-Type: application/json`\n\n- `model: string`: обязательно, внешнее имя модели\n- `prompt: string`: рекомендуется, описание для генерации изображения\n- `n: number`: необязательно, количество генерируемых изображений\n- `size: string`: необязательно, указание размера или разрешения\n- `quality: string`: необязательно, уровень качества\n- `response_format: string`: необязательно, формат ответа\n\nЧасто используемые совместимые расширенные параметры:\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nСпециальные расширенные параметры для Kling:\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Серия Nano Banana\n\nПубличная модель:\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nОписание возможностей:\n- `nano-banana`: базовая генерация изображений по тексту, также совместима с редактированием изображений\n- `nano-banana-pro*`: версия более высокого качества\n- `nano-banana-2*`: более новое семейство версий\n- `*-2k` / `*-4k`: модели с высоким разрешением\n\nЧасто используемые параметры:\n- Text-to-image: `model + prompt`\n- Редактирование изображений: `model + prompt + image`, также совместимо с `image_urls`\n- Часто используемые расширения: `n` `size` `quality` `response_format`\n\nПример:\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Серия Seedream\n\nПубличная модель:\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nОписание возможностей:\n- Единый вызов в режиме text-to-image\n- Рекомендуется в первую очередь передавать стандартные параметры: `prompt + model + size/aspect_ratio`\n\nЧасто используемые параметры:\n- `model + prompt`\n- Необязательно: `size` `aspect_ratio` `n`\n\n### 3.3 Kling основная модель для обычных изображений\n\nОсновная публичная модель:\n- `kling-image`\n\nОбязательно:\n- `model`\n- `model_name`\n\nПоддерживаемые `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nОписание возможностей:\n- Text-to-image: `model + model_name + prompt`\n- Image-to-image: на основе text-to-image добавьте `image`\n- Генерация по нескольким изображениям: передайте `subject_image_list` или несколько `image_urls/images`\n- Расширение изображения: передайте `image` и параметр коэффициента расширения\n\nЧасто используемые параметры:\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nПример:\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling основная модель изображений Omni\n\nОсновная публичная модель:\n- `kling-omni-image`\n\nОбязательно:\n- `model`\n- `model_name`\n\nПоддерживаемые `model_name`:\n- `kling-image-o1`\n- `kling-v3-omni`\n\nЧасто используемые параметры:\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nПример:\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling модель виртуальной примерки\n\nПубличная модель:\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nМинимальные входные параметры:\n- `model + human_image + cloth_image`\n\nОписание:\n- Эти две модели сами по себе являются полноценными основными моделями, поэтому `model_name` передавать не нужно\n\nПример:\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageGeneration",
         "tags": [
           "Генерация изображенийOpenAI в формате DALL-E"
@@ -389,21 +412,29 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Название модели",
-                    "example": "dall-e-3"
+                    "description": "Внешнее имя модели изображений.",
+                    "example": "dall-e-3",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Промпт для генерации изображения"
+                    "description": "Описание для генерации изображения. Для модели виртуальной примерки можно не передавать."
                   },
                   "n": {
                     "type": "integer",
-                    "description": "Количество генерируемых объектов",
+                    "description": "Количество создаваемых изображений.",
                     "default": 1
                   },
                   "size": {
                     "type": "string",
-                    "description": "Размер изображения",
+                    "description": "Описание размера или разрешения.",
                     "enum": [
                       "1024x1024",
                       "1024x1792",
@@ -412,7 +443,7 @@
                   },
                   "quality": {
                     "type": "string",
-                    "description": "Качество генерации изображения",
+                    "description": "Уровень качества.",
                     "enum": [
                       "standard",
                       "hd"
@@ -428,7 +459,7 @@
                   },
                   "response_format": {
                     "type": "string",
-                    "description": "Формат ответа",
+                    "description": "Формат ответа.",
                     "enum": [
                       "url",
                       "b64_json"
@@ -444,11 +475,66 @@
                   "prompt"
                 ]
               },
-              "example": {
-                "model": "dall-e-3",
-                "prompt": "A cute baby sea otter",
-                "n": 1,
-                "size": "1024x1024"
+              "examples": {
+                "nano_banana_text2img": {
+                  "summary": "Nano Banana Генерация изображений по тексту",
+                  "value": {
+                    "model": "nano-banana",
+                    "prompt": "a cute cat running in cloud",
+                    "n": 1,
+                    "size": "1024x1792"
+                  }
+                },
+                "seedream_text2img": {
+                  "summary": "Seedream: генерация изображений по тексту",
+                  "value": {
+                    "model": "doubao-seedream-3-0-t2i-250415",
+                    "prompt": "一张电影感海边日落人像",
+                    "size": "1536x1024",
+                    "n": 1
+                  }
+                },
+                "kling_text2img": {
+                  "summary": "Kling Генерация изображений из текста",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v3",
+                    "prompt": "海边日落，电影感人像",
+                    "aspect_ratio": "16:9",
+                    "n": 1
+                  }
+                },
+                "kling_img2img": {
+                  "summary": "Kling Изображение в изображение",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v2-1",
+                    "prompt": "改成赛博朋克夜景风格",
+                    "image": "https://example.com/input.png",
+                    "n": 1
+                  }
+                },
+                "kling_omni_image": {
+                  "summary": "Kling Изображение Omni",
+                  "value": {
+                    "model": "kling-omni-image",
+                    "model_name": "kling-v3-omni",
+                    "prompt": "生成一张海边跳舞的图片",
+                    "element_list": [
+                      {
+                        "element_id": 835266081714884677
+                      }
+                    ]
+                  }
+                },
+                "kling_virtual_try_on": {
+                  "summary": "Kling Виртуальная примерка",
+                  "value": {
+                    "model": "kolors-virtual-try-on-v1",
+                    "human_image": "https://example.com/human.jpg",
+                    "cloth_image": "https://example.com/cloth.jpg"
+                  }
+                }
               }
             }
           }
@@ -572,7 +658,7 @@
       "post": {
         "summary": "Создать видео",
         "deprecated": false,
-        "description": "Интерфейс генерации видео, совместимый с форматами OpenAI Sora. Поддерживает режимы генерации «текст в видео» и генерацию на основе изображений/видео.\n\n- `POST /v1/videos`: Создание задачи генерации видео\n- `GET /v1/videos/{video_id}`: Запрос статуса задачи\n- `GET /v1/videos/{video_id}/content`: Получение бинарного содержимого видео (скачивание)\n\nВ настоящее время недоступно внешним пользователям:\n- `GET /v1/videos`: Список задач\n- `POST /v1/videos/{video_id}/remix`: Редактирование видео / ремикс\n\nСтандартные заголовки аутентификации:\n- `Content-Type: application/json` (при создании задачи)\n\n1. Вызовите `POST /v1/videos` для создания задачи и получения `id`.\n2. Опрашивайте `GET /v1/videos/{id}`, пока не будет получено состояние `status=completed` или `failed`.\n3. После `completed` в приоритете используйте `video_url` из ответа; для унифицированного скачивания через шлюз можно вызвать `GET /v1/videos/{id}/content`.\n\n## 3.1 Основные параметры\n\n- `model: string` (обязательно)\n- Описание: Название вызываемой модели видео.\n- Примеры: `sora-2`, `doubao-seedance-2-0-260128`\n\n- `prompt: string` (рекомендуется)\n- Описание: Основное описание для генерации видео. Обязательно для передачи при использовании `content`, не может быть пустым.\n- Пример: `第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string` (опционально)\n- Описание: Целевая длительность. Выбирается один из двух параметров: этот или `duration`. Если переданы оба, приоритет обычно отдается результату парсинга шлюза.\n- Пример: `8`\n\n- `size: string` (опционально)\n- Описание: Выходное разрешение, часто используется `宽x高`.\n- Примеры: `720x1280`, `1280x720`\n\n- `mode: string` (опционально)\n- Описание: Режим генерации, по умолчанию `t2v`. Разные режимы имеют разные требования к параметрам исходных материалов.\n- Примеры: `t2v`, `i2v`, `i2v_first_last`, `reference_material`\n\n## 3.2 Общие параметры совместимости\n\n- `aspect_ratio` или `ratio`: Соотношение сторон.\n- `duration`: Псевдоним длительности (используйте либо это, либо `seconds`).\n- `quality` или `resolution`: Параметры, связанные с четкостью (разрешением).\n- `fps`: Частота кадров.\n- `function_mode`: Режим дополнительных функций для активации специфического поведения (например, `omni_reference` для универсальной справочной семантики).\n\n## 3.3 Параметры справочных материалов\n\n- `input_reference`: Стандартный входной объект ссылки.\n- Примечание: Поддерживается только формат строки URL, формат объекта не поддерживается.\n- Правильный пример: `\"input_reference\": \"https://example.com/ref.png\"`\n- Неправильный пример: `\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`: Ссылка на изображение.\n- Примечание: `image_url` обычно используется для одного изображения; `image_urls` используется для нескольких изображений или универсальной ссылки.\n\n- `end_image_url` / `last_image_url`: Ссылка на последний кадр.\n- Примечание: Обычно используется в сочетании с `mode=i2v_first_last` для обозначения конечного кадра видео.\n\n- `video_urls`: Список видеоссылок.\n- Примечание: Часто используется в сценариях универсальной ссылки `reference_material` или `content`.\n\n- `audio_urls`: Список аудиоссылок.\n- Примечание: Используется для фоновой музыки или стиля озвучивания (эффективность зависит от возможностей модели).\n\n- `reference_images`: Ссылка на несколько изображений.\n- Примечание: Часто используется в режимах многокадровой или многоизобразительной ссылки.\n\nПримечание: Разные модели предъявляют разные требования к полям материалов. Рекомендуется передавать параметры в соответствии с разделом «Режимы и минимальные входные параметры» ниже.\n\n## 3.4 Продвинутый режим content (рекомендуется для сложных сценариев ссылок)\n\nМожно напрямую передать массив `content`:\n- `type=text`: текстовая инструкция.\n- `type=image_url|video_url|audio_url`: медиа-ввод.\n- Поддерживается `name` для ссылки на материалы в тексте через `@名称`.\n\nОбязательные ограничения:\n- При использовании `content` параметр `prompt` все равно должен быть передан и не может быть пустым.\n\nСовместимые форматы записи:\n- `image_url/video_url/audio_url` может быть строкой или объектом `{ \"url\": \"https://...\" }`.\n- В `role` можно использовать `material`, также поддерживается совместимость с `reference_image/reference_video/reference_audio`.\n\nМожно одновременно передавать:\n- `generate_audio: boolean`\n- `watermark: boolean`\n\nДополнительные примечания:\n- `generate_audio=true`: запрос к модели на одновременную генерацию аудио (действует только для моделей с поддержкой этой функции).\n- `watermark=false`: запрос на отключение водяных знаков (фактическое применение зависит от политики модели и канала).\n- `name`: псевдоним ресурса, рекомендуется использовать то же значение, что и в `@名称` внутри `text`, чтобы модель могла точно сопоставить материалы.\n\nПоддержка параметров существенно различается между семействами моделей; рекомендуется выбирать параметры согласно следующей таблице:\n\n| Семейство моделей | Популярные названия (примеры) | Рек. мин. входные параметры | Общие расширенные параметры | Примечания |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | Наиболее чувствителен к `mode`; не все версии поддерживают `reference_material`. |\n| Sora Общие | `sora-2`, `sora-2-pro` и `*-stable/*-official` | `model + prompt` | `seconds/size`, рекомендуется добавить `input_reference` (строка URL) | При многоканальном откате требования к изображениям могут различаться; рекомендуется подготовить референсное изображение для повышения вероятности успеха. |\n| Sora С предустановкой длительности | `sora2-landscape-10s`, `sora2-pro-portrait-25s` и т. д. | `model + prompt` | `image_url/input_reference` | Длительность и ориентация обычно определяются названием модели, `seconds/ratio` действует только при разрешении модели. |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | Моделям типа `i2v/r2v` обычно требуются референсные изображения или материалы; модели типа `t2v` обычно поддерживают чистый текст. |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`, а также официальные поля `image/image_list` и др. | Совместимо с официальной семантикой путей (text2video/image2video/multi-image2video) и унифицировано в `/v1/videos`; внешние возможности продления видео не предоставляются. |\n| Агрегированные расширенные модели | `happyhorse*`, `grok-imagine-1.0-video*` и т. д. | `model + prompt` | `seconds/size/content` | Поддержка конкретных полей зависит от реализации модели и канала; рекомендуется использовать стандартные поля, и только при их недостаточности — `content`. |\n\nОписание:\n1. Если вы используете модели со стабильными псевдонимами (например, `*-stable`, `*-official`), базовый уровень может автоматически переключать каналы; старайтесь передавать «межканальные совместимые параметры» (`prompt + model + seconds/duration + size/ratio + 必要参考图`).\n2. Для сложных сценариев с несколькими типами ресурсов (изображение + видео + аудио + @имя) рекомендуется использовать `content`, так как он обладает самой высокой совместимостью.\n3. Если в документации модели явно не указана поддержка определенного поля, сначала выполните запрос с «минимальными входными параметрами», а затем постепенно добавляйте расширенные параметры.\n\n### 4.1 Дополнение к официальному режиму Kling\n\n- `mode=t2v`: текст в видео\n- `mode=i2v`: изображение в видео (требуется `image` или `image_url`)\n- `mode=multi_i2v`: ссылка на несколько изображений (требуется `image_list` или несколько `image_urls`)\n- `mode=extend`: не поддерживается (возможность `/v1/videos` для продления видео временно недоступна во внешнем API)\n\nСтандартные официальные параметры можно передавать напрямую в теле запроса `/v1/videos`:\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Дополнение к видеорежиму Grok\n\nРекомендуемые параметры:\n- `model`: например, `grok-video-3`\n- `prompt`\n- `ratio` или `aspect_ratio`\n- `resolution` или `size`\n- `seconds` или `duration`\n- `image` / `image_url` / `input_reference` (ссылка на одно изображение)\n- `reference_images` / `reference_image_urls` (ссылка на несколько изображений, официальная семантика `reference-to-video`)\n- `mode` (опционально): `image-to-video`, `reference-to-video`\n\nОграничения:\n- `mode=edit-video` / `mode=extend-video` не поддерживаются (редактирование и продление видео временно недоступны во внешнем API).\n- `image/input_reference` и `reference_images` нельзя передавать одновременно.\n\n- `mode=t2v`\n- Минимальное количество входных параметров: `model + prompt`\n\n- `mode=i2v` (эквивалентно `i2v_first`)\n- Минимальный входной параметр: `model + prompt + image_url` (или URL-строка `input_reference`)\n\n- `mode=i2v_first_last`\n- Минимальное количество входных параметров: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Минимальное количество входных параметров: `model + prompt + reference_images` (обычно 1–4 изображения)\n\n- `mode=reference_material`\n- Минимальное количество входных параметров: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- Для сложных сценариев рекомендуется использовать `content + function_mode=omni_reference`\n- Примечание: при передаче `function_mode=omni_reference`, даже если `mode=reference_material` не передан явно, запрос будет обработан в соответствии с семантикой универсальной ссылки.",
+        "description": "Интерфейс генерации видео, совместимый с форматами OpenAI Sora. Поддерживает режимы генерации «текст в видео» и генерацию на основе изображений/видео.\n\n- `POST /v1/videos`: Создание задачи генерации видео\n- `GET /v1/videos/{video_id}`: Запрос статуса задачи\n- `GET /v1/videos/{video_id}/content`: получить двоичное содержимое видео\n\nВ настоящее время недоступно внешним пользователям:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nСтандартные заголовки аутентификации:\n- `Content-Type: application/json`\n\n1. Создайте задачу через `POST /v1/videos` и получите `id`\n2. Выполняйте опрос `GET /v1/videos/{id}`, пока не получите `completed` или `failed`\n3. После завершения в первую очередь используйте `video_url` из ответа\n4. Если требуется унифицированная загрузка, вызовите `GET /v1/videos/{id}/content`\n\nОсновные параметры:\n- `model: string`: обязательно, внешнее имя модели\n- `prompt: string`: рекомендуется, описание для генерации видео\n- `seconds: number|string`: необязательно, целевая длительность\n- `duration: number|string`: необязательно, псевдоним длительности\n- `size: string`: необязательно, размер выходного видео\n- `mode: string`: необязательно, распространённые значения: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nЧасто используемые совместимые параметры:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nЧасто используемые расширенные параметры Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Серия Veo\n\n#### Основные модели Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-fast-stable`\n- `veo3.1-fast-official`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n#### Предустановленные модели Veo 2.x / 3.1\n\n- `veo_2_0_t2v_landscape`\n- `veo_2_0_t2v_landscape-stable`\n- `veo_2_0_t2v_portrait`\n- `veo_2_0_t2v_portrait-stable`\n- `veo_2_0_i2v_landscape`\n- `veo_2_0_i2v_landscape-stable`\n- `veo_2_0_i2v_portrait`\n- `veo_2_0_i2v_portrait-stable`\n- `veo_2_1_fast_d_15_t2v_landscape`\n- `veo_2_1_fast_d_15_t2v_landscape-stable`\n- `veo_2_1_fast_d_15_t2v_portrait`\n- `veo_2_1_fast_d_15_t2v_portrait-stable`\n- `veo_2_1_fast_d_15_i2v_landscape`\n- `veo_2_1_fast_d_15_i2v_landscape-stable`\n- `veo_2_1_fast_d_15_i2v_portrait`\n- `veo_2_1_fast_d_15_i2v_portrait-stable`\n- `veo_3_1_t2v_landscape`\n- `veo_3_1_t2v_landscape-stable`\n- `veo_3_1_t2v_portrait`\n- `veo_3_1_t2v_portrait-stable`\n- `veo_3_1_t2v_fast_landscape`\n- `veo_3_1_t2v_fast_landscape-stable`\n- `veo_3_1_t2v_fast_portrait`\n- `veo_3_1_t2v_fast_portrait-stable`\n- `veo_3_1_t2v_fast_1080p`\n- `veo_3_1_t2v_fast_1080p-stable`\n- `veo_3_1_t2v_fast_4k`\n- `veo_3_1_t2v_fast_4k-stable`\n- `veo_3_1_t2v_fast_portrait_1080p`\n- `veo_3_1_t2v_fast_portrait_1080p-stable`\n- `veo_3_1_t2v_fast_portrait_4k`\n- `veo_3_1_t2v_fast_portrait_4k-stable`\n- `veo_3_1_t2v_fast_ultra`\n- `veo_3_1_t2v_fast_ultra-stable`\n- `veo_3_1_t2v_fast_ultra_1080p`\n- `veo_3_1_t2v_fast_ultra_1080p-stable`\n- `veo_3_1_t2v_fast_ultra_4k`\n- `veo_3_1_t2v_fast_ultra_4k-stable`\n- `veo_3_1_t2v_fast_ultra_relaxed`\n- `veo_3_1_t2v_fast_ultra_relaxed-stable`\n- `veo_3_1_t2v_fast_portrait_ultra`\n- `veo_3_1_t2v_fast_portrait_ultra-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_1080p`\n- `veo_3_1_t2v_fast_portrait_ultra_1080p-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_4k`\n- `veo_3_1_t2v_fast_portrait_ultra_4k-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_relaxed`\n- `veo_3_1_t2v_fast_portrait_ultra_relaxed-stable`\n- `veo_3_1_i2v_s_landscape`\n- `veo_3_1_i2v_s_landscape-stable`\n- `veo_3_1_i2v_s_portrait`\n- `veo_3_1_i2v_s_portrait-stable`\n- `veo_3_1_i2v_s_fast_fl`\n- `veo_3_1_i2v_s_fast_fl-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl`\n- `veo_3_1_i2v_s_fast_ultra_fl-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl_1080p`\n- `veo_3_1_i2v_s_fast_ultra_fl_1080p-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl_4k`\n- `veo_3_1_i2v_s_fast_ultra_fl_4k-stable`\n- `veo_3_1_i2v_s_fast_ultra_relaxed`\n- `veo_3_1_i2v_s_fast_ultra_relaxed-stable`\n- `veo_3_1_i2v_s_fast_portrait_fl`\n- `veo_3_1_i2v_s_fast_portrait_fl-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_1080p`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_1080p-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_4k`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_4k-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_relaxed`\n- `veo_3_1_i2v_s_fast_portrait_ultra_relaxed-stable`\n- `veo_3_1_r2v_fast`\n- `veo_3_1_r2v_fast-stable`\n- `veo_3_1_r2v_fast_ultra`\n- `veo_3_1_r2v_fast_ultra-stable`\n- `veo_3_1_r2v_fast_ultra_1080p`\n- `veo_3_1_r2v_fast_ultra_1080p-stable`\n- `veo_3_1_r2v_fast_ultra_4k`\n- `veo_3_1_r2v_fast_ultra_4k-stable`\n- `veo_3_1_r2v_fast_ultra_relaxed`\n- `veo_3_1_r2v_fast_ultra_relaxed-stable`\n- `veo_3_1_r2v_fast_portrait`\n- `veo_3_1_r2v_fast_portrait-stable`\n- `veo_3_1_r2v_fast_portrait_ultra`\n- `veo_3_1_r2v_fast_portrait_ultra-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_1080p`\n- `veo_3_1_r2v_fast_portrait_ultra_1080p-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_4k`\n- `veo_3_1_r2v_fast_portrait_ultra_4k-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_relaxed`\n- `veo_3_1_r2v_fast_portrait_ultra_relaxed-stable`\n\nРекомендации:\n- Для генерации видео только по тексту в первую очередь используйте основные модели `veo3*` / `veo3.1*`\n- Если есть фиксированные требования к размеру, ориентации или длительности, в первую очередь используйте имя предустановленной модели\n- Для сценариев генерации видео по изображению или по референсу рекомендуется явно передавать `mode + image_url/reference_images`\n\n### 4.2 Серия Sora\n\nБазовые модели:\n- `sora-2`\n- `sora-2-pro`\n- `sora-2-stable`\n- `sora-2-pro-stable`\n- `sora-2-official`\n- `sora-2-pro-official`\n\nПредустановленные модели:\n- `sora2-landscape-10s`\n- `sora2-landscape-10s-stable`\n- `sora2-landscape-10s-official`\n- `sora2-portrait-10s`\n- `sora2-portrait-10s-stable`\n- `sora2-portrait-10s-official`\n- `sora2-landscape-15s`\n- `sora2-landscape-15s-stable`\n- `sora2-landscape-15s-official`\n- `sora2-portrait-15s`\n- `sora2-portrait-15s-stable`\n- `sora2-portrait-15s-official`\n- `sora2-pro-landscape-25s`\n- `sora2-pro-landscape-25s-stable`\n- `sora2-pro-landscape-25s-official`\n- `sora2-pro-portrait-25s`\n- `sora2-pro-portrait-25s-stable`\n- `sora2-pro-portrait-25s-official`\n- `sora2-pro-landscape-hd-15s`\n- `sora2-pro-landscape-hd-15s-stable`\n- `sora2-pro-landscape-hd-15s-official`\n- `sora2-pro-portrait-hd-15s`\n- `sora2-pro-portrait-hd-15s-stable`\n- `sora2-pro-portrait-hd-15s-official`\n\nРекомендации:\n- `sora-2*` подходит для общего использования\n- Предустановленная модель `sora2-*` подходит для сценариев с фиксированной длительностью и ориентацией\n- Если нужна стабильная/официальная стратегия, сразу выбирайте `*-stable` / `*-official`\n\n### 4.3 Серия Seedance\n\nПубличная модель:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-t2v-250428-official`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428-official`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-250528-official`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-0-pro-fast-251015-official`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-1-5-pro-251215-official`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-260128-official`\n- `doubao-seedance-2-0-fast-260128`\n- `doubao-seedance-2-0-fast-260128-official`\n\nРекомендации:\n- Для генерации видео по тексту в приоритете `*-t2v-*` или `pro / fast`\n- Для генерации видео по изображению в приоритете `*-i2v-*`\n- Для сценариев со сложными референсными материалами предпочтительно использовать `content`\n\n### 4.4 Видеосерия Grok\n\nПубличная модель:\n- `grok-video-3`\n\nЧасто используемые параметры:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n### 4.5 Основная видеомодель Kling\n\nОсновная публичная модель:\n- `kling-video`\n\nОбязательно:\n- `model`\n- `model_name`\n\nПоддерживаемые `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nРаспространённые `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nМинимальные входные параметры:\n- Генерация видео по тексту: `model + model_name + prompt + mode=t2v`\n- Генерация видео по изображению: `model + model_name + prompt + mode=i2v + image`\n- Референс по нескольким изображениям: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Продление видео: `model + model_name + mode=extend + video_id`\n\nПример:\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Минимальное количество входных параметров: `model + prompt`\n\n- `mode=i2v`\n- Минимальное количество входных параметров: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Минимальное количество входных параметров: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Минимальное количество входных параметров: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Минимальное количество входных параметров: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`",
         "operationId": "createVideo",
         "tags": [
           "Совместимый формат Sora для генерации видео"
@@ -587,7 +673,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Название вызываемой видеомодели. Примеры: `sora-2`, `doubao-seedance-2-0-260128`",
+                    "description": "Имя модели. Разные модели запускают разную логику адаптации на стороне upstream.",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -619,7 +705,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Основное описание для генерации видео. При использовании `content` этот параметр также обязателен и не может быть пустым. Пример: `第一人称视角果茶广告，节奏轻快`"
+                    "description": "Единая точка входа для промптов. Обязательно для большинства моделей."
                   },
                   "image": {
                     "type": "string",
@@ -628,7 +714,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "Псевдоним длительности (используйте либо это поле, либо `seconds`)."
+                    "description": "Унифицированный параметр для длительности; некоторые модели также принимают seconds."
                   },
                   "width": {
                     "type": "integer",
@@ -643,7 +729,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "Частота кадров."
+                    "description": "Video frame rate"
                   },
                   "seed": {
                     "type": "integer",
@@ -672,7 +758,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Режим генерации; если не передан, по умолчанию используется `t2v`. Разные режимы имеют разные требования к параметрам материалов. Примеры: `t2v`, `i2v`, `i2v_first_last`, `reference_material`."
+                    "description": "Поле подсказки канала/режима, например i2v_first, reference_images и т. д."
                   },
                   "images": {
                     "type": "array",
@@ -683,15 +769,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "Выходное разрешение, обычно `宽x高`. Примеры: `720x1280`, `1280x720`"
+                    "description": "Унифицированная точка входа для размера; будет сопоставляться с resolution/aspect_ratio и т. д."
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Целевая длительность. Выберите между этим параметром и `duration`; если переданы оба, приоритет обычно отдается результату парсинга шлюза. Пример: `8`"
+                    "description": "Sora совместимая точка входа; во время выполнения будет выполнен откат к duration."
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Стандартный ссылочный объект ввода."
+                    "description": "Входное совместимое эталонное изображение для Sora/Veo; может быть multipart-файлом или совместимым объектом."
                   }
                 },
                 "required": [
@@ -706,7 +792,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Название вызываемой видеомодели. Примеры: `sora-2`, `doubao-seedance-2-0-260128`",
+                    "description": "Имя модели. Разные модели запускают разную логику адаптации на стороне upstream.",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -738,7 +824,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Основное описание для генерации видео. При использовании `content` этот параметр также обязателен и не может быть пустым. Пример: `第一人称视角果茶广告，节奏轻快`"
+                    "description": "Единая точка входа для промптов. Обязательно для большинства моделей."
                   },
                   "image": {
                     "type": "string",
@@ -747,7 +833,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "Псевдоним длительности (используйте либо это поле, либо `seconds`)."
+                    "description": "Унифицированный параметр для длительности; некоторые модели также принимают seconds."
                   },
                   "width": {
                     "type": "integer",
@@ -762,7 +848,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "Частота кадров."
+                    "description": "Video frame rate"
                   },
                   "seed": {
                     "type": "integer",
@@ -791,7 +877,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Режим генерации; если не передан, по умолчанию используется `t2v`. Разные режимы имеют разные требования к параметрам материалов. Примеры: `t2v`, `i2v`, `i2v_first_last`, `reference_material`."
+                    "description": "Поле подсказки канала/режима, например i2v_first, reference_images и т. д."
                   },
                   "images": {
                     "type": "array",
@@ -802,15 +888,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "Выходное разрешение, обычно `宽x高`. Примеры: `720x1280`, `1280x720`"
+                    "description": "Унифицированная точка входа для размера; будет сопоставляться с resolution/aspect_ratio и т. д."
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Целевая длительность. Выберите между этим параметром и `duration`; если переданы оба, приоритет обычно отдается результату парсинга шлюза. Пример: `8`"
+                    "description": "Sora совместимая точка входа; во время выполнения будет выполнен откат к duration."
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Стандартный ссылочный объект ввода."
+                    "description": "Входное совместимое эталонное изображение для Sora/Veo; может быть multipart-файлом или совместимым объектом."
                   }
                 },
                 "required": [
@@ -1058,8 +1144,7 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string",
-                      "description": "ID задачи (используется для последующего запроса или скачивания)."
+                      "type": "string"
                     },
                     "task_id": {
                       "type": "string",
@@ -1073,25 +1158,25 @@
                     },
                     "status": {
                       "type": "string",
-                      "description": "Статус задачи.",
+                      "description": "Should use VideoStatus constants: VideoStatusQueued, VideoStatusInProgress, VideoStatusCompleted, VideoStatusFailed",
                       "enum": [
                         "queued",
                         "in_progress",
                         "completed",
-                        "failed"
+                        "failed",
+                        "video_url",
+                        "url",
+                        "completed_at"
                       ]
                     },
                     "progress": {
-                      "type": "integer",
-                      "description": "Прогресс (0–100, приближенное значение)."
+                      "type": "integer"
                     },
                     "created_at": {
-                      "type": "integer",
-                      "description": "Время создания (Unix-время в секундах)."
+                      "type": "integer"
                     },
                     "completed_at": {
-                      "type": "integer",
-                      "description": "Время завершения."
+                      "type": "integer"
                     },
                     "expires_at": {
                       "type": "integer"
@@ -1111,14 +1196,6 @@
                     "metadata": {
                       "type": "object",
                       "additionalProperties": true
-                    },
-                    "video_url": {
-                      "type": "string",
-                      "description": "Прямая ссылка для скачивания видео."
-                    },
-                    "url": {
-                      "type": "string",
-                      "description": "Некоторые модели или каналы могут возвращать это поле в качестве URL-адреса результата."
                     }
                   },
                   "required": [
@@ -1852,6 +1929,43 @@
                     "created_at": {
                       "type": "string",
                       "description": "Время создания (Unix-время в секундах)."
+                    },
+                    "items": {
+                      "type": "string",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "ID задачи."
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Статус задачи, обычно: `queued`, `running`, `succeeded`, `failed`."
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "description": "URL-адрес результата видео."
+                              }
+                            }
+                          },
+                          "video_url": {
+                            "type": "string",
+                            "description": "URL-адрес результата видео."
+                          },
+                          "error": {
+                            "type": "string",
+                            "description": "Сообщение об ошибке в случае сбоя."
+                          },
+                          "progress": {
+                            "type": "string",
+                            "description": "Ход выполнения задачи."
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -1948,6 +2062,43 @@
                         },
                         "total_tokens": {
                           "type": "integer"
+                        }
+                      }
+                    },
+                    "items": {
+                      "type": "string",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "ID задачи."
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Статус задачи, обычно: `queued`, `running`, `succeeded`, `failed`."
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "description": "URL-адрес результата видео."
+                              }
+                            }
+                          },
+                          "video_url": {
+                            "type": "string",
+                            "description": "URL-адрес результата видео."
+                          },
+                          "error": {
+                            "type": "string",
+                            "description": "Сообщение об ошибке в случае сбоя."
+                          },
+                          "progress": {
+                            "type": "string",
+                            "description": "Ход выполнения задачи."
+                          }
                         }
                       }
                     }

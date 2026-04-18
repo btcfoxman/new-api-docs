@@ -245,7 +245,7 @@
       "post": {
         "summary": "Hình ảnh Gemini (Nano Banana)",
         "deprecated": false,
-        "description": "Tạo hình ảnh với Gemini.\n\nDòng Nano Banana hỗ trợ định dạng Dall-E của OpenAI (xem liên kết [Tạo ảnh theo định dạng DALL-E của OpenAI](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).",
+        "description": "Tạo hình ảnh với Gemini.\n\nDòng Nano Banana hỗ trợ định dạng Dall-E của OpenAI (xem liên kết [Tạo ảnh theo định dạng DALL-E của OpenAI](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).\n\nBổ sung phần mô tả các trường tạo ảnh Gemini của /v1beta/models/{model}:generateContent, để tránh việc OpenAPI công khai làm mất description trên các trường lồng nhau.",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "Định dạng Gemini cho tạo ảnh"
@@ -274,7 +274,8 @@
                       "type": "object",
                       "properties": {
                         "role": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "Vai trò của tin nhắn, các giá trị phổ biến là `user` hoặc `model`."
                         },
                         "parts": {
                           "type": "array",
@@ -282,13 +283,30 @@
                             "type": "object",
                             "properties": {
                               "text": {
-                                "type": "string"
+                                "type": "string",
+                                "description": "Nội dung đầu vào văn bản."
+                              },
+                              "inlineData": {
+                                "type": "object",
+                                "description": "Đối tượng nội dung nhị phân nội tuyến, phù hợp cho đầu vào như hình ảnh base64.",
+                                "properties": {
+                                  "mimeType": {
+                                    "type": "string",
+                                    "description": "Loại MIME của nội dung nội tuyến, ví dụ: `image/png`."
+                                  },
+                                  "data": {
+                                    "type": "string",
+                                    "description": "Nội dung dữ liệu nhị phân sau khi được mã hóa Base64."
+                                  }
+                                }
                               }
                             }
-                          }
+                          },
+                          "description": "Mảng các đoạn thông điệp; mọi đầu vào như văn bản, hình ảnh, v.v. đều được đặt ở đây."
                         }
                       }
-                    }
+                    },
+                    "description": "Bắt buộc. Mảng nội dung đầu vào của Gemini, thường chứa ít nhất một thông điệp user."
                   },
                   "generationConfig": {
                     "type": "object",
@@ -297,23 +315,28 @@
                         "type": "array",
                         "items": {
                           "type": "string"
-                        }
+                        },
+                        "description": "Danh sách các chế độ phản hồi; tạo ảnh thường truyền `IMAGE`."
                       },
                       "imageConfig": {
                         "type": "object",
                         "properties": {
                           "aspectRatio": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "Tỷ lệ khung hình, ví dụ: `16:9`, `1:1`, `9:16`."
                           },
                           "imageSize": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "Mức độ phân giải đầu ra, ví dụ: `1K`, `2K`, `4K`."
                           }
-                        }
+                        },
+                        "description": "Đối tượng cấu hình tạo ảnh."
                       }
                     },
                     "required": [
                       "responseModalities"
-                    ]
+                    ],
+                    "description": "Tạo đối tượng cấu hình."
                   }
                 },
                 "required": [
@@ -374,7 +397,7 @@
       "post": {
         "summary": "Tạo hình ảnh (tương thích OpenAI Dall-E)",
         "deprecated": false,
-        "description": "OpenAI API tạo hình ảnh định dạng Dall-E.",
+        "description": "OpenAI API tạo hình ảnh định dạng Dall-E.\n\n- `POST /v1/images/generations`: Tạo tác vụ tạo ảnh\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo ảnh\n- `n: number`: Tùy chọn, số lượng ảnh tạo\n- `size: string`: Tùy chọn, biểu thức kích thước hoặc độ phân giải\n- `quality: string`: Tùy chọn, mức chất lượng\n- `response_format: string`: Tùy chọn, định dạng trả về\n\nCác tham số mở rộng tương thích thường dùng:\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nTham số mở rộng dành riêng cho Kling:\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Dòng Nano Banana\n\nMô hình công khai:\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nMô tả khả năng:\n- `nano-banana`: Tạo ảnh từ văn bản cơ bản, cũng tương thích với chỉnh sửa ảnh\n- `nano-banana-pro*`: Phiên bản chất lượng cao hơn\n- `nano-banana-2*`: Họ phiên bản mới hơn\n- `*-2k` / `*-4k`: Mẫu độ phân giải cao\n\nTham số thường dùng:\n- Text-to-image: `model + prompt`\n- Chỉnh sửa ảnh: `model + prompt + image`, cũng tương thích với `image_urls`\n- Mở rộng thường dùng: `n` `size` `quality` `response_format`\n\nVí dụ:\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Dòng Seedream\n\nMô hình công khai:\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nMô tả khả năng:\n- Thống nhất gọi theo cách text-to-image\n- Khuyến nghị ưu tiên truyền tham số chuẩn: `prompt + model + size/aspect_ratio`\n\nTham số thường dùng:\n- `model + prompt`\n- Tùy chọn: `size` `aspect_ratio` `n`\n\n### 3.3 Kling Mô hình chính hình ảnh thông thường\n\nMô hình chính công khai:\n- `kling-image`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nMô tả khả năng:\n- Text-to-image: `model + model_name + prompt`\n- Image-to-image: thêm `image` trên cơ sở text-to-image\n- Multi-image-to-image: truyền `subject_image_list`, hoặc truyền nhiều `image_urls/images`\n- Outpainting: truyền `image` và tham số tỷ lệ mở rộng ảnh\n\nTham số thường dùng:\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Mô hình chính hình ảnh Omni\n\nMô hình chính công khai:\n- `kling-omni-image`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-image-o1`\n- `kling-v3-omni`\n\nTham số thường dùng:\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling Mô hình thử đồ ảo\n\nMô hình công khai:\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nTham số đầu vào tối thiểu:\n- `model + human_image + cloth_image`\n\nGiải thích:\n- Hai mô hình này bản thân đã là mô hình chính hoàn chỉnh, không cần truyền thêm `model_name`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageGeneration",
         "tags": [
           "Tạo ảnh OpenAI định dạng DALL-E"
@@ -389,21 +412,29 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Tên mô hình",
-                    "example": "dall-e-3"
+                    "description": "Tên mô hình hình ảnh công khai.",
+                    "example": "dall-e-3",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Prompt tạo ảnh"
+                    "description": "Mô tả tạo ảnh. Với mô hình thử đồ ảo, có thể không truyền."
                   },
                   "n": {
                     "type": "integer",
-                    "description": "Số lượng tạo",
+                    "description": "Số lượng ảnh được tạo.",
                     "default": 1
                   },
                   "size": {
                     "type": "string",
-                    "description": "Kích thước hình ảnh",
+                    "description": "Biểu thị kích thước hoặc độ phân giải.",
                     "enum": [
                       "1024x1024",
                       "1024x1792",
@@ -412,7 +443,7 @@
                   },
                   "quality": {
                     "type": "string",
-                    "description": "Chất lượng tạo ảnh",
+                    "description": "Cấp độ chất lượng.",
                     "enum": [
                       "standard",
                       "hd"
@@ -428,7 +459,7 @@
                   },
                   "response_format": {
                     "type": "string",
-                    "description": "Định dạng phản hồi",
+                    "description": "Định dạng trả về.",
                     "enum": [
                       "url",
                       "b64_json"
@@ -444,11 +475,66 @@
                   "prompt"
                 ]
               },
-              "example": {
-                "model": "dall-e-3",
-                "prompt": "A cute baby sea otter",
-                "n": 1,
-                "size": "1024x1024"
+              "examples": {
+                "nano_banana_text2img": {
+                  "summary": "Nano Banana Tạo ảnh từ văn bản",
+                  "value": {
+                    "model": "nano-banana",
+                    "prompt": "a cute cat running in cloud",
+                    "n": 1,
+                    "size": "1024x1792"
+                  }
+                },
+                "seedream_text2img": {
+                  "summary": "Seedream tạo ảnh từ văn bản",
+                  "value": {
+                    "model": "doubao-seedream-3-0-t2i-250415",
+                    "prompt": "一张电影感海边日落人像",
+                    "size": "1536x1024",
+                    "n": 1
+                  }
+                },
+                "kling_text2img": {
+                  "summary": "Kling Tạo ảnh từ văn bản",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v3",
+                    "prompt": "海边日落，电影感人像",
+                    "aspect_ratio": "16:9",
+                    "n": 1
+                  }
+                },
+                "kling_img2img": {
+                  "summary": "Kling Tạo ảnh từ ảnh",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v2-1",
+                    "prompt": "改成赛博朋克夜景风格",
+                    "image": "https://example.com/input.png",
+                    "n": 1
+                  }
+                },
+                "kling_omni_image": {
+                  "summary": "Hình ảnh Kling Omni",
+                  "value": {
+                    "model": "kling-omni-image",
+                    "model_name": "kling-v3-omni",
+                    "prompt": "生成一张海边跳舞的图片",
+                    "element_list": [
+                      {
+                        "element_id": 835266081714884677
+                      }
+                    ]
+                  }
+                },
+                "kling_virtual_try_on": {
+                  "summary": "Kling Thử đồ ảo",
+                  "value": {
+                    "model": "kolors-virtual-try-on-v1",
+                    "human_image": "https://example.com/human.jpg",
+                    "cloth_image": "https://example.com/cloth.jpg"
+                  }
+                }
               }
             }
           }
@@ -572,7 +658,7 @@
       "post": {
         "summary": "Tạo video",
         "deprecated": false,
-        "description": "Interface tạo video định dạng tương thích với OpenAI Sora. Hỗ trợ chế độ tạo video từ văn bản (text-to-video) và tạo video tham chiếu từ hình ảnh/video.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video (tải xuống)\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`: Danh sách tác vụ\n- `POST /v1/videos/{video_id}/remix`: Chỉnh sửa video lớp thứ hai / remix\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json` (khi tạo tác vụ)\n\n1. Gọi `POST /v1/videos` để tạo tác vụ và nhận `id`.\n2. Kiểm tra vòng lặp (polling) `GET /v1/videos/{id}` cho đến khi `status=completed` hoặc `failed`.\n3. Sau khi `completed`, ưu tiên sử dụng `video_url` trong kết quả trả về; nếu cần tải xuống thống nhất qua gateway, có thể gọi `GET /v1/videos/{id}/content`.\n\n## 3.1 Tham số cốt lõi\n\n- `model: string` (Bắt buộc)\n- Mô tả: Tên mô hình video cần gọi.\n- Ví dụ: `sora-2`, `doubao-seedance-2-0-260128`\n\n- `prompt: string` (Khuyên dùng)\n- Mô tả: Mô tả chính để tạo video. Phải truyền tham số này ngay cả khi sử dụng `content`, không được để trống.\n- Ví dụ: `第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string` (Tùy chọn)\n- Mô tả: Thời lượng mục tiêu. Chọn một trong hai giữa tham số này và `duration`, nếu truyền cả hai thì thông thường sẽ căn cứ theo kết quả phân tích của gateway.\n- Ví dụ: `8`\n\n- `size: string` (Tùy chọn)\n- Mô tả: Độ phân giải đầu ra, thường dùng `宽x高`.\n- Ví dụ: `720x1280`, `1280x720`\n\n- `mode: string` (Tùy chọn)\n- Mô tả: Chế độ tạo, nếu không truyền mặc định là `t2v`. Các chế độ khác nhau có yêu cầu khác nhau về tham số tài liệu (assets).\n- Ví dụ: `t2v`, `i2v`, `i2v_first_last`, `reference_material`\n\n## 3.2 Tham số tương thích chung\n\n- `aspect_ratio` hoặc `ratio`: Tỷ lệ khung hình.\n- `duration`: Bí danh thời lượng (có thể chọn một trong hai với `seconds`).\n- `quality` hoặc `resolution`: Tham số liên quan đến độ phân giải.\n- `fps`: Tốc độ khung hình.\n- `function_mode`: Chế độ chức năng tùy chọn, dùng để kích hoạt các hành vi cụ thể (ví dụ: `omni_reference` biểu thị ngữ nghĩa tham chiếu toàn năng).\n\n## 3.3 Tham số tài liệu tham chiếu\n\n- `input_reference`: Đối tượng nhập tham chiếu chuẩn.\n- Mô tả: Chỉ hỗ trợ định dạng chuỗi URL, không hỗ trợ định dạng đối tượng.\n- Ví dụ đúng: `\"input_reference\": \"https://example.com/ref.png\"`\n- Ví dụ sai: `\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`: Tham chiếu hình ảnh.\n- Mô tả: `image_url` thường dùng cho đơn ảnh; `image_urls` dùng cho đa ảnh hoặc tham chiếu toàn năng.\n\n- `end_image_url` / `last_image_url`: Tham chiếu khung hình cuối.\n- Mô tả: Thường kết hợp với `mode=i2v_first_last`, biểu thị khung hình kết thúc video.\n\n- `video_urls`: Danh sách tham chiếu video.\n- Mô tả: Thường dùng trong các kịch bản tham chiếu toàn năng `reference_material` hoặc `content`.\n\n- `audio_urls`: Danh sách tham chiếu âm thanh.\n- Mô tả: Dùng để tham chiếu phong cách nhạc nền/thuyết minh (có hiệu lực hay không tùy thuộc vào khả năng của mô hình).\n\n- `reference_images`: Tham chiếu đa ảnh.\n- Mô tả: Thường dùng trong chế độ tham chiếu đa khung hình/đa ảnh.\n\nLưu ý: Các mô hình khác nhau có yêu cầu khác nhau về trường tài liệu, nên truyền tham số theo phần \"Chế độ và tham số đầu vào tối thiểu\" bên dưới.\n\n## 3.4 Chế độ content nâng cao (khuyên dùng cho các kịch bản tham chiếu phức tạp)\n\nCó thể truyền trực tiếp mảng `content`:\n- `type=text`: Chỉ lệnh văn bản.\n- `type=image_url|video_url|audio_url`: Đầu vào đa phương tiện.\n- Hỗ trợ `name` để tham chiếu tài nguyên trong văn bản thông qua `@名称`.\n\nRàng buộc bắt buộc:\n- Khi sử dụng `content`, `prompt` vẫn phải được truyền và không được để trống.\n\nCách viết tương thích:\n- `image_url/video_url/audio_url` có thể là một chuỗi hoặc đối tượng `{ \"url\": \"https://...\" }`.\n- `role` có thể sử dụng `material`, cũng tương thích với `reference_image/reference_video/reference_audio`.\n\nCó thể mang theo đồng thời:\n- `generate_audio: boolean`\n- `watermark: boolean`\n\nGiải thích bổ sung:\n- `generate_audio=true`: Yêu cầu mô hình đồng thời tạo âm thanh (chỉ có hiệu lực với các mô hình hỗ trợ khả năng này).\n- `watermark=false`: Yêu cầu tắt hình mờ (việc có hiệu lực thực tế hay không phụ thuộc vào mô hình và chính sách kênh).\n- `name`: Bí danh tài nguyên, nên để giống với `@名称` trong `text` để mô hình liên kết chính xác tài nguyên.\n\nCác họ mô hình khác nhau có sự khác biệt lớn về hỗ trợ tham số, nên chọn tham số theo bảng dưới đây:\n\n| Họ mô hình | Tên mô hình phổ biến (ví dụ) | Tham số đầu vào tối thiểu đề xuất | Tham số mở rộng thường dùng | Lưu ý |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | Nhạy cảm nhất với `mode`; không phải tất cả phiên bản đều hỗ trợ `reference_material`. |\n| Sora Phổ biến | `sora-2` `sora-2-pro` và `*-stable/*-official` | `model + prompt` | `seconds/size`, nên bổ sung `input_reference` (chuỗi URL) | Khi fallback đa kênh, yêu cầu về hình ảnh có thể khác nhau, nên chuẩn bị hình ảnh tham chiếu để tăng tỷ lệ thành công. |\n| Sora Thời lượng đặt trước | `sora2-landscape-10s` `sora2-pro-portrait-25s`, v.v. | `model + prompt` | `image_url/input_reference` | Thời lượng và hướng thường do tên mô hình quyết định, `seconds/ratio` chỉ có hiệu lực khi mô hình cho phép. |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | Các mô hình loại `i2v/r2v` thường cần hình ảnh hoặc tài nguyên tham chiếu; loại `t2v` thường có thể dùng thuần văn bản. |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`, cũng như các trường chính thức như `image/image_list` | Đã tương thích với ngữ nghĩa đường dẫn chính thức (text2video/image2video/multi-image2video) và thống nhất vào `/v1/videos`; không cung cấp khả năng mở rộng video ra bên ngoài. |\n| Mô hình mở rộng tổng hợp | `happyhorse*` `grok-imagine-1.0-video*`, v.v. | `model + prompt` | `seconds/size/content` | Các trường hỗ trợ cụ thể phụ thuộc vào việc triển khai mô hình và kênh, nên ưu tiên sử dụng các trường tiêu chuẩn, nếu thiếu mới dùng `content`. |\n\nGiải thích:\n1. Nếu bạn sử dụng mô hình bí danh ổn định (như `*-stable`, `*-official`), lớp dưới có thể tự động chuyển đổi kênh, vui lòng cố gắng truyền \"tham số tương thích đa kênh\" (`prompt + model + seconds/duration + size/ratio + 必要参考图`).\n2. Đối với các kịch bản đa chất liệu phức tạp (Hình ảnh + Video + Âm thanh + @Tên), ưu tiên sử dụng `content` để có khả năng tương thích cao nhất.\n3. Nếu tài liệu mô hình không ghi rõ hỗ trợ một trường cụ thể, vui lòng chạy thử với \"tham số đầu vào tối thiểu\" trước, sau đó mới dần dần thêm các tham số mở rộng.\n\n### 4.1 Bổ sung chế độ chính thức của Kling\n\n- `mode=t2v`: Văn bản sang video\n- `mode=i2v`: Hình ảnh sang video (yêu cầu `image` hoặc `image_url`)\n- `mode=multi_i2v`: Tham chiếu nhiều hình ảnh (yêu cầu `image_list` hoặc nhiều `image_urls`)\n- `mode=extend`: Không hỗ trợ (tính năng kéo dài video tạm thời chưa cung cấp khả năng `/v1/videos` ra bên ngoài)\n\nCác tham số chính thức phổ biến có thể được truyền trực tiếp trong body request của `/v1/videos`:\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Bổ sung chế độ video Grok\n\nTham số đề xuất:\n- `model`: Ví dụ `grok-video-3`\n- `prompt`\n- `ratio` hoặc `aspect_ratio`\n- `resolution` hoặc `size`\n- `seconds` hoặc `duration`\n- `image` / `image_url` / `input_reference` (Tham chiếu hình ảnh đơn)\n- `reference_images` / `reference_image_urls` (Tham chiếu nhiều hình ảnh, ngữ nghĩa `reference-to-video` chính thức)\n- `mode` (tùy chọn): `image-to-video`, `reference-to-video`\n\nRàng buộc:\n- Không hỗ trợ `mode=edit-video` / `mode=extend-video` (Chỉnh sửa và kéo dài video tạm thời không cung cấp ra bên ngoài).\n- `image/input_reference` và `reference_images` không thể truyền cùng lúc.\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v` (tương đương `i2v_first`)\n- Tham số đầu vào tối thiểu: `model + prompt + image_url` (hoặc chuỗi URL `input_reference`)\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images` (thông thường 1~4 ảnh)\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- Đối với các kịch bản phức tạp, khuyến nghị sử dụng `content + function_mode=omni_reference`\n- Mô tả: Khi truyền `function_mode=omni_reference`, ngay cả khi không truyền `mode=reference_material` một cách rõ ràng, hệ thống vẫn sẽ xử lý theo ngữ nghĩa tham chiếu toàn năng.",
+        "description": "Interface tạo video định dạng tương thích với OpenAI Sora. Hỗ trợ chế độ tạo video từ văn bản (text-to-video) và tạo video tham chiếu từ hình ảnh/video.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` tạo tác vụ, lấy `id`\n2. Thăm dò `GET /v1/videos/{id}` cho đến khi `completed` hoặc `failed`\n3. Sau khi hoàn tất, ưu tiên sử dụng `video_url` trong kết quả trả về\n4. Nếu cần tải xuống thống nhất, gọi `GET /v1/videos/{id}/content`\n\nTham số cốt lõi:\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo video\n- `seconds: number|string`: Tùy chọn, thời lượng mục tiêu\n- `duration: number|string`: Tùy chọn, bí danh thời lượng\n- `size: string`: Tùy chọn, kích thước đầu ra\n- `mode: string`: Tùy chọn, các giá trị phổ biến `t2v` `i2v` `i2v_first_last` `reference_material`\n\nTham số tương thích thường dùng:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nTham số mở rộng thường dùng của Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Dòng Veo\n\n#### Mô hình chính Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-fast-stable`\n- `veo3.1-fast-official`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n#### Mô hình cài sẵn Veo 2.x / 3.1\n\n- `veo_2_0_t2v_landscape`\n- `veo_2_0_t2v_landscape-stable`\n- `veo_2_0_t2v_portrait`\n- `veo_2_0_t2v_portrait-stable`\n- `veo_2_0_i2v_landscape`\n- `veo_2_0_i2v_landscape-stable`\n- `veo_2_0_i2v_portrait`\n- `veo_2_0_i2v_portrait-stable`\n- `veo_2_1_fast_d_15_t2v_landscape`\n- `veo_2_1_fast_d_15_t2v_landscape-stable`\n- `veo_2_1_fast_d_15_t2v_portrait`\n- `veo_2_1_fast_d_15_t2v_portrait-stable`\n- `veo_2_1_fast_d_15_i2v_landscape`\n- `veo_2_1_fast_d_15_i2v_landscape-stable`\n- `veo_2_1_fast_d_15_i2v_portrait`\n- `veo_2_1_fast_d_15_i2v_portrait-stable`\n- `veo_3_1_t2v_landscape`\n- `veo_3_1_t2v_landscape-stable`\n- `veo_3_1_t2v_portrait`\n- `veo_3_1_t2v_portrait-stable`\n- `veo_3_1_t2v_fast_landscape`\n- `veo_3_1_t2v_fast_landscape-stable`\n- `veo_3_1_t2v_fast_portrait`\n- `veo_3_1_t2v_fast_portrait-stable`\n- `veo_3_1_t2v_fast_1080p`\n- `veo_3_1_t2v_fast_1080p-stable`\n- `veo_3_1_t2v_fast_4k`\n- `veo_3_1_t2v_fast_4k-stable`\n- `veo_3_1_t2v_fast_portrait_1080p`\n- `veo_3_1_t2v_fast_portrait_1080p-stable`\n- `veo_3_1_t2v_fast_portrait_4k`\n- `veo_3_1_t2v_fast_portrait_4k-stable`\n- `veo_3_1_t2v_fast_ultra`\n- `veo_3_1_t2v_fast_ultra-stable`\n- `veo_3_1_t2v_fast_ultra_1080p`\n- `veo_3_1_t2v_fast_ultra_1080p-stable`\n- `veo_3_1_t2v_fast_ultra_4k`\n- `veo_3_1_t2v_fast_ultra_4k-stable`\n- `veo_3_1_t2v_fast_ultra_relaxed`\n- `veo_3_1_t2v_fast_ultra_relaxed-stable`\n- `veo_3_1_t2v_fast_portrait_ultra`\n- `veo_3_1_t2v_fast_portrait_ultra-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_1080p`\n- `veo_3_1_t2v_fast_portrait_ultra_1080p-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_4k`\n- `veo_3_1_t2v_fast_portrait_ultra_4k-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_relaxed`\n- `veo_3_1_t2v_fast_portrait_ultra_relaxed-stable`\n- `veo_3_1_i2v_s_landscape`\n- `veo_3_1_i2v_s_landscape-stable`\n- `veo_3_1_i2v_s_portrait`\n- `veo_3_1_i2v_s_portrait-stable`\n- `veo_3_1_i2v_s_fast_fl`\n- `veo_3_1_i2v_s_fast_fl-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl`\n- `veo_3_1_i2v_s_fast_ultra_fl-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl_1080p`\n- `veo_3_1_i2v_s_fast_ultra_fl_1080p-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl_4k`\n- `veo_3_1_i2v_s_fast_ultra_fl_4k-stable`\n- `veo_3_1_i2v_s_fast_ultra_relaxed`\n- `veo_3_1_i2v_s_fast_ultra_relaxed-stable`\n- `veo_3_1_i2v_s_fast_portrait_fl`\n- `veo_3_1_i2v_s_fast_portrait_fl-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_1080p`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_1080p-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_4k`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_4k-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_relaxed`\n- `veo_3_1_i2v_s_fast_portrait_ultra_relaxed-stable`\n- `veo_3_1_r2v_fast`\n- `veo_3_1_r2v_fast-stable`\n- `veo_3_1_r2v_fast_ultra`\n- `veo_3_1_r2v_fast_ultra-stable`\n- `veo_3_1_r2v_fast_ultra_1080p`\n- `veo_3_1_r2v_fast_ultra_1080p-stable`\n- `veo_3_1_r2v_fast_ultra_4k`\n- `veo_3_1_r2v_fast_ultra_4k-stable`\n- `veo_3_1_r2v_fast_ultra_relaxed`\n- `veo_3_1_r2v_fast_ultra_relaxed-stable`\n- `veo_3_1_r2v_fast_portrait`\n- `veo_3_1_r2v_fast_portrait-stable`\n- `veo_3_1_r2v_fast_portrait_ultra`\n- `veo_3_1_r2v_fast_portrait_ultra-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_1080p`\n- `veo_3_1_r2v_fast_portrait_ultra_1080p-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_4k`\n- `veo_3_1_r2v_fast_portrait_ultra_4k-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_relaxed`\n- `veo_3_1_r2v_fast_portrait_ultra_relaxed-stable`\n\nKhuyến nghị:\n- Với video tạo từ văn bản thuần túy, ưu tiên dùng mô hình chính `veo3*` / `veo3.1*`\n- Khi có yêu cầu cố định về kích thước, hướng hoặc thời lượng, ưu tiên dùng tên mô hình cài sẵn\n- Với các tình huống tạo video từ ảnh hoặc từ tham chiếu, nên truyền rõ ràng `mode + image_url/reference_images`\n\n### 4.2 Dòng Sora\n\nMô hình cơ sở:\n- `sora-2`\n- `sora-2-pro`\n- `sora-2-stable`\n- `sora-2-pro-stable`\n- `sora-2-official`\n- `sora-2-pro-official`\n\nMô hình cài sẵn:\n- `sora2-landscape-10s`\n- `sora2-landscape-10s-stable`\n- `sora2-landscape-10s-official`\n- `sora2-portrait-10s`\n- `sora2-portrait-10s-stable`\n- `sora2-portrait-10s-official`\n- `sora2-landscape-15s`\n- `sora2-landscape-15s-stable`\n- `sora2-landscape-15s-official`\n- `sora2-portrait-15s`\n- `sora2-portrait-15s-stable`\n- `sora2-portrait-15s-official`\n- `sora2-pro-landscape-25s`\n- `sora2-pro-landscape-25s-stable`\n- `sora2-pro-landscape-25s-official`\n- `sora2-pro-portrait-25s`\n- `sora2-pro-portrait-25s-stable`\n- `sora2-pro-portrait-25s-official`\n- `sora2-pro-landscape-hd-15s`\n- `sora2-pro-landscape-hd-15s-stable`\n- `sora2-pro-landscape-hd-15s-official`\n- `sora2-pro-portrait-hd-15s`\n- `sora2-pro-portrait-hd-15s-stable`\n- `sora2-pro-portrait-hd-15s-official`\n\nKhuyến nghị:\n- `sora-2*` phù hợp cho các lệnh gọi thông dụng\n- Mô hình cài sẵn `sora2-*` phù hợp với các tình huống có thời lượng và hướng cố định\n- Khi cần chiến lược ổn định/chính thức, hãy chọn trực tiếp `*-stable` / `*-official`\n\n### 4.3 Dòng Seedance\n\nMô hình công khai:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-t2v-250428-official`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428-official`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-250528-official`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-0-pro-fast-251015-official`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-1-5-pro-251215-official`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-260128-official`\n- `doubao-seedance-2-0-fast-260128`\n- `doubao-seedance-2-0-fast-260128-official`\n\nKhuyến nghị:\n- Với tạo video từ văn bản, ưu tiên `*-t2v-*` hoặc `pro / fast`\n- Với tạo video từ hình ảnh, ưu tiên `*-i2v-*`\n- Với các tình huống có tư liệu tham chiếu phức tạp, ưu tiên dùng `content`\n\n### 4.4 Dòng video Grok\n\nMô hình công khai:\n- `grok-video-3`\n\nTham số thường dùng:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n### 4.5 Mô hình video chính Kling\n\nMô hình chính công khai:\n- `kling-video`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCác `mode` phổ biến:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nTham số đầu vào tối thiểu:\n- Tạo video từ văn bản: `model + model_name + prompt + mode=t2v`\n- Tạo video từ hình ảnh: `model + model_name + prompt + mode=i2v + image`\n- Tham chiếu nhiều ảnh: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Kéo dài video: `model + model_name + mode=extend + video_id`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`",
         "operationId": "createVideo",
         "tags": [
           "Định dạng tương thích Sora cho tạo video"
@@ -587,7 +673,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Tên của mô hình video cần gọi. Ví dụ: `sora-2`, `doubao-seedance-2-0-260128`",
+                    "description": "Tên mô hình. Các mô hình khác nhau sẽ kích hoạt logic điều chỉnh thích ứng upstream khác nhau.",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -619,7 +705,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Mô tả chính để tạo video. Phải truyền tham số này ngay cả khi sử dụng `content`, không được để trống. Ví dụ: `第一人称视角果茶广告，节奏轻快`"
+                    "description": "Điểm nhập prompt thống nhất. Bắt buộc với hầu hết các mô hình."
                   },
                   "image": {
                     "type": "string",
@@ -628,7 +714,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "Alias thời lượng (có thể chọn một trong hai với `seconds`)."
+                    "description": "Đầu vào thời lượng được thống nhất; một số mô hình cũng chấp nhận seconds."
                   },
                   "width": {
                     "type": "integer",
@@ -643,7 +729,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "Tốc độ khung hình."
+                    "description": "Video frame rate"
                   },
                   "seed": {
                     "type": "integer",
@@ -672,7 +758,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Chế độ tạo, mặc định là `t2v` nếu không truyền vào. Các chế độ khác nhau có yêu cầu khác nhau về tham số tài liệu. Ví dụ: `t2v`, `i2v`, `i2v_first_last`, `reference_material`"
+                    "description": "Các trường gợi ý cho kênh/chế độ, như i2v_first, reference_images, v.v."
                   },
                   "images": {
                     "type": "array",
@@ -683,15 +769,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "Độ phân giải đầu ra, thường dùng `宽x高`. Ví dụ: `720x1280`, `1280x720`"
+                    "description": "Điểm vào kích thước hợp nhất, sẽ được ánh xạ thành resolution/aspect_ratio, v.v."
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Thời lượng mục tiêu. Chọn một trong hai với `duration`, nếu truyền cả hai thì thông thường kết quả phân giải của gateway sẽ được áp dụng. Ví dụ: `8`"
+                    "description": "Điểm vào tương thích của Sora, khi chạy sẽ quay về duration."
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Đối tượng đầu vào tham chiếu tiêu chuẩn."
+                    "description": "Đầu vào ảnh tham chiếu tương thích với Sora/Veo, có thể là tệp multipart hoặc đối tượng tương thích."
                   }
                 },
                 "required": [
@@ -706,7 +792,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Tên của mô hình video cần gọi. Ví dụ: `sora-2`, `doubao-seedance-2-0-260128`",
+                    "description": "Tên mô hình. Các mô hình khác nhau sẽ kích hoạt logic điều chỉnh thích ứng upstream khác nhau.",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -738,7 +824,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Mô tả chính để tạo video. Phải truyền tham số này ngay cả khi sử dụng `content`, không được để trống. Ví dụ: `第一人称视角果茶广告，节奏轻快`"
+                    "description": "Điểm nhập prompt thống nhất. Bắt buộc với hầu hết các mô hình."
                   },
                   "image": {
                     "type": "string",
@@ -747,7 +833,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "Alias thời lượng (có thể chọn một trong hai với `seconds`)."
+                    "description": "Đầu vào thời lượng được thống nhất; một số mô hình cũng chấp nhận seconds."
                   },
                   "width": {
                     "type": "integer",
@@ -762,7 +848,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "Tốc độ khung hình."
+                    "description": "Video frame rate"
                   },
                   "seed": {
                     "type": "integer",
@@ -791,7 +877,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Chế độ tạo, mặc định là `t2v` nếu không truyền vào. Các chế độ khác nhau có yêu cầu khác nhau về tham số tài liệu. Ví dụ: `t2v`, `i2v`, `i2v_first_last`, `reference_material`"
+                    "description": "Các trường gợi ý cho kênh/chế độ, như i2v_first, reference_images, v.v."
                   },
                   "images": {
                     "type": "array",
@@ -802,15 +888,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "Độ phân giải đầu ra, thường dùng `宽x高`. Ví dụ: `720x1280`, `1280x720`"
+                    "description": "Điểm vào kích thước hợp nhất, sẽ được ánh xạ thành resolution/aspect_ratio, v.v."
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Thời lượng mục tiêu. Chọn một trong hai với `duration`, nếu truyền cả hai thì thông thường kết quả phân giải của gateway sẽ được áp dụng. Ví dụ: `8`"
+                    "description": "Điểm vào tương thích của Sora, khi chạy sẽ quay về duration."
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Đối tượng đầu vào tham chiếu tiêu chuẩn."
+                    "description": "Đầu vào ảnh tham chiếu tương thích với Sora/Veo, có thể là tệp multipart hoặc đối tượng tương thích."
                   }
                 },
                 "required": [
@@ -1058,8 +1144,7 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string",
-                      "description": "ID nhiệm vụ (dùng để truy vấn/tải xuống sau này)."
+                      "type": "string"
                     },
                     "task_id": {
                       "type": "string",
@@ -1073,25 +1158,25 @@
                     },
                     "status": {
                       "type": "string",
-                      "description": "Trạng thái nhiệm vụ.",
+                      "description": "Should use VideoStatus constants: VideoStatusQueued, VideoStatusInProgress, VideoStatusCompleted, VideoStatusFailed",
                       "enum": [
                         "queued",
                         "in_progress",
                         "completed",
-                        "failed"
+                        "failed",
+                        "video_url",
+                        "url",
+                        "completed_at"
                       ]
                     },
                     "progress": {
-                      "type": "integer",
-                      "description": "Tiến độ (0~100, giá trị xấp xỉ)."
+                      "type": "integer"
                     },
                     "created_at": {
-                      "type": "integer",
-                      "description": "Thời gian tạo (giây Unix)."
+                      "type": "integer"
                     },
                     "completed_at": {
-                      "type": "integer",
-                      "description": "Thời gian hoàn thành."
+                      "type": "integer"
                     },
                     "expires_at": {
                       "type": "integer"
@@ -1111,14 +1196,6 @@
                     "metadata": {
                       "type": "object",
                       "additionalProperties": true
-                    },
-                    "video_url": {
-                      "type": "string",
-                      "description": "Địa chỉ video có thể tải xuống trực tiếp."
-                    },
-                    "url": {
-                      "type": "string",
-                      "description": "Một số mô hình/kênh có thể trả về trường này dưới dạng địa chỉ kết quả."
                     }
                   },
                   "required": [
@@ -1852,6 +1929,43 @@
                     "created_at": {
                       "type": "string",
                       "description": "Thời gian tạo (giây Unix)."
+                    },
+                    "items": {
+                      "type": "string",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "ID của tác vụ."
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Trạng thái tác vụ, thường là `queued`, `running`, `succeeded`, `failed`."
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "description": "Địa chỉ kết quả video."
+                              }
+                            }
+                          },
+                          "video_url": {
+                            "type": "string",
+                            "description": "Địa chỉ kết quả video."
+                          },
+                          "error": {
+                            "type": "string",
+                            "description": "Thông báo lỗi khi thất bại."
+                          },
+                          "progress": {
+                            "type": "string",
+                            "description": "Tiến độ tác vụ."
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -1948,6 +2062,43 @@
                         },
                         "total_tokens": {
                           "type": "integer"
+                        }
+                      }
+                    },
+                    "items": {
+                      "type": "string",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "ID của tác vụ."
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Trạng thái tác vụ, thường là `queued`, `running`, `succeeded`, `failed`."
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "description": "Địa chỉ kết quả video."
+                              }
+                            }
+                          },
+                          "video_url": {
+                            "type": "string",
+                            "description": "Địa chỉ kết quả video."
+                          },
+                          "error": {
+                            "type": "string",
+                            "description": "Thông báo lỗi khi thất bại."
+                          },
+                          "progress": {
+                            "type": "string",
+                            "description": "Tiến độ tác vụ."
+                          }
                         }
                       }
                     }

@@ -245,7 +245,7 @@
       "post": {
         "summary": "Gemini 图片(Nano Banana)",
         "deprecated": false,
-        "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成OpenAI DALL-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)）。",
+        "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成OpenAI DALL-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)）。\n\n补充 /v1beta/models/{model}:generateContent 的 Gemini 图片生成字段说明，避免公开 OpenAPI 在嵌套字段上丢失 description。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "图片生成Gemini格式"
@@ -274,7 +274,8 @@
                       "type": "object",
                       "properties": {
                         "role": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "消息角色，常见值为 `user` 或 `model`。"
                         },
                         "parts": {
                           "type": "array",
@@ -282,13 +283,30 @@
                             "type": "object",
                             "properties": {
                               "text": {
-                                "type": "string"
+                                "type": "string",
+                                "description": "文本输入内容。"
+                              },
+                              "inlineData": {
+                                "type": "object",
+                                "description": "内联二进制内容对象，适用于 base64 图片等输入。",
+                                "properties": {
+                                  "mimeType": {
+                                    "type": "string",
+                                    "description": "内联内容 MIME 类型，例如 `image/png`。"
+                                  },
+                                  "data": {
+                                    "type": "string",
+                                    "description": "Base64 编码后的二进制数据内容。"
+                                  }
+                                }
                               }
                             }
-                          }
+                          },
+                          "description": "消息片段数组；文本、图片等输入都放在这里。"
                         }
                       }
-                    }
+                    },
+                    "description": "必填。Gemini 输入内容数组，通常至少包含一条 user 消息。"
                   },
                   "generationConfig": {
                     "type": "object",
@@ -297,23 +315,28 @@
                         "type": "array",
                         "items": {
                           "type": "string"
-                        }
+                        },
+                        "description": "响应模式列表；图片生成通常传 `IMAGE`。"
                       },
                       "imageConfig": {
                         "type": "object",
                         "properties": {
                           "aspectRatio": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "宽高比，例如 `16:9`、`1:1`、`9:16`。"
                           },
                           "imageSize": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "输出分辨率等级，例如 `1K`、`2K`、`4K`。"
                           }
-                        }
+                        },
+                        "description": "图片生成配置对象。"
                       }
                     },
                     "required": [
                       "responseModalities"
-                    ]
+                    ],
+                    "description": "生成配置对象。"
                   }
                 },
                 "required": [
@@ -374,7 +397,7 @@
       "post": {
         "summary": "生成图像（OpenAI Dall-E兼容）",
         "deprecated": false,
-        "description": "OpenAI Dall-E格式图片生成接口。",
+        "description": "OpenAI Dall-E格式图片生成接口。\n\n- `POST /v1/images/generations`：创建图片生成任务\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，图片生成描述\n- `n: number`：可选，生成张数\n- `size: string`：可选，尺寸或分辨率表达\n- `quality: string`：可选，质量等级\n- `response_format: string`：可选，返回格式\n\n常用兼容扩展参数：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 专用扩展参数：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana 系列\n\n对外模型：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n能力说明：\n- `nano-banana`：基础文生图，也兼容图编辑\n- `nano-banana-pro*`：更高质量版本\n- `nano-banana-2*`：更新版本族\n- `*-2k` / `*-4k`：高分辨率型号\n\n常用参数：\n- 文生图：`model + prompt`\n- 图编辑：`model + prompt + image`，也兼容 `image_urls`\n- 常用扩展：`n` `size` `quality` `response_format`\n\n示例：\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Seedream 系列\n\n对外模型：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n能力说明：\n- 统一按文生图调用\n- 建议优先传标准参数：`prompt + model + size/aspect_ratio`\n\n常用参数：\n- `model + prompt`\n- 可选：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 常规图片主模型\n\n对外主模型：\n- `kling-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n能力说明：\n- 文生图：`model + model_name + prompt`\n- 图生图：在文生图基础上增加 `image`\n- 多图生图：传 `subject_image_list`，或传多张 `image_urls/images`\n- 扩图：传 `image` 和扩图比例参数\n\n常用参数：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n示例：\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Omni 图片主模型\n\n对外主模型：\n- `kling-omni-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\n常用参数：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n示例：\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling 虚拟试衣模型\n\n对外模型：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入参：\n- `model + human_image + cloth_image`\n\n说明：\n- 这两个模型本身就是完整主模型，不需要再传 `model_name`\n\n示例：\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageGeneration",
         "tags": [
           "图片生成OpenAI DALL-E格式"
@@ -389,21 +412,29 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "模型名称",
-                    "example": "dall-e-3"
+                    "description": "对外图片模型名称。",
+                    "example": "dall-e-3",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "生图提示词"
+                    "description": "图片生成描述。虚拟试衣模型可不传。"
                   },
                   "n": {
                     "type": "integer",
-                    "description": "生成数量",
+                    "description": "生成张数。",
                     "default": 1
                   },
                   "size": {
                     "type": "string",
-                    "description": "图像尺寸",
+                    "description": "尺寸或分辨率表达。",
                     "enum": [
                       "1024x1024",
                       "1024x1792",
@@ -412,7 +443,7 @@
                   },
                   "quality": {
                     "type": "string",
-                    "description": "生图质量",
+                    "description": "质量等级。",
                     "enum": [
                       "standard",
                       "hd"
@@ -428,7 +459,7 @@
                   },
                   "response_format": {
                     "type": "string",
-                    "description": "返回格式",
+                    "description": "返回格式。",
                     "enum": [
                       "url",
                       "b64_json"
@@ -444,11 +475,66 @@
                   "prompt"
                 ]
               },
-              "example": {
-                "model": "dall-e-3",
-                "prompt": "A cute baby sea otter",
-                "n": 1,
-                "size": "1024x1024"
+              "examples": {
+                "nano_banana_text2img": {
+                  "summary": "Nano Banana 文生图",
+                  "value": {
+                    "model": "nano-banana",
+                    "prompt": "a cute cat running in cloud",
+                    "n": 1,
+                    "size": "1024x1792"
+                  }
+                },
+                "seedream_text2img": {
+                  "summary": "Seedream 文生图",
+                  "value": {
+                    "model": "doubao-seedream-3-0-t2i-250415",
+                    "prompt": "一张电影感海边日落人像",
+                    "size": "1536x1024",
+                    "n": 1
+                  }
+                },
+                "kling_text2img": {
+                  "summary": "Kling 文生图",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v3",
+                    "prompt": "海边日落，电影感人像",
+                    "aspect_ratio": "16:9",
+                    "n": 1
+                  }
+                },
+                "kling_img2img": {
+                  "summary": "Kling 图生图",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v2-1",
+                    "prompt": "改成赛博朋克夜景风格",
+                    "image": "https://example.com/input.png",
+                    "n": 1
+                  }
+                },
+                "kling_omni_image": {
+                  "summary": "Kling Omni 图片",
+                  "value": {
+                    "model": "kling-omni-image",
+                    "model_name": "kling-v3-omni",
+                    "prompt": "生成一张海边跳舞的图片",
+                    "element_list": [
+                      {
+                        "element_id": 835266081714884677
+                      }
+                    ]
+                  }
+                },
+                "kling_virtual_try_on": {
+                  "summary": "Kling 虚拟试衣",
+                  "value": {
+                    "model": "kolors-virtual-try-on-v1",
+                    "human_image": "https://example.com/human.jpg",
+                    "cloth_image": "https://example.com/cloth.jpg"
+                  }
+                }
               }
             }
           }
@@ -572,7 +658,7 @@
       "post": {
         "summary": "创建视频",
         "deprecated": false,
-        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容（下载）\n\n当前对外不提供：\n- `GET /v1/videos`：任务列表\n- `POST /v1/videos/{video_id}/remix`：视频二次编辑 / remix\n\n标准鉴权头：\n- `Content-Type: application/json`（创建任务时）\n\n1. 调用 `POST /v1/videos` 创建任务，拿到 `id`。\n2. 轮询 `GET /v1/videos/{id}`，直到 `status=completed` 或 `failed`。\n3. `completed` 后优先使用返回中的 `video_url`；如需网关统一下载可调用 `GET /v1/videos/{id}/content`。\n\n## 3.1 核心参数\n\n- `model: string`（必填）\n- 说明：要调用的视频模型名称。\n- 示例：`sora-2`、`doubao-seedance-2-0-260128`\n\n- `prompt: string`（推荐）\n- 说明：视频生成主描述。使用 `content` 时也必须传，不能为空。\n- 示例：`第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string`（可选）\n- 说明：目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。\n- 示例：`8`\n\n- `size: string`（可选）\n- 说明：输出分辨率，常用 `宽x高`。\n- 示例：`720x1280`、`1280x720`\n\n- `mode: string`（可选）\n- 说明：生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。\n- 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`\n\n## 3.2 通用兼容参数\n\n- `aspect_ratio` 或 `ratio`：宽高比。\n- `duration`：时长别名（与 `seconds` 二选一即可）。\n- `quality` 或 `resolution`：清晰度相关参数。\n- `fps`：帧率。\n- `function_mode`：可选功能模式，用于触发特定行为（如 `omni_reference` 表示全能参考语义）。\n\n## 3.3 参考素材参数\n\n- `input_reference`：标准参考输入对象。\n- 说明：仅支持字符串 URL 写法，不支持对象写法。\n- 正确示例：`\"input_reference\": \"https://example.com/ref.png\"`\n- 错误示例：`\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls`：图片参考。\n- 说明：`image_url` 常用于单图；`image_urls` 用于多图或全能参考。\n\n- `end_image_url` / `last_image_url`：末帧参考。\n- 说明：通常与 `mode=i2v_first_last` 搭配，表示视频结束画面。\n\n- `video_urls`：视频参考列表。\n- 说明：常用于 `reference_material` 或 `content` 全能参考场景。\n\n- `audio_urls`：音频参考列表。\n- 说明：用于背景音乐/旁白风格参考（是否生效取决于模型能力）。\n\n- `reference_images`：多图参考。\n- 说明：常用于多帧/多图参考模式。\n\n说明：不同模型对素材字段要求不同，建议按下文“模式与最小入参”传参。\n\n## 3.4 content 高级模式（推荐给复杂参考场景）\n\n可直接传 `content` 数组：\n- `type=text`：文本指令。\n- `type=image_url|video_url|audio_url`：媒体输入。\n- 支持 `name` 用于在文本中通过 `@名称` 指代素材。\n\n必填约束：\n- 使用 `content` 时，`prompt` 仍必须传且不能为空。\n\n兼容写法：\n- `image_url/video_url/audio_url` 可为字符串，或对象 `{ \"url\": \"https://...\" }`。\n- `role` 可使用 `material`，也兼容 `reference_image/reference_video/reference_audio`。\n\n可同时携带：\n- `generate_audio: boolean`\n- `watermark: boolean`\n\n补充说明：\n- `generate_audio=true`：请求模型同时生成音频（仅支持该能力的模型会生效）。\n- `watermark=false`：请求关闭水印（实际是否生效取决于模型与渠道策略）。\n- `name`：素材别名，建议与 `text` 中 `@名称` 一致，便于模型准确关联素材。\n\n不同模型族对参数支持差异较大，建议按下表选参：\n\n| 模型族 | 常见模型名（示例） | 推荐最小入参 | 常用扩展参数 | 注意事项 |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | 对 `mode` 最敏感；并非所有版本都支持 `reference_material`。 |\n| Sora 通用 | `sora-2` `sora-2-pro` 及 `*-stable/*-official` | `model + prompt` | `seconds/size`，建议补 `input_reference`（字符串 URL） | 多渠道 fallback 时，是否要求图片可能不同，建议准备参考图提高成功率。 |\n| Sora 时长预置 | `sora2-landscape-10s` `sora2-pro-portrait-25s` 等 | `model + prompt` | `image_url/input_reference` | 时长和方向通常由模型名决定，`seconds/ratio` 仅在模型允许时生效。 |\n| Veo | `veo3*` `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | `i2v/r2v` 类模型通常需要参考图或参考素材；`t2v` 类通常可纯文本。 |\n| Kling | `kling-video` `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`，以及 `image/image_list` 等官方字段 | 已兼容官方路径语义（text2video/image2video/multi-image2video）并统一到 `/v1/videos`；不提供视频延长对外能力。 |\n| 聚合扩展模型 | `happyhorse*` `grok-imagine-1.0-video*` 等 | `model + prompt` | `seconds/size/content` | 具体支持字段依赖模型与渠道实现，建议优先使用标准字段，不足再用 `content`。 |\n\n说明：\n1. 若你使用稳定别名模型（如 `*-stable`、`*-official`），底层可能自动切换渠道，请尽量传“跨渠道兼容参数”（`prompt + model + seconds/duration + size/ratio + 必要参考图`）。\n2. 复杂多素材场景（图+视频+音频+@名称）优先使用 `content`，兼容性最高。\n3. 若模型文档未明确支持某字段，请按“最小入参”先跑通，再逐步增加扩展参数。\n\n### 4.1 Kling 官方模式补充\n\n- `mode=t2v`：文生视频\n- `mode=i2v`：图生视频（需 `image` 或 `image_url`）\n- `mode=multi_i2v`：多图参考（需 `image_list` 或多张 `image_urls`）\n- `mode=extend`：不支持（视频延长暂不提供 `/v1/videos` 对外能力）\n\n常见官方参数可直接放在 `/v1/videos` 请求体中透传：\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Grok 视频模式补充\n\n推荐参数：\n- `model`：如 `grok-video-3`\n- `prompt`\n- `ratio` 或 `aspect_ratio`\n- `resolution` 或 `size`\n- `seconds` 或 `duration`\n- `image` / `image_url` / `input_reference`（单图参考）\n- `reference_images` / `reference_image_urls`（多图参考，官方 `reference-to-video` 语义）\n- `mode`（可选）：`image-to-video`、`reference-to-video`\n\n约束：\n- 不支持 `mode=edit-video` / `mode=extend-video`（视频编辑与延长暂不对外）。\n- `image/input_reference` 与 `reference_images` 不能同时传。\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`（等同 `i2v_first`）\n- 最小入参：`model + prompt + image_url`（或 `input_reference` 字符串 URL）\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`（通常 1~4 张）\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- 复杂场景更推荐用 `content + function_mode=omni_reference`\n- 说明：当传 `function_mode=omni_reference` 时，即使未显式传 `mode=reference_material`，也会按全能参考语义处理。",
+        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容\n\n当前对外不提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 创建任务，获取 `id`\n2. 轮询 `GET /v1/videos/{id}` 直到 `completed` 或 `failed`\n3. 完成后优先使用返回中的 `video_url`\n4. 如需统一下载，调用 `GET /v1/videos/{id}/content`\n\n核心参数：\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，视频生成描述\n- `seconds: number|string`：可选，目标时长\n- `duration: number|string`：可选，时长别名\n- `size: string`：可选，输出尺寸\n- `mode: string`：可选，常见值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用兼容参数：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用扩展参数：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-fast-stable`\n- `veo3.1-fast-official`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n#### Veo 2.x / 3.1 预置模型\n\n- `veo_2_0_t2v_landscape`\n- `veo_2_0_t2v_landscape-stable`\n- `veo_2_0_t2v_portrait`\n- `veo_2_0_t2v_portrait-stable`\n- `veo_2_0_i2v_landscape`\n- `veo_2_0_i2v_landscape-stable`\n- `veo_2_0_i2v_portrait`\n- `veo_2_0_i2v_portrait-stable`\n- `veo_2_1_fast_d_15_t2v_landscape`\n- `veo_2_1_fast_d_15_t2v_landscape-stable`\n- `veo_2_1_fast_d_15_t2v_portrait`\n- `veo_2_1_fast_d_15_t2v_portrait-stable`\n- `veo_2_1_fast_d_15_i2v_landscape`\n- `veo_2_1_fast_d_15_i2v_landscape-stable`\n- `veo_2_1_fast_d_15_i2v_portrait`\n- `veo_2_1_fast_d_15_i2v_portrait-stable`\n- `veo_3_1_t2v_landscape`\n- `veo_3_1_t2v_landscape-stable`\n- `veo_3_1_t2v_portrait`\n- `veo_3_1_t2v_portrait-stable`\n- `veo_3_1_t2v_fast_landscape`\n- `veo_3_1_t2v_fast_landscape-stable`\n- `veo_3_1_t2v_fast_portrait`\n- `veo_3_1_t2v_fast_portrait-stable`\n- `veo_3_1_t2v_fast_1080p`\n- `veo_3_1_t2v_fast_1080p-stable`\n- `veo_3_1_t2v_fast_4k`\n- `veo_3_1_t2v_fast_4k-stable`\n- `veo_3_1_t2v_fast_portrait_1080p`\n- `veo_3_1_t2v_fast_portrait_1080p-stable`\n- `veo_3_1_t2v_fast_portrait_4k`\n- `veo_3_1_t2v_fast_portrait_4k-stable`\n- `veo_3_1_t2v_fast_ultra`\n- `veo_3_1_t2v_fast_ultra-stable`\n- `veo_3_1_t2v_fast_ultra_1080p`\n- `veo_3_1_t2v_fast_ultra_1080p-stable`\n- `veo_3_1_t2v_fast_ultra_4k`\n- `veo_3_1_t2v_fast_ultra_4k-stable`\n- `veo_3_1_t2v_fast_ultra_relaxed`\n- `veo_3_1_t2v_fast_ultra_relaxed-stable`\n- `veo_3_1_t2v_fast_portrait_ultra`\n- `veo_3_1_t2v_fast_portrait_ultra-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_1080p`\n- `veo_3_1_t2v_fast_portrait_ultra_1080p-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_4k`\n- `veo_3_1_t2v_fast_portrait_ultra_4k-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_relaxed`\n- `veo_3_1_t2v_fast_portrait_ultra_relaxed-stable`\n- `veo_3_1_i2v_s_landscape`\n- `veo_3_1_i2v_s_landscape-stable`\n- `veo_3_1_i2v_s_portrait`\n- `veo_3_1_i2v_s_portrait-stable`\n- `veo_3_1_i2v_s_fast_fl`\n- `veo_3_1_i2v_s_fast_fl-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl`\n- `veo_3_1_i2v_s_fast_ultra_fl-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl_1080p`\n- `veo_3_1_i2v_s_fast_ultra_fl_1080p-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl_4k`\n- `veo_3_1_i2v_s_fast_ultra_fl_4k-stable`\n- `veo_3_1_i2v_s_fast_ultra_relaxed`\n- `veo_3_1_i2v_s_fast_ultra_relaxed-stable`\n- `veo_3_1_i2v_s_fast_portrait_fl`\n- `veo_3_1_i2v_s_fast_portrait_fl-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_1080p`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_1080p-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_4k`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_4k-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_relaxed`\n- `veo_3_1_i2v_s_fast_portrait_ultra_relaxed-stable`\n- `veo_3_1_r2v_fast`\n- `veo_3_1_r2v_fast-stable`\n- `veo_3_1_r2v_fast_ultra`\n- `veo_3_1_r2v_fast_ultra-stable`\n- `veo_3_1_r2v_fast_ultra_1080p`\n- `veo_3_1_r2v_fast_ultra_1080p-stable`\n- `veo_3_1_r2v_fast_ultra_4k`\n- `veo_3_1_r2v_fast_ultra_4k-stable`\n- `veo_3_1_r2v_fast_ultra_relaxed`\n- `veo_3_1_r2v_fast_ultra_relaxed-stable`\n- `veo_3_1_r2v_fast_portrait`\n- `veo_3_1_r2v_fast_portrait-stable`\n- `veo_3_1_r2v_fast_portrait_ultra`\n- `veo_3_1_r2v_fast_portrait_ultra-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_1080p`\n- `veo_3_1_r2v_fast_portrait_ultra_1080p-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_4k`\n- `veo_3_1_r2v_fast_portrait_ultra_4k-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_relaxed`\n- `veo_3_1_r2v_fast_portrait_ultra_relaxed-stable`\n\n建议：\n- 纯文生视频优先使用 `veo3*` / `veo3.1*` 主模型\n- 对尺寸、方向、时长有固定要求时，优先使用预置模型名\n- 图生或参考生视频场景，建议显式传 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基础模型：\n- `sora-2`\n- `sora-2-pro`\n- `sora-2-stable`\n- `sora-2-pro-stable`\n- `sora-2-official`\n- `sora-2-pro-official`\n\n预置模型：\n- `sora2-landscape-10s`\n- `sora2-landscape-10s-stable`\n- `sora2-landscape-10s-official`\n- `sora2-portrait-10s`\n- `sora2-portrait-10s-stable`\n- `sora2-portrait-10s-official`\n- `sora2-landscape-15s`\n- `sora2-landscape-15s-stable`\n- `sora2-landscape-15s-official`\n- `sora2-portrait-15s`\n- `sora2-portrait-15s-stable`\n- `sora2-portrait-15s-official`\n- `sora2-pro-landscape-25s`\n- `sora2-pro-landscape-25s-stable`\n- `sora2-pro-landscape-25s-official`\n- `sora2-pro-portrait-25s`\n- `sora2-pro-portrait-25s-stable`\n- `sora2-pro-portrait-25s-official`\n- `sora2-pro-landscape-hd-15s`\n- `sora2-pro-landscape-hd-15s-stable`\n- `sora2-pro-landscape-hd-15s-official`\n- `sora2-pro-portrait-hd-15s`\n- `sora2-pro-portrait-hd-15s-stable`\n- `sora2-pro-portrait-hd-15s-official`\n\n建议：\n- `sora-2*` 适合通用调用\n- `sora2-*` 预置模型适合时长、方向固定场景\n- 需要稳定/官方策略时，直接选 `*-stable` / `*-official`\n\n### 4.3 Seedance 系列\n\n对外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-t2v-250428-official`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428-official`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-250528-official`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-0-pro-fast-251015-official`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-1-5-pro-251215-official`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-260128-official`\n- `doubao-seedance-2-0-fast-260128`\n- `doubao-seedance-2-0-fast-260128-official`\n\n建议：\n- 文生视频优先 `*-t2v-*` 或 `pro / fast`\n- 图生视频优先 `*-i2v-*`\n- 复杂参考素材场景优先使用 `content`\n\n### 4.4 Grok 视频系列\n\n对外模型：\n- `grok-video-3`\n\n常用参数：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n### 4.5 Kling 视频主模型\n\n对外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常见 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入参：\n- 文生视频：`model + model_name + prompt + mode=t2v`\n- 图生视频：`model + model_name + prompt + mode=i2v + image`\n- 多图参考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 视频延长：`model + model_name + mode=extend + video_id`\n\n示例：\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`\n- 最小入参：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`",
         "operationId": "createVideo",
         "tags": [
           "视频生成Sora兼容格式"
@@ -587,7 +673,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "要调用的视频模型名称。 示例：`sora-2`、`doubao-seedance-2-0-260128`",
+                    "description": "模型名。不同模型会触发不同上游适配逻辑。",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -619,7 +705,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "视频生成主描述。使用 `content` 时也必须传，不能为空。 示例：`第一人称视角果茶广告，节奏轻快`"
+                    "description": "统一提示词入口。大多数模型必填。"
                   },
                   "image": {
                     "type": "string",
@@ -628,7 +714,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "时长别名（与 `seconds` 二选一即可）。"
+                    "description": "统一时长入口，部分模型也接受 seconds。"
                   },
                   "width": {
                     "type": "integer",
@@ -643,7 +729,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "帧率。"
+                    "description": "Video frame rate"
                   },
                   "seed": {
                     "type": "integer",
@@ -672,7 +758,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
+                    "description": "渠道/模式提示字段，如 i2v_first、reference_images 等。"
                   },
                   "images": {
                     "type": "array",
@@ -683,15 +769,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "输出分辨率，常用 `宽x高`。 示例：`720x1280`、`1280x720`"
+                    "description": "统一尺寸入口，会映射为 resolution/aspect_ratio 等。"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。 示例：`8`"
+                    "description": "Sora 兼容入口，运行时会回退到 duration。"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "标准参考输入对象。"
+                    "description": "Sora/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
                   }
                 },
                 "required": [
@@ -706,7 +792,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "要调用的视频模型名称。 示例：`sora-2`、`doubao-seedance-2-0-260128`",
+                    "description": "模型名。不同模型会触发不同上游适配逻辑。",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -738,7 +824,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "视频生成主描述。使用 `content` 时也必须传，不能为空。 示例：`第一人称视角果茶广告，节奏轻快`"
+                    "description": "统一提示词入口。大多数模型必填。"
                   },
                   "image": {
                     "type": "string",
@@ -747,7 +833,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "时长别名（与 `seconds` 二选一即可）。"
+                    "description": "统一时长入口，部分模型也接受 seconds。"
                   },
                   "width": {
                     "type": "integer",
@@ -762,7 +848,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "帧率。"
+                    "description": "Video frame rate"
                   },
                   "seed": {
                     "type": "integer",
@@ -791,7 +877,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "生成模式，不传默认 `t2v`。不同模式对素材参数要求不同。 示例：`t2v`、`i2v`、`i2v_first_last`、`reference_material`"
+                    "description": "渠道/模式提示字段，如 i2v_first、reference_images 等。"
                   },
                   "images": {
                     "type": "array",
@@ -802,15 +888,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "输出分辨率，常用 `宽x高`。 示例：`720x1280`、`1280x720`"
+                    "description": "统一尺寸入口，会映射为 resolution/aspect_ratio 等。"
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "目标时长。与 `duration` 二选一，若同时传通常以网关解析结果为准。 示例：`8`"
+                    "description": "Sora 兼容入口，运行时会回退到 duration。"
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "标准参考输入对象。"
+                    "description": "Sora/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
                   }
                 },
                 "required": [
@@ -1058,8 +1144,7 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string",
-                      "description": "任务 ID（后续查询/下载使用）。"
+                      "type": "string"
                     },
                     "task_id": {
                       "type": "string",
@@ -1073,25 +1158,25 @@
                     },
                     "status": {
                       "type": "string",
-                      "description": "任务状态。",
+                      "description": "Should use VideoStatus constants: VideoStatusQueued, VideoStatusInProgress, VideoStatusCompleted, VideoStatusFailed",
                       "enum": [
                         "queued",
                         "in_progress",
                         "completed",
-                        "failed"
+                        "failed",
+                        "video_url",
+                        "url",
+                        "completed_at"
                       ]
                     },
                     "progress": {
-                      "type": "integer",
-                      "description": "进度（0~100，近似值）。"
+                      "type": "integer"
                     },
                     "created_at": {
-                      "type": "integer",
-                      "description": "创建时间（Unix 秒）。"
+                      "type": "integer"
                     },
                     "completed_at": {
-                      "type": "integer",
-                      "description": "完成时间。"
+                      "type": "integer"
                     },
                     "expires_at": {
                       "type": "integer"
@@ -1111,14 +1196,6 @@
                     "metadata": {
                       "type": "object",
                       "additionalProperties": true
-                    },
-                    "video_url": {
-                      "type": "string",
-                      "description": "可直接下载的视频地址。"
-                    },
-                    "url": {
-                      "type": "string",
-                      "description": "部分模型/渠道可能返回该字段作为结果地址。"
                     }
                   },
                   "required": [
@@ -1852,6 +1929,43 @@
                     "created_at": {
                       "type": "string",
                       "description": "创建时间（Unix 秒）。"
+                    },
+                    "items": {
+                      "type": "string",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "任务 ID。"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "任务状态，常见为 `queued`、`running`、`succeeded`、`failed`。"
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "description": "视频结果地址。"
+                              }
+                            }
+                          },
+                          "video_url": {
+                            "type": "string",
+                            "description": "视频结果地址。"
+                          },
+                          "error": {
+                            "type": "string",
+                            "description": "失败时的错误信息。"
+                          },
+                          "progress": {
+                            "type": "string",
+                            "description": "任务进度。"
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -1948,6 +2062,43 @@
                         },
                         "total_tokens": {
                           "type": "integer"
+                        }
+                      }
+                    },
+                    "items": {
+                      "type": "string",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "任务 ID。"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "任务状态，常见为 `queued`、`running`、`succeeded`、`failed`。"
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "description": "视频结果地址。"
+                              }
+                            }
+                          },
+                          "video_url": {
+                            "type": "string",
+                            "description": "视频结果地址。"
+                          },
+                          "error": {
+                            "type": "string",
+                            "description": "失败时的错误信息。"
+                          },
+                          "progress": {
+                            "type": "string",
+                            "description": "任务进度。"
+                          }
                         }
                       }
                     }

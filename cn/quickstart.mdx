@@ -12,7 +12,7 @@ description: "获取 API Key、替换 Base URL 并发起首个请求。"
 ## 第二步：配置 Base URL
 
 ```bash
-API_BASE_URL="https://api.aiid.edu.kg/v1"
+API_BASE_URL="https://api.aiid.edu.kg"
 ```
 
 如果现有客户端默认写的是：
@@ -23,7 +23,7 @@ API_BASE_URL="https://api.aiid.edu.kg/v1"
 则分别替换为：
 
 - `https://api.aiid.edu.kg`
-- `https://api.aiid.edu.kg/v1`
+- `https://api.aiid.edu.kg`
 
 ## 第三步：发起第一个请求
 
@@ -34,7 +34,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://api.aiid.edu.kg/v1",
+    base_url="https://api.aiid.edu.kg",
 )
 
 response = client.chat.completions.create(

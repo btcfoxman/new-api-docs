@@ -245,7 +245,7 @@
       "post": {
         "summary": "Images Gemini (Nano Banana)",
         "deprecated": false,
-        "description": "Génération d'images Gemini.\n\nLa série Nano Banana prend en charge le format Dall-E de OpenAI (voir le lien [Génération d’images au format DALL-E de OpenAI](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).",
+        "description": "Génération d'images Gemini.\n\nLa série Nano Banana prend en charge le format Dall-E de OpenAI (voir le lien [Génération d’images au format DALL-E de OpenAI](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).\n\nAjout d’explications sur les champs de génération d’images Gemini de /v1beta/models/{model}:generateContent, afin d’éviter que la description ne soit perdue sur les champs imbriqués dans l’OpenAPI public.",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "Format Gemini pour la génération d’images"
@@ -274,7 +274,8 @@
                       "type": "object",
                       "properties": {
                         "role": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "Rôle du message, les valeurs courantes sont `user` ou `model`."
                         },
                         "parts": {
                           "type": "array",
@@ -282,13 +283,30 @@
                             "type": "object",
                             "properties": {
                               "text": {
-                                "type": "string"
+                                "type": "string",
+                                "description": "Contenu de l’entrée de texte."
+                              },
+                              "inlineData": {
+                                "type": "object",
+                                "description": "Objet de contenu binaire intégré, adapté aux entrées telles que les images en base64.",
+                                "properties": {
+                                  "mimeType": {
+                                    "type": "string",
+                                    "description": "Type MIME du contenu en ligne, par exemple `image/png`."
+                                  },
+                                  "data": {
+                                    "type": "string",
+                                    "description": "Contenu des données binaires encodées en Base64."
+                                  }
+                                }
                               }
                             }
-                          }
+                          },
+                          "description": "Tableau de segments de message ; les entrées telles que le texte, les images, etc. sont placées ici."
                         }
                       }
-                    }
+                    },
+                    "description": "Obligatoire. Tableau des contenus d’entrée Gemini, contenant généralement au moins un message `user`."
                   },
                   "generationConfig": {
                     "type": "object",
@@ -297,23 +315,28 @@
                         "type": "array",
                         "items": {
                           "type": "string"
-                        }
+                        },
+                        "description": "Liste des modes de réponse ; pour la génération d’images, on transmet généralement `IMAGE`."
                       },
                       "imageConfig": {
                         "type": "object",
                         "properties": {
                           "aspectRatio": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "Rapport hauteur/largeur, par exemple `16:9`, `1:1`, `9:16`."
                           },
                           "imageSize": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "Niveau de résolution de sortie, par exemple `1K`, `2K`, `4K`."
                           }
-                        }
+                        },
+                        "description": "Objet de configuration de génération d’images."
                       }
                     },
                     "required": [
                       "responseModalities"
-                    ]
+                    ],
+                    "description": "Objet de configuration de génération."
                   }
                 },
                 "required": [
@@ -374,7 +397,7 @@
       "post": {
         "summary": "Générer une image (compatible OpenAI Dall-E)",
         "deprecated": false,
-        "description": "Interface de génération d'images au format OpenAI Dall-E.",
+        "description": "Interface de génération d'images au format OpenAI Dall-E.\n\n- `POST /v1/images/generations` : créer une tâche de génération d’image\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération d’image\n- `n: number` : facultatif, nombre d’images à générer\n- `size: string` : facultatif, format de taille ou de résolution\n- `quality: string` : facultatif, niveau de qualité\n- `response_format: string` : facultatif, format de retour\n\nParamètres d’extension de compatibilité courants :\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nParamètres d’extension spécifiques à Kling :\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Série Nano Banana\n\nModèle exposé :\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nDescription des capacités :\n- `nano-banana` : génération d’image à partir de texte de base, compatible aussi avec l’édition d’image\n- `nano-banana-pro*` : version de qualité supérieure\n- `nano-banana-2*` : famille de versions plus récente\n- `*-2k` / `*-4k` : modèles haute résolution\n\nParamètres courants :\n- Génération d’image à partir de texte : `model + prompt`\n- Édition d’image : `model + prompt + image`, compatible aussi avec `image_urls`\n- Extensions courantes : `n` `size` `quality` `response_format`\n\nExemple :\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Série Seedream\n\nModèle exposé :\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nDescription des capacités :\n- Appel unifié en génération d’image à partir de texte\n- Il est recommandé de transmettre en priorité les paramètres standard : `prompt + model + size/aspect_ratio`\n\nParamètres courants :\n- `model + prompt`\n- Optionnel : `size` `aspect_ratio` `n`\n\n### 3.3 Kling Modèle principal d’image standard\n\nModèle principal exposé :\n- `kling-image`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nDescription des capacités :\n- Génération d’image à partir de texte : `model + model_name + prompt`\n- Génération d’image à partir d’image : ajoutez `image` sur la base de la génération d’image à partir de texte\n- Génération d’image à partir de plusieurs images : transmettez `subject_image_list`, ou plusieurs `image_urls/images`\n- Extension d’image : transmettez `image` et le paramètre de ratio d’extension\n\nParamètres courants :\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Modèle principal d’image Omni\n\nModèle principal exposé :\n- `kling-omni-image`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-image-o1`\n- `kling-v3-omni`\n\nParamètres courants :\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling Modèle d’essayage virtuel\n\nModèle exposé :\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nParamètres d’entrée minimaux :\n- `model + human_image + cloth_image`\n\nRemarque :\n- Ces deux modèles sont eux-mêmes des modèles principaux complets ; il n’est pas nécessaire de transmettre `model_name` à nouveau.\n\nExemple :\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageGeneration",
         "tags": [
           "Génération d’images OpenAI format DALL-E"
@@ -389,21 +412,29 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Nom du modèle",
-                    "example": "dall-e-3"
+                    "description": "Nom du modèle d’image exposé publiquement.",
+                    "example": "dall-e-3",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Prompt de génération d'image"
+                    "description": "Description de génération d’image. Ce paramètre peut être omis pour le modèle d’essayage virtuel."
                   },
                   "n": {
                     "type": "integer",
-                    "description": "Nombre de générations",
+                    "description": "Nombre d’images à générer.",
                     "default": 1
                   },
                   "size": {
                     "type": "string",
-                    "description": "Dimensions de l'image",
+                    "description": "Expression de la taille ou de la résolution.",
                     "enum": [
                       "1024x1024",
                       "1024x1792",
@@ -412,7 +443,7 @@
                   },
                   "quality": {
                     "type": "string",
-                    "description": "Qualité de génération d'image",
+                    "description": "Niveau de qualité.",
                     "enum": [
                       "standard",
                       "hd"
@@ -428,7 +459,7 @@
                   },
                   "response_format": {
                     "type": "string",
-                    "description": "Format de réponse",
+                    "description": "Format de retour.",
                     "enum": [
                       "url",
                       "b64_json"
@@ -444,11 +475,66 @@
                   "prompt"
                 ]
               },
-              "example": {
-                "model": "dall-e-3",
-                "prompt": "A cute baby sea otter",
-                "n": 1,
-                "size": "1024x1024"
+              "examples": {
+                "nano_banana_text2img": {
+                  "summary": "Nano Banana génération d’images à partir de texte",
+                  "value": {
+                    "model": "nano-banana",
+                    "prompt": "a cute cat running in cloud",
+                    "n": 1,
+                    "size": "1024x1792"
+                  }
+                },
+                "seedream_text2img": {
+                  "summary": "Génération d’images à partir de texte avec Seedream",
+                  "value": {
+                    "model": "doubao-seedream-3-0-t2i-250415",
+                    "prompt": "一张电影感海边日落人像",
+                    "size": "1536x1024",
+                    "n": 1
+                  }
+                },
+                "kling_text2img": {
+                  "summary": "Kling texte vers image",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v3",
+                    "prompt": "海边日落，电影感人像",
+                    "aspect_ratio": "16:9",
+                    "n": 1
+                  }
+                },
+                "kling_img2img": {
+                  "summary": "Kling image à image",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v2-1",
+                    "prompt": "改成赛博朋克夜景风格",
+                    "image": "https://example.com/input.png",
+                    "n": 1
+                  }
+                },
+                "kling_omni_image": {
+                  "summary": "Kling image Omni",
+                  "value": {
+                    "model": "kling-omni-image",
+                    "model_name": "kling-v3-omni",
+                    "prompt": "生成一张海边跳舞的图片",
+                    "element_list": [
+                      {
+                        "element_id": 835266081714884677
+                      }
+                    ]
+                  }
+                },
+                "kling_virtual_try_on": {
+                  "summary": "Kling essayage virtuel",
+                  "value": {
+                    "model": "kolors-virtual-try-on-v1",
+                    "human_image": "https://example.com/human.jpg",
+                    "cloth_image": "https://example.com/cloth.jpg"
+                  }
+                }
               }
             }
           }
@@ -572,7 +658,7 @@
       "post": {
         "summary": "Créer une vidéo",
         "deprecated": false,
-        "description": "Interface de génération vidéo au format compatible OpenAI Sora. Prend en charge les modes de génération texte-vers-vidéo et référence image/vidéo.\n\n- `POST /v1/videos` : Créer une tâche vidéo\n- `GET /v1/videos/{video_id}` : Consulter l'état de la tâche\n- `GET /v1/videos/{video_id}/content` : Obtenir le contenu binaire de la vidéo (téléchargement)\n\nActuellement non disponible pour les utilisateurs externes :\n- `GET /v1/videos` : Liste des tâches\n- `POST /v1/videos/{video_id}/remix` : Réédition de vidéo / Remix\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json` (lors de la création de la tâche)\n\n1. Appelez `POST /v1/videos` pour créer une tâche et obtenir l'ID `id`.\n2. Effectuez un sondage sur `GET /v1/videos/{id}` jusqu'à `status=completed` ou `failed`.\n3. Après `completed`, utilisez en priorité l'URL `video_url` renvoyée ; si un téléchargement unifié via la passerelle est requis, vous pouvez appeler `GET /v1/videos/{id}/content`.\n\n## 3.1 Paramètres principaux\n\n- `model: string` (obligatoire)\n- Description : Nom du modèle vidéo à appeler.\n- Exemple : `sora-2`, `doubao-seedance-2-0-260128`\n\n- `prompt: string` (recommandé)\n- Description : Description principale pour la génération vidéo. Doit également être fourni lors de l'utilisation de `content` ; ne peut pas être vide.\n- Exemple : `第一人称视角果茶广告，节奏轻快`\n\n- `seconds: number|string` (facultatif)\n- Description : Durée cible. Choisissez entre ceci et `duration` ; si les deux sont fournis, le résultat de l'analyse de la passerelle prévaut généralement.\n- Exemple : `8`\n\n- `size: string` (facultatif)\n- Description : Résolution de sortie, `宽x高` est couramment utilisé.\n- Exemple : `720x1280`, `1280x720`\n\n- `mode: string` (facultatif)\n- Description : Mode de génération, `t2v` par défaut s'il n'est pas spécifié. Différents modes ont des exigences différentes pour les paramètres de ressources.\n- Exemples : `t2v`, `i2v`, `i2v_first_last`, `reference_material`\n\n## 3.2 Paramètres de compatibilité généraux\n\n- `aspect_ratio` ou `ratio` : Format d'image (aspect ratio).\n- `duration` : Alias de durée (choisissez soit `duration`, soit `seconds`).\n- `quality` ou `resolution` : Paramètres relatifs à la résolution/clarté.\n- `fps` : Fréquence d'images (FPS).\n- `function_mode` : Mode de fonction optionnel, utilisé pour déclencher des comportements spécifiques (par ex. `omni_reference` pour la sémantique de référence omnipotente).\n\n## 3.3 Paramètres du matériel de référence\n\n- `input_reference` : Objet d'entrée de référence standard.\n- Remarque : Seule la syntaxe d'URL sous forme de chaîne est prise en charge ; la syntaxe d'objet ne l'est pas.\n- Exemple correct : `\"input_reference\": \"https://example.com/ref.png\"`\n- Exemple incorrect : `\"input_reference\": { \"image_url\": \"https://example.com/ref.png\" }`\n\n- `image_url` / `image_urls` : Référence d'image.\n- Remarque : `image_url` est souvent utilisé pour une image unique ; `image_urls` est utilisé pour plusieurs images ou une référence omnipotente.\n\n- `end_image_url` / `last_image_url` : Référence de la dernière image (end frame).\n- Remarque : Généralement associé à `mode=i2v_first_last` pour représenter l'image de fin de la vidéo.\n\n- `video_urls` : Liste de références vidéo.\n- Remarque : Souvent utilisé dans les scénarios de référence omnipotente `reference_material` ou `content`.\n\n- `audio_urls` : Liste de références audio.\n- Remarque : Utilisé pour la référence au style de musique de fond ou de narration (l'efficacité dépend des capacités du modèle).\n\n- `reference_images` : Référence multi-images.\n- Remarque : Couramment utilisé pour les modes de référence multi-images ou multi-trames.\n\nRemarque : Les exigences relatives aux champs de matériel varient selon les modèles. Il est recommandé de passer les paramètres conformément à la section « Modes et paramètres d'entrée minimaux » ci-dessous.\n\n## 3.4 Mode avancé content (recommandé pour les scénarios de référence complexes)\n\nVous pouvez directement passer un tableau `content` :\n- `type=text` : Instructions textuelles.\n- `type=image_url|video_url|audio_url` : Entrée multimédia.\n- Prend en charge `name` pour référencer des ressources via `@名称` dans le texte.\n\nContraintes obligatoires :\n- Lors de l'utilisation de `content`, `prompt` doit toujours être transmis et ne peut pas être vide.\n\nSyntaxes compatibles :\n- `image_url/video_url/audio_url` peut être une chaîne de caractères ou un objet `{ \"url\": \"https://...\" }`.\n- `role` peut utiliser `material`, et est également compatible avec `reference_image/reference_video/reference_audio`.\n\nPeut inclure simultanément :\n- `generate_audio: boolean`\n- `watermark: boolean`\n\nRemarques supplémentaires :\n- `generate_audio=true` : Demande au modèle de générer simultanément de l'audio (effectif uniquement pour les modèles prenant en charge cette fonctionnalité).\n- `watermark=false` : Demande de désactivation du filigrane (l'effet réel dépend du modèle et de la politique du canal).\n- `name` : Alias de la ressource, il est recommandé qu'il soit identique à `@名称` dans `text` pour aider le modèle à associer correctement les ressources.\n\nLa prise en charge des paramètres varie considérablement d'une famille de modèles à l'autre ; il est recommandé de choisir les paramètres selon le tableau suivant :\n\n| Famille de modèles | Noms de modèles courants (exemples) | Paramètres d'entrée minimaux recommandés | Paramètres d'extension courants | Remarques |\n|---|---|---|---|---|\n| Seedance | `doubao-seedance-*` | `model + prompt + mode` | `image_url/image_urls/end_image_url/reference_images/video_urls/audio_urls/function_mode/content` | Le plus sensible à `mode` ; toutes les versions ne prennent pas en charge `reference_material`. |\n| Sora Général | `sora-2`, `sora-2-pro` et `*-stable/*-official` | `model + prompt` | `seconds/size`, il est conseillé de compléter avec `input_reference` (chaîne URL) | Lors d'un fallback multi-canal, les exigences relatives aux images peuvent varier ; il est recommandé de préparer une image de référence pour améliorer le taux de réussite. |\n| Sora Durée prédéfinie | `sora2-landscape-10s`, `sora2-pro-portrait-25s`, etc. | `model + prompt` | `image_url/input_reference` | La durée et l'orientation sont généralement déterminées par le nom du modèle, `seconds/ratio` n'est effectif que si le modèle le permet. |\n| Veo | `veo3*`, `veo3.1*` | `model + prompt` | `mode + image_url/reference_images/content + ratio/seconds` | Les modèles de type `i2v/r2v` nécessitent généralement une image ou une ressource de référence ; les types `t2v` acceptent généralement du texte brut. |\n| Kling | `kling-video`, `kling-*` | `model + prompt + mode` | `mode=t2v/i2v/multi_i2v`, ainsi que les champs officiels tels que `image/image_list` | Compatible avec la sémantique des chemins officiels (text2video/image2video/multi-image2video) et unifié sous `/v1/videos` ; n'offre pas de capacité externe d'extension de vidéo. |\n| Modèles d'extension agrégés | `happyhorse*`, `grok-imagine-1.0-video*`, etc. | `model + prompt` | `seconds/size/content` | Les champs spécifiques pris en charge dépendent de l'implémentation du modèle et du canal ; utilisez de préférence les champs standards, et `content` uniquement si nécessaire. |\n\nRemarque :\n1. Si vous utilisez des modèles à alias stable (tels que `*-stable`, `*-official`), le système sous-jacent peut changer de canal automatiquement. Veuillez essayer de transmettre des « paramètres compatibles multi-canaux » (`prompt + model + seconds/duration + size/ratio + 必要参考图`).\n2. Pour les scénarios complexes multi-ressources (image + vidéo + audio + @nom), utilisez de préférence `content` pour une compatibilité maximale.\n3. Si la documentation du modèle ne mentionne pas explicitement la prise en charge d'un champ, veuillez d'abord valider le fonctionnement avec les « paramètres d'entrée minimaux », puis ajouter progressivement des paramètres étendus.\n\n### 4.1 Compléments sur le mode officiel Kling\n\n- `mode=t2v` : Texte-en-vidéo\n- `mode=i2v` : Image-en-vidéo (nécessite `image` ou `image_url`)\n- `mode=multi_i2v` : Référence multi-images (nécessite `image_list` ou plusieurs `image_urls`)\n- `mode=extend` : Non pris en charge (l'extension vidéo ne propose pas encore de capacités externes `/v1/videos`)\n\nLes paramètres officiels courants peuvent être transmis directement dans le corps de la requête `/v1/videos` :\n- `model_name` `negative_prompt` `cfg_scale` `mode(std/pro)` `duration` `aspect_ratio`\n- `sound` `camera_control` `callback_url` `external_task_id` `watermark_info`\n\n### 4.2 Compléments sur le mode vidéo Grok\n\nParamètres recommandés :\n- `model` : par ex. `grok-video-3`\n- `prompt`\n- `ratio` ou `aspect_ratio`\n- `resolution` ou `size`\n- `seconds` ou `duration`\n- `image` / `image_url` / `input_reference` (référence à image unique)\n- `reference_images` / `reference_image_urls` (référence multi-images, sémantique officielle `reference-to-video`)\n- `mode` (optionnel) : `image-to-video`, `reference-to-video`\n\nContraintes :\n- `mode=edit-video` / `mode=extend-video` non pris en charge (l'édition et l'extension vidéo ne sont pas encore ouvertes à l'extérieur).\n- `image/input_reference` et `reference_images` ne peuvent pas être transmis simultanément.\n\n- `mode=t2v`\n- Entrée minimale : `model + prompt`\n\n- `mode=i2v` (équivalent à `i2v_first`)\n- Paramètre d'entrée minimal : `model + prompt + image_url` (ou URL de chaîne `input_reference`)\n\n- `mode=i2v_first_last`\n- Entrée minimale : `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Entrée minimale : `model + prompt + reference_images` (généralement 1 à 4 images)\n\n- `mode=reference_material`\n- Entrée minimale : `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n- Pour les scénarios complexes, l'utilisation de `content + function_mode=omni_reference` est recommandée\n- Remarque : lorsque `function_mode=omni_reference` est transmis, le traitement suivra la sémantique de référence omnipotente, même si `mode=reference_material` n'est pas explicitement fourni.",
+        "description": "Interface de génération vidéo au format compatible OpenAI Sora. Prend en charge les modes de génération texte-vers-vidéo et référence image/vidéo.\n\n- `POST /v1/videos` : Créer une tâche vidéo\n- `GET /v1/videos/{video_id}` : Consulter l'état de la tâche\n- `GET /v1/videos/{video_id}/content` : obtenir le contenu binaire de la vidéo\n\nActuellement non disponible pour les utilisateurs externes :\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n1. Créez une tâche via `POST /v1/videos` et obtenez `id`\n2. Interrogez `GET /v1/videos/{id}` jusqu’à `completed` ou `failed`\n3. Une fois terminé, utilisez en priorité `video_url` renvoyé dans la réponse\n4. Si un téléchargement unifié est nécessaire, appelez `GET /v1/videos/{id}/content`\n\nParamètres principaux :\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération de la vidéo\n- `seconds: number|string` : facultatif, durée cible\n- `duration: number|string` : facultatif, alias de durée\n- `size: string` : facultatif, taille de sortie\n- `mode: string` : facultatif, valeurs courantes `t2v` `i2v` `i2v_first_last` `reference_material`\n\nParamètres de compatibilité courants :\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nParamètres d’extension courants de Kling :\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Série Veo\n\n#### Modèles principaux Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-fast-stable`\n- `veo3.1-fast-official`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n#### Modèles prédéfinis Veo 2.x / 3.1\n\n- `veo_2_0_t2v_landscape`\n- `veo_2_0_t2v_landscape-stable`\n- `veo_2_0_t2v_portrait`\n- `veo_2_0_t2v_portrait-stable`\n- `veo_2_0_i2v_landscape`\n- `veo_2_0_i2v_landscape-stable`\n- `veo_2_0_i2v_portrait`\n- `veo_2_0_i2v_portrait-stable`\n- `veo_2_1_fast_d_15_t2v_landscape`\n- `veo_2_1_fast_d_15_t2v_landscape-stable`\n- `veo_2_1_fast_d_15_t2v_portrait`\n- `veo_2_1_fast_d_15_t2v_portrait-stable`\n- `veo_2_1_fast_d_15_i2v_landscape`\n- `veo_2_1_fast_d_15_i2v_landscape-stable`\n- `veo_2_1_fast_d_15_i2v_portrait`\n- `veo_2_1_fast_d_15_i2v_portrait-stable`\n- `veo_3_1_t2v_landscape`\n- `veo_3_1_t2v_landscape-stable`\n- `veo_3_1_t2v_portrait`\n- `veo_3_1_t2v_portrait-stable`\n- `veo_3_1_t2v_fast_landscape`\n- `veo_3_1_t2v_fast_landscape-stable`\n- `veo_3_1_t2v_fast_portrait`\n- `veo_3_1_t2v_fast_portrait-stable`\n- `veo_3_1_t2v_fast_1080p`\n- `veo_3_1_t2v_fast_1080p-stable`\n- `veo_3_1_t2v_fast_4k`\n- `veo_3_1_t2v_fast_4k-stable`\n- `veo_3_1_t2v_fast_portrait_1080p`\n- `veo_3_1_t2v_fast_portrait_1080p-stable`\n- `veo_3_1_t2v_fast_portrait_4k`\n- `veo_3_1_t2v_fast_portrait_4k-stable`\n- `veo_3_1_t2v_fast_ultra`\n- `veo_3_1_t2v_fast_ultra-stable`\n- `veo_3_1_t2v_fast_ultra_1080p`\n- `veo_3_1_t2v_fast_ultra_1080p-stable`\n- `veo_3_1_t2v_fast_ultra_4k`\n- `veo_3_1_t2v_fast_ultra_4k-stable`\n- `veo_3_1_t2v_fast_ultra_relaxed`\n- `veo_3_1_t2v_fast_ultra_relaxed-stable`\n- `veo_3_1_t2v_fast_portrait_ultra`\n- `veo_3_1_t2v_fast_portrait_ultra-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_1080p`\n- `veo_3_1_t2v_fast_portrait_ultra_1080p-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_4k`\n- `veo_3_1_t2v_fast_portrait_ultra_4k-stable`\n- `veo_3_1_t2v_fast_portrait_ultra_relaxed`\n- `veo_3_1_t2v_fast_portrait_ultra_relaxed-stable`\n- `veo_3_1_i2v_s_landscape`\n- `veo_3_1_i2v_s_landscape-stable`\n- `veo_3_1_i2v_s_portrait`\n- `veo_3_1_i2v_s_portrait-stable`\n- `veo_3_1_i2v_s_fast_fl`\n- `veo_3_1_i2v_s_fast_fl-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl`\n- `veo_3_1_i2v_s_fast_ultra_fl-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl_1080p`\n- `veo_3_1_i2v_s_fast_ultra_fl_1080p-stable`\n- `veo_3_1_i2v_s_fast_ultra_fl_4k`\n- `veo_3_1_i2v_s_fast_ultra_fl_4k-stable`\n- `veo_3_1_i2v_s_fast_ultra_relaxed`\n- `veo_3_1_i2v_s_fast_ultra_relaxed-stable`\n- `veo_3_1_i2v_s_fast_portrait_fl`\n- `veo_3_1_i2v_s_fast_portrait_fl-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_1080p`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_1080p-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_4k`\n- `veo_3_1_i2v_s_fast_portrait_ultra_fl_4k-stable`\n- `veo_3_1_i2v_s_fast_portrait_ultra_relaxed`\n- `veo_3_1_i2v_s_fast_portrait_ultra_relaxed-stable`\n- `veo_3_1_r2v_fast`\n- `veo_3_1_r2v_fast-stable`\n- `veo_3_1_r2v_fast_ultra`\n- `veo_3_1_r2v_fast_ultra-stable`\n- `veo_3_1_r2v_fast_ultra_1080p`\n- `veo_3_1_r2v_fast_ultra_1080p-stable`\n- `veo_3_1_r2v_fast_ultra_4k`\n- `veo_3_1_r2v_fast_ultra_4k-stable`\n- `veo_3_1_r2v_fast_ultra_relaxed`\n- `veo_3_1_r2v_fast_ultra_relaxed-stable`\n- `veo_3_1_r2v_fast_portrait`\n- `veo_3_1_r2v_fast_portrait-stable`\n- `veo_3_1_r2v_fast_portrait_ultra`\n- `veo_3_1_r2v_fast_portrait_ultra-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_1080p`\n- `veo_3_1_r2v_fast_portrait_ultra_1080p-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_4k`\n- `veo_3_1_r2v_fast_portrait_ultra_4k-stable`\n- `veo_3_1_r2v_fast_portrait_ultra_relaxed`\n- `veo_3_1_r2v_fast_portrait_ultra_relaxed-stable`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte seul, utilisez en priorité les modèles principaux `veo3*` / `veo3.1*`\n- Si vous avez des exigences fixes sur la taille, l’orientation ou la durée, utilisez en priorité un nom de modèle prédéfini\n- Pour les scénarios de génération de vidéo à partir d’image ou avec image de référence, il est recommandé de transmettre explicitement `mode + image_url/reference_images`\n\n### 4.2 Série Sora\n\nModèles de base :\n- `sora-2`\n- `sora-2-pro`\n- `sora-2-stable`\n- `sora-2-pro-stable`\n- `sora-2-official`\n- `sora-2-pro-official`\n\nModèles prédéfinis :\n- `sora2-landscape-10s`\n- `sora2-landscape-10s-stable`\n- `sora2-landscape-10s-official`\n- `sora2-portrait-10s`\n- `sora2-portrait-10s-stable`\n- `sora2-portrait-10s-official`\n- `sora2-landscape-15s`\n- `sora2-landscape-15s-stable`\n- `sora2-landscape-15s-official`\n- `sora2-portrait-15s`\n- `sora2-portrait-15s-stable`\n- `sora2-portrait-15s-official`\n- `sora2-pro-landscape-25s`\n- `sora2-pro-landscape-25s-stable`\n- `sora2-pro-landscape-25s-official`\n- `sora2-pro-portrait-25s`\n- `sora2-pro-portrait-25s-stable`\n- `sora2-pro-portrait-25s-official`\n- `sora2-pro-landscape-hd-15s`\n- `sora2-pro-landscape-hd-15s-stable`\n- `sora2-pro-landscape-hd-15s-official`\n- `sora2-pro-portrait-hd-15s`\n- `sora2-pro-portrait-hd-15s-stable`\n- `sora2-pro-portrait-hd-15s-official`\n\nRecommandations :\n- `sora-2*` convient aux appels généraux\n- Le modèle prédéfini `sora2-*` convient aux scénarios avec durée et orientation fixes\n- Si vous avez besoin d'une stratégie stable/officielle, choisissez directement `*-stable` / `*-official`\n\n### 4.3 Série Seedance\n\nModèle exposé :\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-t2v-250428-official`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428-official`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-250528-official`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-0-pro-fast-251015-official`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-1-5-pro-251215-official`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-260128-official`\n- `doubao-seedance-2-0-fast-260128`\n- `doubao-seedance-2-0-fast-260128-official`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte, privilégiez `*-t2v-*` ou `pro / fast`\n- Pour la génération de vidéo à partir d'image, privilégiez `*-i2v-*`\n- Pour les scénarios avec des éléments de référence complexes, utilisez en priorité `content`\n\n### 4.4 Série vidéo Grok\n\nModèle exposé :\n- `grok-video-3`\n\nParamètres courants :\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n### 4.5 Modèle vidéo principal Kling\n\nModèle principal exposé :\n- `kling-video`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n`mode` courants :\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nParamètres d’entrée minimaux :\n- Génération de vidéo à partir de texte : `model + model_name + prompt + mode=t2v`\n- Génération de vidéo à partir d'image : `model + model_name + prompt + mode=i2v + image`\n- Référence multi-image : `model + model_name + prompt + mode=multi_i2v + image_list`\n- Extension de vidéo : `model + model_name + mode=extend + video_id`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Entrée minimale : `model + prompt`\n\n- `mode=i2v`\n- Entrée minimale : `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Entrée minimale : `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Entrée minimale : `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Entrée minimale : `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`",
         "operationId": "createVideo",
         "tags": [
           "Formats compatibles Sora pour la génération de vidéos"
@@ -587,7 +673,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Nom du modèle vidéo à appeler. Exemples : `sora-2`, `doubao-seedance-2-0-260128`",
+                    "description": "Nom du modèle. Des modèles différents déclenchent des logiques d’adaptation amont différentes.",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -619,7 +705,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Description principale de la génération vidéo. Ce champ est obligatoire et ne peut pas être vide lors de l'utilisation de `content`. Exemple : `第一人称视角果茶广告，节奏轻快`"
+                    "description": "Point d’entrée unifié pour les prompts. Requis pour la plupart des modèles."
                   },
                   "image": {
                     "type": "string",
@@ -628,7 +714,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "Alias de durée (choisissez l'un ou l'autre entre ceci et `seconds`)."
+                    "description": "Paramètre de durée unifié ; certains modèles acceptent également `seconds`."
                   },
                   "width": {
                     "type": "integer",
@@ -643,7 +729,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "Fréquence d'images."
+                    "description": "Video frame rate"
                   },
                   "seed": {
                     "type": "integer",
@@ -672,7 +758,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Mode de génération, la valeur par défaut est `t2v` si non spécifiée. Les exigences relatives aux paramètres des ressources varient selon le mode. Exemples : `t2v`, `i2v`, `i2v_first_last`, `reference_material`"
+                    "description": "Champs d’indication de canal/mode, tels que i2v_first, reference_images, etc."
                   },
                   "images": {
                     "type": "array",
@@ -683,15 +769,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "Résolution de sortie, généralement `宽x高`. Exemples : `720x1280`, `1280x720`"
+                    "description": "Point d’entrée unifié pour la taille, qui sera mappé vers resolution/aspect_ratio, etc."
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Durée cible. Choisissez entre ce paramètre et `duration` ; si les deux sont transmis, le résultat de l'analyse de la passerelle prévaut généralement. Exemple : `8`"
+                    "description": "Point d’entrée de compatibilité pour Sora ; à l’exécution, il revient à duration."
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Objet d'entrée de référence standard."
+                    "description": "Entrée d’image de référence compatible avec Sora/Veo, pouvant être un fichier multipart ou un objet compatible."
                   }
                 },
                 "required": [
@@ -706,7 +792,7 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "Nom du modèle vidéo à appeler. Exemples : `sora-2`, `doubao-seedance-2-0-260128`",
+                    "description": "Nom du modèle. Des modèles différents déclenchent des logiques d’adaptation amont différentes.",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
@@ -738,7 +824,7 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Description principale de la génération vidéo. Ce champ est obligatoire et ne peut pas être vide lors de l'utilisation de `content`. Exemple : `第一人称视角果茶广告，节奏轻快`"
+                    "description": "Point d’entrée unifié pour les prompts. Requis pour la plupart des modèles."
                   },
                   "image": {
                     "type": "string",
@@ -747,7 +833,7 @@
                   },
                   "duration": {
                     "type": "integer",
-                    "description": "Alias de durée (choisissez l'un ou l'autre entre ceci et `seconds`)."
+                    "description": "Paramètre de durée unifié ; certains modèles acceptent également `seconds`."
                   },
                   "width": {
                     "type": "integer",
@@ -762,7 +848,7 @@
                   "fps": {
                     "type": "integer",
                     "example": 30,
-                    "description": "Fréquence d'images."
+                    "description": "Video frame rate"
                   },
                   "seed": {
                     "type": "integer",
@@ -791,7 +877,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "Mode de génération, la valeur par défaut est `t2v` si non spécifiée. Les exigences relatives aux paramètres des ressources varient selon le mode. Exemples : `t2v`, `i2v`, `i2v_first_last`, `reference_material`"
+                    "description": "Champs d’indication de canal/mode, tels que i2v_first, reference_images, etc."
                   },
                   "images": {
                     "type": "array",
@@ -802,15 +888,15 @@
                   },
                   "size": {
                     "type": "string",
-                    "description": "Résolution de sortie, généralement `宽x高`. Exemples : `720x1280`, `1280x720`"
+                    "description": "Point d’entrée unifié pour la taille, qui sera mappé vers resolution/aspect_ratio, etc."
                   },
                   "seconds": {
                     "type": "string",
-                    "description": "Durée cible. Choisissez entre ce paramètre et `duration` ; si les deux sont transmis, le résultat de l'analyse de la passerelle prévaut généralement. Exemple : `8`"
+                    "description": "Point d’entrée de compatibilité pour Sora ; à l’exécution, il revient à duration."
                   },
                   "input_reference": {
                     "type": "string",
-                    "description": "Objet d'entrée de référence standard."
+                    "description": "Entrée d’image de référence compatible avec Sora/Veo, pouvant être un fichier multipart ou un objet compatible."
                   }
                 },
                 "required": [
@@ -1058,8 +1144,7 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string",
-                      "description": "ID de la tâche (à utiliser pour les requêtes ou téléchargements ultérieurs)."
+                      "type": "string"
                     },
                     "task_id": {
                       "type": "string",
@@ -1073,25 +1158,25 @@
                     },
                     "status": {
                       "type": "string",
-                      "description": "État de la tâche.",
+                      "description": "Should use VideoStatus constants: VideoStatusQueued, VideoStatusInProgress, VideoStatusCompleted, VideoStatusFailed",
                       "enum": [
                         "queued",
                         "in_progress",
                         "completed",
-                        "failed"
+                        "failed",
+                        "video_url",
+                        "url",
+                        "completed_at"
                       ]
                     },
                     "progress": {
-                      "type": "integer",
-                      "description": "Progression (0~100, valeur approximative)."
+                      "type": "integer"
                     },
                     "created_at": {
-                      "type": "integer",
-                      "description": "Date de création (secondes Unix)."
+                      "type": "integer"
                     },
                     "completed_at": {
-                      "type": "integer",
-                      "description": "Heure d'achèvement."
+                      "type": "integer"
                     },
                     "expires_at": {
                       "type": "integer"
@@ -1111,14 +1196,6 @@
                     "metadata": {
                       "type": "object",
                       "additionalProperties": true
-                    },
-                    "video_url": {
-                      "type": "string",
-                      "description": "URL de la vidéo téléchargeable directement."
-                    },
-                    "url": {
-                      "type": "string",
-                      "description": "Certains modèles ou canaux peuvent renvoyer ce champ comme URL de résultat."
                     }
                   },
                   "required": [
@@ -1852,6 +1929,43 @@
                     "created_at": {
                       "type": "string",
                       "description": "Date de création (secondes Unix)."
+                    },
+                    "items": {
+                      "type": "string",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "ID de la tâche."
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Statut de la tâche, généralement `queued`, `running`, `succeeded` et `failed`."
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "description": "URL du résultat de la vidéo."
+                              }
+                            }
+                          },
+                          "video_url": {
+                            "type": "string",
+                            "description": "URL du résultat de la vidéo."
+                          },
+                          "error": {
+                            "type": "string",
+                            "description": "Message d'erreur en cas d'échec."
+                          },
+                          "progress": {
+                            "type": "string",
+                            "description": "Progression de la tâche."
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -1948,6 +2062,43 @@
                         },
                         "total_tokens": {
                           "type": "integer"
+                        }
+                      }
+                    },
+                    "items": {
+                      "type": "string",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "ID de la tâche."
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Statut de la tâche, généralement `queued`, `running`, `succeeded` et `failed`."
+                          },
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "video_url": {
+                                "type": "string",
+                                "description": "URL du résultat de la vidéo."
+                              }
+                            }
+                          },
+                          "video_url": {
+                            "type": "string",
+                            "description": "URL du résultat de la vidéo."
+                          },
+                          "error": {
+                            "type": "string",
+                            "description": "Message d'erreur en cas d'échec."
+                          },
+                          "progress": {
+                            "type": "string",
+                            "description": "Progression de la tâche."
+                          }
                         }
                       }
                     }

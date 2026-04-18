@@ -12,7 +12,7 @@ description: "Lấy API Key, thay thế Base URL và thực hiện yêu cầu đ
 ## Bước 2: Cấu hình Base URL
 
 ```bash
-API_BASE_URL="https://api.aiid.edu.kg/v1"
+API_BASE_URL="https://api.aiid.edu.kg"
 ```
 
 Nếu client hiện tại mặc định là:
@@ -23,7 +23,7 @@ Nếu client hiện tại mặc định là:
 Thì hãy thay thế tương ứng bằng:
 
 - `https://api.aiid.edu.kg`
-- `https://api.aiid.edu.kg/v1`
+- `https://api.aiid.edu.kg`
 
 ## Bước 3: Gửi yêu cầu đầu tiên
 
@@ -34,7 +34,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://api.aiid.edu.kg/v1",
+    base_url="https://api.aiid.edu.kg",
 )
 
 response = client.chat.completions.create(
