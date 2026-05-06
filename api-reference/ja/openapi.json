@@ -94,7 +94,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/モデル一覧の取得/モデル一覧の取得"
+        }
       }
     },
     "/v1beta/models": {
@@ -128,7 +131,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/モデル一覧の取得/gemini-形式の取得"
+        }
       }
     },
     "/v1/chat/completions": {
@@ -194,7 +200,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/openai形式-chat/チャットセッションの作成"
+        }
       }
     },
     "/v1/responses": {
@@ -238,7 +247,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/openai形式-responses/レスポンスの作成-openai-responses-api"
+        }
       }
     },
     "/v1beta/models/{model}:generateContent": {
@@ -390,7 +402,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/画像生成gemini形式/gemini-画像nano-banana"
+        }
       }
     },
     "/v1/images/generations": {
@@ -560,7 +575,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/画像生成openai-dall-e形式/画像を生成（openai-dall-e互換）"
+        }
       }
     },
     "/v1/images/edits": {
@@ -651,7 +669,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/画像生成openai-dall-e形式/画像を編集（openai-dall-e互換）"
+        }
       }
     },
     "/v1/videos": {
@@ -1240,7 +1261,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成sora互換フォーマット/動画の生成"
+        }
       }
     },
     "/v1/videos/{task_id}": {
@@ -1363,7 +1387,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成sora互換フォーマット/動画タスクステータスの取得"
+        }
       }
     },
     "/v1/videos/{task_id}/content": {
@@ -1420,7 +1447,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成sora互換フォーマット/動画コンテンツの取得"
+        }
       }
     },
     "/kling/v1/videos/text2video": {
@@ -1482,7 +1512,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成kling形式/kling-テキストからの動画生成"
+        }
       }
     },
     "/kling/v1/videos/text2video/{task_id}": {
@@ -1538,7 +1571,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成kling形式/kling-text-to-videoタスクの状態を取得"
+        }
       }
     },
     "/kling/v1/videos/image2video": {
@@ -1600,7 +1636,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成kling形式/kling-イメージ動画生成"
+        }
       }
     },
     "/kling/v1/videos/image2video/{task_id}": {
@@ -1656,7 +1695,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成kling形式/kling-イメージからの動画生成タスクの状態を取得"
+        }
       }
     },
     "/api/v3/contents/generations/tasks": {
@@ -1977,7 +2019,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成seedance火山方舟/動画の生成（seedance）"
+        }
       }
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
@@ -2112,7 +2157,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成seedance火山方舟/タスクの照会（seedance）"
+        }
       }
     },
     "/v1beta/models/{model}:predictLongRunning": {
@@ -2286,7 +2334,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成veo3形式/動画の作成（veo3形式）"
+        }
       }
     },
     "/v1beta/{operation_name}": {
@@ -2386,7 +2437,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/ja/動画生成veo3形式/タスクの照会（veo3形式）"
+        }
       }
     }
   },

@@ -94,7 +94,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/lấy-danh-sách-mô-hình/lấy-danh-sách-mô-hình"
+        }
       }
     },
     "/v1beta/models": {
@@ -128,7 +131,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/lấy-danh-sách-mô-hình/lấy-định-dạng-gemini"
+        }
       }
     },
     "/v1/chat/completions": {
@@ -194,7 +200,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-openai-chat/tạo-cuộc-hội-thoại-chat"
+        }
       }
     },
     "/v1/responses": {
@@ -238,7 +247,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-openai-responses/tạo-phản-hồi-openai-responses-api"
+        }
       }
     },
     "/v1beta/models/{model}:generateContent": {
@@ -390,7 +402,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-gemini-cho-tạo-ảnh/hình-ảnh-gemini-nano-banana"
+        }
       }
     },
     "/v1/images/generations": {
@@ -560,7 +575,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/tạo-ảnh-openai-định-dạng-dall-e/tạo-hình-ảnh-tương-thích-openai-dall-e"
+        }
       }
     },
     "/v1/images/edits": {
@@ -651,7 +669,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/tạo-ảnh-openai-định-dạng-dall-e/chỉnh-sửa-hình-ảnh-tương-thích-openai-dall-e"
+        }
       }
     },
     "/v1/videos": {
@@ -1240,7 +1261,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-tương-thích-sora-cho-tạo-video/tạo-video"
+        }
       }
     },
     "/v1/videos/{task_id}": {
@@ -1363,7 +1387,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-tương-thích-sora-cho-tạo-video/lấy-trạng-thái-tác-vụ-video"
+        }
       }
     },
     "/v1/videos/{task_id}/content": {
@@ -1420,7 +1447,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-tương-thích-sora-cho-tạo-video/lấy-nội-dung-video"
+        }
       }
     },
     "/kling/v1/videos/text2video": {
@@ -1482,7 +1512,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-kling-tạo-video/kling-chuyển-văn-bản-thành-video"
+        }
       }
     },
     "/kling/v1/videos/text2video/{task_id}": {
@@ -1538,7 +1571,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-kling-tạo-video/lấy-trạng-thái-tác-vụ-chuyển-văn-bản-thành-video-của-kling"
+        }
       }
     },
     "/kling/v1/videos/image2video": {
@@ -1600,7 +1636,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-kling-tạo-video/kling-chuyển-hình-ảnh-thành-video"
+        }
       }
     },
     "/kling/v1/videos/image2video/{task_id}": {
@@ -1656,7 +1695,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-kling-tạo-video/lấy-trạng-thái-nhiệm-vụ-tạo-video-từ-hình-ảnh-của-kling"
+        }
       }
     },
     "/api/v3/contents/generations/tasks": {
@@ -1977,7 +2019,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/vi/tạo-videoseedancevolcengine-ark/tạo-video-seedance"
+        }
       }
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
@@ -2112,7 +2157,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/vi/tạo-videoseedancevolcengine-ark/truy-vấn-tác-vụ-seedance"
+        }
       }
     },
     "/v1beta/models/{model}:predictLongRunning": {
@@ -2286,7 +2334,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-video-tạo-sinh-veo3/tạo-video-định-dạng-veo3"
+        }
       }
     },
     "/v1beta/{operation_name}": {
@@ -2386,7 +2437,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-video-tạo-sinh-veo3/truy-vấn-nhiệm-vụ-định-dạng-veo3"
+        }
       }
     }
   },

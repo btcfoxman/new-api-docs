@@ -94,7 +94,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/получить-список-моделей/получить-список-моделей"
+        }
       }
     },
     "/v1beta/models": {
@@ -128,7 +131,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/получить-список-моделей/получение-формата-gemini"
+        }
       }
     },
     "/v1/chat/completions": {
@@ -194,7 +200,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/формат-openai-chat/создать-чат-диалог"
+        }
       }
     },
     "/v1/responses": {
@@ -238,7 +247,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/формат-openai-responses/создание-ответов-openai-responses-api"
+        }
       }
     },
     "/v1beta/models/{model}:generateContent": {
@@ -390,7 +402,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/формат-gemini-для-генерации-изображений/изображение-gemini-nano-banana"
+        }
       }
     },
     "/v1/images/generations": {
@@ -560,7 +575,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/генерация-изображенийopenai-в-формате-dall-e/генерация-изображений-совместимо-с-openai-dall-e"
+        }
       }
     },
     "/v1/images/edits": {
@@ -651,7 +669,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/генерация-изображенийopenai-в-формате-dall-e/редактирование-изображения-совместимо-с-openai-dall-e"
+        }
       }
     },
     "/v1/videos": {
@@ -1240,7 +1261,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/совместимый-формат-sora-для-генерации-видео/создать-видео"
+        }
       }
     },
     "/v1/videos/{task_id}": {
@@ -1363,7 +1387,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/совместимый-формат-sora-для-генерации-видео/получить-статус-задачи-видео"
+        }
       }
     },
     "/v1/videos/{task_id}/content": {
@@ -1420,7 +1447,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/совместимый-формат-sora-для-генерации-видео/получение-видеоконтента"
+        }
       }
     },
     "/kling/v1/videos/text2video": {
@@ -1482,7 +1512,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/формат-kling-для-генерации-видео/kling-генерация-видео-по-тексту"
+        }
       }
     },
     "/kling/v1/videos/text2video/{task_id}": {
@@ -1538,7 +1571,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/формат-kling-для-генерации-видео/получение-статуса-задачи-генерации-видео-по-тексту-kling"
+        }
       }
     },
     "/kling/v1/videos/image2video": {
@@ -1600,7 +1636,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/формат-kling-для-генерации-видео/kling-генерация-видео-из-изображения"
+        }
       }
     },
     "/kling/v1/videos/image2video/{task_id}": {
@@ -1656,7 +1695,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/формат-kling-для-генерации-видео/получение-статуса-задачи-генерации-видео-по-изображению-kling"
+        }
       }
     },
     "/api/v3/contents/generations/tasks": {
@@ -1977,7 +2019,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/ru/генерация-видео-seedance-volcano-engine-ark/создать-видео-seedance"
+        }
       }
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
@@ -2112,7 +2157,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/ru/генерация-видео-seedance-volcano-engine-ark/запрос-задачи-seedance"
+        }
       }
     },
     "/v1beta/models/{model}:predictLongRunning": {
@@ -2286,7 +2334,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/ru/формат-veo3-для-генерации-видео/создание-видео-формат-veo3"
+        }
       }
     },
     "/v1beta/{operation_name}": {
@@ -2386,7 +2437,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/ru/формат-veo3-для-генерации-видео/запрос-задачи-формат-veo3"
+        }
       }
     }
   },

@@ -94,7 +94,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/list-models/list-models"
+        }
       }
     },
     "/v1beta/models": {
@@ -128,7 +131,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/list-models/get-gemini-format"
+        }
       }
     },
     "/v1/chat/completions": {
@@ -194,7 +200,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/openai-format-chat/create-chat-session"
+        }
       }
     },
     "/v1/responses": {
@@ -238,7 +247,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/openai-format-responses/create-response-openai-responses-api"
+        }
       }
     },
     "/v1beta/models/{model}:generateContent": {
@@ -390,7 +402,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/gemini-format-for-image-generation/gemini-images-nano-banana"
+        }
       }
     },
     "/v1/images/generations": {
@@ -560,7 +575,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/image-generation-openai-dall-e-format/generate-images-openai-dall-e-compatible"
+        }
       }
     },
     "/v1/images/edits": {
@@ -651,7 +669,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/image-generation-openai-dall-e-format/edit-image-openai-dall-e-compatible"
+        }
       }
     },
     "/v1/videos": {
@@ -1240,7 +1261,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-sora-compatible-format/create-video"
+        }
       }
     },
     "/v1/videos/{task_id}": {
@@ -1363,7 +1387,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-sora-compatible-format/get-video-task-status"
+        }
       }
     },
     "/v1/videos/{task_id}/content": {
@@ -1420,7 +1447,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-sora-compatible-format/get-video-content"
+        }
       }
     },
     "/kling/v1/videos/text2video": {
@@ -1482,7 +1512,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-kling-format/kling-text-to-video"
+        }
       }
     },
     "/kling/v1/videos/text2video/{task_id}": {
@@ -1538,7 +1571,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-kling-format/get-kling-text-to-video-task-status"
+        }
       }
     },
     "/kling/v1/videos/image2video": {
@@ -1600,7 +1636,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-kling-format/kling-image-to-video"
+        }
       }
     },
     "/kling/v1/videos/image2video/{task_id}": {
@@ -1656,7 +1695,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-kling-format/get-kling-image-to-video-task-status"
+        }
       }
     },
     "/api/v3/contents/generations/tasks": {
@@ -1977,7 +2019,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-seedance-volcengine-ark/create-video-seedance"
+        }
       }
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
@@ -2112,7 +2157,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-seedance-volcengine-ark/query-task-seedance"
+        }
       }
     },
     "/v1beta/models/{model}:predictLongRunning": {
@@ -2286,7 +2334,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-veo-3-format/create-video-veo3-format"
+        }
       }
     },
     "/v1beta/{operation_name}": {
@@ -2386,7 +2437,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-veo-3-format/query-task-veo3-format"
+        }
       }
     }
   },
