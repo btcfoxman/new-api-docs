@@ -679,7 +679,7 @@
       "post": {
         "summary": "Créer une vidéo",
         "deprecated": false,
-        "description": "Interface de génération vidéo au format compatible OpenAI Sora. Prend en charge les modes de génération texte-vers-vidéo et référence image/vidéo.\n\n- `POST /v1/videos` : Créer une tâche vidéo\n- `GET /v1/videos/{video_id}` : Consulter l'état de la tâche\n- `GET /v1/videos/{video_id}/content` : obtenir le contenu binaire de la vidéo\n\nActuellement non disponible pour les utilisateurs externes :\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n1. Créez une tâche via `POST /v1/videos` et obtenez `id`\n2. Interrogez `GET /v1/videos/{id}` jusqu’à `completed` ou `failed`\n3. Une fois terminé, utilisez en priorité `video_url` renvoyé dans la réponse\n4. Si un téléchargement unifié est nécessaire, appelez `GET /v1/videos/{id}/content`\n\nParamètres principaux :\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération de la vidéo\n- `seconds: number|string` : facultatif, durée cible\n- `duration: number|string` : facultatif, alias de durée\n- `size: string` : facultatif, taille de sortie\n- `mode: string` : facultatif, valeurs courantes `t2v` `i2v` `i2v_first_last` `reference_material`\n\nParamètres de compatibilité courants :\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nParamètres d’extension courants de Kling :\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Série Veo\n\nRemarque : `stable`, `official`, etc. indiquent différents groupes et ne sont pas des suffixes `model` exposés à l’extérieur ; lors de l’appel, veuillez conserver `model` comme nom de modèle de base, et le groupe réellement utilisé sera déterminé par le groupe du compte ou du jeton.\n\n#### Modèles principaux Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte seul, utilisez en priorité les modèles principaux `veo3*` / `veo3.1*`\n- Pour les scénarios de génération de vidéo à partir d’image ou avec image de référence, il est recommandé de transmettre explicitement `mode + image_url/reference_images`\n\n### 4.2 Série Sora\n\nModèles de base :\n- `sora-2`\n- `sora-2-pro`\n\nRecommandations :\n- `sora-2*` convient aux appels généraux\n- Si vous devez utiliser des groupes tels que `stable` / `official`, veuillez conserver `model` comme nom de modèle de base et ne pas ajouter de suffixe au nom du modèle.\n\n### 4.3 Série Seedance\n\nModèle exposé :\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte, privilégiez `*-t2v-*` ou `pro / fast`\n- Pour la génération de vidéo à partir d'image, privilégiez `*-i2v-*`\n- Pour les scénarios avec des éléments de référence complexes, utilisez en priorité `content`\n\n### 4.4 Série vidéo Grok\n\nModèle exposé :\n- `grok-video-3`\n\nParamètres courants :\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n### 4.5 Modèle vidéo principal Kling\n\nModèle principal exposé :\n- `kling-video`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n`mode` courants :\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nParamètres d’entrée minimaux :\n- Génération de vidéo à partir de texte : `model + model_name + prompt + mode=t2v`\n- Génération de vidéo à partir d'image : `model + model_name + prompt + mode=i2v + image`\n- Référence multi-image : `model + model_name + prompt + mode=multi_i2v + image_list`\n- Extension de vidéo : `model + model_name + mode=extend + video_id`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Entrée minimale : `model + prompt`\n\n- `mode=i2v`\n- Entrée minimale : `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Entrée minimale : `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Entrée minimale : `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Entrée minimale : `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`",
+        "description": "Interface de génération vidéo au format compatible OpenAI Sora. Prend en charge les modes de génération texte-vers-vidéo et référence image/vidéo.\n\n- `POST /v1/videos` : Créer une tâche vidéo\n- `GET /v1/videos/{video_id}` : Consulter l'état de la tâche\n- `GET /v1/videos/{video_id}/content` : obtenir le contenu binaire de la vidéo\n\nActuellement non disponible pour les utilisateurs externes :\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n1. Créez une tâche via `POST /v1/videos` et obtenez `id`\n2. Interrogez `GET /v1/videos/{id}` jusqu’à `completed` ou `failed`\n3. Une fois terminé, utilisez en priorité `video_url` renvoyé dans la réponse\n4. Si un téléchargement unifié est nécessaire, appelez `GET /v1/videos/{id}/content`\n\nParamètres principaux :\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération de la vidéo\n- `seconds: number|string` : facultatif, durée cible\n- `duration: number|string` : facultatif, alias de durée\n- `size: string` : facultatif, taille de sortie\n- `mode: string` : facultatif, valeurs courantes `t2v` `i2v` `i2v_first_last` `reference_material`\n\nParamètres de compatibilité courants :\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nParamètres d’extension courants de Kling :\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Série Veo\n\nRemarque : `stable`, `official`, etc. indiquent différents groupes et ne sont pas des suffixes `model` exposés à l’extérieur ; lors de l’appel, veuillez conserver `model` comme nom de modèle de base, et le groupe réellement utilisé sera déterminé par le groupe du compte ou du jeton.\n\n#### Modèles principaux Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte seul, utilisez en priorité les modèles principaux `veo3*` / `veo3.1*`\n- Pour les scénarios de génération de vidéo à partir d’image ou avec image de référence, il est recommandé de transmettre explicitement `mode + image_url/reference_images`\n\n### 4.2 Série Sora\n\nModèles de base :\n- `sora-2`\n- `sora-2-pro`\n\nRecommandations :\n- `sora-2*` convient aux appels généraux\n- Si vous devez utiliser des groupes tels que `stable` / `official`, veuillez conserver `model` comme nom de modèle de base et ne pas ajouter de suffixe au nom du modèle.\n\n### 4.3 Série Seedance\n\nModèle exposé :\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte, privilégiez `*-t2v-*` ou `pro / fast`\n- Pour la génération de vidéo à partir d'image, privilégiez `*-i2v-*`\n- Pour les scénarios avec des éléments de référence complexes, utilisez en priorité `content`\n\n### 4.4 Série vidéo Grok\n\nModèle exposé :\n- `grok-imagine-1.0-video`\n- `grok-video-3`\n\nParamètres courants :\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExemple :\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Modèle vidéo principal Kling\n\nModèle principal exposé :\n- `kling-video`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n`mode` courants :\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nParamètres d’entrée minimaux :\n- Génération de vidéo à partir de texte : `model + model_name + prompt + mode=t2v`\n- Génération de vidéo à partir d'image : `model + model_name + prompt + mode=i2v + image`\n- Référence multi-image : `model + model_name + prompt + mode=multi_i2v + image_list`\n- Extension de vidéo : `model + model_name + mode=extend + video_id`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Entrée minimale : `model + prompt`\n\n- `mode=i2v`\n- Entrée minimale : `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Entrée minimale : `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Entrée minimale : `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Entrée minimale : `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`",
         "operationId": "createVideo",
         "tags": [
           "Formats compatibles Sora pour la génération de vidéos"
@@ -718,6 +718,7 @@
                       "veo3.1-pro",
                       "veo3.1-pro-4k",
                       "kling-video",
+                      "grok-imagine-1.0-video",
                       "grok-video-3",
                       "vidu2.0",
                       "hailuo-video"
@@ -788,6 +789,13 @@
                       "type": "string"
                     }
                   },
+                  "content": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
                   "size": {
                     "type": "string",
                     "description": "Point d’entrée unifié pour la taille, qui sera mappé vers resolution/aspect_ratio, etc."
@@ -837,6 +845,7 @@
                       "veo3.1-pro",
                       "veo3.1-pro-4k",
                       "kling-video",
+                      "grok-imagine-1.0-video",
                       "grok-video-3",
                       "vidu2.0",
                       "hailuo-video"
@@ -905,6 +914,13 @@
                     "description": "Point d'entrée unique pour les images multiples. Utilisé par Vidu, Seedance, Veo, etc.",
                     "items": {
                       "type": "string"
+                    }
+                  },
+                  "content": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
                     }
                   },
                   "size": {
@@ -1095,13 +1111,14 @@
                 "grok_reference_video": {
                   "summary": "Mode vidéo Grok",
                   "value": {
-                    "model": "grok-video-3",
+                    "model": "grok-imagine-1.0-video",
                     "prompt": "A dramatic cinematic shot with fast motion and rich lighting",
                     "reference_images": [
                       "https://example.com/ref-1.jpg"
                     ],
-                    "seconds": "8",
-                    "aspect_ratio": "16:9"
+                    "seconds": 10,
+                    "aspect_ratio": "16:9",
+                    "resolution": "720P"
                   }
                 },
                 "vidu_img2video": {
