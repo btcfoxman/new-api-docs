@@ -94,7 +94,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/获取模型列表/获取模型列表"
+        }
       }
     },
     "/v1beta/models": {
@@ -128,7 +131,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/获取模型列表/gemini格式获取"
+        }
       }
     },
     "/v1/chat/completions": {
@@ -194,7 +200,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/openai格式chat/创建聊天对话"
+        }
       }
     },
     "/v1/responses": {
@@ -238,7 +247,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/openai格式responses/创建响应"
+        }
       }
     },
     "/v1beta/models/{model}:generateContent": {
@@ -390,7 +402,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/图片生成gemini格式/gemini图片nano-banana"
+        }
       }
     },
     "/v1/images/generations": {
@@ -560,7 +575,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/图片生成openai-dall-e格式/生成图像"
+        }
       }
     },
     "/v1/images/edits": {
@@ -651,7 +669,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/图片生成openai-dall-e格式/编辑图像"
+        }
       }
     },
     "/v1/videos": {
@@ -1395,7 +1416,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成sora兼容格式/创建视频"
+        }
       }
     },
     "/v1/videos/{task_id}": {
@@ -1518,7 +1542,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成sora兼容格式/获取视频任务状态"
+        }
       }
     },
     "/v1/videos/{task_id}/content": {
@@ -1575,7 +1602,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成sora兼容格式/获取视频内容"
+        }
       }
     },
     "/kling/v1/videos/text2video": {
@@ -1637,7 +1667,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成kling格式/kling文生视频"
+        }
       }
     },
     "/kling/v1/videos/text2video/{task_id}": {
@@ -1693,7 +1726,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成kling格式/获取kling文生视频任务状态"
+        }
       }
     },
     "/kling/v1/videos/image2video": {
@@ -1755,7 +1791,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成kling格式/kling图生视频"
+        }
       }
     },
     "/kling/v1/videos/image2video/{task_id}": {
@@ -1811,7 +1850,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成kling格式/获取kling图生视频任务状态"
+        }
       }
     },
     "/api/v1/services/aigc/video-generation/video-synthesis": {
@@ -2081,7 +2123,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成happyhorse阿里/创建视频happyhorse"
+        }
       }
     },
     "/api/v1/tasks/{task_id}": {
@@ -2180,7 +2225,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成happyhorse阿里/查询任务happyhorse"
+        }
       }
     },
     "/ent/v2/text2video": {
@@ -2499,7 +2547,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成vidu官方/创建文生视频vidu"
+        }
       }
     },
     "/ent/v2/img2video": {
@@ -2820,7 +2871,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成vidu官方/创建图生视频vidu"
+        }
       }
     },
     "/ent/v2/start-end2video": {
@@ -3141,7 +3195,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成vidu官方/创建首尾帧视频vidu"
+        }
       }
     },
     "/ent/v2/reference2video": {
@@ -3461,7 +3518,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成vidu官方/创建参考生视频vidu"
+        }
       }
     },
     "/ent/v2/tasks/{task_id}/creations": {
@@ -3556,7 +3616,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成vidu官方/查询任务vidu"
+        }
       }
     },
     "/api/v3/contents/generations/tasks": {
@@ -3877,7 +3940,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成seedance火山方舟/创建视频（seedance）"
+        }
       }
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
@@ -4012,7 +4078,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成seedance火山方舟/查询任务（seedance）"
+        }
       }
     },
     "/v1beta/models/{model}:predictLongRunning": {
@@ -4186,7 +4255,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成veo3格式/创建视频（veo3格式）"
+        }
       }
     },
     "/v1beta/{operation_name}": {
@@ -4286,7 +4358,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/cn/视频生成veo3格式/查询任务（veo3格式）"
+        }
       }
     }
   },
