@@ -679,7 +679,7 @@
       "post": {
         "summary": "创建视频",
         "deprecated": false,
-        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容\n\n当前对外不提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 创建任务，获取 `id`\n2. 轮询 `GET /v1/videos/{id}` 直到 `completed` 或 `failed`\n3. 完成后优先使用返回中的 `video_url`\n4. 如需统一下载，调用 `GET /v1/videos/{id}/content`\n\n核心参数：\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，视频生成描述\n- `seconds: number|string`：可选，目标时长\n- `duration: number|string`：可选，时长别名\n- `size: string`：可选，输出尺寸\n- `mode: string`：可选，常见值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用兼容参数：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用扩展参数：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n说明：`stable`、`official` 等表示不同分组，不是对外 `model` 后缀；调用时请保持 `model` 为基础模型名，由账户或令牌分组决定实际走哪个分组。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建议：\n- 纯文生视频优先使用 `veo3*` / `veo3.1*` 主模型\n- 图生或参考生视频场景，建议显式传 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基础模型：\n- `sora-2`\n- `sora-2-pro`\n\n建议：\n- `sora-2*` 适合通用调用\n- 如需使用 `stable` / `official` 等分组，请保持 `model` 为基础模型名，不要在模型名后追加后缀。\n\n### 4.3 Seedance 系列\n\n对外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建议：\n- 文生视频优先 `*-t2v-*` 或 `pro / fast`\n- 图生视频优先 `*-i2v-*`\n- 复杂参考素材场景优先使用 `content`\n\n### 4.4 Grok 视频系列\n\n对外模型：\n- `grok-imagine-1.0-video`\n- `grok-video-3`\n\n常用参数：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n示例：\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Kling 视频主模型\n\n对外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常见 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入参：\n- 文生视频：`model + model_name + prompt + mode=t2v`\n- 图生视频：`model + model_name + prompt + mode=i2v + image`\n- 多图参考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 视频延长：`model + model_name + mode=extend + video_id`\n\n示例：\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`\n- 最小入参：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`",
+        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容\n\n当前对外不提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 创建任务，获取 `id`\n2. 轮询 `GET /v1/videos/{id}` 直到 `completed` 或 `failed`\n3. 完成后优先使用返回中的 `video_url`\n4. 如需统一下载，调用 `GET /v1/videos/{id}/content`\n\n核心参数：\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，视频生成描述\n- `seconds: number|string`：可选，目标时长\n- `duration: number|string`：可选，时长别名\n- `size: string`：可选，输出尺寸\n- `mode: string`：可选，常见值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用兼容参数：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用扩展参数：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n说明：`stable`、`official` 等表示不同分组，不是对外 `model` 后缀；调用时请保持 `model` 为基础模型名，由账户或令牌分组决定实际走哪个分组。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建议：\n- 纯文生视频优先使用 `veo3*` / `veo3.1*` 主模型\n- 图生或参考生视频场景，建议显式传 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基础模型：\n- `sora-2`\n- `sora-2-pro`\n\n建议：\n- `sora-2*` 适合通用调用\n- 如需使用 `stable` / `official` 等分组，请保持 `model` 为基础模型名，不要在模型名后追加后缀。\n\n### 4.3 Seedance 系列\n\n对外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建议：\n- 文生视频优先 `*-t2v-*` 或 `pro / fast`\n- 图生视频优先 `*-i2v-*`\n- 复杂参考素材场景优先使用 `content`\n\n### 4.4 Grok 视频系列\n\n对外模型：\n- `grok-imagine-1.0-video`\n- `grok-video-3`\n\n常用参数：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n示例：\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Kling 视频主模型\n\n对外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常见 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入参：\n- 文生视频：`model + model_name + prompt + mode=t2v`\n- 图生视频：`model + model_name + prompt + mode=i2v + image`\n- 多图参考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 视频延长：`model + model_name + mode=extend + video_id`\n\n示例：\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`\n- 最小入参：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 调用说明\n\n- `gemini-omni` 是 new-api 对外公开的视频模型名，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生视频，最小入参为 `model + prompt`。\n- `mode=r2v`：参考图/参考素材生成，图片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：视频编辑，视频可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同时传参考图。\n- 时长字段可用 `seconds` 或 `duration`，会自动匹配到 4 / 6 / 8 / 10 秒档。",
         "operationId": "createVideo",
         "tags": [
           "视频生成Sora兼容格式"
@@ -694,10 +694,11 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "模型名。不同模型会触发不同上游适配逻辑。",
+                    "description": "必填，对外模型名。 `gemini-omni` 可通过 `/v1/videos` 调用。",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
+                      "gemini-omni",
                       "happyhorse-1.0",
                       "happyhorse-1.0-i2v",
                       "happyhorse-1.0-t2v",
@@ -785,7 +786,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "渠道/模式提示字段，如 i2v_first、reference_images 等。"
+                    "description": "可选，视频生成模式。 `gemini-omni` 支持 `t2v`、`r2v`、`edit`。"
                   },
                   "images": {
                     "type": "array",
@@ -812,6 +813,10 @@
                   "input_reference": {
                     "type": "string",
                     "description": "Sora/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "additionalProperties": true
                   }
                 },
                 "required": [
@@ -826,10 +831,11 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "description": "模型名。不同模型会触发不同上游适配逻辑。",
+                    "description": "必填，对外模型名。 `gemini-omni` 可通过 `/v1/videos` 调用。",
                     "enum": [
                       "sora-2",
                       "sora-2-pro",
+                      "gemini-omni",
                       "happyhorse-1.0",
                       "happyhorse-1.0-i2v",
                       "happyhorse-1.0-t2v",
@@ -917,7 +923,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "渠道/模式提示字段，如 i2v_first、reference_images 等。"
+                    "description": "可选，视频生成模式。 `gemini-omni` 支持 `t2v`、`r2v`、`edit`。"
                   },
                   "images": {
                     "type": "array",
@@ -944,6 +950,10 @@
                   "input_reference": {
                     "type": "string",
                     "description": "Sora/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "additionalProperties": true
                   }
                 },
                 "required": [
@@ -984,6 +994,64 @@
                     "duration": "8",
                     "aspect_ratio": "16:9",
                     "response_format": "url"
+                  }
+                },
+                "gemini_omni_sora_t2v": {
+                  "summary": "Gemini Omni Sora t2v",
+                  "value": {
+                    "model": "gemini-omni",
+                    "mode": "t2v",
+                    "prompt": "A cinematic product video with smooth camera motion",
+                    "duration": 8,
+                    "size": "1280x720"
+                  }
+                },
+                "gemini_omni_sora_r2v": {
+                  "summary": "Gemini Omni Sora r2v",
+                  "value": {
+                    "model": "gemini-omni",
+                    "mode": "r2v",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Keep the product consistent and create a short ad video"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        }
+                      }
+                    ],
+                    "duration": 8,
+                    "size": "1280x720"
+                  }
+                },
+                "gemini_omni_sora_edit": {
+                  "summary": "Gemini Omni Sora edit",
+                  "value": {
+                    "model": "gemini-omni",
+                    "mode": "edit",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Change the outfit color while keeping the motion natural"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://example.com/input.mp4"
+                        }
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/style.jpg"
+                        }
+                      }
+                    ],
+                    "duration": 8,
+                    "size": "1280x720"
                   }
                 },
                 "happyhorse_sora_t2v": {
@@ -3625,7 +3693,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "创建视频（Seedance）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
           "视频生成Seedance火山方舟"
@@ -3644,7 +3712,17 @@
                   "model": {
                     "type": "string",
                     "example": "doubao-seedance-2-0-260128",
-                    "description": "必填。模型名称。"
+                    "description": "必填。模型名称。可传 Seedance 对外模型，也可传 `gemini-omni`。",
+                    "enum": [
+                      "doubao-seedance-1-0-lite-i2v-250428",
+                      "doubao-seedance-1-0-lite-t2v-250428",
+                      "doubao-seedance-1-0-pro-250528",
+                      "doubao-seedance-1-0-pro-fast-251015",
+                      "doubao-seedance-1-5-pro-251215",
+                      "doubao-seedance-2-0-260128",
+                      "doubao-seedance-2-0-fast-260128",
+                      "gemini-omni"
+                    ]
                   },
                   "prompt": {
                     "type": "string",
@@ -3732,7 +3810,7 @@
                   },
                   "mode": {
                     "type": "string",
-                    "description": "可选。兼容模式字段，如 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`。"
+                    "description": "可选。兼容模式字段，如 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`；`gemini-omni` 支持 `t2v`、`r2v`、`edit`。"
                   },
                   "image_url": {
                     "type": "string",
@@ -3827,38 +3905,85 @@
                   }
                 }
               },
-              "example": {
-                "model": "doubao-seedance-2-0-260128",
-                "prompt": "参考素材生成一段剧情短视频",
-                "content": [
-                  {
-                    "type": "text",
-                    "text": "@角色A 在咖啡馆和 @角色B 聊天，@背景视频 作为场景，配上 @背景音乐 --ratio 16:9 --dur 10"
-                  },
-                  {
-                    "type": "image_url",
-                    "image_url": "https://example.com/characterA.jpg",
-                    "role": "material",
-                    "name": "角色A"
-                  },
-                  {
-                    "type": "image_url",
-                    "image_url": "https://example.com/characterB.jpg",
-                    "role": "material",
-                    "name": "角色B"
-                  },
-                  {
-                    "type": "video_url",
-                    "video_url": "https://example.com/cafe-scene.mp4",
-                    "role": "material",
-                    "name": "背景视频"
-                  },
-                  {
-                    "type": "audio_url",
-                    "audio_url": "https://example.com/bgm.mp3",
-                    "name": "背景音乐"
+              "examples": {
+                "seedance_tasks_reference_material": {
+                  "summary": "Seedance content 任务",
+                  "value": {
+                    "model": "doubao-seedance-1-0-lite-i2v-250428",
+                    "mode": "reference_material",
+                    "prompt": "Blend the reference image into a cinematic product video",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Blend the reference image into a cinematic product video"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": "https://example.com/ref.jpg"
+                      }
+                    ],
+                    "duration": 5,
+                    "size": "1280x720"
                   }
-                ]
+                },
+                "gemini_omni_seedance_t2v": {
+                  "summary": "Gemini Omni t2v",
+                  "value": {
+                    "model": "gemini-omni",
+                    "mode": "t2v",
+                    "prompt": "A cinematic product video with smooth camera motion",
+                    "duration": 8,
+                    "size": "1280x720"
+                  }
+                },
+                "gemini_omni_seedance_r2v": {
+                  "summary": "Gemini Omni r2v",
+                  "value": {
+                    "model": "gemini-omni",
+                    "mode": "r2v",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Keep the product consistent and create a short ad video"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        }
+                      }
+                    ],
+                    "duration": 8,
+                    "size": "1280x720"
+                  }
+                },
+                "gemini_omni_seedance_edit": {
+                  "summary": "Gemini Omni edit",
+                  "value": {
+                    "model": "gemini-omni",
+                    "mode": "edit",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Change the outfit color while keeping the motion natural"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://example.com/input.mp4"
+                        }
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/style.jpg"
+                        }
+                      }
+                    ],
+                    "duration": 8,
+                    "size": "1280x720"
+                  }
+                }
               }
             }
           }
@@ -3949,7 +4074,7 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "查询任务（Seedance）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
           "视频生成Seedance火山方舟"
@@ -4087,7 +4212,7 @@
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
         "summary": "创建视频（Veo3格式）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n该接口专题页仅用于说明 Veo 原生格式与当前网关支持状态。\n\n当前 Veo 系列对外请使用 OpenAI Sora 兼容模式：`POST /v1/videos`。\n\nGoogle 原生模式路径预留为：`POST /v1beta/models/{model}:predictLongRunning`。当前网关尚未接通 Veo 原生任务分发链路，因此按原生 `instances/parameters` 请求体调用暂不支持。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n该接口专题页仅用于说明 Veo 原生格式与当前网关支持状态。\n\n当前 Veo 系列对外请使用 OpenAI Sora 兼容模式：`POST /v1/videos`。\n\nGoogle 原生模式路径预留为：`POST /v1beta/models/{model}:predictLongRunning`。当前网关尚未接通 Veo 原生任务分发链路，因此按原生 `instances/parameters` 请求体调用暂不支持。\n\n`gemini-omni` 不是 Google 原生 `predictLongRunning` 调用模型；如需调用 `gemini-omni`，请使用 `POST /v1/videos`，或使用 `POST /api/v3/contents/generations/tasks` 的任务格式。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
           "视频生成Veo3格式"

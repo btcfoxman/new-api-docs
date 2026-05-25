@@ -29,6 +29,8 @@ description: "当前项目不是只有一种协议。为降低接入成本，公
 - Veo3：`/v1beta/models/{model}:predictLongRunning` 和 `/v1beta/{operation_name}`
 - Gemini 图片生成：`/v1beta/models/{model}:generateContent`
 
+`gemini-omni` 是对外公开的视频模型名，不需要关心内部上游模型；视频调用优先使用 `/v1/videos`，也可使用 Seedance 任务格式 `/api/v3/contents/generations/tasks`。`mode=t2v/r2v/edit` 分别表示文生视频、参考生成和视频编辑，时长字段会自动匹配到 4 / 6 / 8 / 10 秒档。
+
 适合：
 - 模型特有字段较多
 - 需要原生请求体结构
