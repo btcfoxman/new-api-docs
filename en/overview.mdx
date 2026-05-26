@@ -5,13 +5,13 @@ description: "The current documentation is based on the actual public interfaces
 
 <CardGroup cols={2}>
   <Card title="Unified Access" icon="code">
-    Prioritize providing OpenAI compatible formats; existing applications based on OpenAI SDK or HTTP usually only need to replace the Base URL and API keys.
+    We prioritize providing a OpenAI-compatible format. Existing applications built on OpenAI SDK or HTTP usually only need to replace the Base URL and API keys.
   </Card>
   <Card title="Multi-Protocol Video Support" icon="film">
-    Simultaneously expose `/v1/videos`, Seedance native formats, Veo3 native formats, and certain model-specific video interfaces.
+    We also expose `/v1/videos`, the native Seedance format, the native Veo3 format, and video endpoints specific to some models.
   </Card>
   <Card title="Imaging Capabilities" icon="image">
-    Provide OpenAI image generation and editing interfaces, while retaining model-specific formats such as Gemini image generation.
+    We provide OpenAI image generation and editing endpoints, while retaining model-specific formats such as Gemini image generation.
   </Card>
   <Card title="Long-Running Task Query" icon="clock">
     Video and certain generation tasks consistently use task IDs or operation names for queries, suitable for asynchronous integration and status polling.
@@ -34,9 +34,16 @@ description: "The current documentation is based on the actual public interfaces
 - `GET /v1/videos/{task_id}`
 - `POST /api/v3/contents/generations/tasks`
 - `GET /api/v3/contents/generations/tasks/{task_id}`
+- `POST /api/v1/services/aigc/video-generation/video-synthesis`
+- `GET /api/v1/tasks/{task_id}`
+- `POST /ent/v2/text2video`
+- `POST /ent/v2/img2video`
+- `POST /ent/v2/start-end2video`
+- `POST /ent/v2/reference2video`
+- `GET /ent/v2/tasks/{task_id}/creations`
 - `POST /v1beta/models/{model}:predictLongRunning`
 - `GET /v1beta/{operation_name}`
-- Model-specific video interfaces such as Kling
+- Model-specific video endpoints such as Kling
 
 ## Currently Public Model Families
 ### Nano Banana
@@ -46,6 +53,14 @@ description: "The current documentation is based on the actual public interfaces
 ### Sora
 - 2 public models in total
 - `sora-2`、`sora-2-pro`
+
+### Gemini Omni
+- 1 public model in total
+- `gemini-omni`
+
+### HappyHorse
+- A total of 5 public models
+- `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`
 
 ### Veo
 - 12 public models in total
@@ -72,5 +87,5 @@ description: "The current documentation is based on the actual public interfaces
 - `hailuo*`
 
 ### Vidu
-- 1 public model in total
-- `vidu*`
+- 2 public models in total
+- `viduq3-turbo`、`vidu*`

@@ -94,10 +94,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/获取模型列表/获取模型列表"
-        }
+        "x-drift-types": []
       }
     },
     "/v1beta/models": {
@@ -131,10 +128,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/获取模型列表/gemini格式获取"
-        }
+        "x-drift-types": []
       }
     },
     "/v1/chat/completions": {
@@ -200,10 +194,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/openai格式chat/创建聊天对话"
-        }
+        "x-drift-types": []
       }
     },
     "/v1/responses": {
@@ -247,10 +238,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/openai格式responses/创建响应"
-        }
+        "x-drift-types": []
       }
     },
     "/v1beta/models/{model}:generateContent": {
@@ -402,10 +390,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/图片生成gemini格式/gemini图片nano-banana"
-        }
+        "x-drift-types": []
       }
     },
     "/v1/images/generations": {
@@ -575,10 +560,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/图片生成openai-dall-e格式/生成图像"
-        }
+        "x-drift-types": []
       }
     },
     "/v1/images/edits": {
@@ -669,10 +651,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/图片生成openai-dall-e格式/编辑图像"
-        }
+        "x-drift-types": []
       }
     },
     "/v1/videos": {
@@ -1484,10 +1463,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成sora兼容格式/创建视频"
-        }
+        "x-drift-types": []
       }
     },
     "/v1/videos/{task_id}": {
@@ -1610,10 +1586,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成sora兼容格式/获取视频任务状态"
-        }
+        "x-drift-types": []
       }
     },
     "/v1/videos/{task_id}/content": {
@@ -1670,10 +1643,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成sora兼容格式/获取视频内容"
-        }
+        "x-drift-types": []
       }
     },
     "/kling/v1/videos/text2video": {
@@ -1735,10 +1705,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成kling格式/kling文生视频"
-        }
+        "x-drift-types": []
       }
     },
     "/kling/v1/videos/text2video/{task_id}": {
@@ -1794,10 +1761,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成kling格式/获取kling文生视频任务状态"
-        }
+        "x-drift-types": []
       }
     },
     "/kling/v1/videos/image2video": {
@@ -1859,10 +1823,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成kling格式/kling图生视频"
-        }
+        "x-drift-types": []
       }
     },
     "/kling/v1/videos/image2video/{task_id}": {
@@ -1918,10 +1879,7 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成kling格式/获取kling图生视频任务状态"
-        }
+        "x-drift-types": []
       }
     },
     "/api/v1/services/aigc/video-generation/video-synthesis": {
@@ -2191,10 +2149,7 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成happyhorse阿里/创建视频happyhorse"
-        }
+        ]
       }
     },
     "/api/v1/tasks/{task_id}": {
@@ -2293,10 +2248,7 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成happyhorse阿里/查询任务happyhorse"
-        }
+        ]
       }
     },
     "/ent/v2/text2video": {
@@ -2615,10 +2567,7 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成vidu官方/创建文生视频vidu"
-        }
+        ]
       }
     },
     "/ent/v2/img2video": {
@@ -2939,10 +2888,7 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成vidu官方/创建图生视频vidu"
-        }
+        ]
       }
     },
     "/ent/v2/start-end2video": {
@@ -3263,10 +3209,7 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成vidu官方/创建首尾帧视频vidu"
-        }
+        ]
       }
     },
     "/ent/v2/reference2video": {
@@ -3586,10 +3529,7 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成vidu官方/创建参考生视频vidu"
-        }
+        ]
       }
     },
     "/ent/v2/tasks/{task_id}/creations": {
@@ -3684,16 +3624,13 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成vidu官方/查询任务vidu"
-        }
+        ]
       }
     },
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "创建视频（Seedance）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，火山方舟 content 数组，混排文本、图片、视频、音频素材。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 文本项写法为 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 图片、视频、音频素材项分别使用 `image_url`、`video_url`、`audio_url` 对象写法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可标识素材用途，`name` 可供提示词中按名称引用。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
           "视频生成Seedance火山方舟"
@@ -3731,6 +3668,7 @@
                   },
                   "content": {
                     "type": "array",
+                    "description": "可选。火山方舟 content 数组，按顺序混排文本与素材项。文本项使用 `{ \"type\": \"text\", \"text\": \"...\" }`；图片、视频、音频项分别使用 `image_url`、`video_url`、`audio_url` 对象并在其中放 `url`，可配合 `role`（如 `reference_image`、`reference_video`、`reference_audio`）和 `name` 供文本引用。",
                     "items": {
                       "type": "object",
                       "required": [
@@ -3744,10 +3682,12 @@
                             "image_url",
                             "video_url",
                             "audio_url"
-                          ]
+                          ],
+                          "description": "内容项类型。"
                         },
                         "text": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "文本内容，仅 type=text 时使用。"
                         },
                         "image_url": {
                           "oneOf": [
@@ -3762,7 +3702,8 @@
                                 }
                               }
                             }
-                          ]
+                          ],
+                          "description": "图片 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
                         },
                         "video_url": {
                           "oneOf": [
@@ -3777,7 +3718,8 @@
                                 }
                               }
                             }
-                          ]
+                          ],
+                          "description": "视频 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
                         },
                         "audio_url": {
                           "oneOf": [
@@ -3792,17 +3734,19 @@
                                 }
                               }
                             }
-                          ]
+                          ],
+                          "description": "音频 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
                         },
                         "role": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "素材用途标识，常见值如 reference_image、reference_video、reference_audio。"
                         },
                         "name": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "素材名称，可供文本提示词引用或区分多个素材。"
                         }
                       }
-                    },
-                    "description": "可选。高级模式下的多媒体输入数组；复杂参考场景推荐使用。"
+                    }
                   },
                   "function_mode": {
                     "type": "string",
@@ -3911,15 +3855,35 @@
                   "value": {
                     "model": "doubao-seedance-1-0-lite-i2v-250428",
                     "mode": "reference_material",
-                    "prompt": "Blend the reference image into a cinematic product video",
+                    "prompt": "测试文字",
                     "content": [
                       {
                         "type": "text",
-                        "text": "Blend the reference image into a cinematic product video"
+                        "text": "测试文字"
                       },
                       {
                         "type": "image_url",
-                        "image_url": "https://example.com/ref.jpg"
+                        "image_url": {
+                          "url": "https://imageproxy.zhongzhuan.chat/api/proxy/image/9979f1a754b3571d5e8bdcc397eedf53.png"
+                        },
+                        "role": "reference_image",
+                        "name": "1"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://imageproxy.zhongzhuan.chat/api/proxy/video/1979f1a754b3571d5e8bdcc397eedf53.mp4"
+                        },
+                        "role": "reference_video",
+                        "name": "2"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://imageproxy.zhongzhuan.chat/api/proxy/video/3979f1a754b3571d5e8bdcc397eedf53.mp3"
+                        },
+                        "role": "reference_audio",
+                        "name": "3"
                       }
                     ],
                     "duration": 5,
@@ -4065,16 +4029,13 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成seedance火山方舟/创建视频（seedance）"
-        }
+        ]
       }
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "查询任务（Seedance）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，高级模式下的多媒体输入数组。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 中的媒体字段支持直接传 URL 字符串，也支持对象写法，例如 `{ \"url\": \"https://example.com/ref.mp4\" }`。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，火山方舟 content 数组，混排文本、图片、视频、音频素材。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 文本项写法为 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 图片、视频、音频素材项分别使用 `image_url`、`video_url`、`audio_url` 对象写法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可标识素材用途，`name` 可供提示词中按名称引用。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
           "视频生成Seedance火山方舟"
@@ -4203,10 +4164,7 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成seedance火山方舟/查询任务（seedance）"
-        }
+        ]
       }
     },
     "/v1beta/models/{model}:predictLongRunning": {
@@ -4380,10 +4338,7 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成veo3格式/创建视频（veo3格式）"
-        }
+        ]
       }
     },
     "/v1beta/{operation_name}": {
@@ -4483,10 +4438,7 @@
           {
             "BearerAuth": []
           }
-        ],
-        "x-mint": {
-          "href": "/api-reference/cn/视频生成veo3格式/查询任务（veo3格式）"
-        }
+        ]
       }
     }
   },

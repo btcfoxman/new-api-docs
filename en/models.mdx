@@ -47,9 +47,45 @@ Prefer the `/v1/videos` OpenAI video-compatible format, which is suitable for un
 
 
 
+### Gemini Omni
+
+`gemini-omni` uses new-api to expose public model names, which can be invoked via `/v1/videos` or `/api/v3/contents/generations/tasks`; use `mode=t2v/r2v/edit` to distinguish text-to-video, reference-based generation, and video editing, and the duration will be automatically mapped to the 4 / 6 / 8 / 10-second tiers.
+
+
+
+| Model | Primary Integration Method |
+
+|---|---|
+
+| `gemini-omni` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+
+
+### HappyHorse
+
+Supports Alibaba DashScope official video generation format, and also supports compatible integration via `/v1/videos`.
+
+
+
+| Model | Primary Integration Method |
+
+|---|---|
+
+| `happyhorse-1.0` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-i2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-t2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-r2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-video-edit` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+
+
 ### Veo
 
-Both the `/v1/videos` compatible format and the `/v1beta/...` native format are available.
+For the Veo primary model, prefer the `/v1/videos` compatible format; `/v1beta/...` reserves notes for the Veo native protocol. `gemini-omni` does not use the Google native path; please use `/v1/videos` or the Seedance task format.
 
 
 
@@ -101,7 +137,7 @@ The currently released model is a video generation model; it is recommended to p
 
 ### Seedance
 
-Supports the `/api/v3/contents/generations/tasks` native format and also supports compatible integration through `/v1/videos`.
+Supports the `/api/v3/contents/generations/tasks` native format, and also supports compatible integration via `/v1/videos`; `gemini-omni` can reuse this task format and use `mode=t2v/r2v/edit` to differentiate capabilities.
 
 
 
@@ -127,7 +163,7 @@ Supports the `/api/v3/contents/generations/tasks` native format and also support
 
 ### Kling Images
 
-Provides Kling image generation, Omni images, and virtual try-on capabilities externally through `/v1/images/generations`.
+Provides Kling image generation, Omni images, and virtual try-on capabilities externally via `/v1/images/generations`.
 
 
 
@@ -177,7 +213,7 @@ Integrate using unified video capabilities, suitable for text-to-video scenarios
 
 ### Vidu
 
-Focuses on unified video capability documentation, suitable for single image, first/last frame, and multi-reference image scenarios.
+Supports the Vidu official video generation format, and also supports compatible integration via `/v1/videos`, suitable for text-to-video, single-image, first-and-last-frame, and multi-reference-image scenarios.
 
 
 
@@ -185,7 +221,9 @@ Focuses on unified video capability documentation, suitable for single image, fi
 
 |---|---|
 
-| `vidu*` | `/v1/videos` |
+| `viduq3-turbo` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu*` | `/ent/v2/...` / `/v1/videos` |
 
 
 
