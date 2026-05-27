@@ -94,7 +94,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/obtenir-la-liste-des-modèles/obtenir-la-liste-des-modèles"
+        }
       }
     },
     "/v1beta/models": {
@@ -128,7 +131,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/obtenir-la-liste-des-modèles/obtention-du-format-gemini"
+        }
       }
     },
     "/v1/chat/completions": {
@@ -194,7 +200,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/openaiformat-chat/créer-une-conversation-de-chat"
+        }
       }
     },
     "/v1/responses": {
@@ -238,7 +247,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-openairesponses/créer-une-réponse-openai-responses-api"
+        }
       }
     },
     "/v1beta/models/{model}:generateContent": {
@@ -390,7 +402,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-gemini-pour-la-génération-d’images/images-gemini-nano-banana"
+        }
       }
     },
     "/v1/images/generations": {
@@ -560,7 +575,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-d’imagesopenai-au-format-dall-e/générer-des-images（openai-compatible-avec-dall-e）"
+        }
       }
     },
     "/v1/images/edits": {
@@ -651,7 +669,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-d’imagesopenai-au-format-dall-e/modifier-l’image-compatible-avec-openai-dall-e"
+        }
       }
     },
     "/v1/videos": {
@@ -1463,7 +1484,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/formats-compatibles-avec-la-génération-de-vidéossora/créer-une-vidéo"
+        }
       }
     },
     "/v1/videos/{task_id}": {
@@ -1586,7 +1610,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/formats-compatibles-avec-la-génération-de-vidéossora/obtenir-le-statut-de-la-tâche-vidéo"
+        }
       }
     },
     "/v1/videos/{task_id}/content": {
@@ -1643,7 +1670,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/formats-compatibles-avec-la-génération-de-vidéossora/obtenir-le-contenu-de-la-vidéo"
+        }
       }
     },
     "/kling/v1/videos/text2video": {
@@ -1705,7 +1735,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-génération-de-vidéo-à-partir-de-texte"
+        }
       }
     },
     "/kling/v1/videos/text2video/{task_id}": {
@@ -1761,7 +1794,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-de-texte-kling"
+        }
       }
     },
     "/kling/v1/videos/image2video": {
@@ -1823,7 +1859,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-image-vers-vidéo"
+        }
       }
     },
     "/kling/v1/videos/image2video/{task_id}": {
@@ -1879,7 +1918,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-d’une-image-kling"
+        }
       }
     },
     "/api/v1/services/aigc/video-generation/video-synthesis": {
@@ -2149,7 +2191,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-vidéohappyhorsealibaba/créer-une-vidéohappyhorse"
+        }
       }
     },
     "/api/v1/tasks/{task_id}": {
@@ -2248,7 +2293,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-vidéohappyhorsealibaba/interroger-la-tâchehappyhorse"
+        }
       }
     },
     "/ent/v2/text2video": {
@@ -2567,7 +2615,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-de-textevidu"
+        }
       }
     },
     "/ent/v2/img2video": {
@@ -2888,7 +2939,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-d’une-imagevidu"
+        }
       }
     },
     "/ent/v2/start-end2video": {
@@ -3209,7 +3263,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-d’images-de-début-et-de-fin-vidu"
+        }
       }
     },
     "/ent/v2/reference2video": {
@@ -3529,7 +3586,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-de-référence-généréevidu"
+        }
       }
     },
     "/ent/v2/tasks/{task_id}/creations": {
@@ -3624,7 +3684,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-vidéovidu-officielle/interroger-la-tâchevidu"
+        }
       }
     },
     "/api/v3/contents/generations/tasks": {
@@ -4029,7 +4092,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-vidéoseedancevolcano-ark/créer-une-vidéo（seedance）"
+        }
       }
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
@@ -4164,7 +4230,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/génération-vidéoseedancevolcano-ark/interroger-une-tâche-seedance"
+        }
       }
     },
     "/v1beta/models/{model}:predictLongRunning": {
@@ -4338,7 +4407,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/format-vidéo-générée-veo3/créer-une-vidéo-format-veo3"
+        }
       }
     },
     "/v1beta/{operation_name}": {
@@ -4438,7 +4510,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/fr/format-vidéo-générée-veo3/interroger-la-tâche-format-veo3"
+        }
       }
     }
   },

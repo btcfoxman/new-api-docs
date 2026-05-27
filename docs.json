@@ -34,46 +34,39 @@
                 ]
               },
               {
-                "group": "image-generation-gemini-format",
+                "group": "Gemini Format for Image Generation",
                 "pages": [
                   "api-reference/en/image-generation-gemini-format/gemini-images-nano-banana"
                 ]
               },
               {
-                "group": "image-generation-openai-dall-e-format",
+                "group": "Image generationOpenAI DALL-E format",
                 "pages": [
-                  "api-reference/en/image-generation-openai-dall-e-format/create-image-edit",
-                  "api-reference/en/image-generation-openai-dall-e-format/create-image-generation"
+                  "api-reference/en/image-generation-openai-dall-e-format/edit-images-openai-dall-e-compatible",
+                  "api-reference/en/image-generation-openai-dall-e-format/generate-images-compatible-with-openai-dall-e"
                 ]
               },
               {
-                "group": "list-models",
+                "group": "List models",
                 "pages": [
                   "api-reference/en/list-models/list-models",
-                  "api-reference/en/list-models/get-models-gemini-format"
+                  "api-reference/en/list-models/get-gemini-format"
                 ]
               },
               {
-                "group": "openai-format-chat",
-                "pages": [
-                  "api-reference/en/openai-format-chat/create-chat-completion"
-                ]
-              },
-              {
-                "group": "openai-format-responses",
+                "group": "OpenAI Format (Responses)",
                 "pages": [
                   "api-reference/en/openai-format-responses/create-response"
                 ]
               },
               {
-                "group": "video-generation-happyhorse-aliyun",
+                "group": "OpenAI format (Chat)",
                 "pages": [
-                  "api-reference/en/video-generation-happyhorse-aliyun/create-videohappyhorse",
-                  "api-reference/en/video-generation-happyhorse-aliyun/get-taskhappyhorse"
+                  "api-reference/en/openai-format-chat/create-chat-session"
                 ]
               },
               {
-                "group": "video-generation-kling-format",
+                "group": "Video generation Kling format",
                 "pages": [
                   "api-reference/en/video-generation-kling-format/create-kling-image-to-video",
                   "api-reference/en/video-generation-kling-format/get-kling-image-to-video-task",
@@ -82,35 +75,42 @@
                 ]
               },
               {
-                "group": "video-generation-seedance",
+                "group": "Video generation Sora compatible formats",
                 "pages": [
-                  "api-reference/en/video-generation-seedance/create-video（seedance）",
-                  "api-reference/en/video-generation-seedance/get-task（seedance）"
+                  "api-reference/en/video-generation-sora-compatible-formats/create-video",
+                  "api-reference/en/video-generation-sora-compatible-formats/get-video-task-status",
+                  "api-reference/en/video-generation-sora-compatible-formats/get-video-content"
                 ]
               },
               {
-                "group": "video-generation-sora-compatible-format",
+                "group": "Video generation Vidu official",
                 "pages": [
-                  "api-reference/en/video-generation-sora-compatible-format/create-video",
-                  "api-reference/en/video-generation-sora-compatible-format/get-video-task-status",
-                  "api-reference/en/video-generation-sora-compatible-format/get-video-content"
+                  "api-reference/en/video-generation-vidu-official/create-image-to-video-vidu",
+                  "api-reference/en/video-generation-vidu-official/create-reference-generated-videovidu",
+                  "api-reference/en/video-generation-vidu-official/create-a-start-and-end-frame-videovidu",
+                  "api-reference/en/video-generation-vidu-official/query-tasksvidu",
+                  "api-reference/en/video-generation-vidu-official/create-text-to-video-vidu"
                 ]
               },
               {
-                "group": "video-generation-veo3-format",
+                "group": "Video generationHappyHorseAlibaba",
                 "pages": [
-                  "api-reference/en/video-generation-veo3-format/create-video（veo3格式）",
-                  "api-reference/en/video-generation-veo3-format/get-task（veo3格式）"
+                  "api-reference/en/video-generationhappyhorsealibaba/create-videohappyhorse",
+                  "api-reference/en/video-generationhappyhorsealibaba/query-task-happyhorse"
                 ]
               },
               {
-                "group": "video-generation-vidu-official",
+                "group": "Video generationSeedanceVolcano Ark",
                 "pages": [
-                  "api-reference/en/video-generation-vidu-official/create-vidu-image-to-video",
-                  "api-reference/en/video-generation-vidu-official/create-vidu-reference-video",
-                  "api-reference/en/video-generation-vidu-official/create-vidu-start-end-video",
-                  "api-reference/en/video-generation-vidu-official/get-taskvidu",
-                  "api-reference/en/video-generation-vidu-official/create-vidu-text-to-video"
+                  "api-reference/en/video-generationseedancevolcano-ark/create-video-seedance",
+                  "api-reference/en/video-generationseedancevolcano-ark/get-task-seedance"
+                ]
+              },
+              {
+                "group": "Video generationVeo3 format",
+                "pages": [
+                  "api-reference/en/video-generation-veo3-format/create-video-format-veo3",
+                  "api-reference/en/video-generation-veo3-format/query-task-format-veo3"
                 ]
               }
             ]
@@ -356,83 +356,83 @@
                 ]
               },
               {
-                "group": "openai格式-chat",
+                "group": "OpenAI格式（Chat）",
                 "pages": [
-                  "api-reference/zh-tw/openai格式-chat/建立聊天對話"
+                  "api-reference/zh-tw/openai格式（chat）/建立聊天對話"
                 ]
               },
               {
-                "group": "openai格式-responses",
+                "group": "OpenAI格式（Responses）",
                 "pages": [
-                  "api-reference/zh-tw/openai格式-responses/建立回應"
+                  "api-reference/zh-tw/openai格式（responses）/建立回應-openai-responses-api"
                 ]
               },
               {
-                "group": "取得模型列表",
+                "group": "圖片生成 Gemini 格式",
                 "pages": [
-                  "api-reference/zh-tw/取得模型列表/取得模型列表",
-                  "api-reference/zh-tw/取得模型列表/gemini格式取得"
+                  "api-reference/zh-tw/圖片生成-gemini-格式/gemini-圖片nano-banana"
                 ]
               },
               {
-                "group": "圖片生成-gemini格式",
+                "group": "圖片生成OpenAI DALL-E 格式",
                 "pages": [
-                  "api-reference/zh-tw/圖片生成-gemini格式/gemini圖片-nano-banana"
+                  "api-reference/zh-tw/圖片生成openai-dall-e-格式/編輯圖像（openai-dall-e-相容）",
+                  "api-reference/zh-tw/圖片生成openai-dall-e-格式/生成圖像（openai-與-dall-e-相容）"
                 ]
               },
               {
-                "group": "圖片生成-openai-dall-e格式",
+                "group": "影片生成HappyHorse阿里",
                 "pages": [
-                  "api-reference/zh-tw/圖片生成-openai-dall-e格式/編輯圖片（openai-dall-e相容）",
-                  "api-reference/zh-tw/圖片生成-openai-dall-e格式/生成圖片（openai-dall-e相容）"
+                  "api-reference/zh-tw/影片生成happyhorse阿里/建立影片happyhorse",
+                  "api-reference/zh-tw/影片生成happyhorse阿里/查詢任務happyhorse"
                 ]
               },
               {
-                "group": "影片生成happyhorse-阿里",
+                "group": "影片生成Kling格式",
                 "pages": [
-                  "api-reference/zh-tw/影片生成happyhorse-阿里/建立影片happyhorse",
-                  "api-reference/zh-tw/影片生成happyhorse-阿里/查詢任務happyhorse"
+                  "api-reference/zh-tw/影片生成kling格式/kling-圖生影片",
+                  "api-reference/zh-tw/影片生成kling格式/取得-kling-圖生影片任務狀態",
+                  "api-reference/zh-tw/影片生成kling格式/kling-文生影片",
+                  "api-reference/zh-tw/影片生成kling格式/取得-kling-文生影片任務狀態"
                 ]
               },
               {
-                "group": "影片生成kling格式",
+                "group": "影片生成Seedance火山方舟",
                 "pages": [
-                  "api-reference/zh-tw/影片生成kling格式/kling圖生影片",
-                  "api-reference/zh-tw/影片生成kling格式/取得kling圖生影片任務狀態",
-                  "api-reference/zh-tw/影片生成kling格式/kling文生影片",
-                  "api-reference/zh-tw/影片生成kling格式/取得kling文生影片任務狀態"
+                  "api-reference/zh-tw/影片生成seedance火山方舟/建立影片（seedance）",
+                  "api-reference/zh-tw/影片生成seedance火山方舟/查詢任務（seedance）"
                 ]
               },
               {
-                "group": "影片生成seedance",
-                "pages": [
-                  "api-reference/zh-tw/影片生成seedance/建立影片（seedance）",
-                  "api-reference/zh-tw/影片生成seedance/查詢任務（seedance）"
-                ]
-              },
-              {
-                "group": "影片生成sora相容格式",
+                "group": "影片生成Sora相容格式",
                 "pages": [
                   "api-reference/zh-tw/影片生成sora相容格式/建立影片",
                   "api-reference/zh-tw/影片生成sora相容格式/取得影片任務狀態",
-                  "api-reference/zh-tw/影片生成sora相容格式/取得影片內容"
+                  "api-reference/zh-tw/影片生成sora相容格式/獲取影片內容"
                 ]
               },
               {
-                "group": "影片生成veo3格式",
+                "group": "影片生成Veo3格式",
                 "pages": [
-                  "api-reference/zh-tw/影片生成veo3格式/建立影片（veo3格式）",
+                  "api-reference/zh-tw/影片生成veo3格式/建立影片（veo3-格式）",
                   "api-reference/zh-tw/影片生成veo3格式/查詢任務（veo3格式）"
                 ]
               },
               {
-                "group": "影片生成vidu官方",
+                "group": "影片生成Vidu官方",
                 "pages": [
-                  "api-reference/zh-tw/影片生成vidu官方/建立vidu圖生影片",
-                  "api-reference/zh-tw/影片生成vidu官方/建立vidu參考生影片",
-                  "api-reference/zh-tw/影片生成vidu官方/建立vidu首尾幀影片",
+                  "api-reference/zh-tw/影片生成vidu官方/建立圖生影片vidu",
+                  "api-reference/zh-tw/影片生成vidu官方/建立參考生視頻vidu",
+                  "api-reference/zh-tw/影片生成vidu官方/建立首尾幀影片vidu",
                   "api-reference/zh-tw/影片生成vidu官方/查詢任務vidu",
-                  "api-reference/zh-tw/影片生成vidu官方/建立vidu文生影片"
+                  "api-reference/zh-tw/影片生成vidu官方/建立文生影片vidu"
+                ]
+              },
+              {
+                "group": "獲取模型列表",
+                "pages": [
+                  "api-reference/zh-tw/獲取模型列表/獲取模型列表",
+                  "api-reference/zh-tw/獲取模型列表/取得-gemini-格式"
                 ]
               }
             ]
@@ -517,83 +517,83 @@
                 ]
               },
               {
-                "group": "gemini",
+                "group": "Format Gemini pour la génération d’images",
                 "pages": [
-                  "api-reference/fr/gemini/gemini-nano-banana"
+                  "api-reference/fr/format-gemini-pour-la-génération-d’images/images-gemini-nano-banana"
                 ]
               },
               {
-                "group": "generation-video-format-compatible-sora",
+                "group": "Format OpenAI(Responses)",
                 "pages": [
-                  "api-reference/fr/generation-video-format-compatible-sora/creer-video",
-                  "api-reference/fr/generation-video-format-compatible-sora/obtenir-statut-tache-video",
-                  "api-reference/fr/generation-video-format-compatible-sora/obtenir-contenu-video"
+                  "api-reference/fr/format-openairesponses/créer-une-réponse-openai-responses-api"
                 ]
               },
               {
-                "group": "generation-video-format-kling",
+                "group": "Format de génération vidéo Kling",
                 "pages": [
-                  "api-reference/fr/generation-video-format-kling/kling",
-                  "api-reference/fr/generation-video-format-kling/kling-get--kling-v1-videos-image2video--task_id",
-                  "api-reference/fr/generation-video-format-kling/kling-post--kling-v1-videos-text2video",
-                  "api-reference/fr/generation-video-format-kling/kling-get--kling-v1-videos-text2video--task_id"
+                  "api-reference/fr/format-de-génération-vidéo-kling/kling-image-vers-vidéo",
+                  "api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-d’une-image-kling",
+                  "api-reference/fr/format-de-génération-vidéo-kling/kling-génération-de-vidéo-à-partir-de-texte",
+                  "api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-de-texte-kling"
                 ]
               },
               {
-                "group": "generation-video-format-veo3",
+                "group": "Format vidéo générée Veo3",
                 "pages": [
-                  "api-reference/fr/generation-video-format-veo3/creer-video（veo3格式）",
-                  "api-reference/fr/generation-video-format-veo3/consulter-tache（veo3格式）"
+                  "api-reference/fr/format-vidéo-générée-veo3/créer-une-vidéo-format-veo3",
+                  "api-reference/fr/format-vidéo-générée-veo3/interroger-la-tâche-format-veo3"
                 ]
               },
               {
-                "group": "generation-video-happyhorse-aliyun",
+                "group": "Formats compatibles avec la génération de vidéosSora",
                 "pages": [
-                  "api-reference/fr/generation-video-happyhorse-aliyun/creer-videohappyhorse",
-                  "api-reference/fr/generation-video-happyhorse-aliyun/consulter-tachehappyhorse"
+                  "api-reference/fr/formats-compatibles-avec-la-génération-de-vidéossora/créer-une-vidéo",
+                  "api-reference/fr/formats-compatibles-avec-la-génération-de-vidéossora/obtenir-le-statut-de-la-tâche-vidéo",
+                  "api-reference/fr/formats-compatibles-avec-la-génération-de-vidéossora/obtenir-le-contenu-de-la-vidéo"
                 ]
               },
               {
-                "group": "generation-video-seedance",
+                "group": "Génération d’imagesOpenAI au format DALL-E",
                 "pages": [
-                  "api-reference/fr/generation-video-seedance/creer-video（seedance）",
-                  "api-reference/fr/generation-video-seedance/consulter-tache（seedance）"
+                  "api-reference/fr/génération-d’imagesopenai-au-format-dall-e/modifier-l’image-compatible-avec-openai-dall-e",
+                  "api-reference/fr/génération-d’imagesopenai-au-format-dall-e/générer-des-images（openai-compatible-avec-dall-e）"
                 ]
               },
               {
-                "group": "generation-video-vidu-officielle",
+                "group": "Génération vidéoHappyHorseAlibaba",
                 "pages": [
-                  "api-reference/fr/generation-video-vidu-officielle/creer-video-image-vidu",
-                  "api-reference/fr/generation-video-vidu-officielle/creer-video-reference-vidu",
-                  "api-reference/fr/generation-video-vidu-officielle/creer-video-debut-fin-vidu",
-                  "api-reference/fr/generation-video-vidu-officielle/consulter-tachevidu",
-                  "api-reference/fr/generation-video-vidu-officielle/creer-video-texte-vidu"
+                  "api-reference/fr/génération-vidéohappyhorsealibaba/créer-une-vidéohappyhorse",
+                  "api-reference/fr/génération-vidéohappyhorsealibaba/interroger-la-tâchehappyhorse"
                 ]
               },
               {
-                "group": "liste-modeles",
+                "group": "Génération vidéoSeedanceVolcano Ark",
                 "pages": [
-                  "api-reference/fr/liste-modeles/liste-modeles",
-                  "api-reference/fr/liste-modeles/gemini"
+                  "api-reference/fr/génération-vidéoseedancevolcano-ark/créer-une-vidéo（seedance）",
+                  "api-reference/fr/génération-vidéoseedancevolcano-ark/interroger-une-tâche-seedance"
                 ]
               },
               {
-                "group": "openai-chat",
+                "group": "Génération vidéoVidu officielle",
                 "pages": [
-                  "api-reference/fr/openai-chat/item"
+                  "api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-d’une-imagevidu",
+                  "api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-de-référence-généréevidu",
+                  "api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-d’images-de-début-et-de-fin-vidu",
+                  "api-reference/fr/génération-vidéovidu-officielle/interroger-la-tâchevidu",
+                  "api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-de-textevidu"
                 ]
               },
               {
-                "group": "openai-dall-e",
+                "group": "Obtenir la liste des modèles",
                 "pages": [
-                  "api-reference/fr/openai-dall-e/openai-dall-e",
-                  "api-reference/fr/openai-dall-e/openai-dall-e-post--v1-images-generations"
+                  "api-reference/fr/obtenir-la-liste-des-modèles/obtenir-la-liste-des-modèles",
+                  "api-reference/fr/obtenir-la-liste-des-modèles/obtention-du-format-gemini"
                 ]
               },
               {
-                "group": "openai-responses",
+                "group": "OpenAIFormat (Chat)",
                 "pages": [
-                  "api-reference/fr/openai-responses/openai-responses-api"
+                  "api-reference/fr/openaiformat-chat/créer-une-conversation-de-chat"
                 ]
               }
             ]
@@ -678,83 +678,83 @@
                 ]
               },
               {
-                "group": "gemini",
+                "group": "OpenAI形式(Chat)",
                 "pages": [
-                  "api-reference/ja/gemini/gemini-nano-banana"
+                  "api-reference/ja/openai形式chat/チャットセッションの作成"
                 ]
               },
               {
-                "group": "model-list",
+                "group": "OpenAI形式（Responses）",
                 "pages": [
-                  "api-reference/ja/model-list/model-list",
-                  "api-reference/ja/model-list/gemini"
+                  "api-reference/ja/openai形式（responses）/レスポンスを作成-openai-responses-api"
                 ]
               },
               {
-                "group": "openai-chat",
+                "group": "モデル一覧の取得",
                 "pages": [
-                  "api-reference/ja/openai-chat/item"
+                  "api-reference/ja/モデル一覧の取得/モデル一覧の取得",
+                  "api-reference/ja/モデル一覧の取得/gemini-形式の取得"
                 ]
               },
               {
-                "group": "openai-dall-e",
+                "group": "動画生成HappyHorseアリ",
                 "pages": [
-                  "api-reference/ja/openai-dall-e/openai-dall-e",
-                  "api-reference/ja/openai-dall-e/openai-dall-e-post--v1-images-generations"
+                  "api-reference/ja/動画生成happyhorseアリ/動画を作成happyhorse",
+                  "api-reference/ja/動画生成happyhorseアリ/タスクを照会happyhorse"
                 ]
               },
               {
-                "group": "openai-responses",
+                "group": "動画生成Kling形式",
                 "pages": [
-                  "api-reference/ja/openai-responses/openai-responses-api"
+                  "api-reference/ja/動画生成kling形式/kling-イメージから動画生成",
+                  "api-reference/ja/動画生成kling形式/kling-の画像から動画へのタスク状態を取得",
+                  "api-reference/ja/動画生成kling形式/kling-テキストから動画を生成",
+                  "api-reference/ja/動画生成kling形式/kling-のテキストから動画生成タスクのステータスを取得"
                 ]
               },
               {
-                "group": "video-generation-happyhorse-aliyun",
+                "group": "動画生成Seedance火山アーク",
                 "pages": [
-                  "api-reference/ja/video-generation-happyhorse-aliyun/create-videohappyhorse",
-                  "api-reference/ja/video-generation-happyhorse-aliyun/get-taskhappyhorse"
+                  "api-reference/ja/動画生成seedance火山アーク/動画を作成（seedance）",
+                  "api-reference/ja/動画生成seedance火山アーク/タスクを照会する（seedance）"
                 ]
               },
               {
-                "group": "video-generation-kling-format",
+                "group": "動画生成Sora対応形式",
                 "pages": [
-                  "api-reference/ja/video-generation-kling-format/kling",
-                  "api-reference/ja/video-generation-kling-format/kling-get--kling-v1-videos-image2video--task_id",
-                  "api-reference/ja/video-generation-kling-format/kling-post--kling-v1-videos-text2video",
-                  "api-reference/ja/video-generation-kling-format/kling-get--kling-v1-videos-text2video--task_id"
+                  "api-reference/ja/動画生成sora対応形式/動画の生成",
+                  "api-reference/ja/動画生成sora対応形式/動画タスクステータスの取得",
+                  "api-reference/ja/動画生成sora対応形式/動画コンテンツの取得"
                 ]
               },
               {
-                "group": "video-generation-seedance",
+                "group": "動画生成Veo3形式",
                 "pages": [
-                  "api-reference/ja/video-generation-seedance/create-video（seedance）",
-                  "api-reference/ja/video-generation-seedance/get-task（seedance）"
+                  "api-reference/ja/動画生成veo3形式/動画を作成（veo3形式）",
+                  "api-reference/ja/動画生成veo3形式/タスクを照会する（veo3形式）"
                 ]
               },
               {
-                "group": "video-generation-sora-compatible-format",
+                "group": "動画生成Vidu公式",
                 "pages": [
-                  "api-reference/ja/video-generation-sora-compatible-format/create-video",
-                  "api-reference/ja/video-generation-sora-compatible-format/get-video-task-status",
-                  "api-reference/ja/video-generation-sora-compatible-format/get-video-content"
+                  "api-reference/ja/動画生成vidu公式/画像から動画を作成するvidu",
+                  "api-reference/ja/動画生成vidu公式/参照生成動画を作成vidu",
+                  "api-reference/ja/動画生成vidu公式/開始フレームと終了フレームの動画を作成するvidu",
+                  "api-reference/ja/動画生成vidu公式/タスクを照会するvidu",
+                  "api-reference/ja/動画生成vidu公式/テキストから動画を作成vidu"
                 ]
               },
               {
-                "group": "video-generation-veo3-format",
+                "group": "画像生成Gemini形式",
                 "pages": [
-                  "api-reference/ja/video-generation-veo3-format/create-video（veo3格式）",
-                  "api-reference/ja/video-generation-veo3-format/get-task（veo3格式）"
+                  "api-reference/ja/画像生成gemini形式/gemini-画像nano-banana"
                 ]
               },
               {
-                "group": "video-generation-vidu-official",
+                "group": "画像生成OpenAI DALL-E形式",
                 "pages": [
-                  "api-reference/ja/video-generation-vidu-official/create-vidu-image-to-video",
-                  "api-reference/ja/video-generation-vidu-official/create-vidu-reference-video",
-                  "api-reference/ja/video-generation-vidu-official/create-vidu-start-end-video",
-                  "api-reference/ja/video-generation-vidu-official/get-taskvidu",
-                  "api-reference/ja/video-generation-vidu-official/create-vidu-text-to-video"
+                  "api-reference/ja/画像生成openai-dall-e形式/画像を編集する（openai-dall-e互換）",
+                  "api-reference/ja/画像生成openai-dall-e形式/画像を生成（openai-dall-e互換）"
                 ]
               }
             ]
@@ -839,83 +839,83 @@
                 ]
               },
               {
-                "group": "gemini",
+                "group": "Генерация видеоHappyHorseАли",
                 "pages": [
-                  "api-reference/ru/gemini/gemini-nano-banana"
+                  "api-reference/ru/генерация-видеоhappyhorseали/создать-видеоhappyhorse",
+                  "api-reference/ru/генерация-видеоhappyhorseали/запрос-задачиhappyhorse"
                 ]
               },
               {
-                "group": "generaciya-video-format-kling",
+                "group": "Генерация видеоSeedanceVolcano Ark",
                 "pages": [
-                  "api-reference/ru/generaciya-video-format-kling/kling",
-                  "api-reference/ru/generaciya-video-format-kling/kling-get--kling-v1-videos-image2video--task_id",
-                  "api-reference/ru/generaciya-video-format-kling/kling-post--kling-v1-videos-text2video",
-                  "api-reference/ru/generaciya-video-format-kling/kling-get--kling-v1-videos-text2video--task_id"
+                  "api-reference/ru/генерация-видеоseedancevolcano-ark/создать-видео（seedance）",
+                  "api-reference/ru/генерация-видеоseedancevolcano-ark/запросить-задачу（seedance）"
                 ]
               },
               {
-                "group": "generaciya-video-format-veo3",
+                "group": "Генерация изображенийOpenAI в формате DALL-E",
                 "pages": [
-                  "api-reference/ru/generaciya-video-format-veo3/sozdat-video（veo3格式）",
-                  "api-reference/ru/generaciya-video-format-veo3/poluchit-zadachu（veo3格式）"
+                  "api-reference/ru/генерация-изображенийopenai-в-формате-dall-e/редактировать-изображение（openai-совместимо-с-dall-e）",
+                  "api-reference/ru/генерация-изображенийopenai-в-формате-dall-e/генерация-изображений-openai-совместимо-с-dall-e"
                 ]
               },
               {
-                "group": "generaciya-video-happyhorse-aliyun",
+                "group": "Официальная генерация видеоVidu",
                 "pages": [
-                  "api-reference/ru/generaciya-video-happyhorse-aliyun/sozdat-videohappyhorse",
-                  "api-reference/ru/generaciya-video-happyhorse-aliyun/poluchit-zadachuhappyhorse"
+                  "api-reference/ru/официальная-генерация-видеоvidu/создать-видео-по-изображениюvidu",
+                  "api-reference/ru/официальная-генерация-видеоvidu/создать-видео-по-эталонному-видеоvidu",
+                  "api-reference/ru/официальная-генерация-видеоvidu/создать-видео-по-первой-и-последней-кадрамvidu",
+                  "api-reference/ru/официальная-генерация-видеоvidu/запрос-задачиvidu",
+                  "api-reference/ru/официальная-генерация-видеоvidu/создать-видео-по-текстуvidu"
                 ]
               },
               {
-                "group": "generaciya-video-seedance",
+                "group": "Получить список моделей",
                 "pages": [
-                  "api-reference/ru/generaciya-video-seedance/sozdat-video（seedance）",
-                  "api-reference/ru/generaciya-video-seedance/poluchit-zadachu（seedance）"
+                  "api-reference/ru/получить-список-моделей/получить-список-моделей",
+                  "api-reference/ru/получить-список-моделей/получение-формата-gemini"
                 ]
               },
               {
-                "group": "generaciya-video-sovmestimyi-format-sora",
+                "group": "Совместимый формат для Sora генерации видео",
                 "pages": [
-                  "api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video",
-                  "api-reference/ru/generaciya-video-sovmestimyi-format-sora/poluchit-status-video-zadachi",
-                  "api-reference/ru/generaciya-video-sovmestimyi-format-sora/poluchit-video-content"
+                  "api-reference/ru/совместимый-формат-для-sora-генерации-видео/создать-видео",
+                  "api-reference/ru/совместимый-формат-для-sora-генерации-видео/получить-статус-задачи-видео",
+                  "api-reference/ru/совместимый-формат-для-sora-генерации-видео/получение-видеоконтента"
                 ]
               },
               {
-                "group": "generaciya-video-vidu-oficialno",
+                "group": "Формат 3 генерации видеоVeo",
                 "pages": [
-                  "api-reference/ru/generaciya-video-vidu-oficialno/sozdat-vidu-izobrazhenie-video",
-                  "api-reference/ru/generaciya-video-vidu-oficialno/sozdat-vidu-reference-video",
-                  "api-reference/ru/generaciya-video-vidu-oficialno/sozdat-vidu-start-end-video",
-                  "api-reference/ru/generaciya-video-vidu-oficialno/poluchit-zadachuvidu",
-                  "api-reference/ru/generaciya-video-vidu-oficialno/sozdat-vidu-tekst-video"
+                  "api-reference/ru/формат-3-генерации-видеоveo/создать-видео-формат-veo3",
+                  "api-reference/ru/формат-3-генерации-видеоveo/запрос-задачи-формат-veo3"
                 ]
               },
               {
-                "group": "openai-chat",
+                "group": "Формат Gemini для генерации изображений",
                 "pages": [
-                  "api-reference/ru/openai-chat/item"
+                  "api-reference/ru/формат-gemini-для-генерации-изображений/изображение-gemini-nano-banana"
                 ]
               },
               {
-                "group": "openai-dall-e",
+                "group": "Формат OpenAI (Chat)",
                 "pages": [
-                  "api-reference/ru/openai-dall-e/openai-dall-e",
-                  "api-reference/ru/openai-dall-e/openai-dall-e-post--v1-images-generations"
+                  "api-reference/ru/формат-openai-chat/создать-чат-диалог"
                 ]
               },
               {
-                "group": "openai-responses",
+                "group": "Формат OpenAI (Responses)",
                 "pages": [
-                  "api-reference/ru/openai-responses/openai-responses-api"
+                  "api-reference/ru/формат-openai-responses/создать-ответ-openai-responses-api"
                 ]
               },
               {
-                "group": "spisok-modelei",
+                "group": "ФорматKling генерации видео",
                 "pages": [
-                  "api-reference/ru/spisok-modelei/spisok-modelei",
-                  "api-reference/ru/spisok-modelei/gemini"
+                  "api-reference/ru/форматkling-генерации-видео/kling-генерация-видео-по-изображению",
+                  "api-reference/ru/форматkling-генерации-видео/получить-статус-задачи-генерации-видео-из-изображения-kling",
+                  "api-reference/ru/форматkling-генерации-видео/kling-генерация-видео-по-тексту",
+                  "api-reference/ru/форматkling-генерации-видео/получить-статус-задачи-генерации-видео-по-тексту-kling"
                 ]
               }
             ]
@@ -1000,83 +1000,83 @@
                 ]
               },
               {
-                "group": "danh-sach-mo-hinh",
+                "group": "Chính thức về tạo videoVidu",
                 "pages": [
-                  "api-reference/vi/danh-sach-mo-hinh/danh-sach-mo-hinh",
-                  "api-reference/vi/danh-sach-mo-hinh/gemini"
+                  "api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-từ-hình-ảnh-vidu",
+                  "api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-sinh-tham-chiếuvidu",
+                  "api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-khung-đầu-và-khung-cuối-vidu",
+                  "api-reference/vi/chính-thức-về-tạo-videovidu/truy-vấn-tác-vụvidu",
+                  "api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-từ-văn-bảnvidu"
                 ]
               },
               {
-                "group": "gemini",
+                "group": "Lấy danh sách mô hình",
                 "pages": [
-                  "api-reference/vi/gemini/gemini-nano-banana"
+                  "api-reference/vi/lấy-danh-sách-mô-hình/lấy-danh-sách-mô-hình",
+                  "api-reference/vi/lấy-danh-sách-mô-hình/lấy-định-dạng-gemini"
                 ]
               },
               {
-                "group": "openai-chat",
+                "group": "Tạo hình ảnhOpenAI định dạng DALL-E",
                 "pages": [
-                  "api-reference/vi/openai-chat/item"
+                  "api-reference/vi/tạo-hình-ảnhopenai-định-dạng-dall-e/chỉnh-sửa-hình-ảnh-tương-thích-với-openai-dall-e",
+                  "api-reference/vi/tạo-hình-ảnhopenai-định-dạng-dall-e/tạo-hình-ảnh-tương-thích-openai-dall-e"
                 ]
               },
               {
-                "group": "openai-dall-e",
+                "group": "Tạo videoHappyHorseAlibaba",
                 "pages": [
-                  "api-reference/vi/openai-dall-e/openai-dall-e",
-                  "api-reference/vi/openai-dall-e/openai-dall-e-post--v1-images-generations"
+                  "api-reference/vi/tạo-videohappyhorsealibaba/tạo-videohappyhorse",
+                  "api-reference/vi/tạo-videohappyhorsealibaba/truy-vấn-tác-vụhappyhorse"
                 ]
               },
               {
-                "group": "openai-responses",
+                "group": "Tạo videoSeedanceVolcano Ark",
                 "pages": [
-                  "api-reference/vi/openai-responses/openai-responses-api"
+                  "api-reference/vi/tạo-videoseedancevolcano-ark/tạo-video（seedance）",
+                  "api-reference/vi/tạo-videoseedancevolcano-ark/truy-vấn-tác-vụ（seedance）"
                 ]
               },
               {
-                "group": "tao-video-dinh-dang-kling",
+                "group": "Định dạng Gemini cho tạo ảnh",
                 "pages": [
-                  "api-reference/vi/tao-video-dinh-dang-kling/kling",
-                  "api-reference/vi/tao-video-dinh-dang-kling/kling-get--kling-v1-videos-image2video--task_id",
-                  "api-reference/vi/tao-video-dinh-dang-kling/kling-post--kling-v1-videos-text2video",
-                  "api-reference/vi/tao-video-dinh-dang-kling/kling-get--kling-v1-videos-text2video--task_id"
+                  "api-reference/vi/định-dạng-gemini-cho-tạo-ảnh/hình-ảnh-gemini-nano-banana"
                 ]
               },
               {
-                "group": "tao-video-dinh-dang-tuong-thich-sora",
+                "group": "Định dạng OpenAI (Chat)",
                 "pages": [
-                  "api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video",
-                  "api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/lay-trang-thai-tac-vu-video",
-                  "api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/lay-noi-dung-video"
+                  "api-reference/vi/định-dạng-openai-chat/tạo-cuộc-hội-thoại-chat"
                 ]
               },
               {
-                "group": "tao-video-dinh-dang-veo3",
+                "group": "Định dạng OpenAI (Responses)",
                 "pages": [
-                  "api-reference/vi/tao-video-dinh-dang-veo3/tao-video（veo3格式）",
-                  "api-reference/vi/tao-video-dinh-dang-veo3/truy-van-tac-vu（veo3格式）"
+                  "api-reference/vi/định-dạng-openai-responses/tạo-phản-hồi-openai-phản-hồi-api"
                 ]
               },
               {
-                "group": "tao-video-happyhorse-aliyun",
+                "group": "Định dạng tương thích Sora cho tạo video",
                 "pages": [
-                  "api-reference/vi/tao-video-happyhorse-aliyun/tao-videohappyhorse",
-                  "api-reference/vi/tao-video-happyhorse-aliyun/truy-van-tac-vuhappyhorse"
+                  "api-reference/vi/định-dạng-tương-thích-sora-cho-tạo-video/tạo-video",
+                  "api-reference/vi/định-dạng-tương-thích-sora-cho-tạo-video/lấy-trạng-thái-tác-vụ-video",
+                  "api-reference/vi/định-dạng-tương-thích-sora-cho-tạo-video/lấy-nội-dung-video"
                 ]
               },
               {
-                "group": "tao-video-seedance",
+                "group": "Định dạng video生成Veo3",
                 "pages": [
-                  "api-reference/vi/tao-video-seedance/tao-video（seedance）",
-                  "api-reference/vi/tao-video-seedance/truy-van-tac-vu（seedance）"
+                  "api-reference/vi/định-dạng-video生成veo3/tạo-video-định-dạng-veo3",
+                  "api-reference/vi/định-dạng-video生成veo3/truy-vấn-tác-vụ-định-dạng-veo3"
                 ]
               },
               {
-                "group": "tao-video-vidu-chinh-thuc",
+                "group": "Định dạngKling tạo video",
                 "pages": [
-                  "api-reference/vi/tao-video-vidu-chinh-thuc/tao-video-hinh-anh-vidu",
-                  "api-reference/vi/tao-video-vidu-chinh-thuc/tao-video-tham-chieu-vidu",
-                  "api-reference/vi/tao-video-vidu-chinh-thuc/tao-video-khung-dau-cuoi-vidu",
-                  "api-reference/vi/tao-video-vidu-chinh-thuc/truy-van-tac-vuvidu",
-                  "api-reference/vi/tao-video-vidu-chinh-thuc/tao-video-van-ban-vidu"
+                  "api-reference/vi/định-dạngkling-tạo-video/kling-chuyển-hình-ảnh-thành-video",
+                  "api-reference/vi/định-dạngkling-tạo-video/lấy-trạng-thái-tác-vụ-tạo-video-từ-ảnh-kling",
+                  "api-reference/vi/định-dạngkling-tạo-video/kling-tạo-video-từ-văn-bản",
+                  "api-reference/vi/định-dạngkling-tạo-video/lấy-trạng-thái-tác-vụ-tạo-video-từ-văn-bản-kling"
                 ]
               }
             ]

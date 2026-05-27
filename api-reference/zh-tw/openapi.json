@@ -94,7 +94,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/獲取模型列表/獲取模型列表"
+        }
       }
     },
     "/v1beta/models": {
@@ -128,7 +131,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/獲取模型列表/取得-gemini-格式"
+        }
       }
     },
     "/v1/chat/completions": {
@@ -194,7 +200,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/openai格式（chat）/建立聊天對話"
+        }
       }
     },
     "/v1/responses": {
@@ -238,7 +247,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/openai格式（responses）/建立回應-openai-responses-api"
+        }
       }
     },
     "/v1beta/models/{model}:generateContent": {
@@ -390,7 +402,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/圖片生成-gemini-格式/gemini-圖片nano-banana"
+        }
       }
     },
     "/v1/images/generations": {
@@ -560,7 +575,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/圖片生成openai-dall-e-格式/生成圖像（openai-與-dall-e-相容）"
+        }
       }
     },
     "/v1/images/edits": {
@@ -651,7 +669,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/圖片生成openai-dall-e-格式/編輯圖像（openai-dall-e-相容）"
+        }
       }
     },
     "/v1/videos": {
@@ -1463,7 +1484,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成sora相容格式/建立影片"
+        }
       }
     },
     "/v1/videos/{task_id}": {
@@ -1586,7 +1610,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成sora相容格式/取得影片任務狀態"
+        }
       }
     },
     "/v1/videos/{task_id}/content": {
@@ -1643,7 +1670,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成sora相容格式/獲取影片內容"
+        }
       }
     },
     "/kling/v1/videos/text2video": {
@@ -1705,7 +1735,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成kling格式/kling-文生影片"
+        }
       }
     },
     "/kling/v1/videos/text2video/{task_id}": {
@@ -1761,7 +1794,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成kling格式/取得-kling-文生影片任務狀態"
+        }
       }
     },
     "/kling/v1/videos/image2video": {
@@ -1823,7 +1859,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成kling格式/kling-圖生影片"
+        }
       }
     },
     "/kling/v1/videos/image2video/{task_id}": {
@@ -1879,7 +1918,10 @@
         "x-doc-source": "relay-openapi+contract-transform",
         "x-drift-status": "ok",
         "x-drift-count": 0,
-        "x-drift-types": []
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成kling格式/取得-kling-圖生影片任務狀態"
+        }
       }
     },
     "/api/v1/services/aigc/video-generation/video-synthesis": {
@@ -2149,7 +2191,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成happyhorse阿里/建立影片happyhorse"
+        }
       }
     },
     "/api/v1/tasks/{task_id}": {
@@ -2248,7 +2293,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成happyhorse阿里/查詢任務happyhorse"
+        }
       }
     },
     "/ent/v2/text2video": {
@@ -2567,7 +2615,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成vidu官方/建立文生影片vidu"
+        }
       }
     },
     "/ent/v2/img2video": {
@@ -2888,7 +2939,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成vidu官方/建立圖生影片vidu"
+        }
       }
     },
     "/ent/v2/start-end2video": {
@@ -3209,7 +3263,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成vidu官方/建立首尾幀影片vidu"
+        }
       }
     },
     "/ent/v2/reference2video": {
@@ -3529,7 +3586,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成vidu官方/建立參考生視頻vidu"
+        }
       }
     },
     "/ent/v2/tasks/{task_id}/creations": {
@@ -3624,7 +3684,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成vidu官方/查詢任務vidu"
+        }
       }
     },
     "/api/v3/contents/generations/tasks": {
@@ -4029,7 +4092,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成seedance火山方舟/建立影片（seedance）"
+        }
       }
     },
     "/api/v3/contents/generations/tasks/{task_id}": {
@@ -4164,7 +4230,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成seedance火山方舟/查詢任務（seedance）"
+        }
       }
     },
     "/v1beta/models/{model}:predictLongRunning": {
@@ -4338,7 +4407,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成veo3格式/建立影片（veo3-格式）"
+        }
       }
     },
     "/v1beta/{operation_name}": {
@@ -4438,7 +4510,10 @@
           {
             "BearerAuth": []
           }
-        ]
+        ],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成veo3格式/查詢任務（veo3格式）"
+        }
       }
     }
   },
