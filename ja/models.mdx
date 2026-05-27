@@ -1,0 +1,230 @@
+---
+title: "モデルと機能マトリックス"
+description: "このページには、静的なサンプルリストではなく、`new-api` の現在の公開インターフェースで利用可能なモデルが表示されています。"
+---
+
+## モデルグループ
+
+### Nano Banana
+
+主に画像生成と編集に使用され、Gemini ネイティブ形式のアクセスもサポートしています。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `nano-banana` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+
+
+### Sora
+
+`/v1/videos` OpenAI の動画互換フォーマットを優先し、動画の一元接入に適しています。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `sora-2` | `/v1/videos` |
+
+| `sora-2-pro` | `/v1/videos` |
+
+
+
+### Gemini Omni
+
+`gemini-omni` は new-api で外部公開するモデル名を使用し、`/v1/videos` または `/api/v3/contents/generations/tasks` で呼び出せます。`mode=t2v/r2v/edit` を使ってテキスト生成、参照生成、動画編集を区別し、長さは自動的に 4 / 6 / 8 / 10 秒のいずれかに一致します。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `gemini-omni` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+
+
+### HappyHorse
+
+阿里 DashScope の公式動画生成フォーマットをサポートし、`/v1/videos` を通じた互換接続にも対応しています。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `happyhorse-1.0` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-i2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-t2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-r2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-video-edit` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+
+
+### Veo
+
+Veo のメインモデルは `/v1/videos` 互換フォーマットを優先します。`/v1beta/...` は Veo のネイティブプロトコル向けの説明を確保しています。`gemini-omni` は Google のネイティブパスを使用しないため、`/v1/videos` または Seedance のタスクフォーマットを使用してください。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `veo3` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-4k` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-components` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro-4k` | `/v1/videos` / `/v1beta/...` |
+
+
+
+### Grok
+
+現在公開されているのはビデオ生成モデルであり、統合ビデオインターフェース経由でのアクセスを優先することをお勧めします。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `grok-imagine-1.0-video` | `/v1/videos` |
+
+| `grok-video-3` | `/v1/videos` |
+
+
+
+### Seedance
+
+`/api/v3/contents/generations/tasks` のネイティブフォーマットをサポートし、`/v1/videos` を通じた互換接続にも対応しています。`gemini-omni` はこのタスクフォーマットを再利用でき、`mode=t2v/r2v/edit` で機能を区別します。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `doubao-seedance-1-0-lite-i2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-lite-t2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-250528` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-fast-251015` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-5-pro-251215` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-fast-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+
+
+### Kling Images
+
+`/v1/images/generations` を通じて、Kling の画像生成、Omni 画像、バーチャル試着機能を外部提供します。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `kling-image` | `/v1/images/generations` |
+
+| `kling-omni-image` | `/v1/images/generations` |
+
+| `kolors-virtual-try-on-v1` | `/v1/images/generations` |
+
+| `kolors-virtual-try-on-v1-5` | `/v1/images/generations` |
+
+
+
+### Kling Videos
+
+モデル専用インターフェースと統合ビデオエントリの両方が公開されています。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `kling-video` | `/kling/v1/...` / `/v1/videos` |
+
+| `kling-*` | `/kling/v1/...` / `/v1/videos` |
+
+
+
+### Hailuo
+
+統合ビデオ機能を使用してアクセスし、Text-to-Video（テキストからビデオ生成）シナリオに適しています。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `hailuo*` | `/v1/videos` |
+
+
+
+### Vidu
+
+Vidu の公式動画生成フォーマットをサポートし、`/v1/videos` を通じた互換接続にも対応しています。テキスト生成、単一画像、開始・終了フレーム、複数参照画像のシナリオに適しています。
+
+
+
+| モデル | 主なアクセス方法 |
+
+|---|---|
+
+| `viduq3-turbo` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu*` | `/ent/v2/...` / `/v1/videos` |
+
+
+
+料金情報については、[料金ページ](https://aiid.edu.kg/pricing) をご覧ください。

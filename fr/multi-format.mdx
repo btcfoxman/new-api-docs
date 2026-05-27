@@ -1,0 +1,54 @@
+---
+title: "Instructions pour l'accès multiprotocole et multiformat"
+description: "Ce projet ne se limite pas à un seul protocole. Afin de réduire les coûts d'intégration, la documentation publique privilégie un format unifié, tout en conservant quelques formats natifs de modèles ou des formats spécifiques."
+---
+
+## 1. Format compatible OpenAI
+
+Adapté à la plupart des scénarios d'intégration récents, à privilégier :
+
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
+- `POST /v1/images/generations`
+- `POST /v1/images/edits`
+- `POST /v1/videos`
+- `GET /v1/videos/{task_id}`
+
+Caractéristiques :
+- Écosystème SDK mature
+- Style de champs unifié
+- Idéal pour l'alternance entre plusieurs modèles
+
+## 2. Format natif du modèle
+
+Lorsque le modèle lui-même nécessite des champs spécifiques, une structure de tâche dédiée ou un protocole de requête natif, les interfaces natives sont exposées :
+
+- Seedance：`/api/v3/contents/generations/tasks`
+- HappyHorse : `/api/v1/services/aigc/video-generation/video-synthesis` et `/api/v1/tasks/{task_id}`
+- Vidu：`/ent/v2/text2video`、`/ent/v2/img2video`、`/ent/v2/start-end2video`、`/ent/v2/reference2video` 和 `/ent/v2/tasks/{task_id}/creations`
+- Veo3 : `/v1beta/models/{model}:predictLongRunning` et `/v1beta/{operation_name}`
+- Génération d'images Gemini : `/v1beta/models/{model}:generateContent`
+
+`gemini-omni` est le nom public du modèle vidéo ; il n’est pas nécessaire de se soucier du modèle amont interne. Pour les appels vidéo, utilisez de préférence `/v1/videos` ; vous pouvez aussi utiliser le format de tâche Seedance `/api/v3/contents/generations/tasks`. `mode=t2v/r2v/edit` représentent respectivement la génération de texte en vidéo, la génération par référence et l’édition vidéo ; le champ de durée correspond automatiquement aux formats de 4 / 6 / 8 / 10 secondes.
+
+Adapté pour :
+- Présence de nombreux champs spécifiques au modèle
+- Nécessité d'une structure de corps de requête native
+- Besoin de rester proche du format officiel en amont
+
+## 3. Interfaces vidéo spécifiques au modèle
+
+Actuellement, quelques interfaces spécifiques aux modèles sont encore exposées, par exemple :
+
+- `POST /kling/v1/videos/text2video`
+- `POST /kling/v1/videos/image2video`
+Adapté pour :
+- Intégrations déjà basées sur le protocole spécifique du modèle correspondant
+- Besoin d'utiliser le mode de paramètres spécifique à ce modèle
+
+## 4. Conseils de sélection
+
+1. Pour les nouveaux projets, privilégiez le format compatible OpenAI.
+2. Si le format compatible ne couvre pas les champs spécifiques au modèle, passez alors au format natif.
+3. Les interfaces de tâches longues doivent distinguer clairement l'interface de création de l'interface de requête, en conservant `task_id` ou `operation_name`.
+4. Lorsque plusieurs formats d'appel existent pour un même modèle, fiez-vous aux champs pris en charge sur la page de l'interface correspondante et ne mélangez pas les corps de requête.

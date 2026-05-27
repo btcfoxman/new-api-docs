@@ -1,0 +1,68 @@
+---
+title: "快速上手"
+description: "取得 API Key、替換 Base URL 並發起第一個請求。"
+---
+
+## 第一步：取得 API Key
+
+1. 登入 [出海營 API 控制台](https://aiid.edu.kg/console)
+2. 進入令牌頁面建立 API Key
+3. 後續透過 `Authorization: Bearer YOUR_API_KEY` 使用
+
+## 第二步：設定 Base URL
+
+```bash
+API_BASE_URL="https://api.aiid.edu.kg"
+```
+
+如果現有用戶端預設寫的是：
+
+- `https://api.openai.com`
+- `https://api.openai.com/v1`
+
+則分別替換為：
+
+- `https://api.aiid.edu.kg`
+- `https://api.aiid.edu.kg`
+
+## 第三步：發起第一個請求
+
+### Python
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.aiid.edu.kg",
+)
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Hello, what can you do?"}],
+)
+
+print(response.choices[0].message.content)
+```
+
+### cURL
+
+```bash
+curl https://api.aiid.edu.kg/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer YOUR_API_KEY"   -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "Hello world!"}]
+  }'
+```
+
+## 接入建議
+
+- 新專案優先從 OpenAI 相容介面開始
+- 圖片編輯必須注意 `multipart/form-data` 與檔案欄位要求
+- 影片任務介面應先儲存 `task_id` 或 `operation_name` 再查詢
+- 除錯失敗時優先查看 HTTP 狀態碼、`error.code` 和 `error.message`
+
+## 下一步
+
+- 線上除錯：見  `zh-tw/online-debug%60
+- AI 生成呼叫程式碼：見  `zh-tw/ai-codegen%60
+- 模型分組與能力：見  `zh-tw/models%60

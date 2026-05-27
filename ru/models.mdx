@@ -1,0 +1,230 @@
+---
+title: "Матрица моделей и возможностей"
+description: "На этой странице представлены модели, доступные в текущих публичных интерфейсах `new-api`, а не статический список примеров."
+---
+
+## Группировка моделей
+
+### Nano Banana
+
+В основном используется для генерации и редактирования изображений, также поддерживает доступ в нативном формате Gemini.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `nano-banana` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+
+
+### Sora
+
+Предпочтительно использовать `/v1/videos` OpenAI совместимый видеоформат, подходящий для унифицированного подключения видео.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `sora-2` | `/v1/videos` |
+
+| `sora-2-pro` | `/v1/videos` |
+
+
+
+### Gemini Omni
+
+`gemini-omni` использует new-api для публичного имени модели; вызывать можно через `/v1/videos` или `/api/v3/contents/generations/tasks`; `mode=t2v/r2v/edit` используется для различения text-to-image, генерации по референсу и видеомонтажа, а длительность автоматически подбирается к вариантам 4 / 6 / 8 / 10 секунд.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `gemini-omni` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+
+
+### HappyHorse
+
+Поддерживается официальный формат генерации видео Alibaba DashScope, а также совместимое подключение через `/v1/videos`.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `happyhorse-1.0` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-i2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-t2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-r2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-video-edit` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+
+
+### Veo
+
+Для основной модели Veo предпочтительно использовать совместимый формат `/v1/videos`; `/v1beta/...` — зарезервированное описание для нативного протокола Veo. `gemini-omni` не использует нативный путь Google, пожалуйста, используйте `/v1/videos` или формат задачи Seedance.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `veo3` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-4k` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-components` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro-4k` | `/v1/videos` / `/v1beta/...` |
+
+
+
+### Grok
+
+В настоящее время открыта модель генерации видео, рекомендуется подключаться через унифицированный видеоинтерфейс.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `grok-imagine-1.0-video` | `/v1/videos` |
+
+| `grok-video-3` | `/v1/videos` |
+
+
+
+### Seedance
+
+Поддерживается нативный формат `/api/v3/contents/generations/tasks`, а также совместимое подключение через `/v1/videos`; `gemini-omni` может повторно использовать этот формат задачи и различать возможности с помощью `mode=t2v/r2v/edit`.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `doubao-seedance-1-0-lite-i2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-lite-t2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-250528` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-fast-251015` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-5-pro-251215` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-fast-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+
+
+### Kling Images
+
+Через `/v1/images/generations` внешне предоставляются возможности Kling для генерации изображений, Omni-изображений и виртуальной примерки.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `kling-image` | `/v1/images/generations` |
+
+| `kling-omni-image` | `/v1/images/generations` |
+
+| `kolors-virtual-try-on-v1` | `/v1/images/generations` |
+
+| `kolors-virtual-try-on-v1-5` | `/v1/images/generations` |
+
+
+
+### Kling Videos
+
+Одновременно открыты специализированный интерфейс модели и унифицированный вход для видео.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `kling-video` | `/kling/v1/...` / `/v1/videos` |
+
+| `kling-*` | `/kling/v1/...` / `/v1/videos` |
+
+
+
+### Hailuo
+
+Подключение с использованием унифицированных возможностей видео, подходит для сценариев генерации видео из текста.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `hailuo*` | `/v1/videos` |
+
+
+
+### Vidu
+
+Поддерживается официальный формат генерации видео Vidu, а также совместимое подключение через `/v1/videos`; подходит для сценариев text-to-video, одного изображения, первого и последнего кадра и нескольких референсных изображений.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `viduq3-turbo` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu*` | `/ent/v2/...` / `/v1/videos` |
+
+
+
+Для получения информации о тарифах посетите: [Страница тарифов](https://aiid.edu.kg/pricing).

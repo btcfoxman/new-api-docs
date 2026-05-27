@@ -1,0 +1,54 @@
+---
+title: "多協定與多格式接入說明"
+description: "當前專案並非僅支援單一協定。為降低整合成本，公開文件優先提供統一格式；同時保留少量模型原生格式或專用格式。"
+---
+
+## 1. OpenAI 相容格式
+
+適合大多數新串接場景，優先考慮：
+
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
+- `POST /v1/images/generations`
+- `POST /v1/images/edits`
+- `POST /v1/videos`
+- `GET /v1/videos/{task_id}`
+
+特點：
+- SDK 生態成熟
+- 欄位風格統一
+- 適合多模型切換
+
+## 2. 模型原生格式
+
+當模型本身需要專用欄位、專用任務結構或原生查詢協定時，公開原生介面：
+
+- Seedance：`/api/v3/contents/generations/tasks`
+- HappyHorse：`/api/v1/services/aigc/video-generation/video-synthesis` 和 `/api/v1/tasks/{task_id}`
+- Vidu：`/ent/v2/text2video`、`/ent/v2/img2video`、`/ent/v2/start-end2video`、`/ent/v2/reference2video` 和 `/ent/v2/tasks/{task_id}/creations`
+- Veo3：`/v1beta/models/{model}:predictLongRunning` 和 `/v1beta/{operation_name}`
+- Gemini 圖片生成：`/v1beta/models/{model}:generateContent`
+
+`gemini-omni` 是對外公開的影片模型名稱，不需要關心內部上游模型；影片呼叫優先使用 `/v1/videos`，也可使用 Seedance 任務格式 `/api/v3/contents/generations/tasks`。`mode=t2v/r2v/edit` 分別表示文生影片、參考生成和影片編輯，時長欄位會自動匹配到 4 / 6 / 8 / 10 秒檔。
+
+適合：
+- 模型特有欄位較多
+- 需要原生請求體結構
+- 需要保持與上游官方格式接近
+
+## 3. 模型專用影片介面
+
+目前仍公開少量模型專用介面，例如：
+
+- `POST /kling/v1/videos/text2video`
+- `POST /kling/v1/videos/image2video`
+適合：
+- 已經基於對應模型專用協定整合
+- 需要使用該模型專用參數模式
+
+## 4. 選擇建議
+
+1. 新專案優先使用 OpenAI 相容格式。
+2. 如果相容格式無法涵蓋模型特有欄位，再切換到原生格式。
+3. 長任務介面應明確區分「建立介面」與「查詢介面」，儲存 `task_id` 或 `operation_name`。
+4. 同一模型存在多種呼叫格式時，以對應介面頁面的支援欄位為準，請勿混用請求體。

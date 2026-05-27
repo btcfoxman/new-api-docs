@@ -1,0 +1,31 @@
+---
+title: "Authentification et sécurité"
+description: "Protégez vos jetons API et la sécurité de vos données"
+---
+
+## Authentification (Authentication)
+
+API utilise le mécanisme standard de Bearer Token pour l’authentification.
+
+### Format du Header
+```text
+Authorization: Bearer YOUR_API_KEY
+```
+
+## Spécifications de sécurité des jetons
+
+### 1. Principe du moindre privilège
+Si vous distribuez la clé API à un partenaire externe, restreignez dans la console les éléments suivants pour cette clé :
+- **Portée du modèle** : autoriser uniquement l'appel de modèles spécifiques.
+- **Délai d'expiration** : définir une expiration à court terme pour réduire les risques.
+- **Liste blanche d'IP** : restreindre les adresses IP des appelants.
+
+### 2. Interdiction stricte du codage en dur côté client
+N’insérez jamais directement le jeton `sk-` dans le JavaScript côté client ou le code d’une application mobile. Tous les appels API doivent être relayés par le serveur backend, ou utiliser notre système de distribution sécurisé pour générer des jetons de courte durée.
+
+### 3. Confidentialité des données
+Nous ne stockons pas le contenu de vos conversations. API sert uniquement de nœud de relais haute performance ; le contenu des conversations circule en mémoire et est transmis directement au fournisseur de service sous-jacent.
+
+## Surveillance et audit
+
+Vous pouvez surveiller en temps réel les détails de chaque appel API sur la page « Logs » de la console. En cas de question de sécurité, veuillez envoyer un e-mail à support@aiid.edu.kg.

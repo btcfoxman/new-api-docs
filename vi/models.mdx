@@ -1,0 +1,230 @@
+---
+title: "Ma trận mô hình và năng lực"
+description: "Trang này hiển thị các mô hình hiện có trong các giao diện công khai của `new-api`, không phải là danh sách ví dụ tĩnh."
+---
+
+## Nhóm mô hình
+
+### Nano Banana
+
+Chủ yếu được sử dụng để tạo và chỉnh sửa hình ảnh, đồng thời hỗ trợ truy cập định dạng gốc của Gemini.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `nano-banana` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-2-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-2k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+| `nano-banana-pro-4k` | `/v1/images/generations` / `/v1/images/edits` / `/v1beta/...` |
+
+
+
+### Sora
+
+Ưu tiên dùng định dạng video tương thích `/v1/videos` OpenAI, phù hợp cho việc tích hợp video thống nhất.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `sora-2` | `/v1/videos` |
+
+| `sora-2-pro` | `/v1/videos` |
+
+
+
+### Gemini Omni
+
+`gemini-omni` dùng new-api để công khai tên mô hình ra ngoài, có thể gọi qua `/v1/videos` hoặc `/api/v3/contents/generations/tasks`; dùng `mode=t2v/r2v/edit` để phân biệt tạo từ văn bản, tạo tham chiếu và chỉnh sửa video, thời lượng sẽ tự động khớp thành các mức 4 / 6 / 8 / 10 giây.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `gemini-omni` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+
+
+### HappyHorse
+
+Hỗ trợ định dạng tạo video chính thức của Ali DashScope, đồng thời cũng hỗ trợ tích hợp tương thích qua `/v1/videos`.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `happyhorse-1.0` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-i2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-t2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-r2v` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+| `happyhorse-1.0-video-edit` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
+
+
+
+### Veo
+
+Mô hình chính Veo ưu tiên dùng định dạng tương thích `/v1/videos`; `/v1beta/...` là phần mô tả dành riêng cho giao thức nguyên bản của Veo. `gemini-omni` không đi theo đường dẫn nguyên bản của Google, vui lòng dùng `/v1/videos` hoặc định dạng tác vụ Seedance.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `veo3` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-fast-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3-pro-frames` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-4k` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-components` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-fast` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro` | `/v1/videos` / `/v1beta/...` |
+
+| `veo3.1-pro-4k` | `/v1/videos` / `/v1beta/...` |
+
+
+
+### Grok
+
+Hiện tại các mô hình tạo video đã được công khai, khuyến nghị ưu tiên truy cập thông qua giao diện video thống nhất.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `grok-imagine-1.0-video` | `/v1/videos` |
+
+| `grok-video-3` | `/v1/videos` |
+
+
+
+### Seedance
+
+Hỗ trợ cả định dạng nguyên bản `/api/v3/contents/generations/tasks`, cũng hỗ trợ tích hợp tương thích qua `/v1/videos`; `gemini-omni` có thể tái sử dụng định dạng tác vụ này và dùng `mode=t2v/r2v/edit` để phân biệt năng lực.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `doubao-seedance-1-0-lite-i2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-lite-t2v-250428` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-250528` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-0-pro-fast-251015` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-1-5-pro-251215` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `doubao-seedance-2-0-fast-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+
+
+### Kling Images
+
+Cung cấp ra ngoài năng lực tạo ảnh Kling, ảnh Omni và thử đồ ảo thông qua `/v1/images/generations`.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `kling-image` | `/v1/images/generations` |
+
+| `kling-omni-image` | `/v1/images/generations` |
+
+| `kolors-virtual-try-on-v1` | `/v1/images/generations` |
+
+| `kolors-virtual-try-on-v1-5` | `/v1/images/generations` |
+
+
+
+### Kling Videos
+
+Công khai đồng thời giao diện chuyên dụng cho mô hình và cổng video thống nhất.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `kling-video` | `/kling/v1/...` / `/v1/videos` |
+
+| `kling-*` | `/kling/v1/...` / `/v1/videos` |
+
+
+
+### Hailuo
+
+Sử dụng khả năng video thống nhất để truy cập, phù hợp cho kịch bản tạo video từ văn bản (text-to-video).
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `hailuo*` | `/v1/videos` |
+
+
+
+### Vidu
+
+Hỗ trợ định dạng tạo video chính thức của Vidu, đồng thời cũng hỗ trợ tích hợp tương thích qua `/v1/videos`, phù hợp cho các kịch bản văn bản sang video, một ảnh, khung đầu-cuối và nhiều ảnh tham chiếu.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `viduq3-turbo` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu*` | `/ent/v2/...` / `/v1/videos` |
+
+
+
+Để biết thông tin chi phí, vui lòng truy cập: [Trang tính phí](https://aiid.edu.kg/pricing).
