@@ -4238,11 +4238,11 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "创建视频（Veo3格式）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n该接口专题页仅用于说明 Veo 原生格式与当前网关支持状态。\n\n当前 Veo 系列对外请使用 OpenAI Sora 兼容模式：`POST /v1/videos`。\n\nGoogle 原生模式路径预留为：`POST /v1beta/models/{model}:predictLongRunning`。当前网关尚未接通 Veo 原生任务分发链路，因此按原生 `instances/parameters` 请求体调用暂不支持。\n\n`gemini-omni` 不是 Google 原生 `predictLongRunning` 调用模型；如需调用 `gemini-omni`，请使用 `POST /v1/videos`，或使用 `POST /api/v3/contents/generations/tasks` 的任务格式。",
+        "summary": "创建视频（Omni与Veo格式）",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n该接口专题页用于说明 Omni 与 Veo 相关视频格式，以及当前网关对 Veo 原生格式的支持状态。\n\n当前 Veo 系列对外请使用 OpenAI Sora 兼容模式：`POST /v1/videos`。\n\nGoogle 原生模式路径预留为：`POST /v1beta/models/{model}:predictLongRunning`。当前网关尚未接通 Veo 原生任务分发链路，因此按原生 `instances/parameters` 请求体调用暂不支持。\n\n重点：`gemini-omni` 模型支持的端点是 Sora兼容格式 `POST /v1/videos` 或 Seedance格式 `POST /api/v3/contents/generations/tasks`；不支持本页 Google 原生 Veo `predictLongRunning` 端点。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "视频生成Veo3格式"
+          "视频生成Omni与Veo格式"
         ],
         "parameters": [
           {
@@ -4409,17 +4409,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/cn/视频生成veo3格式/创建视频（veo3格式）"
+          "href": "/api-reference/cn/视频生成omni与veo格式/创建视频（omni与veo格式）"
         }
       }
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "查询任务（Veo3格式）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n该接口专题页仅用于说明 Veo 原生查询协议。\n\n当前 Veo 系列请改用 `/v1/videos` 统一接口进行创建与查询。\n\n下述 `operation_name` 查询结构仅作为预留协议说明保留，暂不支持实际调用。",
+        "summary": "查询任务（Omni与Veo格式）",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n该接口专题页用于说明 Omni 与 Veo 相关查询格式，以及 Veo 原生查询协议的预留状态。\n\n当前 Veo 系列请改用 `/v1/videos` 统一接口进行创建与查询。\n\n下述 `operation_name` 查询结构仅作为预留协议说明保留，暂不支持实际调用。\n\n重点：`gemini-omni` 模型支持的端点是 Sora兼容格式 `POST /v1/videos` 或 Seedance格式 `POST /api/v3/contents/generations/tasks`；不支持本页 Google 原生 Veo `predictLongRunning` 端点。",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "视频生成Veo3格式"
+          "视频生成Omni与Veo格式"
         ],
         "parameters": [
           {
@@ -4512,7 +4512,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/cn/视频生成veo3格式/查询任务（veo3格式）"
+          "href": "/api-reference/cn/视频生成omni与veo格式/查询任务（omni与veo格式）"
         }
       }
     }
@@ -6809,13 +6809,13 @@
       "name": "视频生成Kling格式"
     },
     {
+      "name": "视频生成Omni与Veo格式"
+    },
+    {
       "name": "视频生成Seedance火山方舟"
     },
     {
       "name": "视频生成Sora兼容格式"
-    },
-    {
-      "name": "视频生成Veo3格式"
     },
     {
       "name": "视频生成Vidu官方"

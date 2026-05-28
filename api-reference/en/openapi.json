@@ -4238,11 +4238,11 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "Create video (format Veo3)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nThis API overview page is only used to explain the native format of Veo and the current gateway support status.\n\nFor external use of the current Veo series, please use OpenAI Sora compatibility mode: `POST /v1/videos`.\n\nThe reserved path for Google native mode is: `POST /v1beta/models/{model}:predictLongRunning`. The current gateway is not yet connected to the native task dispatch pipeline of Veo, so calls using the native [[TERM_1]] request body are not yet supported.\n\n`gemini-omni` is not a Google native [[TERM_1]] invocation model; if you need to call [[TERM_2]], please use [[TERM_3]], or use the task format of [[TERM_4]].",
+        "summary": "Create video (Omni and Veo formats)",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nThis API topic page explains the video formats related to Omni and Veo, as well as the current gateway support status for the native Veo format.\n\nFor external use of the current Veo series, please use OpenAI Sora compatibility mode: `POST /v1/videos`.\n\nThe reserved path for Google native mode is: `POST /v1beta/models/{model}:predictLongRunning`. The current gateway is not yet connected to the native task dispatch pipeline of Veo, so calls using the native [[TERM_1]] request body are not yet supported.\n\nNote: The endpoints supported by the `gemini-omni` model are the Sora compatible format `POST /v1/videos` or the Seedance format `POST /api/v3/contents/generations/tasks`; this page does not support Google native Veo `predictLongRunning` endpoints.",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "Video generationVeo3 format"
+          "Video generation Omni and Veo formats"
         ],
         "parameters": [
           {
@@ -4409,17 +4409,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generation-veo3-format/create-video-format-veo3"
+          "href": "/api-reference/en/video-generation-omni-and-veo-formats/create-video-omni-and-veo-formats"
         }
       }
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "Query task (format Veo3)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nThis API topic page is only for explaining the native query protocol of Veo.\n\nFor the current Veo series, please use the `/v1/videos` unified API for creation and queries.\n\nThe following `operation_name` query structure is retained for reserved protocol documentation only and does not currently support actual calls.",
+        "summary": "Query tasks (Omni and Veo formats)",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nThis API topic page explains the query formats related to Omni and Veo, as well as the reserved status of the native query protocol for Veo.\n\nFor the current Veo series, please use the `/v1/videos` unified API for creation and queries.\n\nThe following `operation_name` query structure is retained for reserved protocol documentation only and does not currently support actual calls.\n\nNote: The endpoints supported by the `gemini-omni` model are the Sora compatible format `POST /v1/videos` or the Seedance format `POST /api/v3/contents/generations/tasks`; this page does not support Google native Veo `predictLongRunning` endpoints.",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "Video generationVeo3 format"
+          "Video generation Omni and Veo formats"
         ],
         "parameters": [
           {
@@ -4512,7 +4512,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generation-veo3-format/query-task-format-veo3"
+          "href": "/api-reference/en/video-generation-omni-and-veo-formats/query-tasks-omni-and-veo-formats"
         }
       }
     }
@@ -6809,13 +6809,13 @@
       "name": "Video generation Kling format"
     },
     {
+      "name": "Video generation Omni and Veo formats"
+    },
+    {
       "name": "Video generationSeedanceVolcano Ark"
     },
     {
       "name": "Video generation Sora compatible formats"
-    },
-    {
-      "name": "Video generationVeo3 format"
     },
     {
       "name": "Video generation Vidu official"

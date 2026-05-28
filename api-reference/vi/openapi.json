@@ -4238,11 +4238,11 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "Tạo video (định dạng Veo3)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề của giao diện này chỉ dùng để mô tả định dạng nguyên bản của Veo và trạng thái hỗ trợ hiện tại của cổng.\n\nHiện tại, khi sử dụng dòng Veo để công khai, vui lòng dùng chế độ tương thích OpenAI Sora: `POST /v1/videos`.\n\nĐường dẫn dành riêng cho chế độ nguyên bản của Google là: `POST /v1beta/models/{model}:predictLongRunning`. Hiện cổng chưa kết nối với chuỗi phân phối tác vụ nguyên bản của Veo, vì vậy hiện chưa hỗ trợ gọi theo request body nguyên bản `instances/parameters`.\n\n`gemini-omni` không phải là mô hình gọi `predictLongRunning` nguyên bản của Google; nếu cần gọi `gemini-omni`, vui lòng dùng `POST /v1/videos`, hoặc sử dụng định dạng tác vụ của `POST /api/v3/contents/generations/tasks`.",
+        "summary": "Tạo video (định dạng Omni và Veo)",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề của giao diện này dùng để giải thích các định dạng video liên quan đến Omni và Veo, cũng như trạng thái hỗ trợ của cổng hiện tại đối với định dạng gốc của Veo.\n\nHiện tại, khi sử dụng dòng Veo để công khai, vui lòng dùng chế độ tương thích OpenAI Sora: `POST /v1/videos`.\n\nĐường dẫn dành riêng cho chế độ nguyên bản của Google là: `POST /v1beta/models/{model}:predictLongRunning`. Hiện cổng chưa kết nối với chuỗi phân phối tác vụ nguyên bản của Veo, vì vậy hiện chưa hỗ trợ gọi theo request body nguyên bản `instances/parameters`.\n\nLưu ý: `gemini-omni` Điểm cuối mà mô hình hỗ trợ là định dạng tương thích Sora `POST /v1/videos` hoặc định dạng Seedance `POST /api/v3/contents/generations/tasks`; không hỗ trợ điểm cuối Google gốc Veo `predictLongRunning` trên trang này.",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "Định dạng video生成Veo3"
+          "Định dạng Video Generation Omni và Veo"
         ],
         "parameters": [
           {
@@ -4409,17 +4409,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/định-dạng-video生成veo3/tạo-video-định-dạng-veo3"
+          "href": "/api-reference/vi/định-dạng-video-generation-omni-và-veo/tạo-video-định-dạng-omni-và-veo"
         }
       }
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "Truy vấn tác vụ (định dạng Veo3)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề của API này chỉ dùng để giải thích giao thức truy vấn gốc của Veo.\n\nVới dòng Veo hiện tại, vui lòng dùng giao diện thống nhất `/v1/videos` để tạo và truy vấn.\n\nCấu trúc truy vấn `operation_name` dưới đây chỉ được giữ lại dưới dạng giải thích giao thức dự phòng, hiện chưa hỗ trợ gọi thực tế.",
+        "summary": "Truy vấn tác vụ (định dạng Omni và Veo)",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTrang chuyên đề của API này dùng để giải thích định dạng truy vấn liên quan đến Omni và Veo, cũng như trạng thái dự phòng của giao thức truy vấn nguyên bản của Veo.\n\nVới dòng Veo hiện tại, vui lòng dùng giao diện thống nhất `/v1/videos` để tạo và truy vấn.\n\nCấu trúc truy vấn `operation_name` dưới đây chỉ được giữ lại dưới dạng giải thích giao thức dự phòng, hiện chưa hỗ trợ gọi thực tế.\n\nLưu ý: `gemini-omni` Điểm cuối mà mô hình hỗ trợ là định dạng tương thích Sora `POST /v1/videos` hoặc định dạng Seedance `POST /api/v3/contents/generations/tasks`; không hỗ trợ điểm cuối Google gốc Veo `predictLongRunning` trên trang này.",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "Định dạng video生成Veo3"
+          "Định dạng Video Generation Omni và Veo"
         ],
         "parameters": [
           {
@@ -4512,7 +4512,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/định-dạng-video生成veo3/truy-vấn-tác-vụ-định-dạng-veo3"
+          "href": "/api-reference/vi/định-dạng-video-generation-omni-và-veo/truy-vấn-tác-vụ-định-dạng-omni-và-veo"
         }
       }
     }
@@ -6809,13 +6809,13 @@
       "name": "Định dạngKling tạo video"
     },
     {
+      "name": "Định dạng Video Generation Omni và Veo"
+    },
+    {
       "name": "Tạo videoSeedanceVolcano Ark"
     },
     {
       "name": "Định dạng tương thích Sora cho tạo video"
-    },
-    {
-      "name": "Định dạng video生成Veo3"
     },
     {
       "name": "Chính thức về tạo videoVidu"

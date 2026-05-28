@@ -75,6 +75,13 @@
                 ]
               },
               {
+                "group": "Video generation Omni and Veo formats",
+                "pages": [
+                  "api-reference/en/video-generation-omni-and-veo-formats/create-video-omni-and-veo-formats",
+                  "api-reference/en/video-generation-omni-and-veo-formats/query-tasks-omni-and-veo-formats"
+                ]
+              },
+              {
                 "group": "Video generation Sora compatible formats",
                 "pages": [
                   "api-reference/en/video-generation-sora-compatible-formats/create-video",
@@ -104,13 +111,6 @@
                 "pages": [
                   "api-reference/en/video-generationseedancevolcano-ark/create-video-seedance",
                   "api-reference/en/video-generationseedancevolcano-ark/get-task-seedance"
-                ]
-              },
-              {
-                "group": "Video generationVeo3 format",
-                "pages": [
-                  "api-reference/en/video-generation-veo3-format/create-video-format-veo3",
-                  "api-reference/en/video-generation-veo3-format/query-task-format-veo3"
                 ]
               }
             ]
@@ -243,6 +243,13 @@
                 ]
               },
               {
+                "group": "视频生成Omni与Veo格式",
+                "pages": [
+                  "api-reference/cn/视频生成omni与veo格式/创建视频（omni与veo格式）",
+                  "api-reference/cn/视频生成omni与veo格式/查询任务（omni与veo格式）"
+                ]
+              },
+              {
                 "group": "视频生成Seedance火山方舟",
                 "pages": [
                   "api-reference/cn/视频生成seedance火山方舟/创建视频（seedance）",
@@ -255,13 +262,6 @@
                   "api-reference/cn/视频生成sora兼容格式/创建视频",
                   "api-reference/cn/视频生成sora兼容格式/获取视频任务状态",
                   "api-reference/cn/视频生成sora兼容格式/获取视频内容"
-                ]
-              },
-              {
-                "group": "视频生成Veo3格式",
-                "pages": [
-                  "api-reference/cn/视频生成veo3格式/创建视频（veo3格式）",
-                  "api-reference/cn/视频生成veo3格式/查询任务（veo3格式）"
                 ]
               },
               {
@@ -381,6 +381,13 @@
                 ]
               },
               {
+                "group": "影片生成 Omni 與 Veo 格式",
+                "pages": [
+                  "api-reference/zh-tw/影片生成-omni-與-veo-格式/建立影片（omni-與-veo-格式）",
+                  "api-reference/zh-tw/影片生成-omni-與-veo-格式/查詢任務（omni-與veo格式）"
+                ]
+              },
+              {
                 "group": "影片生成HappyHorse阿里",
                 "pages": [
                   "api-reference/zh-tw/影片生成happyhorse阿里/建立影片happyhorse",
@@ -409,13 +416,6 @@
                   "api-reference/zh-tw/影片生成sora相容格式/建立影片",
                   "api-reference/zh-tw/影片生成sora相容格式/取得影片任務狀態",
                   "api-reference/zh-tw/影片生成sora相容格式/獲取影片內容"
-                ]
-              },
-              {
-                "group": "影片生成Veo3格式",
-                "pages": [
-                  "api-reference/zh-tw/影片生成veo3格式/建立影片（veo3-格式）",
-                  "api-reference/zh-tw/影片生成veo3格式/查詢任務（veo3格式）"
                 ]
               },
               {
@@ -523,6 +523,13 @@
                 ]
               },
               {
+                "group": "Format Omni de génération vidéo et Veo",
+                "pages": [
+                  "api-reference/fr/format-omni-de-génération-vidéo-et-veo/créer-une-vidéo-format-omni-et-veo",
+                  "api-reference/fr/format-omni-de-génération-vidéo-et-veo/interroger-les-tâches-formats-omni-et-veo"
+                ]
+              },
+              {
                 "group": "Format OpenAI(Responses)",
                 "pages": [
                   "api-reference/fr/format-openairesponses/créer-une-réponse-openai-responses-api"
@@ -535,13 +542,6 @@
                   "api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-d’une-image-kling",
                   "api-reference/fr/format-de-génération-vidéo-kling/kling-génération-de-vidéo-à-partir-de-texte",
                   "api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-de-texte-kling"
-                ]
-              },
-              {
-                "group": "Format vidéo générée Veo3",
-                "pages": [
-                  "api-reference/fr/format-vidéo-générée-veo3/créer-une-vidéo-format-veo3",
-                  "api-reference/fr/format-vidéo-générée-veo3/interroger-la-tâche-format-veo3"
                 ]
               },
               {
@@ -713,6 +713,13 @@
                 ]
               },
               {
+                "group": "動画生成OmniとVeo形式",
+                "pages": [
+                  "api-reference/ja/動画生成omniとveo形式/動画を作成する（omniおよびveo形式）",
+                  "api-reference/ja/動画生成omniとveo形式/タスクを検索する（omniとveo形式）"
+                ]
+              },
+              {
                 "group": "動画生成Seedance火山アーク",
                 "pages": [
                   "api-reference/ja/動画生成seedance火山アーク/動画を作成（seedance）",
@@ -725,13 +732,6 @@
                   "api-reference/ja/動画生成sora対応形式/動画の生成",
                   "api-reference/ja/動画生成sora対応形式/動画タスクステータスの取得",
                   "api-reference/ja/動画生成sora対応形式/動画コンテンツの取得"
-                ]
-              },
-              {
-                "group": "動画生成Veo3形式",
-                "pages": [
-                  "api-reference/ja/動画生成veo3形式/動画を作成（veo3形式）",
-                  "api-reference/ja/動画生成veo3形式/タスクを照会する（veo3形式）"
                 ]
               },
               {
@@ -839,6 +839,13 @@
                 ]
               },
               {
+                "group": "Видео-генерация Omni и формат Veo",
+                "pages": [
+                  "api-reference/ru/видео-генерация-omni-и-формат-veo/создать-видео-форматы-omni-и-veo",
+                  "api-reference/ru/видео-генерация-omni-и-формат-veo/запрос-задачи-формат-omni-и-veo"
+                ]
+              },
+              {
                 "group": "Генерация видеоHappyHorseАли",
                 "pages": [
                   "api-reference/ru/генерация-видеоhappyhorseали/создать-видеоhappyhorse",
@@ -882,13 +889,6 @@
                   "api-reference/ru/совместимый-формат-для-sora-генерации-видео/создать-видео",
                   "api-reference/ru/совместимый-формат-для-sora-генерации-видео/получить-статус-задачи-видео",
                   "api-reference/ru/совместимый-формат-для-sora-генерации-видео/получение-видеоконтента"
-                ]
-              },
-              {
-                "group": "Формат 3 генерации видеоVeo",
-                "pages": [
-                  "api-reference/ru/формат-3-генерации-видеоveo/создать-видео-формат-veo3",
-                  "api-reference/ru/формат-3-генерации-видеоveo/запрос-задачи-формат-veo3"
                 ]
               },
               {
@@ -1056,18 +1056,18 @@
                 ]
               },
               {
+                "group": "Định dạng Video Generation Omni và Veo",
+                "pages": [
+                  "api-reference/vi/định-dạng-video-generation-omni-và-veo/tạo-video-định-dạng-omni-và-veo",
+                  "api-reference/vi/định-dạng-video-generation-omni-và-veo/truy-vấn-tác-vụ-định-dạng-omni-và-veo"
+                ]
+              },
+              {
                 "group": "Định dạng tương thích Sora cho tạo video",
                 "pages": [
                   "api-reference/vi/định-dạng-tương-thích-sora-cho-tạo-video/tạo-video",
                   "api-reference/vi/định-dạng-tương-thích-sora-cho-tạo-video/lấy-trạng-thái-tác-vụ-video",
                   "api-reference/vi/định-dạng-tương-thích-sora-cho-tạo-video/lấy-nội-dung-video"
-                ]
-              },
-              {
-                "group": "Định dạng video生成Veo3",
-                "pages": [
-                  "api-reference/vi/định-dạng-video生成veo3/tạo-video-định-dạng-veo3",
-                  "api-reference/vi/định-dạng-video生成veo3/truy-vấn-tác-vụ-định-dạng-veo3"
                 ]
               },
               {

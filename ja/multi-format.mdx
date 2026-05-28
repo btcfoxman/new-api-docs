@@ -26,7 +26,7 @@ description: "現在のプロジェクトは単一のプロトコルのみに対
 - Seedance：`/api/v3/contents/generations/tasks`
 - HappyHorse：`/api/v1/services/aigc/video-generation/video-synthesis` と `/api/v1/tasks/{task_id}`
 - Vidu：`/ent/v2/text2video`、`/ent/v2/img2video`、`/ent/v2/start-end2video`、`/ent/v2/reference2video` 和 `/ent/v2/tasks/{task_id}/creations`
-- Veo3：`/v1beta/models/{model}:predictLongRunning` と `/v1beta/{operation_name}`
+- Omni と Veo：`gemini-omni` は `/v1/videos` または `/api/v3/contents/generations/tasks` を使用します。Veo のネイティブ予約済みパスは `/v1beta/models/{model}:predictLongRunning` と `/v1beta/{operation_name}` です
 - Gemini 画像生成：`/v1beta/models/{model}:generateContent`
 
 `gemini-omni` は外部公開されている動画モデル名であり、内部の上流モデルを気にする必要はありません。動画の呼び出しでは `/v1/videos` を優先して使用しますが、Seedance のタスク形式 `/api/v3/contents/generations/tasks` も使用できます。`mode=t2v/r2v/edit` はそれぞれテキストから動画生成、参考生成、動画編集を表し、duration フィールドは 4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。

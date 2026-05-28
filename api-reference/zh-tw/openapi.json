@@ -4238,11 +4238,11 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "建立影片（Veo3 格式）",
-        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n此介面專題頁僅用於說明 Veo 原生格式與目前閘道支援狀態。\n\n目前 Veo 系列對外請使用 OpenAI Sora 相容模式：`POST /v1/videos`。\n\nGoogle 原生模式路徑預留為：`POST /v1beta/models/{model}:predictLongRunning`。目前閘道尚未接通 Veo 原生任務分發鏈路，因此依原生 `instances/parameters` 請求體呼叫暫不支援。\n\n`gemini-omni` 不是 Google 原生 `predictLongRunning` 呼叫模型；如需呼叫 `gemini-omni`，請使用 `POST /v1/videos`，或使用 `POST /api/v3/contents/generations/tasks` 的任務格式。",
+        "summary": "建立影片（Omni 與 Veo 格式）",
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n此介面專題頁用於說明 Omni 與 Veo 相關影片格式，以及目前閘道對 Veo 原生格式的支援狀態。\n\n目前 Veo 系列對外請使用 OpenAI Sora 相容模式：`POST /v1/videos`。\n\nGoogle 原生模式路徑預留為：`POST /v1beta/models/{model}:predictLongRunning`。目前閘道尚未接通 Veo 原生任務分發鏈路，因此依原生 `instances/parameters` 請求體呼叫暫不支援。\n\n重點：`gemini-omni` 模型支援的端點是 Sora相容格式 `POST /v1/videos` 或 Seedance格式 `POST /api/v3/contents/generations/tasks`；不支援本頁 Google 原生 Veo `predictLongRunning` 端點。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "影片生成Veo3格式"
+          "影片生成 Omni 與 Veo 格式"
         ],
         "parameters": [
           {
@@ -4409,17 +4409,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成veo3格式/建立影片（veo3-格式）"
+          "href": "/api-reference/zh-tw/影片生成-omni-與-veo-格式/建立影片（omni-與-veo-格式）"
         }
       }
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "查詢任務（Veo3格式）",
-        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n此介面專題頁僅用於說明 Veo 原生查詢協議。\n\n目前 Veo 系列請改用 `/v1/videos` 統一介面進行建立與查詢。\n\n下述 `operation_name` 查詢結構僅作為預留協定說明保留，暫不支援實際呼叫。",
+        "summary": "查詢任務（Omni 與Veo格式）",
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n此介面專題頁用於說明 Omni 與 Veo 相關查詢格式，以及 Veo 原生查詢協議的預留狀態。\n\n目前 Veo 系列請改用 `/v1/videos` 統一介面進行建立與查詢。\n\n下述 `operation_name` 查詢結構僅作為預留協定說明保留，暫不支援實際呼叫。\n\n重點：`gemini-omni` 模型支援的端點是 Sora相容格式 `POST /v1/videos` 或 Seedance格式 `POST /api/v3/contents/generations/tasks`；不支援本頁 Google 原生 Veo `predictLongRunning` 端點。",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "影片生成Veo3格式"
+          "影片生成 Omni 與 Veo 格式"
         ],
         "parameters": [
           {
@@ -4512,7 +4512,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成veo3格式/查詢任務（veo3格式）"
+          "href": "/api-reference/zh-tw/影片生成-omni-與-veo-格式/查詢任務（omni-與veo格式）"
         }
       }
     }
@@ -6809,13 +6809,13 @@
       "name": "影片生成Kling格式"
     },
     {
+      "name": "影片生成 Omni 與 Veo 格式"
+    },
+    {
       "name": "影片生成Seedance火山方舟"
     },
     {
       "name": "影片生成Sora相容格式"
-    },
-    {
-      "name": "影片生成Veo3格式"
     },
     {
       "name": "影片生成Vidu官方"

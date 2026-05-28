@@ -4238,11 +4238,11 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "Créer une vidéo (format Veo3)",
-        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nCette page dédiée à l’API sert uniquement à expliquer le format natif de Veo et l’état de prise en charge actuel par la passerelle.\n\nPour les appels externes de la série Veo, veuillez utiliser le mode de compatibilité OpenAI Sora : `POST /v1/videos`.\n\nLe chemin réservé pour le mode natif de Google est : `POST /v1beta/models/{model}:predictLongRunning`. La passerelle actuelle n’est pas encore connectée à la chaîne native de distribution des tâches de Veo ; les appels au format du corps de requête natif `instances/parameters` ne sont donc pas encore pris en charge.\n\n`gemini-omni` n’est pas un modèle d’appel natif Google `predictLongRunning` ; si vous devez appeler `gemini-omni`, veuillez utiliser `POST /v1/videos`, ou utiliser le format de tâche de `POST /api/v3/contents/generations/tasks`.",
+        "summary": "Créer une vidéo (format Omni et Veo)",
+        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nCette page de présentation de l’API explique les formats vidéo liés à Omni et à Veo, ainsi que l’état de prise en charge par la passerelle actuelle du format natif de Veo.\n\nPour les appels externes de la série Veo, veuillez utiliser le mode de compatibilité OpenAI Sora : `POST /v1/videos`.\n\nLe chemin réservé pour le mode natif de Google est : `POST /v1beta/models/{model}:predictLongRunning`. La passerelle actuelle n’est pas encore connectée à la chaîne native de distribution des tâches de Veo ; les appels au format du corps de requête natif `instances/parameters` ne sont donc pas encore pris en charge.\n\nPoint clé : les points de terminaison pris en charge par le modèle `gemini-omni` sont le format compatible Sora `POST /v1/videos` ou le format Seedance `POST /api/v3/contents/generations/tasks` ; les points de terminaison Google natifs Veo `predictLongRunning` de cette page ne sont pas pris en charge.",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "Format vidéo générée Veo3"
+          "Format Omni de génération vidéo et Veo"
         ],
         "parameters": [
           {
@@ -4409,17 +4409,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/fr/format-vidéo-générée-veo3/créer-une-vidéo-format-veo3"
+          "href": "/api-reference/fr/format-omni-de-génération-vidéo-et-veo/créer-une-vidéo-format-omni-et-veo"
         }
       }
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "Interroger la tâche (format Veo3)",
-        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nCette page dédiée à cette API sert uniquement à expliquer le protocole de requête natif de Veo.\n\nPour la série Veo actuelle, veuillez utiliser l’interface unifiée `/v1/videos` pour la création et la requête.\n\nLa structure de requête `operation_name` suivante est conservée uniquement à titre d'explication de protocole réservé et ne prend pas en charge les appels réels pour le moment.",
+        "summary": "Interroger les tâches (formats Omni et Veo)",
+        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nCette page thématique de l’API sert à expliquer les formats de requête liés à Omni et à Veo, ainsi que l’état réservé du protocole de requête natif de Veo.\n\nPour la série Veo actuelle, veuillez utiliser l’interface unifiée `/v1/videos` pour la création et la requête.\n\nLa structure de requête `operation_name` suivante est conservée uniquement à titre d'explication de protocole réservé et ne prend pas en charge les appels réels pour le moment.\n\nPoint clé : les points de terminaison pris en charge par le modèle `gemini-omni` sont le format compatible Sora `POST /v1/videos` ou le format Seedance `POST /api/v3/contents/generations/tasks` ; les points de terminaison Google natifs Veo `predictLongRunning` de cette page ne sont pas pris en charge.",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "Format vidéo générée Veo3"
+          "Format Omni de génération vidéo et Veo"
         ],
         "parameters": [
           {
@@ -4512,7 +4512,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/fr/format-vidéo-générée-veo3/interroger-la-tâche-format-veo3"
+          "href": "/api-reference/fr/format-omni-de-génération-vidéo-et-veo/interroger-les-tâches-formats-omni-et-veo"
         }
       }
     }
@@ -6809,13 +6809,13 @@
       "name": "Format de génération vidéo Kling"
     },
     {
+      "name": "Format Omni de génération vidéo et Veo"
+    },
+    {
       "name": "Génération vidéoSeedanceVolcano Ark"
     },
     {
       "name": "Formats compatibles avec la génération de vidéosSora"
-    },
-    {
-      "name": "Format vidéo générée Veo3"
     },
     {
       "name": "Génération vidéoVidu officielle"

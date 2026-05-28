@@ -4238,11 +4238,11 @@
     },
     "/v1beta/models/{model}:predictLongRunning": {
       "post": {
-        "summary": "動画を作成（Veo3形式）",
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nこのAPI専用ページは、Veo のネイティブ形式と現在のゲートウェイ対応状況の説明のみを目的としています。\n\n現在、Veo 系列を外部向けに利用する場合は、OpenAI Sora 互換モードを使用してください：`POST /v1/videos`。\n\nGoogle ネイティブモードのパスは以下のために予約されています：`POST /v1beta/models/{model}:predictLongRunning`。現在のゲートウェイはまだ Veo のネイティブタスク配信経路に接続されていないため、ネイティブ `instances/parameters` のリクエストボディによる呼び出しは現時点ではサポートされていません。\n\n`gemini-omni` は Google ネイティブの `predictLongRunning` 呼び出しモデルではありません。`gemini-omni` を呼び出す必要がある場合は、`POST /v1/videos` を使用するか、`POST /api/v3/contents/generations/tasks` のタスク形式を使用してください。",
+        "summary": "動画を作成する（OmniおよびVeo形式）",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nこのAPIトピックページは、Omni と Veo に関連する動画形式、および現在のゲートウェイにおける Veo ネイティブ形式のサポート状況を説明します。\n\n現在、Veo 系列を外部向けに利用する場合は、OpenAI Sora 互換モードを使用してください：`POST /v1/videos`。\n\nGoogle ネイティブモードのパスは以下のために予約されています：`POST /v1beta/models/{model}:predictLongRunning`。現在のゲートウェイはまだ Veo のネイティブタスク配信経路に接続されていないため、ネイティブ `instances/parameters` のリクエストボディによる呼び出しは現時点ではサポートされていません。\n\n重要：`gemini-omni` モデルでサポートされているエンドポイントは、Sora互換形式 `POST /v1/videos` または Seedance形式 `POST /api/v3/contents/generations/tasks` です。本ページの Google ネイティブ Veo `predictLongRunning` エンドポイントはサポートされていません。",
         "operationId": "create_veo3_google_native_task",
         "tags": [
-          "動画生成Veo3形式"
+          "動画生成OmniとVeo形式"
         ],
         "parameters": [
           {
@@ -4409,17 +4409,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成veo3形式/動画を作成（veo3形式）"
+          "href": "/api-reference/ja/動画生成omniとveo形式/動画を作成する（omniおよびveo形式）"
         }
       }
     },
     "/v1beta/{operation_name}": {
       "get": {
-        "summary": "タスクを照会する（Veo3形式）",
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nこのインターフェースの特集ページは Veo のネイティブクエリプロトコルの説明専用です。\n\n現在の Veo シリーズは、作成と検索に `/v1/videos` の統一インターフェースを使用してください。\n\n以下の `operation_name` クエリ構造は予約プロトコルの説明として保持されているものであり、現時点では実際の呼び出しには対応していません。",
+        "summary": "タスクを検索する（OmniとVeo形式）",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nこのインターフェースの特集ページでは、Omni と Veo に関連するクエリ形式、および Veo ネイティブクエリプロトコルの予約状態について説明します。\n\n現在の Veo シリーズは、作成と検索に `/v1/videos` の統一インターフェースを使用してください。\n\n以下の `operation_name` クエリ構造は予約プロトコルの説明として保持されているものであり、現時点では実際の呼び出しには対応していません。\n\n重要：`gemini-omni` モデルでサポートされているエンドポイントは、Sora互換形式 `POST /v1/videos` または Seedance形式 `POST /api/v3/contents/generations/tasks` です。本ページの Google ネイティブ Veo `predictLongRunning` エンドポイントはサポートされていません。",
         "operationId": "query_veo3_google_native_task",
         "tags": [
-          "動画生成Veo3形式"
+          "動画生成OmniとVeo形式"
         ],
         "parameters": [
           {
@@ -4512,7 +4512,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成veo3形式/タスクを照会する（veo3形式）"
+          "href": "/api-reference/ja/動画生成omniとveo形式/タスクを検索する（omniとveo形式）"
         }
       }
     }
@@ -6809,13 +6809,13 @@
       "name": "動画生成Kling形式"
     },
     {
+      "name": "動画生成OmniとVeo形式"
+    },
+    {
       "name": "動画生成Seedance火山アーク"
     },
     {
       "name": "動画生成Sora対応形式"
-    },
-    {
-      "name": "動画生成Veo3形式"
     },
     {
       "name": "動画生成Vidu公式"
