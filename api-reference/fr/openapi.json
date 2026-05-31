@@ -2305,7 +2305,7 @@
         "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nVidu interface officielle de génération vidéo ; le chemin public suit le protocole officiel Vidu.\n\nModèle public actuel : `viduq3-turbo`. Prend en charge la génération vidéo à partir de texte, d’image, d’images de début et de fin, ainsi que de références. Le même modèle prend également en charge l’intégration au format compatible Sora via `/v1/videos` ; les `mode` courants sont `t2v`, `i2v`, `i2v_first_last` et `reference_images`.\n\nComplète le squelette de requête publique, la structure de requête de tâche et le modèle de validation recommandé du format officiel de génération vidéo Vidu ; le chemin public conserve le format de point de terminaison officiel Vidu.\n\nModèles pris en charge :\nviduq3-turbo\n\nChamps de requête unifiés :\n- `model` (string, requis) : nom de modèle externe Vidu, actuellement public `viduq3-turbo`.\n- `prompt` (string, facultatif) : prompt de génération vidéo ; obligatoire pour le texte vers vidéo, à fournir selon les besoins métier pour image vers vidéo, images de début/fin et vidéo de référence.\n- `images` (array[string], facultatif) : entrées d’image. 1 image pour image vers vidéo, 2 images pour les images de début et de fin, 1 à 7 images pour la vidéo de référence.\n- `videos` (array[string], facultatif) : entrée facultative de sujet vidéo pour la vidéo de référence, à utiliser selon les capacités officielles du modèle Vidu.\n- `subjects` (array[object], facultatif) : entrée au format de bibliothèque de sujets pour la vidéo de référence, pouvant inclure des champs tels que le nom du sujet, des images, des vidéos ou le timbre vocal.\n- `duration` (integer, facultatif) : durée de la vidéo, en secondes. `viduq3-turbo` utilise couramment 5 secondes ; peut être définie selon la plage officielle.\n- `resolution` (string, facultatif) : résolution de sortie, valeurs courantes `540p`, `720p` et `1080p`.\n- `aspect_ratio` (string, facultatif) : format d’image de sortie, couramment utilisé pour le texte vers vidéo et la vidéo de référence, par exemple `16:9`, `9:16` et `1:1`.\n- `seed` (integer, facultatif) : graine aléatoire.\n- `movement_amplitude` (string, facultatif) : amplitude du mouvement, valeurs courantes `auto`, `small`, `medium` et `large`.\n- `audio` (boolean, facultatif) : activer ou non la sortie directe audio et vidéo.\n- `off_peak` (boolean, facultatif) : utiliser ou non la génération décalée.\n- `watermark` (boolean, facultatif) : indiquer s’il faut ajouter un filigrane.\n\nDifférences courantes entre modèles/modes :\n- `Vidu 文生视频` : modèle pris en charge viduq3-turbo ; texte vers vidéo au format officiel.\n- `Vidu 图生视频` : modèle pris en charge viduq3-turbo ; image unique vers vidéo au format officiel.\n- `Vidu 首尾帧生视频` : modèle pris en charge viduq3-turbo ; deux images de début et de fin vers vidéo au format officiel.\n- `Vidu 参考生视频` : modèle pris en charge viduq3-turbo ; vidéo à partir de plusieurs images de référence au format officiel.",
         "operationId": "createViduTextVideo",
         "tags": [
-          "Génération vidéoVidu officielle"
+          "Génération vidéo Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -2617,7 +2617,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-de-textevidu"
+          "href": "/api-reference/fr/génération-vidéo-vidu/créer-une-vidéo-à-partir-de-textevidu"
         }
       }
     },
@@ -2627,7 +2627,7 @@
         "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nVidu interface officielle de génération vidéo ; le chemin public suit le protocole officiel Vidu.\n\nModèle public actuel : `viduq3-turbo`. Prend en charge la génération vidéo à partir de texte, d’image, d’images de début et de fin, ainsi que de références. Le même modèle prend également en charge l’intégration au format compatible Sora via `/v1/videos` ; les `mode` courants sont `t2v`, `i2v`, `i2v_first_last` et `reference_images`.\n\nComplète le squelette de requête publique, la structure de requête de tâche et le modèle de validation recommandé du format officiel de génération vidéo Vidu ; le chemin public conserve le format de point de terminaison officiel Vidu.\n\nModèles pris en charge :\nviduq3-turbo\n\nChamps de requête unifiés :\n- `model` (string, requis) : nom de modèle externe Vidu, actuellement public `viduq3-turbo`.\n- `prompt` (string, facultatif) : prompt de génération vidéo ; obligatoire pour le texte vers vidéo, à fournir selon les besoins métier pour image vers vidéo, images de début/fin et vidéo de référence.\n- `images` (array[string], facultatif) : entrées d’image. 1 image pour image vers vidéo, 2 images pour les images de début et de fin, 1 à 7 images pour la vidéo de référence.\n- `videos` (array[string], facultatif) : entrée facultative de sujet vidéo pour la vidéo de référence, à utiliser selon les capacités officielles du modèle Vidu.\n- `subjects` (array[object], facultatif) : entrée au format de bibliothèque de sujets pour la vidéo de référence, pouvant inclure des champs tels que le nom du sujet, des images, des vidéos ou le timbre vocal.\n- `duration` (integer, facultatif) : durée de la vidéo, en secondes. `viduq3-turbo` utilise couramment 5 secondes ; peut être définie selon la plage officielle.\n- `resolution` (string, facultatif) : résolution de sortie, valeurs courantes `540p`, `720p` et `1080p`.\n- `aspect_ratio` (string, facultatif) : format d’image de sortie, couramment utilisé pour le texte vers vidéo et la vidéo de référence, par exemple `16:9`, `9:16` et `1:1`.\n- `seed` (integer, facultatif) : graine aléatoire.\n- `movement_amplitude` (string, facultatif) : amplitude du mouvement, valeurs courantes `auto`, `small`, `medium` et `large`.\n- `audio` (boolean, facultatif) : activer ou non la sortie directe audio et vidéo.\n- `off_peak` (boolean, facultatif) : utiliser ou non la génération décalée.\n- `watermark` (boolean, facultatif) : indiquer s’il faut ajouter un filigrane.\n\nDifférences courantes entre modèles/modes :\n- `Vidu 文生视频` : modèle pris en charge viduq3-turbo ; texte vers vidéo au format officiel.\n- `Vidu 图生视频` : modèle pris en charge viduq3-turbo ; image unique vers vidéo au format officiel.\n- `Vidu 首尾帧生视频` : modèle pris en charge viduq3-turbo ; deux images de début et de fin vers vidéo au format officiel.\n- `Vidu 参考生视频` : modèle pris en charge viduq3-turbo ; vidéo à partir de plusieurs images de référence au format officiel.",
         "operationId": "createViduImageVideo",
         "tags": [
-          "Génération vidéoVidu officielle"
+          "Génération vidéo Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -2941,7 +2941,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-d’une-imagevidu"
+          "href": "/api-reference/fr/génération-vidéo-vidu/créer-une-vidéo-à-partir-d’une-imagevidu"
         }
       }
     },
@@ -2951,7 +2951,7 @@
         "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nVidu interface officielle de génération vidéo ; le chemin public suit le protocole officiel Vidu.\n\nModèle public actuel : `viduq3-turbo`. Prend en charge la génération vidéo à partir de texte, d’image, d’images de début et de fin, ainsi que de références. Le même modèle prend également en charge l’intégration au format compatible Sora via `/v1/videos` ; les `mode` courants sont `t2v`, `i2v`, `i2v_first_last` et `reference_images`.\n\nComplète le squelette de requête publique, la structure de requête de tâche et le modèle de validation recommandé du format officiel de génération vidéo Vidu ; le chemin public conserve le format de point de terminaison officiel Vidu.\n\nModèles pris en charge :\nviduq3-turbo\n\nChamps de requête unifiés :\n- `model` (string, requis) : nom de modèle externe Vidu, actuellement public `viduq3-turbo`.\n- `prompt` (string, facultatif) : prompt de génération vidéo ; obligatoire pour le texte vers vidéo, à fournir selon les besoins métier pour image vers vidéo, images de début/fin et vidéo de référence.\n- `images` (array[string], facultatif) : entrées d’image. 1 image pour image vers vidéo, 2 images pour les images de début et de fin, 1 à 7 images pour la vidéo de référence.\n- `videos` (array[string], facultatif) : entrée facultative de sujet vidéo pour la vidéo de référence, à utiliser selon les capacités officielles du modèle Vidu.\n- `subjects` (array[object], facultatif) : entrée au format de bibliothèque de sujets pour la vidéo de référence, pouvant inclure des champs tels que le nom du sujet, des images, des vidéos ou le timbre vocal.\n- `duration` (integer, facultatif) : durée de la vidéo, en secondes. `viduq3-turbo` utilise couramment 5 secondes ; peut être définie selon la plage officielle.\n- `resolution` (string, facultatif) : résolution de sortie, valeurs courantes `540p`, `720p` et `1080p`.\n- `aspect_ratio` (string, facultatif) : format d’image de sortie, couramment utilisé pour le texte vers vidéo et la vidéo de référence, par exemple `16:9`, `9:16` et `1:1`.\n- `seed` (integer, facultatif) : graine aléatoire.\n- `movement_amplitude` (string, facultatif) : amplitude du mouvement, valeurs courantes `auto`, `small`, `medium` et `large`.\n- `audio` (boolean, facultatif) : activer ou non la sortie directe audio et vidéo.\n- `off_peak` (boolean, facultatif) : utiliser ou non la génération décalée.\n- `watermark` (boolean, facultatif) : indiquer s’il faut ajouter un filigrane.\n\nDifférences courantes entre modèles/modes :\n- `Vidu 文生视频` : modèle pris en charge viduq3-turbo ; texte vers vidéo au format officiel.\n- `Vidu 图生视频` : modèle pris en charge viduq3-turbo ; image unique vers vidéo au format officiel.\n- `Vidu 首尾帧生视频` : modèle pris en charge viduq3-turbo ; deux images de début et de fin vers vidéo au format officiel.\n- `Vidu 参考生视频` : modèle pris en charge viduq3-turbo ; vidéo à partir de plusieurs images de référence au format officiel.",
         "operationId": "createViduStartEndVideo",
         "tags": [
-          "Génération vidéoVidu officielle"
+          "Génération vidéo Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -3265,7 +3265,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-d’images-de-début-et-de-fin-vidu"
+          "href": "/api-reference/fr/génération-vidéo-vidu/créer-une-vidéo-à-partir-d’images-de-début-et-de-fin-vidu"
         }
       }
     },
@@ -3275,7 +3275,7 @@
         "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nVidu interface officielle de génération vidéo ; le chemin public suit le protocole officiel Vidu.\n\nModèle public actuel : `viduq3-turbo`. Prend en charge la génération vidéo à partir de texte, d’image, d’images de début et de fin, ainsi que de références. Le même modèle prend également en charge l’intégration au format compatible Sora via `/v1/videos` ; les `mode` courants sont `t2v`, `i2v`, `i2v_first_last` et `reference_images`.\n\nComplète le squelette de requête publique, la structure de requête de tâche et le modèle de validation recommandé du format officiel de génération vidéo Vidu ; le chemin public conserve le format de point de terminaison officiel Vidu.\n\nModèles pris en charge :\nviduq3-turbo\n\nChamps de requête unifiés :\n- `model` (string, requis) : nom de modèle externe Vidu, actuellement public `viduq3-turbo`.\n- `prompt` (string, facultatif) : prompt de génération vidéo ; obligatoire pour le texte vers vidéo, à fournir selon les besoins métier pour image vers vidéo, images de début/fin et vidéo de référence.\n- `images` (array[string], facultatif) : entrées d’image. 1 image pour image vers vidéo, 2 images pour les images de début et de fin, 1 à 7 images pour la vidéo de référence.\n- `videos` (array[string], facultatif) : entrée facultative de sujet vidéo pour la vidéo de référence, à utiliser selon les capacités officielles du modèle Vidu.\n- `subjects` (array[object], facultatif) : entrée au format de bibliothèque de sujets pour la vidéo de référence, pouvant inclure des champs tels que le nom du sujet, des images, des vidéos ou le timbre vocal.\n- `duration` (integer, facultatif) : durée de la vidéo, en secondes. `viduq3-turbo` utilise couramment 5 secondes ; peut être définie selon la plage officielle.\n- `resolution` (string, facultatif) : résolution de sortie, valeurs courantes `540p`, `720p` et `1080p`.\n- `aspect_ratio` (string, facultatif) : format d’image de sortie, couramment utilisé pour le texte vers vidéo et la vidéo de référence, par exemple `16:9`, `9:16` et `1:1`.\n- `seed` (integer, facultatif) : graine aléatoire.\n- `movement_amplitude` (string, facultatif) : amplitude du mouvement, valeurs courantes `auto`, `small`, `medium` et `large`.\n- `audio` (boolean, facultatif) : activer ou non la sortie directe audio et vidéo.\n- `off_peak` (boolean, facultatif) : utiliser ou non la génération décalée.\n- `watermark` (boolean, facultatif) : indiquer s’il faut ajouter un filigrane.\n\nDifférences courantes entre modèles/modes :\n- `Vidu 文生视频` : modèle pris en charge viduq3-turbo ; texte vers vidéo au format officiel.\n- `Vidu 图生视频` : modèle pris en charge viduq3-turbo ; image unique vers vidéo au format officiel.\n- `Vidu 首尾帧生视频` : modèle pris en charge viduq3-turbo ; deux images de début et de fin vers vidéo au format officiel.\n- `Vidu 参考生视频` : modèle pris en charge viduq3-turbo ; vidéo à partir de plusieurs images de référence au format officiel.",
         "operationId": "createViduReferenceVideo",
         "tags": [
-          "Génération vidéoVidu officielle"
+          "Génération vidéo Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -3588,7 +3588,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-de-référence-généréevidu"
+          "href": "/api-reference/fr/génération-vidéo-vidu/créer-une-vidéo-de-référence-généréevidu"
         }
       }
     },
@@ -3598,7 +3598,7 @@
         "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nVidu interface officielle de génération vidéo ; le chemin public suit le protocole officiel Vidu.\n\nModèle public actuel : `viduq3-turbo`. Prend en charge la génération vidéo à partir de texte, d’image, d’images de début et de fin, ainsi que de références. Le même modèle prend également en charge l’intégration au format compatible Sora via `/v1/videos` ; les `mode` courants sont `t2v`, `i2v`, `i2v_first_last` et `reference_images`.\n\nComplète le squelette de requête publique, la structure de requête de tâche et le modèle de validation recommandé du format officiel de génération vidéo Vidu ; le chemin public conserve le format de point de terminaison officiel Vidu.\n\nModèles pris en charge :\nviduq3-turbo\n\nChamps de requête unifiés :\n- `model` (string, requis) : nom de modèle externe Vidu, actuellement public `viduq3-turbo`.\n- `prompt` (string, facultatif) : prompt de génération vidéo ; obligatoire pour le texte vers vidéo, à fournir selon les besoins métier pour image vers vidéo, images de début/fin et vidéo de référence.\n- `images` (array[string], facultatif) : entrées d’image. 1 image pour image vers vidéo, 2 images pour les images de début et de fin, 1 à 7 images pour la vidéo de référence.\n- `videos` (array[string], facultatif) : entrée facultative de sujet vidéo pour la vidéo de référence, à utiliser selon les capacités officielles du modèle Vidu.\n- `subjects` (array[object], facultatif) : entrée au format de bibliothèque de sujets pour la vidéo de référence, pouvant inclure des champs tels que le nom du sujet, des images, des vidéos ou le timbre vocal.\n- `duration` (integer, facultatif) : durée de la vidéo, en secondes. `viduq3-turbo` utilise couramment 5 secondes ; peut être définie selon la plage officielle.\n- `resolution` (string, facultatif) : résolution de sortie, valeurs courantes `540p`, `720p` et `1080p`.\n- `aspect_ratio` (string, facultatif) : format d’image de sortie, couramment utilisé pour le texte vers vidéo et la vidéo de référence, par exemple `16:9`, `9:16` et `1:1`.\n- `seed` (integer, facultatif) : graine aléatoire.\n- `movement_amplitude` (string, facultatif) : amplitude du mouvement, valeurs courantes `auto`, `small`, `medium` et `large`.\n- `audio` (boolean, facultatif) : activer ou non la sortie directe audio et vidéo.\n- `off_peak` (boolean, facultatif) : utiliser ou non la génération décalée.\n- `watermark` (boolean, facultatif) : indiquer s’il faut ajouter un filigrane.\n\nDifférences courantes entre modèles/modes :\n- `Vidu 文生视频` : modèle pris en charge viduq3-turbo ; texte vers vidéo au format officiel.\n- `Vidu 图生视频` : modèle pris en charge viduq3-turbo ; image unique vers vidéo au format officiel.\n- `Vidu 首尾帧生视频` : modèle pris en charge viduq3-turbo ; deux images de début et de fin vers vidéo au format officiel.\n- `Vidu 参考生视频` : modèle pris en charge viduq3-turbo ; vidéo à partir de plusieurs images de référence au format officiel.",
         "operationId": "queryViduTaskCreations",
         "tags": [
-          "Génération vidéoVidu officielle"
+          "Génération vidéo Vidu"
         ],
         "parameters": [
           {
@@ -3686,7 +3686,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/fr/génération-vidéovidu-officielle/interroger-la-tâchevidu"
+          "href": "/api-reference/fr/génération-vidéo-vidu/interroger-la-tâchevidu"
         }
       }
     },
@@ -3696,7 +3696,7 @@
         "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nUtilisé pour créer des tâches de génération vidéo et interroger leur statut et leurs résultats via l'ID de tâche.\n\nChamps principaux pour la création de tâche :\n- `model` : Obligatoire, nom du modèle.\n- `prompt` : Obligatoire, description principale pour la génération vidéo.\n- `content` : facultatif, tableau content de Volcano Ark, pour mélanger du texte, des images, des vidéos et des fichiers audio.\n- `function_mode` : Optionnel, couramment utilisé pour les modes avancés tels que la référence omnipotente.\n\nParamètres d'entrée compatibles :\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nDétails d'appel :\n- Pour `mode=reference_material` ou `function_mode=omni_reference`, il est recommandé de transmettre le texte et les éléments de référence via `content`.\n- Les éléments texte de `content` s’écrivent sous la forme `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- Les éléments d’images, de vidéos et d’audio de `content` utilisent respectivement les écritures d’objet `image_url`, `video_url` et `audio_url`, par exemple `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` peut identifier l’usage du média, et `name` peut être référencé par son nom dans le prompt.\n- `ratio`, `duration`, `resolution` et `fps` affectent la configuration de génération finale.\n\nAppel Gemini Omni :\n- `gemini-omni` peut aussi être appelé via cette interface de tâche Seedance.\n- `mode=t2v` est utilisé pour la génération de vidéo à partir de texte, `mode=r2v` pour la génération à partir d’images/de médias de référence, et `mode=edit` pour l’édition vidéo.\n- Le texte peut être placé dans l’élément `text` de `prompt` ou `content` ; les images peuvent être placées dans `image_url / image_urls / reference_images / input_reference / content` ; les vidéos peuvent être placées dans `video_urls / content`.\n- Le champ de durée peut utiliser `duration` ou `seconds` ; il sera automatiquement aligné sur les paliers de 4 / 6 / 8 / 10 secondes.\n\nChamps importants des résultats de requête :\n- `items[].status`\n- `items[].content.video_url` ou `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "Génération vidéoSeedanceVolcano Ark"
+          "Génération vidéo Seedance"
         ],
         "requestBody": {
           "required": true,
@@ -4094,7 +4094,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/fr/génération-vidéoseedancevolcano-ark/créer-une-vidéo（seedance）"
+          "href": "/api-reference/fr/génération-vidéo-seedance/créer-une-vidéo（seedance）"
         }
       }
     },
@@ -4104,7 +4104,7 @@
         "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nUtilisé pour créer des tâches de génération vidéo et interroger leur statut et leurs résultats via l'ID de tâche.\n\nChamps principaux pour la création de tâche :\n- `model` : Obligatoire, nom du modèle.\n- `prompt` : Obligatoire, description principale pour la génération vidéo.\n- `content` : facultatif, tableau content de Volcano Ark, pour mélanger du texte, des images, des vidéos et des fichiers audio.\n- `function_mode` : Optionnel, couramment utilisé pour les modes avancés tels que la référence omnipotente.\n\nParamètres d'entrée compatibles :\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nDétails d'appel :\n- Pour `mode=reference_material` ou `function_mode=omni_reference`, il est recommandé de transmettre le texte et les éléments de référence via `content`.\n- Les éléments texte de `content` s’écrivent sous la forme `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- Les éléments d’images, de vidéos et d’audio de `content` utilisent respectivement les écritures d’objet `image_url`, `video_url` et `audio_url`, par exemple `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` peut identifier l’usage du média, et `name` peut être référencé par son nom dans le prompt.\n- `ratio`, `duration`, `resolution` et `fps` affectent la configuration de génération finale.\n\nAppel Gemini Omni :\n- `gemini-omni` peut aussi être appelé via cette interface de tâche Seedance.\n- `mode=t2v` est utilisé pour la génération de vidéo à partir de texte, `mode=r2v` pour la génération à partir d’images/de médias de référence, et `mode=edit` pour l’édition vidéo.\n- Le texte peut être placé dans l’élément `text` de `prompt` ou `content` ; les images peuvent être placées dans `image_url / image_urls / reference_images / input_reference / content` ; les vidéos peuvent être placées dans `video_urls / content`.\n- Le champ de durée peut utiliser `duration` ou `seconds` ; il sera automatiquement aligné sur les paliers de 4 / 6 / 8 / 10 secondes.\n\nChamps importants des résultats de requête :\n- `items[].status`\n- `items[].content.video_url` ou `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "Génération vidéoSeedanceVolcano Ark"
+          "Génération vidéo Seedance"
         ],
         "parameters": [
           {
@@ -4232,7 +4232,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/fr/génération-vidéoseedancevolcano-ark/interroger-une-tâche-seedance"
+          "href": "/api-reference/fr/génération-vidéo-seedance/interroger-une-tâche-seedance"
         }
       }
     },
@@ -6812,13 +6812,13 @@
       "name": "Format Omni de génération vidéo et Veo"
     },
     {
-      "name": "Génération vidéoSeedanceVolcano Ark"
+      "name": "Génération vidéo Seedance"
     },
     {
       "name": "Formats compatibles avec la génération de vidéosSora"
     },
     {
-      "name": "Génération vidéoVidu officielle"
+      "name": "Génération vidéo Vidu"
     }
   ],
   "x-doc-drift-summary": {

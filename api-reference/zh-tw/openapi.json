@@ -2305,7 +2305,7 @@
         "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nVidu 官方影片生成介面，公開路徑遵循 Vidu 官方協議。\n\n目前公開模型：`viduq3-turbo`。支援文生影片、圖生影片、首尾幀生影片、參考生影片。同一模型也支援透過 `/v1/videos` Sora 相容格式接入，常用 `mode` 為 `t2v`、`i2v`、`i2v_first_last`、`reference_images`。\n\n補充 Vidu 官方影片生成格式的公開請求骨架、任務查詢結構和推薦驗證模板，公開路徑保持 Vidu 官方端點格式。\n\n支援模型：\nviduq3-turbo\n\n統一請求欄位：\n- `model` (string, 必填): Vidu 對外模型名，目前公開 `viduq3-turbo`。\n- `prompt` (string, 可選): 影片生成提示詞；文生影片必填，圖生/首尾幀/參考生影片按業務需要傳。\n- `images` (array[string], 可選): 圖片輸入。圖生影片 1 張，首尾幀 2 張，參考生影片 1~7 張。\n- `videos` (array[string], 可選): 參考生影片可選影片主體輸入，按 Vidu 官方模型能力使用。\n- `subjects` (array[object], 可選): 參考生影片主體庫格式輸入，可包含主體名稱、圖片、影片或音色等欄位。\n- `duration` (integer, 可選): 影片時長，單位秒。`viduq3-turbo` 常用 5 秒，可按官方範圍設定。\n- `resolution` (string, 可選): 輸出解析度，常見值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可選): 輸出寬高比，文生/參考生影片常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可選): 隨機種子。\n- `movement_amplitude` (string, 可選): 運動幅度，常見值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可選): 是否開啟音影片直出。\n- `off_peak` (boolean, 可選): 是否使用錯峰生成。\n- `watermark` (boolean, 可選): 是否新增浮水印。\n\n常見模型／模式差異：\n- `Vidu 文生视频`: 支援模型 viduq3-turbo；官方格式文生影片。\n- `Vidu 图生视频`: 支援模型 viduq3-turbo；官方格式單圖圖生影片。\n- `Vidu 首尾帧生视频`: 支援模型 viduq3-turbo；官方格式首尾幀雙圖生影片。\n- `Vidu 参考生视频`: 支援模型 viduq3-turbo；官方格式多參考圖生影片。",
         "operationId": "createViduTextVideo",
         "tags": [
-          "影片生成Vidu官方"
+          "影片生成 Vidu 格式"
         ],
         "requestBody": {
           "required": true,
@@ -2617,7 +2617,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成vidu官方/建立文生影片vidu"
+          "href": "/api-reference/zh-tw/影片生成-vidu-格式/建立文生影片vidu"
         }
       }
     },
@@ -2627,7 +2627,7 @@
         "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nVidu 官方影片生成介面，公開路徑遵循 Vidu 官方協議。\n\n目前公開模型：`viduq3-turbo`。支援文生影片、圖生影片、首尾幀生影片、參考生影片。同一模型也支援透過 `/v1/videos` Sora 相容格式接入，常用 `mode` 為 `t2v`、`i2v`、`i2v_first_last`、`reference_images`。\n\n補充 Vidu 官方影片生成格式的公開請求骨架、任務查詢結構和推薦驗證模板，公開路徑保持 Vidu 官方端點格式。\n\n支援模型：\nviduq3-turbo\n\n統一請求欄位：\n- `model` (string, 必填): Vidu 對外模型名，目前公開 `viduq3-turbo`。\n- `prompt` (string, 可選): 影片生成提示詞；文生影片必填，圖生/首尾幀/參考生影片按業務需要傳。\n- `images` (array[string], 可選): 圖片輸入。圖生影片 1 張，首尾幀 2 張，參考生影片 1~7 張。\n- `videos` (array[string], 可選): 參考生影片可選影片主體輸入，按 Vidu 官方模型能力使用。\n- `subjects` (array[object], 可選): 參考生影片主體庫格式輸入，可包含主體名稱、圖片、影片或音色等欄位。\n- `duration` (integer, 可選): 影片時長，單位秒。`viduq3-turbo` 常用 5 秒，可按官方範圍設定。\n- `resolution` (string, 可選): 輸出解析度，常見值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可選): 輸出寬高比，文生/參考生影片常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可選): 隨機種子。\n- `movement_amplitude` (string, 可選): 運動幅度，常見值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可選): 是否開啟音影片直出。\n- `off_peak` (boolean, 可選): 是否使用錯峰生成。\n- `watermark` (boolean, 可選): 是否新增浮水印。\n\n常見模型／模式差異：\n- `Vidu 文生视频`: 支援模型 viduq3-turbo；官方格式文生影片。\n- `Vidu 图生视频`: 支援模型 viduq3-turbo；官方格式單圖圖生影片。\n- `Vidu 首尾帧生视频`: 支援模型 viduq3-turbo；官方格式首尾幀雙圖生影片。\n- `Vidu 参考生视频`: 支援模型 viduq3-turbo；官方格式多參考圖生影片。",
         "operationId": "createViduImageVideo",
         "tags": [
-          "影片生成Vidu官方"
+          "影片生成 Vidu 格式"
         ],
         "requestBody": {
           "required": true,
@@ -2941,7 +2941,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成vidu官方/建立圖生影片vidu"
+          "href": "/api-reference/zh-tw/影片生成-vidu-格式/建立圖生影片vidu"
         }
       }
     },
@@ -2951,7 +2951,7 @@
         "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nVidu 官方影片生成介面，公開路徑遵循 Vidu 官方協議。\n\n目前公開模型：`viduq3-turbo`。支援文生影片、圖生影片、首尾幀生影片、參考生影片。同一模型也支援透過 `/v1/videos` Sora 相容格式接入，常用 `mode` 為 `t2v`、`i2v`、`i2v_first_last`、`reference_images`。\n\n補充 Vidu 官方影片生成格式的公開請求骨架、任務查詢結構和推薦驗證模板，公開路徑保持 Vidu 官方端點格式。\n\n支援模型：\nviduq3-turbo\n\n統一請求欄位：\n- `model` (string, 必填): Vidu 對外模型名，目前公開 `viduq3-turbo`。\n- `prompt` (string, 可選): 影片生成提示詞；文生影片必填，圖生/首尾幀/參考生影片按業務需要傳。\n- `images` (array[string], 可選): 圖片輸入。圖生影片 1 張，首尾幀 2 張，參考生影片 1~7 張。\n- `videos` (array[string], 可選): 參考生影片可選影片主體輸入，按 Vidu 官方模型能力使用。\n- `subjects` (array[object], 可選): 參考生影片主體庫格式輸入，可包含主體名稱、圖片、影片或音色等欄位。\n- `duration` (integer, 可選): 影片時長，單位秒。`viduq3-turbo` 常用 5 秒，可按官方範圍設定。\n- `resolution` (string, 可選): 輸出解析度，常見值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可選): 輸出寬高比，文生/參考生影片常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可選): 隨機種子。\n- `movement_amplitude` (string, 可選): 運動幅度，常見值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可選): 是否開啟音影片直出。\n- `off_peak` (boolean, 可選): 是否使用錯峰生成。\n- `watermark` (boolean, 可選): 是否新增浮水印。\n\n常見模型／模式差異：\n- `Vidu 文生视频`: 支援模型 viduq3-turbo；官方格式文生影片。\n- `Vidu 图生视频`: 支援模型 viduq3-turbo；官方格式單圖圖生影片。\n- `Vidu 首尾帧生视频`: 支援模型 viduq3-turbo；官方格式首尾幀雙圖生影片。\n- `Vidu 参考生视频`: 支援模型 viduq3-turbo；官方格式多參考圖生影片。",
         "operationId": "createViduStartEndVideo",
         "tags": [
-          "影片生成Vidu官方"
+          "影片生成 Vidu 格式"
         ],
         "requestBody": {
           "required": true,
@@ -3265,7 +3265,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成vidu官方/建立首尾幀影片vidu"
+          "href": "/api-reference/zh-tw/影片生成-vidu-格式/建立首尾幀影片vidu"
         }
       }
     },
@@ -3275,7 +3275,7 @@
         "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nVidu 官方影片生成介面，公開路徑遵循 Vidu 官方協議。\n\n目前公開模型：`viduq3-turbo`。支援文生影片、圖生影片、首尾幀生影片、參考生影片。同一模型也支援透過 `/v1/videos` Sora 相容格式接入，常用 `mode` 為 `t2v`、`i2v`、`i2v_first_last`、`reference_images`。\n\n補充 Vidu 官方影片生成格式的公開請求骨架、任務查詢結構和推薦驗證模板，公開路徑保持 Vidu 官方端點格式。\n\n支援模型：\nviduq3-turbo\n\n統一請求欄位：\n- `model` (string, 必填): Vidu 對外模型名，目前公開 `viduq3-turbo`。\n- `prompt` (string, 可選): 影片生成提示詞；文生影片必填，圖生/首尾幀/參考生影片按業務需要傳。\n- `images` (array[string], 可選): 圖片輸入。圖生影片 1 張，首尾幀 2 張，參考生影片 1~7 張。\n- `videos` (array[string], 可選): 參考生影片可選影片主體輸入，按 Vidu 官方模型能力使用。\n- `subjects` (array[object], 可選): 參考生影片主體庫格式輸入，可包含主體名稱、圖片、影片或音色等欄位。\n- `duration` (integer, 可選): 影片時長，單位秒。`viduq3-turbo` 常用 5 秒，可按官方範圍設定。\n- `resolution` (string, 可選): 輸出解析度，常見值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可選): 輸出寬高比，文生/參考生影片常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可選): 隨機種子。\n- `movement_amplitude` (string, 可選): 運動幅度，常見值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可選): 是否開啟音影片直出。\n- `off_peak` (boolean, 可選): 是否使用錯峰生成。\n- `watermark` (boolean, 可選): 是否新增浮水印。\n\n常見模型／模式差異：\n- `Vidu 文生视频`: 支援模型 viduq3-turbo；官方格式文生影片。\n- `Vidu 图生视频`: 支援模型 viduq3-turbo；官方格式單圖圖生影片。\n- `Vidu 首尾帧生视频`: 支援模型 viduq3-turbo；官方格式首尾幀雙圖生影片。\n- `Vidu 参考生视频`: 支援模型 viduq3-turbo；官方格式多參考圖生影片。",
         "operationId": "createViduReferenceVideo",
         "tags": [
-          "影片生成Vidu官方"
+          "影片生成 Vidu 格式"
         ],
         "requestBody": {
           "required": true,
@@ -3588,7 +3588,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成vidu官方/建立參考生視頻vidu"
+          "href": "/api-reference/zh-tw/影片生成-vidu-格式/建立參考生視頻vidu"
         }
       }
     },
@@ -3598,7 +3598,7 @@
         "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nVidu 官方影片生成介面，公開路徑遵循 Vidu 官方協議。\n\n目前公開模型：`viduq3-turbo`。支援文生影片、圖生影片、首尾幀生影片、參考生影片。同一模型也支援透過 `/v1/videos` Sora 相容格式接入，常用 `mode` 為 `t2v`、`i2v`、`i2v_first_last`、`reference_images`。\n\n補充 Vidu 官方影片生成格式的公開請求骨架、任務查詢結構和推薦驗證模板，公開路徑保持 Vidu 官方端點格式。\n\n支援模型：\nviduq3-turbo\n\n統一請求欄位：\n- `model` (string, 必填): Vidu 對外模型名，目前公開 `viduq3-turbo`。\n- `prompt` (string, 可選): 影片生成提示詞；文生影片必填，圖生/首尾幀/參考生影片按業務需要傳。\n- `images` (array[string], 可選): 圖片輸入。圖生影片 1 張，首尾幀 2 張，參考生影片 1~7 張。\n- `videos` (array[string], 可選): 參考生影片可選影片主體輸入，按 Vidu 官方模型能力使用。\n- `subjects` (array[object], 可選): 參考生影片主體庫格式輸入，可包含主體名稱、圖片、影片或音色等欄位。\n- `duration` (integer, 可選): 影片時長，單位秒。`viduq3-turbo` 常用 5 秒，可按官方範圍設定。\n- `resolution` (string, 可選): 輸出解析度，常見值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可選): 輸出寬高比，文生/參考生影片常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可選): 隨機種子。\n- `movement_amplitude` (string, 可選): 運動幅度，常見值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可選): 是否開啟音影片直出。\n- `off_peak` (boolean, 可選): 是否使用錯峰生成。\n- `watermark` (boolean, 可選): 是否新增浮水印。\n\n常見模型／模式差異：\n- `Vidu 文生视频`: 支援模型 viduq3-turbo；官方格式文生影片。\n- `Vidu 图生视频`: 支援模型 viduq3-turbo；官方格式單圖圖生影片。\n- `Vidu 首尾帧生视频`: 支援模型 viduq3-turbo；官方格式首尾幀雙圖生影片。\n- `Vidu 参考生视频`: 支援模型 viduq3-turbo；官方格式多參考圖生影片。",
         "operationId": "queryViduTaskCreations",
         "tags": [
-          "影片生成Vidu官方"
+          "影片生成 Vidu 格式"
         ],
         "parameters": [
           {
@@ -3686,7 +3686,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成vidu官方/查詢任務vidu"
+          "href": "/api-reference/zh-tw/影片生成-vidu-格式/查詢任務vidu"
         }
       }
     },
@@ -3696,7 +3696,7 @@
         "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n用於建立影片生成任務，並透過任務 ID 查詢狀態與結果。\n\n建立任務核心欄位：\n- `model`：必填，模型名稱。\n- `prompt`：必填，影片生成主描述。\n- `content`：選填，火山方舟 content 陣列，可混排文字、圖片、影片、音訊素材。\n- `function_mode`：選填，常用於全能參考等進階模式。\n\n相容入參：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼叫細節：\n- 當 `mode=reference_material` 或 `function_mode=omni_reference` 時，建議透過 `content` 傳遞文字與參考素材。\n- `content` 文字項寫法為 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 圖片、影片、音訊素材項分別使用 `image_url`、`video_url`、`audio_url` 物件寫法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可標示素材用途，`name` 可供提示詞中依名稱引用。\n- `ratio`、`duration`、`resolution`、`fps` 會影響最終生成配置。\n\nGemini Omni 呼叫：\n- `gemini-omni` 也可透過本 Seedance 任務介面呼叫。\n- `mode=t2v` 用於文生影片，`mode=r2v` 用於參考圖/參考素材生成，`mode=edit` 用於影片編輯。\n- 文字可放在 `prompt` 或 `content` 的 `text` 項；圖片可放在 `image_url / image_urls / reference_images / input_reference / content`；影片可放在 `video_urls / content`。\n- 時長欄位可用 `duration` 或 `seconds`，會自動匹配到 4 / 6 / 8 / 10 秒檔。\n\n查詢結果關注欄位：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "影片生成Seedance火山方舟"
+          "影片生成 Seedance 格式"
         ],
         "requestBody": {
           "required": true,
@@ -4094,7 +4094,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成seedance火山方舟/建立影片（seedance）"
+          "href": "/api-reference/zh-tw/影片生成-seedance-格式/建立影片（seedance）"
         }
       }
     },
@@ -4104,7 +4104,7 @@
         "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n用於建立影片生成任務，並透過任務 ID 查詢狀態與結果。\n\n建立任務核心欄位：\n- `model`：必填，模型名稱。\n- `prompt`：必填，影片生成主描述。\n- `content`：選填，火山方舟 content 陣列，可混排文字、圖片、影片、音訊素材。\n- `function_mode`：選填，常用於全能參考等進階模式。\n\n相容入參：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼叫細節：\n- 當 `mode=reference_material` 或 `function_mode=omni_reference` 時，建議透過 `content` 傳遞文字與參考素材。\n- `content` 文字項寫法為 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 圖片、影片、音訊素材項分別使用 `image_url`、`video_url`、`audio_url` 物件寫法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可標示素材用途，`name` 可供提示詞中依名稱引用。\n- `ratio`、`duration`、`resolution`、`fps` 會影響最終生成配置。\n\nGemini Omni 呼叫：\n- `gemini-omni` 也可透過本 Seedance 任務介面呼叫。\n- `mode=t2v` 用於文生影片，`mode=r2v` 用於參考圖/參考素材生成，`mode=edit` 用於影片編輯。\n- 文字可放在 `prompt` 或 `content` 的 `text` 項；圖片可放在 `image_url / image_urls / reference_images / input_reference / content`；影片可放在 `video_urls / content`。\n- 時長欄位可用 `duration` 或 `seconds`，會自動匹配到 4 / 6 / 8 / 10 秒檔。\n\n查詢結果關注欄位：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "影片生成Seedance火山方舟"
+          "影片生成 Seedance 格式"
         ],
         "parameters": [
           {
@@ -4232,7 +4232,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成seedance火山方舟/查詢任務（seedance）"
+          "href": "/api-reference/zh-tw/影片生成-seedance-格式/查詢任務（seedance）"
         }
       }
     },
@@ -6812,13 +6812,13 @@
       "name": "影片生成 Omni 與 Veo 格式"
     },
     {
-      "name": "影片生成Seedance火山方舟"
+      "name": "影片生成 Seedance 格式"
     },
     {
       "name": "影片生成Sora相容格式"
     },
     {
-      "name": "影片生成Vidu官方"
+      "name": "影片生成 Vidu 格式"
     }
   ],
   "x-doc-drift-summary": {

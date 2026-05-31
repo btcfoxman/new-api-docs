@@ -66,6 +66,13 @@
                 ]
               },
               {
+                "group": "Video generation HappyHorse",
+                "pages": [
+                  "api-reference/en/video-generation-happyhorse/create-videohappyhorse",
+                  "api-reference/en/video-generation-happyhorse/query-task-happyhorse"
+                ]
+              },
+              {
                 "group": "Video generation Kling format",
                 "pages": [
                   "api-reference/en/video-generation-kling-format/create-kling-image-to-video",
@@ -82,6 +89,13 @@
                 ]
               },
               {
+                "group": "Video generation Seedance",
+                "pages": [
+                  "api-reference/en/video-generation-seedance/create-video-seedance",
+                  "api-reference/en/video-generation-seedance/get-task-seedance"
+                ]
+              },
+              {
                 "group": "Video generation Sora compatible formats",
                 "pages": [
                   "api-reference/en/video-generation-sora-compatible-formats/create-video",
@@ -90,27 +104,13 @@
                 ]
               },
               {
-                "group": "Video generation Vidu official",
+                "group": "Video generation Vidu",
                 "pages": [
-                  "api-reference/en/video-generation-vidu-official/create-image-to-video-vidu",
-                  "api-reference/en/video-generation-vidu-official/create-reference-generated-videovidu",
-                  "api-reference/en/video-generation-vidu-official/create-a-start-and-end-frame-videovidu",
-                  "api-reference/en/video-generation-vidu-official/query-tasksvidu",
-                  "api-reference/en/video-generation-vidu-official/create-text-to-video-vidu"
-                ]
-              },
-              {
-                "group": "Video generationHappyHorseAlibaba",
-                "pages": [
-                  "api-reference/en/video-generationhappyhorsealibaba/create-videohappyhorse",
-                  "api-reference/en/video-generationhappyhorsealibaba/query-task-happyhorse"
-                ]
-              },
-              {
-                "group": "Video generationSeedanceVolcano Ark",
-                "pages": [
-                  "api-reference/en/video-generationseedancevolcano-ark/create-video-seedance",
-                  "api-reference/en/video-generationseedancevolcano-ark/get-task-seedance"
+                  "api-reference/en/video-generation-vidu/create-image-to-video-vidu",
+                  "api-reference/en/video-generation-vidu/create-reference-generated-videovidu",
+                  "api-reference/en/video-generation-vidu/create-a-start-and-end-frame-videovidu",
+                  "api-reference/en/video-generation-vidu/query-tasksvidu",
+                  "api-reference/en/video-generation-vidu/create-text-to-video-vidu"
                 ]
               }
             ]
@@ -250,10 +250,10 @@
                 ]
               },
               {
-                "group": "视频生成Seedance火山方舟",
+                "group": "视频生成Seedance格式",
                 "pages": [
-                  "api-reference/cn/视频生成seedance火山方舟/创建视频（seedance）",
-                  "api-reference/cn/视频生成seedance火山方舟/查询任务（seedance）"
+                  "api-reference/cn/视频生成seedance格式/创建视频（seedance）",
+                  "api-reference/cn/视频生成seedance格式/查询任务（seedance）"
                 ]
               },
               {
@@ -265,13 +265,13 @@
                 ]
               },
               {
-                "group": "视频生成Vidu官方",
+                "group": "视频生成Vidu格式",
                 "pages": [
-                  "api-reference/cn/视频生成vidu官方/创建图生视频vidu",
-                  "api-reference/cn/视频生成vidu官方/创建参考生视频vidu",
-                  "api-reference/cn/视频生成vidu官方/创建首尾帧视频vidu",
-                  "api-reference/cn/视频生成vidu官方/查询任务vidu",
-                  "api-reference/cn/视频生成vidu官方/创建文生视频vidu"
+                  "api-reference/cn/视频生成vidu格式/创建图生视频vidu",
+                  "api-reference/cn/视频生成vidu格式/创建参考生视频vidu",
+                  "api-reference/cn/视频生成vidu格式/创建首尾帧视频vidu",
+                  "api-reference/cn/视频生成vidu格式/查询任务vidu",
+                  "api-reference/cn/视频生成vidu格式/创建文生视频vidu"
                 ]
               }
             ]
@@ -388,6 +388,23 @@
                 ]
               },
               {
+                "group": "影片生成 Seedance 格式",
+                "pages": [
+                  "api-reference/zh-tw/影片生成-seedance-格式/建立影片（seedance）",
+                  "api-reference/zh-tw/影片生成-seedance-格式/查詢任務（seedance）"
+                ]
+              },
+              {
+                "group": "影片生成 Vidu 格式",
+                "pages": [
+                  "api-reference/zh-tw/影片生成-vidu-格式/建立圖生影片vidu",
+                  "api-reference/zh-tw/影片生成-vidu-格式/建立參考生視頻vidu",
+                  "api-reference/zh-tw/影片生成-vidu-格式/建立首尾幀影片vidu",
+                  "api-reference/zh-tw/影片生成-vidu-格式/查詢任務vidu",
+                  "api-reference/zh-tw/影片生成-vidu-格式/建立文生影片vidu"
+                ]
+              },
+              {
                 "group": "影片生成HappyHorse阿里",
                 "pages": [
                   "api-reference/zh-tw/影片生成happyhorse阿里/建立影片happyhorse",
@@ -404,28 +421,11 @@
                 ]
               },
               {
-                "group": "影片生成Seedance火山方舟",
-                "pages": [
-                  "api-reference/zh-tw/影片生成seedance火山方舟/建立影片（seedance）",
-                  "api-reference/zh-tw/影片生成seedance火山方舟/查詢任務（seedance）"
-                ]
-              },
-              {
                 "group": "影片生成Sora相容格式",
                 "pages": [
                   "api-reference/zh-tw/影片生成sora相容格式/建立影片",
                   "api-reference/zh-tw/影片生成sora相容格式/取得影片任務狀態",
                   "api-reference/zh-tw/影片生成sora相容格式/獲取影片內容"
-                ]
-              },
-              {
-                "group": "影片生成Vidu官方",
-                "pages": [
-                  "api-reference/zh-tw/影片生成vidu官方/建立圖生影片vidu",
-                  "api-reference/zh-tw/影片生成vidu官方/建立參考生視頻vidu",
-                  "api-reference/zh-tw/影片生成vidu官方/建立首尾幀影片vidu",
-                  "api-reference/zh-tw/影片生成vidu官方/查詢任務vidu",
-                  "api-reference/zh-tw/影片生成vidu官方/建立文生影片vidu"
                 ]
               },
               {
@@ -560,27 +560,27 @@
                 ]
               },
               {
+                "group": "Génération vidéo Seedance",
+                "pages": [
+                  "api-reference/fr/génération-vidéo-seedance/créer-une-vidéo（seedance）",
+                  "api-reference/fr/génération-vidéo-seedance/interroger-une-tâche-seedance"
+                ]
+              },
+              {
+                "group": "Génération vidéo Vidu",
+                "pages": [
+                  "api-reference/fr/génération-vidéo-vidu/créer-une-vidéo-à-partir-d’une-imagevidu",
+                  "api-reference/fr/génération-vidéo-vidu/créer-une-vidéo-de-référence-généréevidu",
+                  "api-reference/fr/génération-vidéo-vidu/créer-une-vidéo-à-partir-d’images-de-début-et-de-fin-vidu",
+                  "api-reference/fr/génération-vidéo-vidu/interroger-la-tâchevidu",
+                  "api-reference/fr/génération-vidéo-vidu/créer-une-vidéo-à-partir-de-textevidu"
+                ]
+              },
+              {
                 "group": "Génération vidéoHappyHorseAlibaba",
                 "pages": [
                   "api-reference/fr/génération-vidéohappyhorsealibaba/créer-une-vidéohappyhorse",
                   "api-reference/fr/génération-vidéohappyhorsealibaba/interroger-la-tâchehappyhorse"
-                ]
-              },
-              {
-                "group": "Génération vidéoSeedanceVolcano Ark",
-                "pages": [
-                  "api-reference/fr/génération-vidéoseedancevolcano-ark/créer-une-vidéo（seedance）",
-                  "api-reference/fr/génération-vidéoseedancevolcano-ark/interroger-une-tâche-seedance"
-                ]
-              },
-              {
-                "group": "Génération vidéoVidu officielle",
-                "pages": [
-                  "api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-d’une-imagevidu",
-                  "api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-de-référence-généréevidu",
-                  "api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-d’images-de-début-et-de-fin-vidu",
-                  "api-reference/fr/génération-vidéovidu-officielle/interroger-la-tâchevidu",
-                  "api-reference/fr/génération-vidéovidu-officielle/créer-une-vidéo-à-partir-de-textevidu"
                 ]
               },
               {
@@ -690,6 +690,23 @@
                 ]
               },
               {
+                "group": "Video generation Seedance",
+                "pages": [
+                  "api-reference/ja/video-generation-seedance/動画を作成（seedance）",
+                  "api-reference/ja/video-generation-seedance/タスクを照会する（seedance）"
+                ]
+              },
+              {
+                "group": "Video generation Vidu",
+                "pages": [
+                  "api-reference/ja/video-generation-vidu/画像から動画を作成するvidu",
+                  "api-reference/ja/video-generation-vidu/参照生成動画を作成vidu",
+                  "api-reference/ja/video-generation-vidu/開始フレームと終了フレームの動画を作成するvidu",
+                  "api-reference/ja/video-generation-vidu/タスクを照会するvidu",
+                  "api-reference/ja/video-generation-vidu/テキストから動画を作成vidu"
+                ]
+              },
+              {
                 "group": "モデル一覧の取得",
                 "pages": [
                   "api-reference/ja/モデル一覧の取得/モデル一覧の取得",
@@ -720,28 +737,11 @@
                 ]
               },
               {
-                "group": "動画生成Seedance火山アーク",
-                "pages": [
-                  "api-reference/ja/動画生成seedance火山アーク/動画を作成（seedance）",
-                  "api-reference/ja/動画生成seedance火山アーク/タスクを照会する（seedance）"
-                ]
-              },
-              {
                 "group": "動画生成Sora対応形式",
                 "pages": [
                   "api-reference/ja/動画生成sora対応形式/動画の生成",
                   "api-reference/ja/動画生成sora対応形式/動画タスクステータスの取得",
                   "api-reference/ja/動画生成sora対応形式/動画コンテンツの取得"
-                ]
-              },
-              {
-                "group": "動画生成Vidu公式",
-                "pages": [
-                  "api-reference/ja/動画生成vidu公式/画像から動画を作成するvidu",
-                  "api-reference/ja/動画生成vidu公式/参照生成動画を作成vidu",
-                  "api-reference/ja/動画生成vidu公式/開始フレームと終了フレームの動画を作成するvidu",
-                  "api-reference/ja/動画生成vidu公式/タスクを照会するvidu",
-                  "api-reference/ja/動画生成vidu公式/テキストから動画を作成vidu"
                 ]
               },
               {
@@ -846,6 +846,23 @@
                 ]
               },
               {
+                "group": "Генерация видео Seedance",
+                "pages": [
+                  "api-reference/ru/генерация-видео-seedance/создать-видео（seedance）",
+                  "api-reference/ru/генерация-видео-seedance/запросить-задачу（seedance）"
+                ]
+              },
+              {
+                "group": "Генерация видео Vidu",
+                "pages": [
+                  "api-reference/ru/генерация-видео-vidu/создать-видео-по-изображениюvidu",
+                  "api-reference/ru/генерация-видео-vidu/создать-видео-по-эталонному-видеоvidu",
+                  "api-reference/ru/генерация-видео-vidu/создать-видео-по-первой-и-последней-кадрамvidu",
+                  "api-reference/ru/генерация-видео-vidu/запрос-задачиvidu",
+                  "api-reference/ru/генерация-видео-vidu/создать-видео-по-текстуvidu"
+                ]
+              },
+              {
                 "group": "Генерация видеоHappyHorseАли",
                 "pages": [
                   "api-reference/ru/генерация-видеоhappyhorseали/создать-видеоhappyhorse",
@@ -853,27 +870,10 @@
                 ]
               },
               {
-                "group": "Генерация видеоSeedanceVolcano Ark",
-                "pages": [
-                  "api-reference/ru/генерация-видеоseedancevolcano-ark/создать-видео（seedance）",
-                  "api-reference/ru/генерация-видеоseedancevolcano-ark/запросить-задачу（seedance）"
-                ]
-              },
-              {
                 "group": "Генерация изображенийOpenAI в формате DALL-E",
                 "pages": [
                   "api-reference/ru/генерация-изображенийopenai-в-формате-dall-e/редактировать-изображение（openai-совместимо-с-dall-e）",
                   "api-reference/ru/генерация-изображенийopenai-в-формате-dall-e/генерация-изображений-openai-совместимо-с-dall-e"
-                ]
-              },
-              {
-                "group": "Официальная генерация видеоVidu",
-                "pages": [
-                  "api-reference/ru/официальная-генерация-видеоvidu/создать-видео-по-изображениюvidu",
-                  "api-reference/ru/официальная-генерация-видеоvidu/создать-видео-по-эталонному-видеоvidu",
-                  "api-reference/ru/официальная-генерация-видеоvidu/создать-видео-по-первой-и-последней-кадрамvidu",
-                  "api-reference/ru/официальная-генерация-видеоvidu/запрос-задачиvidu",
-                  "api-reference/ru/официальная-генерация-видеоvidu/создать-видео-по-текстуvidu"
                 ]
               },
               {
@@ -1000,16 +1000,6 @@
                 ]
               },
               {
-                "group": "Chính thức về tạo videoVidu",
-                "pages": [
-                  "api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-từ-hình-ảnh-vidu",
-                  "api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-sinh-tham-chiếuvidu",
-                  "api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-khung-đầu-và-khung-cuối-vidu",
-                  "api-reference/vi/chính-thức-về-tạo-videovidu/truy-vấn-tác-vụvidu",
-                  "api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-từ-văn-bảnvidu"
-                ]
-              },
-              {
                 "group": "Lấy danh sách mô hình",
                 "pages": [
                   "api-reference/vi/lấy-danh-sách-mô-hình/lấy-danh-sách-mô-hình",
@@ -1024,17 +1014,27 @@
                 ]
               },
               {
+                "group": "Tạo video Seedance",
+                "pages": [
+                  "api-reference/vi/tạo-video-seedance/tạo-video（seedance）",
+                  "api-reference/vi/tạo-video-seedance/truy-vấn-tác-vụ（seedance）"
+                ]
+              },
+              {
+                "group": "Tạo video Vidu",
+                "pages": [
+                  "api-reference/vi/tạo-video-vidu/tạo-video-từ-hình-ảnh-vidu",
+                  "api-reference/vi/tạo-video-vidu/tạo-video-sinh-tham-chiếuvidu",
+                  "api-reference/vi/tạo-video-vidu/tạo-video-khung-đầu-và-khung-cuối-vidu",
+                  "api-reference/vi/tạo-video-vidu/truy-vấn-tác-vụvidu",
+                  "api-reference/vi/tạo-video-vidu/tạo-video-từ-văn-bảnvidu"
+                ]
+              },
+              {
                 "group": "Tạo videoHappyHorseAlibaba",
                 "pages": [
                   "api-reference/vi/tạo-videohappyhorsealibaba/tạo-videohappyhorse",
                   "api-reference/vi/tạo-videohappyhorsealibaba/truy-vấn-tác-vụhappyhorse"
-                ]
-              },
-              {
-                "group": "Tạo videoSeedanceVolcano Ark",
-                "pages": [
-                  "api-reference/vi/tạo-videoseedancevolcano-ark/tạo-video（seedance）",
-                  "api-reference/vi/tạo-videoseedancevolcano-ark/truy-vấn-tác-vụ（seedance）"
                 ]
               },
               {

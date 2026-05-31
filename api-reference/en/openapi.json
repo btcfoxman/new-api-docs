@@ -1930,7 +1930,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nHappyHorse Alibaba video generation API, with public paths following the official DashScope protocol.\n\nSupports 5 external models: `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, and `happyhorse-1.0-video-edit`. Among them, `happyhorse-1.0` is an aggregated model and requires `mode` to distinguish `t2v`, `i2v`, `r2v`, and `video_edit`.\n\nThe public API keeps the official endpoint format; channel-specific prefixes are only concatenated internally when the gateway requests a specific upstream channel. Clients do not need to pass `X-DashScope-Async` explicitly; it is handled by the gateway or the official channel adapter layer.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the HappyHorse Alibaba official video generation format; the public paths keep the official endpoint format.\n\nSupported models:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nUnified request fields:\n- `model` (string, required): HappyHorse external model name. The aggregated model `happyhorse-1.0` must be used with `mode`.\n- `mode` (string, optional): Aggregated model mode; common values are `t2v`, `i2v`, `r2v`, and `video_edit`. You can omit this for fixed submodels.\n- `input.prompt` (string, required): Prompt for video generation or editing.\n- `input.media` (array[object], optional): Multimedia input. Use `first_frame` for image-to-video, `reference_image` for reference-to-video, and `video` plus optional `reference_image` for video editing.\n- `parameters.duration` (integer, optional): Generation duration, billed by second.\n- `parameters.resolution` (string, optional): Output resolution; common values are `720P` and `1080P`.\n- `parameters.ratio` (string, optional): Output aspect ratio, commonly used for text-to-video and reference-to-video.\n- `parameters.watermark` (boolean, optional): Whether to add a watermark.\n- `parameters.seed` (integer, optional): Random seed.\n\nCommon model/mode differences:\n- `HappyHorse 聚合模型`: Supports model happyhorse-1.0; the aggregated model uses mode to distinguish the final model.\n- `HappyHorse 文生视频`: Supports model happyhorse-1.0-t2v; official-format text-to-video.\n- `HappyHorse 首帧图生视频`: Supports model happyhorse-1.0-i2v; official-format first-frame image-to-video.\n- `HappyHorse 参考生视频`: Supports model happyhorse-1.0-r2v; official-format multi-reference image-to-video.\n- `HappyHorse 视频编辑`: Supports model happyhorse-1.0-video-edit; official-format video editing.",
         "operationId": "create__happyhorse__task",
         "tags": [
-          "Video generationHappyHorseAlibaba"
+          "Video generation HappyHorse"
         ],
         "requestBody": {
           "required": true,
@@ -2193,7 +2193,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generationhappyhorsealibaba/create-videohappyhorse"
+          "href": "/api-reference/en/video-generation-happyhorse/create-videohappyhorse"
         }
       }
     },
@@ -2203,7 +2203,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nHappyHorse Alibaba video generation API, with public paths following the official DashScope protocol.\n\nSupports 5 external models: `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, and `happyhorse-1.0-video-edit`. Among them, `happyhorse-1.0` is an aggregated model and requires `mode` to distinguish `t2v`, `i2v`, `r2v`, and `video_edit`.\n\nThe public API keeps the official endpoint format; channel-specific prefixes are only concatenated internally when the gateway requests a specific upstream channel. Clients do not need to pass `X-DashScope-Async` explicitly; it is handled by the gateway or the official channel adapter layer.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the HappyHorse Alibaba official video generation format; the public paths keep the official endpoint format.\n\nSupported models:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nUnified request fields:\n- `model` (string, required): HappyHorse external model name. The aggregated model `happyhorse-1.0` must be used with `mode`.\n- `mode` (string, optional): Aggregated model mode; common values are `t2v`, `i2v`, `r2v`, and `video_edit`. You can omit this for fixed submodels.\n- `input.prompt` (string, required): Prompt for video generation or editing.\n- `input.media` (array[object], optional): Multimedia input. Use `first_frame` for image-to-video, `reference_image` for reference-to-video, and `video` plus optional `reference_image` for video editing.\n- `parameters.duration` (integer, optional): Generation duration, billed by second.\n- `parameters.resolution` (string, optional): Output resolution; common values are `720P` and `1080P`.\n- `parameters.ratio` (string, optional): Output aspect ratio, commonly used for text-to-video and reference-to-video.\n- `parameters.watermark` (boolean, optional): Whether to add a watermark.\n- `parameters.seed` (integer, optional): Random seed.\n\nCommon model/mode differences:\n- `HappyHorse 聚合模型`: Supports model happyhorse-1.0; the aggregated model uses mode to distinguish the final model.\n- `HappyHorse 文生视频`: Supports model happyhorse-1.0-t2v; official-format text-to-video.\n- `HappyHorse 首帧图生视频`: Supports model happyhorse-1.0-i2v; official-format first-frame image-to-video.\n- `HappyHorse 参考生视频`: Supports model happyhorse-1.0-r2v; official-format multi-reference image-to-video.\n- `HappyHorse 视频编辑`: Supports model happyhorse-1.0-video-edit; official-format video editing.",
         "operationId": "query__happyhorse__task",
         "tags": [
-          "Video generationHappyHorseAlibaba"
+          "Video generation HappyHorse"
         ],
         "parameters": [
           {
@@ -2295,7 +2295,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generationhappyhorsealibaba/query-task-happyhorse"
+          "href": "/api-reference/en/video-generation-happyhorse/query-task-happyhorse"
         }
       }
     },
@@ -2305,7 +2305,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nVidu official video generation API; the public path follows the Vidu official specification.\n\nCurrent public model: `viduq3-turbo`. Supports text-to-video, image-to-video, start-and-end-frame video generation, and reference-based video generation. The same model also supports access via the `/v1/videos` Sora compatible format. Common `mode` are `t2v`, `i2v`, `i2v_first_last`, and `reference_images`.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the Vidu official video generation format, while the public path retains the Vidu official endpoint format.\n\nSupported models:\nviduq3-turbo\n\nUnified request fields:\n- `model` (string, required): Vidu public model name, currently public `viduq3-turbo`.\n- `prompt` (string, optional): Video generation prompt; required for text-to-video, and passed as needed for image-to-video, start-and-end-frame, and reference-based video generation.\n- `images` (array[string], optional): Image input. 1 image for image-to-video, 2 images for start-and-end-frame video generation, and 1~7 images for reference-based video generation.\n- `videos` (array[string], optional): Optional video subject input for reference-based video generation, used according to the capabilities of the Vidu official model.\n- `subjects` (array[object], optional): Subject-library format input for reference-based video generation; may include fields such as subject name, image, video, or voice timbre.\n- `duration` (integer, optional): Video duration, in seconds. `viduq3-turbo` commonly uses 5 seconds; set it according to the official range.\n- `resolution` (string, optional): Output resolution, common values are `540p`, `720p`, and `1080p`.\n- `aspect_ratio` (string, optional): Output aspect ratio, commonly used for text-to-video/reference-based video generation, such as `16:9`, `9:16`, and `1:1`.\n- `seed` (integer, optional): Random seed.\n- `movement_amplitude` (string, optional): Motion intensity, common values are `auto`, `small`, `medium`, and `large`.\n- `audio` (boolean, optional): Whether to enable direct audio-video output.\n- `off_peak` (boolean, optional): Whether to use staggered generation.\n- `watermark` (boolean, optional): Whether to add a watermark.\n\nCommon model/mode differences:\n- `Vidu 文生视频`: Supported model viduq3-turbo; official-format text-to-video.\n- `Vidu 图生视频`: Supported model viduq3-turbo; official-format single-image image-to-video.\n- `Vidu 首尾帧生视频`: Supported model viduq3-turbo; official-format two-image start-and-end-frame video generation.\n- `Vidu 参考生视频`: Supported model viduq3-turbo; official-format multi-reference image-to-video.",
         "operationId": "createViduTextVideo",
         "tags": [
-          "Video generation Vidu official"
+          "Video generation Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -2617,7 +2617,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generation-vidu-official/create-text-to-video-vidu"
+          "href": "/api-reference/en/video-generation-vidu/create-text-to-video-vidu"
         }
       }
     },
@@ -2627,7 +2627,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nVidu official video generation API; the public path follows the Vidu official specification.\n\nCurrent public model: `viduq3-turbo`. Supports text-to-video, image-to-video, start-and-end-frame video generation, and reference-based video generation. The same model also supports access via the `/v1/videos` Sora compatible format. Common `mode` are `t2v`, `i2v`, `i2v_first_last`, and `reference_images`.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the Vidu official video generation format, while the public path retains the Vidu official endpoint format.\n\nSupported models:\nviduq3-turbo\n\nUnified request fields:\n- `model` (string, required): Vidu public model name, currently public `viduq3-turbo`.\n- `prompt` (string, optional): Video generation prompt; required for text-to-video, and passed as needed for image-to-video, start-and-end-frame, and reference-based video generation.\n- `images` (array[string], optional): Image input. 1 image for image-to-video, 2 images for start-and-end-frame video generation, and 1~7 images for reference-based video generation.\n- `videos` (array[string], optional): Optional video subject input for reference-based video generation, used according to the capabilities of the Vidu official model.\n- `subjects` (array[object], optional): Subject-library format input for reference-based video generation; may include fields such as subject name, image, video, or voice timbre.\n- `duration` (integer, optional): Video duration, in seconds. `viduq3-turbo` commonly uses 5 seconds; set it according to the official range.\n- `resolution` (string, optional): Output resolution, common values are `540p`, `720p`, and `1080p`.\n- `aspect_ratio` (string, optional): Output aspect ratio, commonly used for text-to-video/reference-based video generation, such as `16:9`, `9:16`, and `1:1`.\n- `seed` (integer, optional): Random seed.\n- `movement_amplitude` (string, optional): Motion intensity, common values are `auto`, `small`, `medium`, and `large`.\n- `audio` (boolean, optional): Whether to enable direct audio-video output.\n- `off_peak` (boolean, optional): Whether to use staggered generation.\n- `watermark` (boolean, optional): Whether to add a watermark.\n\nCommon model/mode differences:\n- `Vidu 文生视频`: Supported model viduq3-turbo; official-format text-to-video.\n- `Vidu 图生视频`: Supported model viduq3-turbo; official-format single-image image-to-video.\n- `Vidu 首尾帧生视频`: Supported model viduq3-turbo; official-format two-image start-and-end-frame video generation.\n- `Vidu 参考生视频`: Supported model viduq3-turbo; official-format multi-reference image-to-video.",
         "operationId": "createViduImageVideo",
         "tags": [
-          "Video generation Vidu official"
+          "Video generation Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -2941,7 +2941,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generation-vidu-official/create-image-to-video-vidu"
+          "href": "/api-reference/en/video-generation-vidu/create-image-to-video-vidu"
         }
       }
     },
@@ -2951,7 +2951,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nVidu official video generation API; the public path follows the Vidu official specification.\n\nCurrent public model: `viduq3-turbo`. Supports text-to-video, image-to-video, start-and-end-frame video generation, and reference-based video generation. The same model also supports access via the `/v1/videos` Sora compatible format. Common `mode` are `t2v`, `i2v`, `i2v_first_last`, and `reference_images`.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the Vidu official video generation format, while the public path retains the Vidu official endpoint format.\n\nSupported models:\nviduq3-turbo\n\nUnified request fields:\n- `model` (string, required): Vidu public model name, currently public `viduq3-turbo`.\n- `prompt` (string, optional): Video generation prompt; required for text-to-video, and passed as needed for image-to-video, start-and-end-frame, and reference-based video generation.\n- `images` (array[string], optional): Image input. 1 image for image-to-video, 2 images for start-and-end-frame video generation, and 1~7 images for reference-based video generation.\n- `videos` (array[string], optional): Optional video subject input for reference-based video generation, used according to the capabilities of the Vidu official model.\n- `subjects` (array[object], optional): Subject-library format input for reference-based video generation; may include fields such as subject name, image, video, or voice timbre.\n- `duration` (integer, optional): Video duration, in seconds. `viduq3-turbo` commonly uses 5 seconds; set it according to the official range.\n- `resolution` (string, optional): Output resolution, common values are `540p`, `720p`, and `1080p`.\n- `aspect_ratio` (string, optional): Output aspect ratio, commonly used for text-to-video/reference-based video generation, such as `16:9`, `9:16`, and `1:1`.\n- `seed` (integer, optional): Random seed.\n- `movement_amplitude` (string, optional): Motion intensity, common values are `auto`, `small`, `medium`, and `large`.\n- `audio` (boolean, optional): Whether to enable direct audio-video output.\n- `off_peak` (boolean, optional): Whether to use staggered generation.\n- `watermark` (boolean, optional): Whether to add a watermark.\n\nCommon model/mode differences:\n- `Vidu 文生视频`: Supported model viduq3-turbo; official-format text-to-video.\n- `Vidu 图生视频`: Supported model viduq3-turbo; official-format single-image image-to-video.\n- `Vidu 首尾帧生视频`: Supported model viduq3-turbo; official-format two-image start-and-end-frame video generation.\n- `Vidu 参考生视频`: Supported model viduq3-turbo; official-format multi-reference image-to-video.",
         "operationId": "createViduStartEndVideo",
         "tags": [
-          "Video generation Vidu official"
+          "Video generation Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -3265,7 +3265,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generation-vidu-official/create-a-start-and-end-frame-videovidu"
+          "href": "/api-reference/en/video-generation-vidu/create-a-start-and-end-frame-videovidu"
         }
       }
     },
@@ -3275,7 +3275,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nVidu official video generation API; the public path follows the Vidu official specification.\n\nCurrent public model: `viduq3-turbo`. Supports text-to-video, image-to-video, start-and-end-frame video generation, and reference-based video generation. The same model also supports access via the `/v1/videos` Sora compatible format. Common `mode` are `t2v`, `i2v`, `i2v_first_last`, and `reference_images`.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the Vidu official video generation format, while the public path retains the Vidu official endpoint format.\n\nSupported models:\nviduq3-turbo\n\nUnified request fields:\n- `model` (string, required): Vidu public model name, currently public `viduq3-turbo`.\n- `prompt` (string, optional): Video generation prompt; required for text-to-video, and passed as needed for image-to-video, start-and-end-frame, and reference-based video generation.\n- `images` (array[string], optional): Image input. 1 image for image-to-video, 2 images for start-and-end-frame video generation, and 1~7 images for reference-based video generation.\n- `videos` (array[string], optional): Optional video subject input for reference-based video generation, used according to the capabilities of the Vidu official model.\n- `subjects` (array[object], optional): Subject-library format input for reference-based video generation; may include fields such as subject name, image, video, or voice timbre.\n- `duration` (integer, optional): Video duration, in seconds. `viduq3-turbo` commonly uses 5 seconds; set it according to the official range.\n- `resolution` (string, optional): Output resolution, common values are `540p`, `720p`, and `1080p`.\n- `aspect_ratio` (string, optional): Output aspect ratio, commonly used for text-to-video/reference-based video generation, such as `16:9`, `9:16`, and `1:1`.\n- `seed` (integer, optional): Random seed.\n- `movement_amplitude` (string, optional): Motion intensity, common values are `auto`, `small`, `medium`, and `large`.\n- `audio` (boolean, optional): Whether to enable direct audio-video output.\n- `off_peak` (boolean, optional): Whether to use staggered generation.\n- `watermark` (boolean, optional): Whether to add a watermark.\n\nCommon model/mode differences:\n- `Vidu 文生视频`: Supported model viduq3-turbo; official-format text-to-video.\n- `Vidu 图生视频`: Supported model viduq3-turbo; official-format single-image image-to-video.\n- `Vidu 首尾帧生视频`: Supported model viduq3-turbo; official-format two-image start-and-end-frame video generation.\n- `Vidu 参考生视频`: Supported model viduq3-turbo; official-format multi-reference image-to-video.",
         "operationId": "createViduReferenceVideo",
         "tags": [
-          "Video generation Vidu official"
+          "Video generation Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -3588,7 +3588,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generation-vidu-official/create-reference-generated-videovidu"
+          "href": "/api-reference/en/video-generation-vidu/create-reference-generated-videovidu"
         }
       }
     },
@@ -3598,7 +3598,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nVidu official video generation API; the public path follows the Vidu official specification.\n\nCurrent public model: `viduq3-turbo`. Supports text-to-video, image-to-video, start-and-end-frame video generation, and reference-based video generation. The same model also supports access via the `/v1/videos` Sora compatible format. Common `mode` are `t2v`, `i2v`, `i2v_first_last`, and `reference_images`.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the Vidu official video generation format, while the public path retains the Vidu official endpoint format.\n\nSupported models:\nviduq3-turbo\n\nUnified request fields:\n- `model` (string, required): Vidu public model name, currently public `viduq3-turbo`.\n- `prompt` (string, optional): Video generation prompt; required for text-to-video, and passed as needed for image-to-video, start-and-end-frame, and reference-based video generation.\n- `images` (array[string], optional): Image input. 1 image for image-to-video, 2 images for start-and-end-frame video generation, and 1~7 images for reference-based video generation.\n- `videos` (array[string], optional): Optional video subject input for reference-based video generation, used according to the capabilities of the Vidu official model.\n- `subjects` (array[object], optional): Subject-library format input for reference-based video generation; may include fields such as subject name, image, video, or voice timbre.\n- `duration` (integer, optional): Video duration, in seconds. `viduq3-turbo` commonly uses 5 seconds; set it according to the official range.\n- `resolution` (string, optional): Output resolution, common values are `540p`, `720p`, and `1080p`.\n- `aspect_ratio` (string, optional): Output aspect ratio, commonly used for text-to-video/reference-based video generation, such as `16:9`, `9:16`, and `1:1`.\n- `seed` (integer, optional): Random seed.\n- `movement_amplitude` (string, optional): Motion intensity, common values are `auto`, `small`, `medium`, and `large`.\n- `audio` (boolean, optional): Whether to enable direct audio-video output.\n- `off_peak` (boolean, optional): Whether to use staggered generation.\n- `watermark` (boolean, optional): Whether to add a watermark.\n\nCommon model/mode differences:\n- `Vidu 文生视频`: Supported model viduq3-turbo; official-format text-to-video.\n- `Vidu 图生视频`: Supported model viduq3-turbo; official-format single-image image-to-video.\n- `Vidu 首尾帧生视频`: Supported model viduq3-turbo; official-format two-image start-and-end-frame video generation.\n- `Vidu 参考生视频`: Supported model viduq3-turbo; official-format multi-reference image-to-video.",
         "operationId": "queryViduTaskCreations",
         "tags": [
-          "Video generation Vidu official"
+          "Video generation Vidu"
         ],
         "parameters": [
           {
@@ -3686,7 +3686,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generation-vidu-official/query-tasksvidu"
+          "href": "/api-reference/en/video-generation-vidu/query-tasksvidu"
         }
       }
     },
@@ -3696,7 +3696,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional, the Volcano Ark content array, mixing text, image, video, and audio materials.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- `content` text items are written as `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` image, video, and audio material items use the `image_url`, `video_url`, and `audio_url` object formats respectively, for example `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` can be used to identify the purpose of the material, and `name` can be referenced by name in prompts.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nGemini Omni invocation:\n- `gemini-omni` can also be invoked through this Seedance task API.\n- `mode=t2v` is used for text-to-video, `mode=r2v` for generation with reference images/reference materials, and `mode=edit` for video editing.\n- Text can be placed in the `text` item of `prompt` or `content`; images can be placed in `image_url / image_urls / reference_images / input_reference / content`; videos can be placed in `video_urls / content`.\n- The duration field can use `duration` or `seconds`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "Video generationSeedanceVolcano Ark"
+          "Video generation Seedance"
         ],
         "requestBody": {
           "required": true,
@@ -4094,7 +4094,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generationseedancevolcano-ark/create-video-seedance"
+          "href": "/api-reference/en/video-generation-seedance/create-video-seedance"
         }
       }
     },
@@ -4104,7 +4104,7 @@
         "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional, the Volcano Ark content array, mixing text, image, video, and audio materials.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- `content` text items are written as `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` image, video, and audio material items use the `image_url`, `video_url`, and `audio_url` object formats respectively, for example `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` can be used to identify the purpose of the material, and `name` can be referenced by name in prompts.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nGemini Omni invocation:\n- `gemini-omni` can also be invoked through this Seedance task API.\n- `mode=t2v` is used for text-to-video, `mode=r2v` for generation with reference images/reference materials, and `mode=edit` for video editing.\n- Text can be placed in the `text` item of `prompt` or `content`; images can be placed in `image_url / image_urls / reference_images / input_reference / content`; videos can be placed in `video_urls / content`.\n- The duration field can use `duration` or `seconds`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "Video generationSeedanceVolcano Ark"
+          "Video generation Seedance"
         ],
         "parameters": [
           {
@@ -4232,7 +4232,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generationseedancevolcano-ark/get-task-seedance"
+          "href": "/api-reference/en/video-generation-seedance/get-task-seedance"
         }
       }
     },
@@ -6803,7 +6803,7 @@
       "name": "List models"
     },
     {
-      "name": "Video generationHappyHorseAlibaba"
+      "name": "Video generation HappyHorse"
     },
     {
       "name": "Video generation Kling format"
@@ -6812,13 +6812,13 @@
       "name": "Video generation Omni and Veo formats"
     },
     {
-      "name": "Video generationSeedanceVolcano Ark"
+      "name": "Video generation Seedance"
     },
     {
       "name": "Video generation Sora compatible formats"
     },
     {
-      "name": "Video generation Vidu official"
+      "name": "Video generation Vidu"
     }
   ],
   "x-doc-drift-summary": {

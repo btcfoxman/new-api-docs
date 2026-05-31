@@ -2305,7 +2305,7 @@
         "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nVidu 公式動画生成API。公開パスは Vidu 公式仕様に準拠します。\n\n現在公開されているモデル：`viduq3-turbo`。テキストから動画、画像から動画、開始・終了フレームから動画、参考動画から動画に対応しています。同一モデルは `/v1/videos` Sora 互換形式でも接続でき、一般的な `mode` は `t2v`、`i2v`、`i2v_first_last`、`reference_images` です。\n\nVidu 公式動画生成フォーマットの公開リクエスト骨格、タスク照会構造、推奨検証テンプレートを補足します。公開パスは Vidu 公式エンドポイント形式を維持します。\n\n対応モデル：\nviduq3-turbo\n\n共通リクエストフィールド：\n- `model` (string, 必須): Vidu の対外公開モデル名。現在公開中の `viduq3-turbo`。\n- `prompt` (string, 任意): 動画生成プロンプト。テキストから動画では必須、画像から/開始・終了フレーム/参考動画からは業務要件に応じて送信します。\n- `images` (array[string], 任意): 画像入力。画像から動画は1枚、開始・終了フレームは2枚、参考動画からは1〜7枚。\n- `videos` (array[string], 任意): 参考動画から動画で使用できる動画主体入力。Vidu 公式モデルの機能に応じて使用します。\n- `subjects` (array[object], 任意): 参考動画から動画の主体ライブラリ形式の入力。主体名、画像、動画、音色などのフィールドを含めることができます。\n- `duration` (integer, 任意): 動画の長さ。単位は秒です。`viduq3-turbo` は通常 5 秒で、公式の範囲に従って設定できます。\n- `resolution` (string, 任意): 出力解像度。一般的な値は `540p`、`720p`、`1080p` です。\n- `aspect_ratio` (string, 任意): 出力アスペクト比。テキストから動画/参考動画から動画で一般的に使用されます。例: `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 任意): 乱数シード。\n- `movement_amplitude` (string, 任意): モーションの強さ。一般的な値は `auto`、`small`、`medium`、`large` です。\n- `audio` (boolean, 任意): 音声付き動画の直接出力を有効にするかどうか。\n- `off_peak` (boolean, 任意): オフピーク生成を使用するかどうか。\n- `watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n\n代表的なモデル/モードの違い：\n- `Vidu 文生视频`: サポートモデル viduq3-turbo；公式形式のテキストから動画。\n- `Vidu 图生视频`: サポートモデル viduq3-turbo；公式形式の単一画像から動画。\n- `Vidu 首尾帧生视频`: サポートモデル viduq3-turbo；公式形式の開始・終了フレームの2画像から動画。\n- `Vidu 参考生视频`: サポートモデル viduq3-turbo；公式形式の複数参考画像から動画。",
         "operationId": "createViduTextVideo",
         "tags": [
-          "動画生成Vidu公式"
+          "Video generation Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -2617,7 +2617,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成vidu公式/テキストから動画を作成vidu"
+          "href": "/api-reference/ja/video-generation-vidu/テキストから動画を作成vidu"
         }
       }
     },
@@ -2627,7 +2627,7 @@
         "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nVidu 公式動画生成API。公開パスは Vidu 公式仕様に準拠します。\n\n現在公開されているモデル：`viduq3-turbo`。テキストから動画、画像から動画、開始・終了フレームから動画、参考動画から動画に対応しています。同一モデルは `/v1/videos` Sora 互換形式でも接続でき、一般的な `mode` は `t2v`、`i2v`、`i2v_first_last`、`reference_images` です。\n\nVidu 公式動画生成フォーマットの公開リクエスト骨格、タスク照会構造、推奨検証テンプレートを補足します。公開パスは Vidu 公式エンドポイント形式を維持します。\n\n対応モデル：\nviduq3-turbo\n\n共通リクエストフィールド：\n- `model` (string, 必須): Vidu の対外公開モデル名。現在公開中の `viduq3-turbo`。\n- `prompt` (string, 任意): 動画生成プロンプト。テキストから動画では必須、画像から/開始・終了フレーム/参考動画からは業務要件に応じて送信します。\n- `images` (array[string], 任意): 画像入力。画像から動画は1枚、開始・終了フレームは2枚、参考動画からは1〜7枚。\n- `videos` (array[string], 任意): 参考動画から動画で使用できる動画主体入力。Vidu 公式モデルの機能に応じて使用します。\n- `subjects` (array[object], 任意): 参考動画から動画の主体ライブラリ形式の入力。主体名、画像、動画、音色などのフィールドを含めることができます。\n- `duration` (integer, 任意): 動画の長さ。単位は秒です。`viduq3-turbo` は通常 5 秒で、公式の範囲に従って設定できます。\n- `resolution` (string, 任意): 出力解像度。一般的な値は `540p`、`720p`、`1080p` です。\n- `aspect_ratio` (string, 任意): 出力アスペクト比。テキストから動画/参考動画から動画で一般的に使用されます。例: `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 任意): 乱数シード。\n- `movement_amplitude` (string, 任意): モーションの強さ。一般的な値は `auto`、`small`、`medium`、`large` です。\n- `audio` (boolean, 任意): 音声付き動画の直接出力を有効にするかどうか。\n- `off_peak` (boolean, 任意): オフピーク生成を使用するかどうか。\n- `watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n\n代表的なモデル/モードの違い：\n- `Vidu 文生视频`: サポートモデル viduq3-turbo；公式形式のテキストから動画。\n- `Vidu 图生视频`: サポートモデル viduq3-turbo；公式形式の単一画像から動画。\n- `Vidu 首尾帧生视频`: サポートモデル viduq3-turbo；公式形式の開始・終了フレームの2画像から動画。\n- `Vidu 参考生视频`: サポートモデル viduq3-turbo；公式形式の複数参考画像から動画。",
         "operationId": "createViduImageVideo",
         "tags": [
-          "動画生成Vidu公式"
+          "Video generation Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -2941,7 +2941,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成vidu公式/画像から動画を作成するvidu"
+          "href": "/api-reference/ja/video-generation-vidu/画像から動画を作成するvidu"
         }
       }
     },
@@ -2951,7 +2951,7 @@
         "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nVidu 公式動画生成API。公開パスは Vidu 公式仕様に準拠します。\n\n現在公開されているモデル：`viduq3-turbo`。テキストから動画、画像から動画、開始・終了フレームから動画、参考動画から動画に対応しています。同一モデルは `/v1/videos` Sora 互換形式でも接続でき、一般的な `mode` は `t2v`、`i2v`、`i2v_first_last`、`reference_images` です。\n\nVidu 公式動画生成フォーマットの公開リクエスト骨格、タスク照会構造、推奨検証テンプレートを補足します。公開パスは Vidu 公式エンドポイント形式を維持します。\n\n対応モデル：\nviduq3-turbo\n\n共通リクエストフィールド：\n- `model` (string, 必須): Vidu の対外公開モデル名。現在公開中の `viduq3-turbo`。\n- `prompt` (string, 任意): 動画生成プロンプト。テキストから動画では必須、画像から/開始・終了フレーム/参考動画からは業務要件に応じて送信します。\n- `images` (array[string], 任意): 画像入力。画像から動画は1枚、開始・終了フレームは2枚、参考動画からは1〜7枚。\n- `videos` (array[string], 任意): 参考動画から動画で使用できる動画主体入力。Vidu 公式モデルの機能に応じて使用します。\n- `subjects` (array[object], 任意): 参考動画から動画の主体ライブラリ形式の入力。主体名、画像、動画、音色などのフィールドを含めることができます。\n- `duration` (integer, 任意): 動画の長さ。単位は秒です。`viduq3-turbo` は通常 5 秒で、公式の範囲に従って設定できます。\n- `resolution` (string, 任意): 出力解像度。一般的な値は `540p`、`720p`、`1080p` です。\n- `aspect_ratio` (string, 任意): 出力アスペクト比。テキストから動画/参考動画から動画で一般的に使用されます。例: `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 任意): 乱数シード。\n- `movement_amplitude` (string, 任意): モーションの強さ。一般的な値は `auto`、`small`、`medium`、`large` です。\n- `audio` (boolean, 任意): 音声付き動画の直接出力を有効にするかどうか。\n- `off_peak` (boolean, 任意): オフピーク生成を使用するかどうか。\n- `watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n\n代表的なモデル/モードの違い：\n- `Vidu 文生视频`: サポートモデル viduq3-turbo；公式形式のテキストから動画。\n- `Vidu 图生视频`: サポートモデル viduq3-turbo；公式形式の単一画像から動画。\n- `Vidu 首尾帧生视频`: サポートモデル viduq3-turbo；公式形式の開始・終了フレームの2画像から動画。\n- `Vidu 参考生视频`: サポートモデル viduq3-turbo；公式形式の複数参考画像から動画。",
         "operationId": "createViduStartEndVideo",
         "tags": [
-          "動画生成Vidu公式"
+          "Video generation Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -3265,7 +3265,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成vidu公式/開始フレームと終了フレームの動画を作成するvidu"
+          "href": "/api-reference/ja/video-generation-vidu/開始フレームと終了フレームの動画を作成するvidu"
         }
       }
     },
@@ -3275,7 +3275,7 @@
         "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nVidu 公式動画生成API。公開パスは Vidu 公式仕様に準拠します。\n\n現在公開されているモデル：`viduq3-turbo`。テキストから動画、画像から動画、開始・終了フレームから動画、参考動画から動画に対応しています。同一モデルは `/v1/videos` Sora 互換形式でも接続でき、一般的な `mode` は `t2v`、`i2v`、`i2v_first_last`、`reference_images` です。\n\nVidu 公式動画生成フォーマットの公開リクエスト骨格、タスク照会構造、推奨検証テンプレートを補足します。公開パスは Vidu 公式エンドポイント形式を維持します。\n\n対応モデル：\nviduq3-turbo\n\n共通リクエストフィールド：\n- `model` (string, 必須): Vidu の対外公開モデル名。現在公開中の `viduq3-turbo`。\n- `prompt` (string, 任意): 動画生成プロンプト。テキストから動画では必須、画像から/開始・終了フレーム/参考動画からは業務要件に応じて送信します。\n- `images` (array[string], 任意): 画像入力。画像から動画は1枚、開始・終了フレームは2枚、参考動画からは1〜7枚。\n- `videos` (array[string], 任意): 参考動画から動画で使用できる動画主体入力。Vidu 公式モデルの機能に応じて使用します。\n- `subjects` (array[object], 任意): 参考動画から動画の主体ライブラリ形式の入力。主体名、画像、動画、音色などのフィールドを含めることができます。\n- `duration` (integer, 任意): 動画の長さ。単位は秒です。`viduq3-turbo` は通常 5 秒で、公式の範囲に従って設定できます。\n- `resolution` (string, 任意): 出力解像度。一般的な値は `540p`、`720p`、`1080p` です。\n- `aspect_ratio` (string, 任意): 出力アスペクト比。テキストから動画/参考動画から動画で一般的に使用されます。例: `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 任意): 乱数シード。\n- `movement_amplitude` (string, 任意): モーションの強さ。一般的な値は `auto`、`small`、`medium`、`large` です。\n- `audio` (boolean, 任意): 音声付き動画の直接出力を有効にするかどうか。\n- `off_peak` (boolean, 任意): オフピーク生成を使用するかどうか。\n- `watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n\n代表的なモデル/モードの違い：\n- `Vidu 文生视频`: サポートモデル viduq3-turbo；公式形式のテキストから動画。\n- `Vidu 图生视频`: サポートモデル viduq3-turbo；公式形式の単一画像から動画。\n- `Vidu 首尾帧生视频`: サポートモデル viduq3-turbo；公式形式の開始・終了フレームの2画像から動画。\n- `Vidu 参考生视频`: サポートモデル viduq3-turbo；公式形式の複数参考画像から動画。",
         "operationId": "createViduReferenceVideo",
         "tags": [
-          "動画生成Vidu公式"
+          "Video generation Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -3588,7 +3588,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成vidu公式/参照生成動画を作成vidu"
+          "href": "/api-reference/ja/video-generation-vidu/参照生成動画を作成vidu"
         }
       }
     },
@@ -3598,7 +3598,7 @@
         "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nVidu 公式動画生成API。公開パスは Vidu 公式仕様に準拠します。\n\n現在公開されているモデル：`viduq3-turbo`。テキストから動画、画像から動画、開始・終了フレームから動画、参考動画から動画に対応しています。同一モデルは `/v1/videos` Sora 互換形式でも接続でき、一般的な `mode` は `t2v`、`i2v`、`i2v_first_last`、`reference_images` です。\n\nVidu 公式動画生成フォーマットの公開リクエスト骨格、タスク照会構造、推奨検証テンプレートを補足します。公開パスは Vidu 公式エンドポイント形式を維持します。\n\n対応モデル：\nviduq3-turbo\n\n共通リクエストフィールド：\n- `model` (string, 必須): Vidu の対外公開モデル名。現在公開中の `viduq3-turbo`。\n- `prompt` (string, 任意): 動画生成プロンプト。テキストから動画では必須、画像から/開始・終了フレーム/参考動画からは業務要件に応じて送信します。\n- `images` (array[string], 任意): 画像入力。画像から動画は1枚、開始・終了フレームは2枚、参考動画からは1〜7枚。\n- `videos` (array[string], 任意): 参考動画から動画で使用できる動画主体入力。Vidu 公式モデルの機能に応じて使用します。\n- `subjects` (array[object], 任意): 参考動画から動画の主体ライブラリ形式の入力。主体名、画像、動画、音色などのフィールドを含めることができます。\n- `duration` (integer, 任意): 動画の長さ。単位は秒です。`viduq3-turbo` は通常 5 秒で、公式の範囲に従って設定できます。\n- `resolution` (string, 任意): 出力解像度。一般的な値は `540p`、`720p`、`1080p` です。\n- `aspect_ratio` (string, 任意): 出力アスペクト比。テキストから動画/参考動画から動画で一般的に使用されます。例: `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 任意): 乱数シード。\n- `movement_amplitude` (string, 任意): モーションの強さ。一般的な値は `auto`、`small`、`medium`、`large` です。\n- `audio` (boolean, 任意): 音声付き動画の直接出力を有効にするかどうか。\n- `off_peak` (boolean, 任意): オフピーク生成を使用するかどうか。\n- `watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n\n代表的なモデル/モードの違い：\n- `Vidu 文生视频`: サポートモデル viduq3-turbo；公式形式のテキストから動画。\n- `Vidu 图生视频`: サポートモデル viduq3-turbo；公式形式の単一画像から動画。\n- `Vidu 首尾帧生视频`: サポートモデル viduq3-turbo；公式形式の開始・終了フレームの2画像から動画。\n- `Vidu 参考生视频`: サポートモデル viduq3-turbo；公式形式の複数参考画像から動画。",
         "operationId": "queryViduTaskCreations",
         "tags": [
-          "動画生成Vidu公式"
+          "Video generation Vidu"
         ],
         "parameters": [
           {
@@ -3686,7 +3686,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成vidu公式/タスクを照会するvidu"
+          "href": "/api-reference/ja/video-generation-vidu/タスクを照会するvidu"
         }
       }
     },
@@ -3696,7 +3696,7 @@
         "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意。Volcano Ark の content 配列で、テキスト、画像、動画、音声素材を混在して配置できます。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` テキスト項目の記述形式は `{ \"type\": \"text\", \"text\": \"测试文字\" }` です。\n- `content` 画像、動画、音声素材項目はそれぞれ `image_url`、`video_url`、`audio_url` のオブジェクト形式を使用します。例: `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` で素材の用途を識別でき、`name` はプロンプト内で名前指定による参照に使用できます。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\nGemini Omni の呼び出し：\n- `gemini-omni` は、本 Seedance タスク API からも呼び出せます。\n- `mode=t2v` はテキストから動画の生成に使用し、`mode=r2v` は参照画像/参照素材を用いた生成に使用し、`mode=edit` は動画編集に使用します。\n- テキストは `prompt` または `content` の `text` 項目に配置できます。画像は `image_url / image_urls / reference_images / input_reference / content` に、動画は `video_urls / content` に配置できます。\n- 再生時間フィールドは `duration` または `seconds` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "動画生成Seedance火山アーク"
+          "Video generation Seedance"
         ],
         "requestBody": {
           "required": true,
@@ -4094,7 +4094,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成seedance火山アーク/動画を作成（seedance）"
+          "href": "/api-reference/ja/video-generation-seedance/動画を作成（seedance）"
         }
       }
     },
@@ -4104,7 +4104,7 @@
         "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意。Volcano Ark の content 配列で、テキスト、画像、動画、音声素材を混在して配置できます。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` テキスト項目の記述形式は `{ \"type\": \"text\", \"text\": \"测试文字\" }` です。\n- `content` 画像、動画、音声素材項目はそれぞれ `image_url`、`video_url`、`audio_url` のオブジェクト形式を使用します。例: `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` で素材の用途を識別でき、`name` はプロンプト内で名前指定による参照に使用できます。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\nGemini Omni の呼び出し：\n- `gemini-omni` は、本 Seedance タスク API からも呼び出せます。\n- `mode=t2v` はテキストから動画の生成に使用し、`mode=r2v` は参照画像/参照素材を用いた生成に使用し、`mode=edit` は動画編集に使用します。\n- テキストは `prompt` または `content` の `text` 項目に配置できます。画像は `image_url / image_urls / reference_images / input_reference / content` に、動画は `video_urls / content` に配置できます。\n- 再生時間フィールドは `duration` または `seconds` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "動画生成Seedance火山アーク"
+          "Video generation Seedance"
         ],
         "parameters": [
           {
@@ -4232,7 +4232,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成seedance火山アーク/タスクを照会する（seedance）"
+          "href": "/api-reference/ja/video-generation-seedance/タスクを照会する（seedance）"
         }
       }
     },
@@ -6812,13 +6812,13 @@
       "name": "動画生成OmniとVeo形式"
     },
     {
-      "name": "動画生成Seedance火山アーク"
+      "name": "Video generation Seedance"
     },
     {
       "name": "動画生成Sora対応形式"
     },
     {
-      "name": "動画生成Vidu公式"
+      "name": "Video generation Vidu"
     }
   ],
   "x-doc-drift-summary": {

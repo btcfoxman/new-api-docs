@@ -2305,7 +2305,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nVidu giao diện tạo video chính thức, đường dẫn công khai tuân theo giao thức chính thức của Vidu.\n\nMô hình công khai hiện tại: `viduq3-turbo`. Hỗ trợ text-to-video, image-to-video, video từ khung đầu-cuối, và reference-to-video. Cùng một mô hình cũng hỗ trợ tích hợp thông qua định dạng tương thích Sora của `/v1/videos`, các `mode` thường dùng là `t2v`, `i2v`, `i2v_first_last`, `reference_images`.\n\nBổ sung skeleton request công khai, cấu trúc truy vấn tác vụ và mẫu xác minh được khuyến nghị cho định dạng tạo video chính thức của Vidu, đường dẫn công khai giữ nguyên định dạng endpoint chính thức của Vidu.\n\nMô hình hỗ trợ:\nviduq3-turbo\n\nCác trường yêu cầu thống nhất:\n- `model` (string, bắt buộc): tên mô hình công khai của Vidu, hiện công khai `viduq3-turbo`.\n- `prompt` (string, tùy chọn): prompt tạo video; bắt buộc với text-to-video, còn image-to-video/khung đầu-cuối/reference-to-video thì truyền theo nhu cầu nghiệp vụ.\n- `images` (array[string], tùy chọn): đầu vào hình ảnh. image-to-video dùng 1 ảnh, khung đầu-cuối dùng 2 ảnh, reference-to-video dùng 1~7 ảnh.\n- `videos` (array[string], tùy chọn): đầu vào đối tượng video tùy chọn cho reference-to-video, sử dụng theo năng lực mô hình chính thức của Vidu.\n- `subjects` (array[object], tùy chọn): đầu vào theo định dạng thư viện chủ thể của reference-to-video, có thể bao gồm các trường như tên chủ thể, ảnh, video hoặc giọng.\n- `duration` (integer, tùy chọn): độ dài video, tính bằng giây. `viduq3-turbo` thường dùng 5 giây, có thể đặt theo phạm vi chính thức.\n- `resolution` (string, tùy chọn): độ phân giải đầu ra, giá trị phổ biến `540p`, `720p`, `1080p`.\n- `aspect_ratio` (string, tùy chọn): tỷ lệ khung hình đầu ra, thường dùng cho text-to-video/reference-to-video, như `16:9`, `9:16`, `1:1`.\n- `seed` (integer, tùy chọn): Seed ngẫu nhiên.\n- `movement_amplitude` (string, tùy chọn): mức độ chuyển động, các giá trị phổ biến `auto`, `small`, `medium`, `large`.\n- `audio` (boolean, tùy chọn): có bật xuất trực tiếp âm thanh và video hay không.\n- `off_peak` (boolean, tùy chọn): có sử dụng tạo lệch giờ hay không.\n- `watermark` (boolean, tùy chọn): Có thêm watermark hay không.\n\nKhác biệt thường gặp giữa mô hình/chế độ:\n- `Vidu 文生视频`: hỗ trợ mô hình viduq3-turbo; text-to-video theo định dạng chính thức.\n- `Vidu 图生视频`: hỗ trợ mô hình viduq3-turbo; image-to-video một ảnh theo định dạng chính thức.\n- `Vidu 首尾帧生视频`: hỗ trợ mô hình viduq3-turbo; video từ hai ảnh khung đầu-cuối theo định dạng chính thức.\n- `Vidu 参考生视频`: hỗ trợ mô hình viduq3-turbo; reference-to-video với nhiều ảnh tham chiếu theo định dạng chính thức.",
         "operationId": "createViduTextVideo",
         "tags": [
-          "Chính thức về tạo videoVidu"
+          "Tạo video Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -2617,7 +2617,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-từ-văn-bảnvidu"
+          "href": "/api-reference/vi/tạo-video-vidu/tạo-video-từ-văn-bảnvidu"
         }
       }
     },
@@ -2627,7 +2627,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nVidu giao diện tạo video chính thức, đường dẫn công khai tuân theo giao thức chính thức của Vidu.\n\nMô hình công khai hiện tại: `viduq3-turbo`. Hỗ trợ text-to-video, image-to-video, video từ khung đầu-cuối, và reference-to-video. Cùng một mô hình cũng hỗ trợ tích hợp thông qua định dạng tương thích Sora của `/v1/videos`, các `mode` thường dùng là `t2v`, `i2v`, `i2v_first_last`, `reference_images`.\n\nBổ sung skeleton request công khai, cấu trúc truy vấn tác vụ và mẫu xác minh được khuyến nghị cho định dạng tạo video chính thức của Vidu, đường dẫn công khai giữ nguyên định dạng endpoint chính thức của Vidu.\n\nMô hình hỗ trợ:\nviduq3-turbo\n\nCác trường yêu cầu thống nhất:\n- `model` (string, bắt buộc): tên mô hình công khai của Vidu, hiện công khai `viduq3-turbo`.\n- `prompt` (string, tùy chọn): prompt tạo video; bắt buộc với text-to-video, còn image-to-video/khung đầu-cuối/reference-to-video thì truyền theo nhu cầu nghiệp vụ.\n- `images` (array[string], tùy chọn): đầu vào hình ảnh. image-to-video dùng 1 ảnh, khung đầu-cuối dùng 2 ảnh, reference-to-video dùng 1~7 ảnh.\n- `videos` (array[string], tùy chọn): đầu vào đối tượng video tùy chọn cho reference-to-video, sử dụng theo năng lực mô hình chính thức của Vidu.\n- `subjects` (array[object], tùy chọn): đầu vào theo định dạng thư viện chủ thể của reference-to-video, có thể bao gồm các trường như tên chủ thể, ảnh, video hoặc giọng.\n- `duration` (integer, tùy chọn): độ dài video, tính bằng giây. `viduq3-turbo` thường dùng 5 giây, có thể đặt theo phạm vi chính thức.\n- `resolution` (string, tùy chọn): độ phân giải đầu ra, giá trị phổ biến `540p`, `720p`, `1080p`.\n- `aspect_ratio` (string, tùy chọn): tỷ lệ khung hình đầu ra, thường dùng cho text-to-video/reference-to-video, như `16:9`, `9:16`, `1:1`.\n- `seed` (integer, tùy chọn): Seed ngẫu nhiên.\n- `movement_amplitude` (string, tùy chọn): mức độ chuyển động, các giá trị phổ biến `auto`, `small`, `medium`, `large`.\n- `audio` (boolean, tùy chọn): có bật xuất trực tiếp âm thanh và video hay không.\n- `off_peak` (boolean, tùy chọn): có sử dụng tạo lệch giờ hay không.\n- `watermark` (boolean, tùy chọn): Có thêm watermark hay không.\n\nKhác biệt thường gặp giữa mô hình/chế độ:\n- `Vidu 文生视频`: hỗ trợ mô hình viduq3-turbo; text-to-video theo định dạng chính thức.\n- `Vidu 图生视频`: hỗ trợ mô hình viduq3-turbo; image-to-video một ảnh theo định dạng chính thức.\n- `Vidu 首尾帧生视频`: hỗ trợ mô hình viduq3-turbo; video từ hai ảnh khung đầu-cuối theo định dạng chính thức.\n- `Vidu 参考生视频`: hỗ trợ mô hình viduq3-turbo; reference-to-video với nhiều ảnh tham chiếu theo định dạng chính thức.",
         "operationId": "createViduImageVideo",
         "tags": [
-          "Chính thức về tạo videoVidu"
+          "Tạo video Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -2941,7 +2941,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-từ-hình-ảnh-vidu"
+          "href": "/api-reference/vi/tạo-video-vidu/tạo-video-từ-hình-ảnh-vidu"
         }
       }
     },
@@ -2951,7 +2951,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nVidu giao diện tạo video chính thức, đường dẫn công khai tuân theo giao thức chính thức của Vidu.\n\nMô hình công khai hiện tại: `viduq3-turbo`. Hỗ trợ text-to-video, image-to-video, video từ khung đầu-cuối, và reference-to-video. Cùng một mô hình cũng hỗ trợ tích hợp thông qua định dạng tương thích Sora của `/v1/videos`, các `mode` thường dùng là `t2v`, `i2v`, `i2v_first_last`, `reference_images`.\n\nBổ sung skeleton request công khai, cấu trúc truy vấn tác vụ và mẫu xác minh được khuyến nghị cho định dạng tạo video chính thức của Vidu, đường dẫn công khai giữ nguyên định dạng endpoint chính thức của Vidu.\n\nMô hình hỗ trợ:\nviduq3-turbo\n\nCác trường yêu cầu thống nhất:\n- `model` (string, bắt buộc): tên mô hình công khai của Vidu, hiện công khai `viduq3-turbo`.\n- `prompt` (string, tùy chọn): prompt tạo video; bắt buộc với text-to-video, còn image-to-video/khung đầu-cuối/reference-to-video thì truyền theo nhu cầu nghiệp vụ.\n- `images` (array[string], tùy chọn): đầu vào hình ảnh. image-to-video dùng 1 ảnh, khung đầu-cuối dùng 2 ảnh, reference-to-video dùng 1~7 ảnh.\n- `videos` (array[string], tùy chọn): đầu vào đối tượng video tùy chọn cho reference-to-video, sử dụng theo năng lực mô hình chính thức của Vidu.\n- `subjects` (array[object], tùy chọn): đầu vào theo định dạng thư viện chủ thể của reference-to-video, có thể bao gồm các trường như tên chủ thể, ảnh, video hoặc giọng.\n- `duration` (integer, tùy chọn): độ dài video, tính bằng giây. `viduq3-turbo` thường dùng 5 giây, có thể đặt theo phạm vi chính thức.\n- `resolution` (string, tùy chọn): độ phân giải đầu ra, giá trị phổ biến `540p`, `720p`, `1080p`.\n- `aspect_ratio` (string, tùy chọn): tỷ lệ khung hình đầu ra, thường dùng cho text-to-video/reference-to-video, như `16:9`, `9:16`, `1:1`.\n- `seed` (integer, tùy chọn): Seed ngẫu nhiên.\n- `movement_amplitude` (string, tùy chọn): mức độ chuyển động, các giá trị phổ biến `auto`, `small`, `medium`, `large`.\n- `audio` (boolean, tùy chọn): có bật xuất trực tiếp âm thanh và video hay không.\n- `off_peak` (boolean, tùy chọn): có sử dụng tạo lệch giờ hay không.\n- `watermark` (boolean, tùy chọn): Có thêm watermark hay không.\n\nKhác biệt thường gặp giữa mô hình/chế độ:\n- `Vidu 文生视频`: hỗ trợ mô hình viduq3-turbo; text-to-video theo định dạng chính thức.\n- `Vidu 图生视频`: hỗ trợ mô hình viduq3-turbo; image-to-video một ảnh theo định dạng chính thức.\n- `Vidu 首尾帧生视频`: hỗ trợ mô hình viduq3-turbo; video từ hai ảnh khung đầu-cuối theo định dạng chính thức.\n- `Vidu 参考生视频`: hỗ trợ mô hình viduq3-turbo; reference-to-video với nhiều ảnh tham chiếu theo định dạng chính thức.",
         "operationId": "createViduStartEndVideo",
         "tags": [
-          "Chính thức về tạo videoVidu"
+          "Tạo video Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -3265,7 +3265,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-khung-đầu-và-khung-cuối-vidu"
+          "href": "/api-reference/vi/tạo-video-vidu/tạo-video-khung-đầu-và-khung-cuối-vidu"
         }
       }
     },
@@ -3275,7 +3275,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nVidu giao diện tạo video chính thức, đường dẫn công khai tuân theo giao thức chính thức của Vidu.\n\nMô hình công khai hiện tại: `viduq3-turbo`. Hỗ trợ text-to-video, image-to-video, video từ khung đầu-cuối, và reference-to-video. Cùng một mô hình cũng hỗ trợ tích hợp thông qua định dạng tương thích Sora của `/v1/videos`, các `mode` thường dùng là `t2v`, `i2v`, `i2v_first_last`, `reference_images`.\n\nBổ sung skeleton request công khai, cấu trúc truy vấn tác vụ và mẫu xác minh được khuyến nghị cho định dạng tạo video chính thức của Vidu, đường dẫn công khai giữ nguyên định dạng endpoint chính thức của Vidu.\n\nMô hình hỗ trợ:\nviduq3-turbo\n\nCác trường yêu cầu thống nhất:\n- `model` (string, bắt buộc): tên mô hình công khai của Vidu, hiện công khai `viduq3-turbo`.\n- `prompt` (string, tùy chọn): prompt tạo video; bắt buộc với text-to-video, còn image-to-video/khung đầu-cuối/reference-to-video thì truyền theo nhu cầu nghiệp vụ.\n- `images` (array[string], tùy chọn): đầu vào hình ảnh. image-to-video dùng 1 ảnh, khung đầu-cuối dùng 2 ảnh, reference-to-video dùng 1~7 ảnh.\n- `videos` (array[string], tùy chọn): đầu vào đối tượng video tùy chọn cho reference-to-video, sử dụng theo năng lực mô hình chính thức của Vidu.\n- `subjects` (array[object], tùy chọn): đầu vào theo định dạng thư viện chủ thể của reference-to-video, có thể bao gồm các trường như tên chủ thể, ảnh, video hoặc giọng.\n- `duration` (integer, tùy chọn): độ dài video, tính bằng giây. `viduq3-turbo` thường dùng 5 giây, có thể đặt theo phạm vi chính thức.\n- `resolution` (string, tùy chọn): độ phân giải đầu ra, giá trị phổ biến `540p`, `720p`, `1080p`.\n- `aspect_ratio` (string, tùy chọn): tỷ lệ khung hình đầu ra, thường dùng cho text-to-video/reference-to-video, như `16:9`, `9:16`, `1:1`.\n- `seed` (integer, tùy chọn): Seed ngẫu nhiên.\n- `movement_amplitude` (string, tùy chọn): mức độ chuyển động, các giá trị phổ biến `auto`, `small`, `medium`, `large`.\n- `audio` (boolean, tùy chọn): có bật xuất trực tiếp âm thanh và video hay không.\n- `off_peak` (boolean, tùy chọn): có sử dụng tạo lệch giờ hay không.\n- `watermark` (boolean, tùy chọn): Có thêm watermark hay không.\n\nKhác biệt thường gặp giữa mô hình/chế độ:\n- `Vidu 文生视频`: hỗ trợ mô hình viduq3-turbo; text-to-video theo định dạng chính thức.\n- `Vidu 图生视频`: hỗ trợ mô hình viduq3-turbo; image-to-video một ảnh theo định dạng chính thức.\n- `Vidu 首尾帧生视频`: hỗ trợ mô hình viduq3-turbo; video từ hai ảnh khung đầu-cuối theo định dạng chính thức.\n- `Vidu 参考生视频`: hỗ trợ mô hình viduq3-turbo; reference-to-video với nhiều ảnh tham chiếu theo định dạng chính thức.",
         "operationId": "createViduReferenceVideo",
         "tags": [
-          "Chính thức về tạo videoVidu"
+          "Tạo video Vidu"
         ],
         "requestBody": {
           "required": true,
@@ -3588,7 +3588,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/chính-thức-về-tạo-videovidu/tạo-video-sinh-tham-chiếuvidu"
+          "href": "/api-reference/vi/tạo-video-vidu/tạo-video-sinh-tham-chiếuvidu"
         }
       }
     },
@@ -3598,7 +3598,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nVidu giao diện tạo video chính thức, đường dẫn công khai tuân theo giao thức chính thức của Vidu.\n\nMô hình công khai hiện tại: `viduq3-turbo`. Hỗ trợ text-to-video, image-to-video, video từ khung đầu-cuối, và reference-to-video. Cùng một mô hình cũng hỗ trợ tích hợp thông qua định dạng tương thích Sora của `/v1/videos`, các `mode` thường dùng là `t2v`, `i2v`, `i2v_first_last`, `reference_images`.\n\nBổ sung skeleton request công khai, cấu trúc truy vấn tác vụ và mẫu xác minh được khuyến nghị cho định dạng tạo video chính thức của Vidu, đường dẫn công khai giữ nguyên định dạng endpoint chính thức của Vidu.\n\nMô hình hỗ trợ:\nviduq3-turbo\n\nCác trường yêu cầu thống nhất:\n- `model` (string, bắt buộc): tên mô hình công khai của Vidu, hiện công khai `viduq3-turbo`.\n- `prompt` (string, tùy chọn): prompt tạo video; bắt buộc với text-to-video, còn image-to-video/khung đầu-cuối/reference-to-video thì truyền theo nhu cầu nghiệp vụ.\n- `images` (array[string], tùy chọn): đầu vào hình ảnh. image-to-video dùng 1 ảnh, khung đầu-cuối dùng 2 ảnh, reference-to-video dùng 1~7 ảnh.\n- `videos` (array[string], tùy chọn): đầu vào đối tượng video tùy chọn cho reference-to-video, sử dụng theo năng lực mô hình chính thức của Vidu.\n- `subjects` (array[object], tùy chọn): đầu vào theo định dạng thư viện chủ thể của reference-to-video, có thể bao gồm các trường như tên chủ thể, ảnh, video hoặc giọng.\n- `duration` (integer, tùy chọn): độ dài video, tính bằng giây. `viduq3-turbo` thường dùng 5 giây, có thể đặt theo phạm vi chính thức.\n- `resolution` (string, tùy chọn): độ phân giải đầu ra, giá trị phổ biến `540p`, `720p`, `1080p`.\n- `aspect_ratio` (string, tùy chọn): tỷ lệ khung hình đầu ra, thường dùng cho text-to-video/reference-to-video, như `16:9`, `9:16`, `1:1`.\n- `seed` (integer, tùy chọn): Seed ngẫu nhiên.\n- `movement_amplitude` (string, tùy chọn): mức độ chuyển động, các giá trị phổ biến `auto`, `small`, `medium`, `large`.\n- `audio` (boolean, tùy chọn): có bật xuất trực tiếp âm thanh và video hay không.\n- `off_peak` (boolean, tùy chọn): có sử dụng tạo lệch giờ hay không.\n- `watermark` (boolean, tùy chọn): Có thêm watermark hay không.\n\nKhác biệt thường gặp giữa mô hình/chế độ:\n- `Vidu 文生视频`: hỗ trợ mô hình viduq3-turbo; text-to-video theo định dạng chính thức.\n- `Vidu 图生视频`: hỗ trợ mô hình viduq3-turbo; image-to-video một ảnh theo định dạng chính thức.\n- `Vidu 首尾帧生视频`: hỗ trợ mô hình viduq3-turbo; video từ hai ảnh khung đầu-cuối theo định dạng chính thức.\n- `Vidu 参考生视频`: hỗ trợ mô hình viduq3-turbo; reference-to-video với nhiều ảnh tham chiếu theo định dạng chính thức.",
         "operationId": "queryViduTaskCreations",
         "tags": [
-          "Chính thức về tạo videoVidu"
+          "Tạo video Vidu"
         ],
         "parameters": [
           {
@@ -3686,7 +3686,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/chính-thức-về-tạo-videovidu/truy-vấn-tác-vụvidu"
+          "href": "/api-reference/vi/tạo-video-vidu/truy-vấn-tác-vụvidu"
         }
       }
     },
@@ -3696,7 +3696,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: tùy chọn, mảng content của Volcano Ark, trộn văn bản, hình ảnh, video và âm thanh.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- `content` mục văn bản được viết theo dạng `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` các mục tài nguyên hình ảnh, video, âm thanh lần lượt dùng cú pháp đối tượng `image_url`, `video_url`, `audio_url`, ví dụ `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` có thể dùng để xác định mục đích của tài nguyên, `name` có thể được tham chiếu theo tên trong prompt.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nGọi Gemini Omni:\n- `gemini-omni` cũng có thể được gọi thông qua giao diện tác vụ Seedance này.\n- `mode=t2v` dùng cho tạo video từ văn bản, `mode=r2v` dùng cho tạo bằng ảnh tham chiếu/tài nguyên tham chiếu, `mode=edit` dùng cho chỉnh sửa video.\n- Văn bản có thể đặt trong mục `text` của `prompt` hoặc `content`; hình ảnh có thể đặt trong `image_url / image_urls / reference_images / input_reference / content`; video có thể đặt trong `video_urls / content`.\n- Trường thời lượng có thể dùng `duration` hoặc `seconds`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
-          "Tạo videoSeedanceVolcano Ark"
+          "Tạo video Seedance"
         ],
         "requestBody": {
           "required": true,
@@ -4094,7 +4094,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/tạo-videoseedancevolcano-ark/tạo-video（seedance）"
+          "href": "/api-reference/vi/tạo-video-seedance/tạo-video（seedance）"
         }
       }
     },
@@ -4104,7 +4104,7 @@
         "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Bắt buộc, mô tả chính để tạo video.\n- `content`: tùy chọn, mảng content của Volcano Ark, trộn văn bản, hình ảnh, video và âm thanh.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- `content` mục văn bản được viết theo dạng `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` các mục tài nguyên hình ảnh, video, âm thanh lần lượt dùng cú pháp đối tượng `image_url`, `video_url`, `audio_url`, ví dụ `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` có thể dùng để xác định mục đích của tài nguyên, `name` có thể được tham chiếu theo tên trong prompt.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nGọi Gemini Omni:\n- `gemini-omni` cũng có thể được gọi thông qua giao diện tác vụ Seedance này.\n- `mode=t2v` dùng cho tạo video từ văn bản, `mode=r2v` dùng cho tạo bằng ảnh tham chiếu/tài nguyên tham chiếu, `mode=edit` dùng cho chỉnh sửa video.\n- Văn bản có thể đặt trong mục `text` của `prompt` hoặc `content`; hình ảnh có thể đặt trong `image_url / image_urls / reference_images / input_reference / content`; video có thể đặt trong `video_urls / content`.\n- Trường thời lượng có thể dùng `duration` hoặc `seconds`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n\"error\": {\n\"code\": \"invalid_request_error\",\n\"message\": \"requires at least one image in `images`\"\n}\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
-          "Tạo videoSeedanceVolcano Ark"
+          "Tạo video Seedance"
         ],
         "parameters": [
           {
@@ -4232,7 +4232,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/tạo-videoseedancevolcano-ark/truy-vấn-tác-vụ（seedance）"
+          "href": "/api-reference/vi/tạo-video-seedance/truy-vấn-tác-vụ（seedance）"
         }
       }
     },
@@ -6812,13 +6812,13 @@
       "name": "Định dạng Video Generation Omni và Veo"
     },
     {
-      "name": "Tạo videoSeedanceVolcano Ark"
+      "name": "Tạo video Seedance"
     },
     {
       "name": "Định dạng tương thích Sora cho tạo video"
     },
     {
-      "name": "Chính thức về tạo videoVidu"
+      "name": "Tạo video Vidu"
     }
   ],
   "x-doc-drift-summary": {
