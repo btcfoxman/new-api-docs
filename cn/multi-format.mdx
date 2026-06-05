@@ -9,6 +9,7 @@ description: "当前项目不是只有一种协议。为降低接入成本，公
 
 - `POST /v1/chat/completions`
 - `POST /v1/responses`
+- `GET /v1/responses/{response_id}`
 - `POST /v1/images/generations`
 - `POST /v1/images/edits`
 - `POST /v1/videos`
@@ -28,6 +29,7 @@ description: "当前项目不是只有一种协议。为降低接入成本，公
 - Vidu：`/ent/v2/text2video`、`/ent/v2/img2video`、`/ent/v2/start-end2video`、`/ent/v2/reference2video` 和 `/ent/v2/tasks/{task_id}/creations`
 - Omni 与 Veo：`gemini-omni` 使用 `/v1/videos` 或 `/api/v3/contents/generations/tasks`；Veo 原生预留路径为 `/v1beta/models/{model}:predictLongRunning` 和 `/v1beta/{operation_name}`
 - Gemini 图片生成：`/v1beta/models/{model}:generateContent`
+- 音乐生成：`/suno/submit/music` 和 `/suno/fetch/{task_id}`，支持提示词描述模式、轻音乐/纯伴奏、歌词高级模式
 
 `gemini-omni` 是对外公开的视频模型名，不需要关心内部上游模型；视频调用优先使用 `/v1/videos`，也可使用 Seedance 任务格式 `/api/v3/contents/generations/tasks`。`mode=t2v/r2v/edit` 分别表示文生视频、参考生成和视频编辑，时长字段会自动匹配到 4 / 6 / 8 / 10 秒档。
 

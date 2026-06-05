@@ -210,7 +210,7 @@
       "post": {
         "summary": "创建响应 (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API，用于创建模型响应。\n支持多轮对话、工具调用、推理等功能。",
+        "description": "OpenAI Responses API，用于创建模型响应。\n支持多轮对话、工具调用、推理等功能。\n\n补充 OpenAI Responses API 的图片生成异步用例。`background=true` 用于提交后台任务，创建接口会立即返回 `status=queued` 和完整 `id`，随后使用该 `id` 调用 `GET /v1/responses/{response_id}` 查询结果。\n\n## 异步图片生成流程\n\n1. 调用 `POST /v1/responses`，请求体中传 `tools=[{ \"type\": \"image_generation\" }]` 且 `background=true`。\n2. 保存创建接口返回的完整 `id`，例如 `resp_xxx`。不要截断、重写或只保存 `metadata.task_id`。\n3. 调用 `GET /v1/responses/{response_id}` 查询，直到 `status=completed` 或 `status=failed`。\n4. 成功后读取 `output[].url` 获取图片链接。\n\n### 创建异步图片任务示例\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n \"model\": \"gpt-image-2-2k\",\n \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n \"stream\": false,\n \"tools\": [\n {\n \"type\": \"image_generation\"\n }\n ],\n \"background\": true\n}\n```\n\n创建接口返回示例：\n\n```json\n{\n \"id\": \"resp_xxx\",\n \"created_at\": 1780649146,\n \"error\": null,\n \"incomplete_details\": null,\n \"instructions\": null,\n \"metadata\": {\n \"task_id\": \"010c31178d26436ca6194cde07931b33\",\n \"credits\": \"23\"\n },\n \"model\": \"gpt-image-2-2k\",\n \"object\": \"response\",\n \"output\": [],\n \"parallel_tool_calls\": true,\n \"temperature\": null,\n \"tool_choice\": null,\n \"tools\": null,\n \"top_p\": null,\n \"max_output_tokens\": null,\n \"previous_response_id\": null,\n \"reasoning\": null,\n \"status\": \"queued\",\n \"text\": null,\n \"truncation\": null,\n \"usage\": null,\n \"user\": null,\n \"store\": null\n}\n```\n\n支持模型：`gpt-image-2-2k`、`gpt-image-2-4k`、`nano-banana-pro`。",
         "operationId": "createResponse",
         "tags": [
           "OpenAI格式(Responses)"
@@ -220,7 +220,24 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ResponsesRequest"
+                "$ref": "#/components/schemas/ResponsesRequest",
+                "properties": {}
+              },
+              "examples": {
+                "responses_image_async": {
+                  "summary": "图片生成异步",
+                  "value": {
+                    "model": "gpt-image-2-2k",
+                    "input": "生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。",
+                    "stream": false,
+                    "tools": [
+                      {
+                        "type": "image_generation"
+                      }
+                    ],
+                    "background": true
+                  }
+                }
               }
             }
           },
@@ -233,6 +250,39 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResponsesResponse"
+                },
+                "examples": {
+                  "responses_image_async_queued": {
+                    "summary": "图片生成异步创建返回",
+                    "value": {
+                      "id": "resp_xxx",
+                      "created_at": 1780649146,
+                      "error": null,
+                      "incomplete_details": null,
+                      "instructions": null,
+                      "metadata": {
+                        "task_id": "010c31178d26436ca6194cde07931b33",
+                        "credits": "23"
+                      },
+                      "model": "gpt-image-2-2k",
+                      "object": "response",
+                      "output": [],
+                      "parallel_tool_calls": true,
+                      "temperature": null,
+                      "tool_choice": null,
+                      "tools": null,
+                      "top_p": null,
+                      "max_output_tokens": null,
+                      "previous_response_id": null,
+                      "reasoning": null,
+                      "status": "queued",
+                      "text": null,
+                      "truncation": null,
+                      "usage": null,
+                      "user": null,
+                      "store": null
+                    }
+                  }
                 }
               }
             },
@@ -257,7 +307,7 @@
       "post": {
         "summary": "Gemini 图片(Nano Banana)",
         "deprecated": false,
-        "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成OpenAI DALL-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)）。\n\n补充 /v1beta/models/{model}:generateContent 的 Gemini 图片生成字段说明，避免公开 OpenAPI 在嵌套字段上丢失 description。",
+        "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成OpenAI DALL-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)）。\n\nGemini 图片生成兼容接口。`contents[].parts` 中放文本或图片输入，`generationConfig.responseModalities` 通常传 `IMAGE`，图片尺寸通过 `generationConfig.imageConfig.imageSize` 控制。\n\n## 图片生成固定计价\n\n以下图片模型按次计费：\n\n| 模型 | 计价 |\n|---|---|\n| `kling-image-v3` | 0.05 / 次 |\n| `doubao-seedream-5-0-260128` | 0.05 / 次 |\n| `doubao-seedream-4-5-251128` | 0.06 / 次 |",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "图片生成Gemini格式"
@@ -412,7 +462,7 @@
       "post": {
         "summary": "生成图像（OpenAI Dall-E兼容）",
         "deprecated": false,
-        "description": "OpenAI Dall-E格式图片生成接口。\n\n- `POST /v1/images/generations`：创建图片生成任务\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，图片生成描述\n- `n: number`：可选，生成张数\n- `size: string`：可选，尺寸或分辨率表达\n- `quality: string`：可选，质量等级\n- `response_format: string`：可选，返回格式\n\n常用兼容扩展参数：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 专用扩展参数：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana 系列\n\n对外模型：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n能力说明：\n- `nano-banana`：基础文生图，也兼容图编辑\n- `nano-banana-pro*`：更高质量版本\n- `nano-banana-2*`：更新版本族\n- `*-2k` / `*-4k`：高分辨率型号\n\n常用参数：\n- 文生图：`model + prompt`\n- 图编辑：`model + prompt + image`，也兼容 `image_urls`\n- 常用扩展：`n` `size` `quality` `response_format`\n\n示例：\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Seedream 系列\n\n对外模型：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n能力说明：\n- 统一按文生图调用\n- 建议优先传标准参数：`prompt + model + size/aspect_ratio`\n\n常用参数：\n- `model + prompt`\n- 可选：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 常规图片主模型\n\n对外主模型：\n- `kling-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n能力说明：\n- 文生图：`model + model_name + prompt`\n- 图生图：在文生图基础上增加 `image`\n- 多图生图：传 `subject_image_list`，或传多张 `image_urls/images`\n- 扩图：传 `image` 和扩图比例参数\n\n常用参数：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n示例：\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Omni 图片主模型\n\n对外主模型：\n- `kling-omni-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\n常用参数：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n示例：\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling 虚拟试衣模型\n\n对外模型：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入参：\n- `model + human_image + cloth_image`\n\n说明：\n- 这两个模型本身就是完整主模型，不需要再传 `model_name`\n\n示例：\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
+        "description": "OpenAI Dall-E格式图片生成接口。\n\n- `POST /v1/images/generations`：创建图片生成任务\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，图片生成描述\n- `n: number`：可选，生成张数\n- `size: string`：可选，尺寸或分辨率表达\n- `quality: string`：可选，质量等级\n- `response_format: string`：可选，返回格式\n\n常用兼容扩展参数：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 专用扩展参数：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana 系列\n\n对外模型：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n能力说明：\n- `nano-banana`：基础文生图，也兼容图编辑\n- `nano-banana-pro*`：更高质量版本\n- `nano-banana-2*`：更新版本族\n- `*-2k` / `*-4k`：高分辨率型号\n\n常用参数：\n- 文生图：`model + prompt`\n- 图编辑：`model + prompt + image`，也兼容 `image_urls`\n- 常用扩展：`n` `size` `quality` `response_format`\n\n示例：\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Seedream 系列\n\n对外模型：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n能力说明：\n- 统一按文生图调用\n- 建议优先传标准参数：`prompt + model + size/aspect_ratio`\n\n常用参数：\n- `model + prompt`\n- 可选：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 常规图片主模型\n\n对外主模型：\n- `kling-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n能力说明：\n- 文生图：`model + model_name + prompt`\n- 图生图：在文生图基础上增加 `image`\n- 多图生图：传 `subject_image_list`，或传多张 `image_urls/images`\n- 扩图：传 `image` 和扩图比例参数\n\n常用参数：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n示例：\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Omni 图片主模型\n\n对外主模型：\n- `kling-omni-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\n常用参数：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n示例：\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling 虚拟试衣模型\n\n对外模型：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入参：\n- `model + human_image + cloth_image`\n\n说明：\n- 这两个模型本身就是完整主模型，不需要再传 `model_name`\n\n示例：\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## 图片生成/编辑固定计价\n\n以下模型在 `POST /v1/images/generations` 与 `POST /v1/images/edits` 中按次计费：\n\n| 模型 | 计价 |\n|---|---|\n| `kling-image-v3` | 0.05 / 次 |\n| `doubao-seedream-5-0-260128` | 0.05 / 次 |\n| `doubao-seedream-4-5-251128` | 0.06 / 次 |",
         "operationId": "createImageGeneration",
         "tags": [
           "图片生成OpenAI DALL-E格式"
@@ -585,7 +635,7 @@
       "post": {
         "summary": "编辑图像（OpenAI Dall-E兼容）",
         "deprecated": false,
-        "description": "OpenAI Dall-E格式图片编辑接口。",
+        "description": "OpenAI Dall-E格式图片编辑接口。\n\n- `POST /v1/images/edits`：编辑图片\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，图片生成描述\n- `n: number`：可选，生成张数\n- `size: string`：可选，尺寸或分辨率表达\n- `quality: string`：可选，质量等级\n- `response_format: string`：可选，返回格式\n\n常用兼容扩展参数：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 专用扩展参数：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana 系列\n\n对外模型：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n能力说明：\n- `nano-banana`：基础文生图，也兼容图编辑\n- `nano-banana-pro*`：更高质量版本\n- `nano-banana-2*`：更新版本族\n- `*-2k` / `*-4k`：高分辨率型号\n\n常用参数：\n- 文生图：`model + prompt`\n- 图编辑：`model + prompt + image`，也兼容 `image_urls`\n- 常用扩展：`n` `size` `quality` `response_format`\n\n示例：\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Seedream 系列\n\n对外模型：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n能力说明：\n- 统一按文生图调用\n- 建议优先传标准参数：`prompt + model + size/aspect_ratio`\n\n常用参数：\n- `model + prompt`\n- 可选：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 常规图片主模型\n\n对外主模型：\n- `kling-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n能力说明：\n- 文生图：`model + model_name + prompt`\n- 图生图：在文生图基础上增加 `image`\n- 多图生图：传 `subject_image_list`，或传多张 `image_urls/images`\n- 扩图：传 `image` 和扩图比例参数\n\n常用参数：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n示例：\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Omni 图片主模型\n\n对外主模型：\n- `kling-omni-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\n常用参数：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n示例：\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling 虚拟试衣模型\n\n对外模型：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入参：\n- `model + human_image + cloth_image`\n\n说明：\n- 这两个模型本身就是完整主模型，不需要再传 `model_name`\n\n示例：\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## 图片生成/编辑固定计价\n\n以下模型在 `POST /v1/images/generations` 与 `POST /v1/images/edits` 中按次计费：\n\n| 模型 | 计价 |\n|---|---|\n| `kling-image-v3` | 0.05 / 次 |\n| `doubao-seedream-5-0-260128` | 0.05 / 次 |\n| `doubao-seedream-4-5-251128` | 0.06 / 次 |",
         "operationId": "createImageEdit",
         "tags": [
           "图片生成OpenAI DALL-E格式"
@@ -600,12 +650,21 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "example": "dall-e-2"
+                    "example": "dall-e-2",
+                    "description": "对外图片模型名称。",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
                   },
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "需编辑的图片"
+                    "description": "单图输入，常用于图生图与扩图。"
                   },
                   "mask": {
                     "type": "string",
@@ -614,11 +673,12 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "编辑提示词"
+                    "description": "图片生成描述。虚拟试衣模型可不传。"
                   },
                   "n": {
                     "type": "integer",
-                    "default": 1
+                    "default": 1,
+                    "description": "生成张数。"
                   },
                   "size": {
                     "type": "string",
@@ -626,14 +686,16 @@
                       "256x256",
                       "512x512",
                       "1024x1024"
-                    ]
+                    ],
+                    "description": "尺寸或分辨率表达。"
                   },
                   "response_format": {
                     "type": "string",
                     "enum": [
                       "url",
                       "b64_json"
-                    ]
+                    ],
+                    "description": "返回格式。"
                   },
                   "user": {
                     "type": "string"
@@ -644,6 +706,131 @@
                   "image",
                   "prompt"
                 ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "dall-e-2",
+                    "description": "对外图片模型名称。",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "单图输入，常用于图生图与扩图。"
+                  },
+                  "mask": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "可选遮罩图"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "图片生成描述。虚拟试衣模型可不传。"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "生成张数。"
+                  },
+                  "size": {
+                    "type": "string",
+                    "enum": [
+                      "256x256",
+                      "512x512",
+                      "1024x1024"
+                    ],
+                    "description": "尺寸或分辨率表达。"
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "enum": [
+                      "url",
+                      "b64_json"
+                    ],
+                    "description": "返回格式。"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "model",
+                  "image",
+                  "prompt"
+                ]
+              },
+              "examples": {
+                "nano_banana_text2img": {
+                  "summary": "Nano Banana 文生图",
+                  "value": {
+                    "model": "nano-banana",
+                    "prompt": "a cute cat running in cloud",
+                    "n": 1,
+                    "size": "1024x1792"
+                  }
+                },
+                "seedream_text2img": {
+                  "summary": "Seedream 文生图",
+                  "value": {
+                    "model": "doubao-seedream-3-0-t2i-250415",
+                    "prompt": "一张电影感海边日落人像",
+                    "size": "1536x1024",
+                    "n": 1
+                  }
+                },
+                "kling_text2img": {
+                  "summary": "Kling 文生图",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v3",
+                    "prompt": "海边日落，电影感人像",
+                    "aspect_ratio": "16:9",
+                    "n": 1
+                  }
+                },
+                "kling_img2img": {
+                  "summary": "Kling 图生图",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v2-1",
+                    "prompt": "改成赛博朋克夜景风格",
+                    "image": "https://example.com/input.png",
+                    "n": 1
+                  }
+                },
+                "kling_omni_image": {
+                  "summary": "Kling Omni 图片",
+                  "value": {
+                    "model": "kling-omni-image",
+                    "model_name": "kling-v3-omni",
+                    "prompt": "生成一张海边跳舞的图片",
+                    "element_list": [
+                      {
+                        "element_id": 835266081714884677
+                      }
+                    ]
+                  }
+                },
+                "kling_virtual_try_on": {
+                  "summary": "Kling 虚拟试衣",
+                  "value": {
+                    "model": "kolors-virtual-try-on-v1",
+                    "human_image": "https://example.com/human.jpg",
+                    "cloth_image": "https://example.com/cloth.jpg"
+                  }
+                }
               }
             }
           }
@@ -679,7 +866,7 @@
       "post": {
         "summary": "创建视频",
         "deprecated": false,
-        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容\n\n当前对外不提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 创建任务，获取 `id`\n2. 轮询 `GET /v1/videos/{id}` 直到 `completed` 或 `failed`\n3. 完成后优先使用返回中的 `video_url`\n4. 如需统一下载，调用 `GET /v1/videos/{id}/content`\n\n核心参数：\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，视频生成描述\n- `seconds: number|string`：可选，目标时长\n- `duration: number|string`：可选，时长别名\n- `size: string`：可选，输出尺寸\n- `mode: string`：可选，常见值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用兼容参数：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用扩展参数：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n说明：`stable`、`official` 等表示不同分组，不是对外 `model` 后缀；调用时请保持 `model` 为基础模型名，由账户或令牌分组决定实际走哪个分组。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建议：\n- 纯文生视频优先使用 `veo3*` / `veo3.1*` 主模型\n- 图生或参考生视频场景，建议显式传 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基础模型：\n- `sora-2`\n- `sora-2-pro`\n\n建议：\n- `sora-2*` 适合通用调用\n- 如需使用 `stable` / `official` 等分组，请保持 `model` 为基础模型名，不要在模型名后追加后缀。\n\n### 4.3 Seedance 系列\n\n对外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建议：\n- 文生视频优先 `*-t2v-*` 或 `pro / fast`\n- 图生视频优先 `*-i2v-*`\n- 复杂参考素材场景优先使用 `content`\n\n### 4.4 Grok 视频系列\n\n对外模型：\n- `grok-imagine-1.0-video`\n- `grok-video-3`\n\n常用参数：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n示例：\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Kling 视频主模型\n\n对外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常见 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入参：\n- 文生视频：`model + model_name + prompt + mode=t2v`\n- 图生视频：`model + model_name + prompt + mode=i2v + image`\n- 多图参考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 视频延长：`model + model_name + mode=extend + video_id`\n\n示例：\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`\n- 最小入参：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 调用说明\n\n- `gemini-omni` 是 new-api 对外公开的视频模型名，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生视频，最小入参为 `model + prompt`。\n- `mode=r2v`：参考图/参考素材生成，图片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：视频编辑，视频可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同时传参考图。\n- 时长字段可用 `seconds` 或 `duration`，会自动匹配到 4 / 6 / 8 / 10 秒档。",
+        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容\n\n当前对外不提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 创建任务，获取 `id`\n2. 轮询 `GET /v1/videos/{id}` 直到 `completed` 或 `failed`\n3. 完成后优先使用返回中的 `video_url`\n4. 如需统一下载，调用 `GET /v1/videos/{id}/content`\n\n核心参数：\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，视频生成描述\n- `seconds: number|string`：可选，目标时长\n- `duration: number|string`：可选，时长别名\n- `size: string`：可选，输出尺寸\n- `mode: string`：可选，常见值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用兼容参数：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用扩展参数：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n说明：`stable`、`official` 等表示不同分组，不是对外 `model` 后缀；调用时请保持 `model` 为基础模型名，由账户或令牌分组决定实际走哪个分组。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建议：\n- 纯文生视频优先使用 `veo3*` / `veo3.1*` 主模型\n- 图生或参考生视频场景，建议显式传 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基础模型：\n- `sora-2`\n- `sora-2-pro`\n\n建议：\n- `sora-2*` 适合通用调用\n- 如需使用 `stable` / `official` 等分组，请保持 `model` 为基础模型名，不要在模型名后追加后缀。\n\n### 4.3 Seedance 系列\n\n对外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建议：\n- 文生视频优先 `*-t2v-*` 或 `pro / fast`\n- 图生视频优先 `*-i2v-*`\n- 复杂参考素材场景优先使用 `content`\n\n### 4.4 Grok 视频系列\n\n对外模型：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\n常用参数：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n示例：\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Kling 视频主模型\n\n对外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常见 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入参：\n- 文生视频：`model + model_name + prompt + mode=t2v`\n- 图生视频：`model + model_name + prompt + mode=i2v + image`\n- 多图参考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 视频延长：`model + model_name + mode=extend + video_id`\n\n示例：\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`\n- 最小入参：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 调用说明\n\n- `gemini-omni` 是 new-api 对外公开的视频模型名，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生视频，最小入参为 `model + prompt`。\n- `mode=r2v`：参考图/参考素材生成，图片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：视频编辑，视频可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同时传参考图。\n- 时长字段可用 `seconds` 或 `duration`，会自动匹配到 4 / 6 / 8 / 10 秒档。",
         "operationId": "createVideo",
         "tags": [
           "视频生成Sora兼容格式"
@@ -725,6 +912,7 @@
                       "veo3.1-pro-4k",
                       "kling-video",
                       "grok-imagine-1.0-video",
+                      "grok-imagine-video-1.5-preview",
                       "grok-video-3",
                       "viduq3-turbo",
                       "hailuo-video"
@@ -862,6 +1050,7 @@
                       "veo3.1-pro-4k",
                       "kling-video",
                       "grok-imagine-1.0-video",
+                      "grok-imagine-video-1.5-preview",
                       "grok-video-3",
                       "viduq3-turbo",
                       "hailuo-video"
@@ -1921,6 +2110,750 @@
         "x-drift-types": [],
         "x-mint": {
           "href": "/api-reference/cn/视频生成kling格式/获取kling图生视频任务状态"
+        }
+      }
+    },
+    "/v1/responses/{response_id}": {
+      "get": {
+        "summary": "查询响应 (OpenAI Responses API)",
+        "description": "OpenAI Responses API 异步任务查询接口。`response_id` 使用创建响应时返回的完整 `id`，不要截断或重写。\n\n查询 OpenAI Responses API 异步图片任务。`response_id` 必须使用 `POST /v1/responses` 返回的完整 `id`，例如 `resp_xxx`。\n\n## 异步查询示例\n\n```http\nGET /v1/responses/resp_xxx\n```\n\n路径参数等价说明：\n\n```json\n{\n \"response_id\": \"resp_xxx\"\n}\n```\n\n完成态返回示例：\n\n```json\n{\n \"id\": \"resp_xxx\",\n \"created_at\": 1780649146,\n \"error\": null,\n \"incomplete_details\": null,\n \"instructions\": null,\n \"metadata\": {},\n \"model\": \"gpt-image-2-2k\",\n \"object\": \"response\",\n \"output\": [\n {\n \"id\": \"ig_010c31178d26436ca6194cde07931b33_0\",\n \"result\": null,\n \"status\": \"completed\",\n \"type\": \"image_generation_call\",\n \"url\": \"https://example.png\"\n }\n ],\n \"parallel_tool_calls\": true,\n \"temperature\": null,\n \"tool_choice\": null,\n \"tools\": null,\n \"top_p\": null,\n \"max_output_tokens\": null,\n \"previous_response_id\": null,\n \"reasoning\": null,\n \"status\": \"completed\",\n \"text\": null,\n \"truncation\": null,\n \"usage\": null,\n \"user\": null,\n \"store\": null\n}\n```",
+        "tags": [
+          "OpenAI格式(Responses)"
+        ],
+        "parameters": [
+          {
+            "name": "response_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "resp_xxx"
+            },
+            "description": "创建响应返回的完整 id。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "resp_xxx",
+                      "description": "Response ID。"
+                    },
+                    "object": {
+                      "type": "string",
+                      "example": "response"
+                    },
+                    "created_at": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "in_progress",
+                      "description": "任务状态，常见为 `queued`、`in_progress`、`completed`、`failed`。"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "output": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string",
+                            "description": "图片任务完成后的图片 URL。"
+                          }
+                        }
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "上游任务 ID 元数据。"
+                        }
+                      }
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "description": "失败时的错误对象。"
+                    }
+                  }
+                },
+                "examples": {
+                  "responses_image_async_completed": {
+                    "summary": "图片生成异步查询完成返回",
+                    "value": {
+                      "id": "resp_xxx",
+                      "created_at": 1780649146,
+                      "error": null,
+                      "incomplete_details": null,
+                      "instructions": null,
+                      "metadata": {},
+                      "model": "gpt-image-2-2k",
+                      "object": "response",
+                      "output": [
+                        {
+                          "id": "ig_010c31178d26436ca6194cde07931b33_0",
+                          "result": null,
+                          "status": "completed",
+                          "type": "image_generation_call",
+                          "url": "https://example.png"
+                        }
+                      ],
+                      "parallel_tool_calls": true,
+                      "temperature": null,
+                      "tool_choice": null,
+                      "tools": null,
+                      "top_p": null,
+                      "max_output_tokens": null,
+                      "previous_response_id": null,
+                      "reasoning": null,
+                      "status": "completed",
+                      "text": null,
+                      "truncation": null,
+                      "usage": null,
+                      "user": null,
+                      "store": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/openai格式responses/查询响应-openai-responses-api"
+        }
+      }
+    },
+    "/suno/submit/music": {
+      "post": {
+        "summary": "创建音乐生成任务",
+        "description": "音乐生成提交接口，兼容旧 `/suno/submit/music` 路径。支持 Suno v5、MiniMax Music V2.6、Sonauto V3、Mureka V9，返回任务 ID，后续通过 `/suno/fetch` 查询。\n\n音乐生成任务提交接口。路径保持 `/suno/submit/music`，实际可通过 `upstream_model`、`music_model`、`engine`、`model_id` 或 `modelId` 选择音乐生成模型。创建接口返回 `task_id`，随后用 `/suno/fetch/{task_id}` 查询输出。\n\n## 音乐模型与计价\n\n| 模型 | 选择值 | 计价 |\n|---|---|---|\n| Suno v5 | `suno-v5` | 0.38 / 次 |\n| MiniMax Music V2.6 | `minimax-music-v2.6` | 0.15 / 次 |\n| Sonauto V3 | `sonauto-v3` | 0.32 / 次 |\n| Mureka V9 | `mureka-v9` | 0.24 / 次 |\n\n## 提示词描述模式\n\n适合只描述风格、情绪、语言、歌手类型和场景，由模型自动生成歌曲内容。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\",\n \"make_instrumental\": false\n}\n```\n\n## 轻音乐或纯伴奏\n\n可使用 `light_music=true` 或 `make_instrumental=true`。`light_music` 表示偏轻音乐/背景音乐，`make_instrumental` 表示不生成演唱人声。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## 歌词高级模式\n\n适合业务侧已经准备好歌词，需要指定标题和风格标签。可传 `custom_mode=true`，歌词字段可用 `lyrics`、`lyric`、`custom_lyrics` 或 `customLyrics`。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"夏日海风\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\n海风吹过白色沙滩\\n[Chorus]\\n把夏天唱成一束光\"\n}\n```\n\n## 查询\n\n创建成功后保存返回的 `data` 任务 ID，例如 `task_xxx`，调用 `GET /suno/fetch/{task_id}` 查询状态、音频地址、封面、标题、歌词和上游返回的原始片段信息。",
+        "tags": [
+          "音乐生成任务格式"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "model",
+                  "prompt"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "suno_music",
+                    "description": "固定传 `suno_music`。",
+                    "enum": [
+                      "suno_music"
+                    ]
+                  },
+                  "upstream_model": {
+                    "type": "string",
+                    "example": "suno-v5",
+                    "description": "音乐模型选择值，例如 `suno-v5`、`minimax-music-v2.6`、`sonauto-v3`、`mureka-v9`。"
+                  },
+                  "music_model": {
+                    "type": "string",
+                    "description": "`upstream_model` 的兼容别名。"
+                  },
+                  "engine": {
+                    "type": "string",
+                    "description": "`upstream_model` 的兼容别名。"
+                  },
+                  "model_id": {
+                    "type": "string",
+                    "description": "上游模型 ID 兼容字段。"
+                  },
+                  "modelId": {
+                    "type": "string",
+                    "description": "`model_id` 的 camelCase 兼容字段。"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "提示词描述模式下为音乐风格、情绪和场景；歌词高级模式下可作为歌词兼容字段。"
+                  },
+                  "gpt_description_prompt": {
+                    "type": "string",
+                    "description": "描述模式提示词兼容字段。"
+                  },
+                  "make_instrumental": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "是否生成纯伴奏。"
+                  },
+                  "light_music": {
+                    "type": "boolean",
+                    "description": "是否按轻音乐/背景音乐方向生成。"
+                  },
+                  "pure_music": {
+                    "type": "boolean",
+                    "description": "是否按纯音乐方向生成。"
+                  },
+                  "custom_mode": {
+                    "type": "boolean",
+                    "description": "是否使用自定义模式。"
+                  },
+                  "customMode": {
+                    "type": "boolean",
+                    "description": "`custom_mode` 的 camelCase 兼容字段。"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "歌曲标题。"
+                  },
+                  "tags": {
+                    "type": "string",
+                    "description": "风格标签，例如 `electro pop, female vocal`。"
+                  },
+                  "style": {
+                    "type": "string",
+                    "description": "风格兼容字段。"
+                  },
+                  "genre": {
+                    "type": "string",
+                    "description": "曲风兼容字段。"
+                  },
+                  "genres": {
+                    "type": "string",
+                    "description": "曲风兼容字段。"
+                  },
+                  "lyrics": {
+                    "type": "string",
+                    "description": "歌词内容。"
+                  },
+                  "lyric": {
+                    "type": "string",
+                    "description": "`lyrics` 兼容别名。"
+                  },
+                  "custom_lyrics": {
+                    "type": "string",
+                    "description": "`lyrics` 兼容别名。"
+                  },
+                  "customLyrics": {
+                    "type": "string",
+                    "description": "`lyrics` 兼容别名。"
+                  }
+                }
+              },
+              "examples": {
+                "music_submit_prompt": {
+                  "summary": "音乐描述生成",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "suno-v5",
+                    "prompt": "轻快电子流行，夏日海边，女声 旋律",
+                    "make_instrumental": false
+                  }
+                },
+                "music_submit_light": {
+                  "summary": "轻音乐生成",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "minimax-music-v2.6",
+                    "prompt": "温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐",
+                    "light_music": true,
+                    "make_instrumental": true
+                  }
+                },
+                "music_submit_lyrics": {
+                  "summary": "歌词高级模式",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "mureka-v9",
+                    "custom_mode": true,
+                    "title": "夏日海风",
+                    "tags": "electro pop, female vocal, bright summer",
+                    "lyrics": "[Verse]\n海风吹过白色沙滩\n[Chorus]\n把夏天唱成一束光"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "成功时为 `success`。"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "错误或提示信息。"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "任务 ID，用于后续查询。"
+                    }
+                  }
+                },
+                "examples": {
+                  "music_submit_success": {
+                    "summary": "音乐生成提交成功",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": "task_xxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/音乐生成任务格式/创建音乐生成任务"
+        }
+      }
+    },
+    "/suno/fetch": {
+      "get": {
+        "summary": "查询音乐任务",
+        "description": "通过 query `task_id` 查询音乐生成任务。\n\n音乐生成任务查询接口。创建接口返回的 `data` 即任务 ID，可通过 `GET /suno/fetch/{task_id}` 查询单个任务，也可通过 `POST /suno/fetch` 批量查询。\n\n## 查询方式\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n或：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 查询输出\n\n外层保持 new-api 任务结构：\n\n- `code`：成功时为 `success`。\n- `message`：错误或提示信息。\n- `data.task_id`：任务 ID。\n- `data.status`：任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。\n- `data.progress`：任务进度。\n- `data.result_url`：成功后可用的结果地址，若上游返回多首歌曲，以 `data.data` 内片段为准。\n- `data.data`：上游音乐结果原始数据，通常包含歌曲片段数组或对象。\n\n成功态示例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "音乐生成任务格式"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_xxx"
+            },
+            "description": "提交音乐任务返回的任务 ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "成功时为 `success`。"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "错误或提示信息。"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "任务 ID。"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。"
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "任务进度。"
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "成功后可用的结果地址。"
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "歌曲音频 URL。"
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "歌曲封面 URL。"
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "歌曲标题。"
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "音频时长。"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "音乐任务查询成功",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/音乐生成任务格式/查询音乐任务"
+        }
+      },
+      "post": {
+        "summary": "查询音乐任务（JSON）",
+        "description": "通过 JSON body 查询音乐生成任务。\n\n音乐生成任务查询接口。创建接口返回的 `data` 即任务 ID，可通过 `GET /suno/fetch/{task_id}` 查询单个任务，也可通过 `POST /suno/fetch` 批量查询。\n\n## 查询方式\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n或：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 查询输出\n\n外层保持 new-api 任务结构：\n\n- `code`：成功时为 `success`。\n- `message`：错误或提示信息。\n- `data.task_id`：任务 ID。\n- `data.status`：任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。\n- `data.progress`：任务进度。\n- `data.result_url`：成功后可用的结果地址，若上游返回多首歌曲，以 `data.data` 内片段为准。\n- `data.data`：上游音乐结果原始数据，通常包含歌曲片段数组或对象。\n\n成功态示例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "音乐生成任务格式"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "task_id"
+                ],
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "example": "task_xxx",
+                    "description": "提交接口返回的任务 ID。"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "`task_id` 兼容别名。"
+                  }
+                }
+              },
+              "examples": {
+                "suno_music_fetch": {
+                  "summary": "音乐任务查询",
+                  "value": {
+                    "task_id": "task_xxx"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "成功时为 `success`。"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "错误或提示信息。"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "任务 ID。"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。"
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "任务进度。"
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "成功后可用的结果地址。"
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "歌曲音频 URL。"
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "歌曲封面 URL。"
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "歌曲标题。"
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "音频时长。"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "音乐任务查询成功",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/音乐生成任务格式/查询音乐任务（json）"
+        }
+      }
+    },
+    "/suno/fetch/{task_id}": {
+      "get": {
+        "summary": "按 ID 查询音乐任务",
+        "description": "通过 path `task_id` 查询音乐生成任务。\n\n音乐生成任务查询接口。创建接口返回的 `data` 即任务 ID，可通过 `GET /suno/fetch/{task_id}` 查询单个任务，也可通过 `POST /suno/fetch` 批量查询。\n\n## 查询方式\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n或：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 查询输出\n\n外层保持 new-api 任务结构：\n\n- `code`：成功时为 `success`。\n- `message`：错误或提示信息。\n- `data.task_id`：任务 ID。\n- `data.status`：任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。\n- `data.progress`：任务进度。\n- `data.result_url`：成功后可用的结果地址，若上游返回多首歌曲，以 `data.data` 内片段为准。\n- `data.data`：上游音乐结果原始数据，通常包含歌曲片段数组或对象。\n\n成功态示例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "音乐生成任务格式"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_xxx"
+            },
+            "description": "提交音乐任务返回的任务 ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "成功时为 `success`。"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "错误或提示信息。"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "任务 ID。"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。"
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "任务进度。"
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "成功后可用的结果地址。"
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "歌曲音频 URL。"
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "歌曲封面 URL。"
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "歌曲标题。"
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "音频时长。"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "音乐任务查询成功",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/cn/音乐生成任务格式/按-id-查询音乐任务"
         }
       }
     },
@@ -6819,6 +7752,9 @@
     },
     {
       "name": "视频生成Vidu格式"
+    },
+    {
+      "name": "音乐生成任务格式"
     }
   ],
   "x-doc-drift-summary": {

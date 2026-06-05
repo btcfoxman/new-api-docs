@@ -9,6 +9,7 @@ Phù hợp với hầu hết các kịch bản tích hợp mới, nên ưu tiên
 
 - `POST /v1/chat/completions`
 - `POST /v1/responses`
+- `GET /v1/responses/{response_id}`
 - `POST /v1/images/generations`
 - `POST /v1/images/edits`
 - `POST /v1/videos`
@@ -28,6 +29,7 @@ Khi bản thân mô hình yêu cầu các trường chuyên dụng, cấu trúc 
 - Vidu：`/ent/v2/text2video`、`/ent/v2/img2video`、`/ent/v2/start-end2video`、`/ent/v2/reference2video` 和 `/ent/v2/tasks/{task_id}/creations`
 - Omni và Veo: `gemini-omni` sử dụng `/v1/videos` hoặc `/api/v3/contents/generations/tasks`; đường dẫn dự trữ gốc của Veo là `/v1beta/models/{model}:predictLongRunning` và `/v1beta/{operation_name}`
 - Gemini tạo hình ảnh: `/v1beta/models/{model}:generateContent`
+- Tạo nhạc: `/suno/submit/music` và `/suno/fetch/{task_id}`, hỗ trợ chế độ mô tả bằng prompt, nhạc nhẹ/nhạc đệm thuần, chế độ nâng cao cho lời bài hát
 
 `gemini-omni` là tên mô hình video công khai, không cần quan tâm đến mô hình upstream nội bộ; khi gọi video ưu tiên dùng `/v1/videos`, cũng có thể dùng định dạng tác vụ Seedance `/api/v3/contents/generations/tasks`. `mode=t2v/r2v/edit` lần lượt biểu thị tạo video từ văn bản, tạo theo tham chiếu và chỉnh sửa video; trường thời lượng sẽ tự động khớp với các mốc 4 / 6 / 8 / 10 giây.
 

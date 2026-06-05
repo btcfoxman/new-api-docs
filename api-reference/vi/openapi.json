@@ -210,7 +210,7 @@
       "post": {
         "summary": "Tạo phản hồi (OpenAI Phản hồi API)",
         "deprecated": false,
-        "description": "OpenAI Responses API, dùng để tạo phản hồi của mô hình.\nHỗ trợ các tính năng như hội thoại đa vòng, gọi công cụ, suy luận.",
+        "description": "OpenAI Responses API, dùng để tạo phản hồi của mô hình.\nHỗ trợ các tính năng như hội thoại đa vòng, gọi công cụ, suy luận.\n\nBổ sung các trường hợp sử dụng tạo ảnh bất đồng bộ cho OpenAI Responses API. `background=true` dùng để gửi tác vụ nền, API tạo sẽ trả về ngay `status=queued` và `id` đầy đủ, sau đó dùng `id` này để gọi `GET /v1/responses/{response_id}` truy vấn kết quả.\n\n## Quy trình tạo ảnh bất đồng bộ\n\n1. Gọi `POST /v1/responses`, trong body của request truyền `tools=[{ \"type\": \"image_generation\" }]` và `background=true`.\n2. Lưu lại toàn bộ `id` do API tạo trả về, ví dụ `resp_xxx`. Không cắt ngắn, viết lại hoặc chỉ lưu `metadata.task_id`.\n3. Gọi `GET /v1/responses/{response_id}` để truy vấn cho đến khi `status=completed` hoặc `status=failed`.\n4. Sau khi thành công, đọc `output[].url` để lấy liên kết ảnh.\n\n### Ví dụ tạo tác vụ ảnh bất đồng bộ\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n \"model\": \"gpt-image-2-2k\",\n \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n \"stream\": false,\n \"tools\": [\n {\n \"type\": \"image_generation\"\n }\n ],\n \"background\": true\n}\n```\n\nVí dụ phản hồi của API tạo:\n\n```json\n{\n \"id\": \"resp_xxx\",\n \"created_at\": 1780649146,\n \"error\": null,\n \"incomplete_details\": null,\n \"instructions\": null,\n \"metadata\": {\n \"task_id\": \"010c31178d26436ca6194cde07931b33\",\n \"credits\": \"23\"\n },\n \"model\": \"gpt-image-2-2k\",\n \"object\": \"response\",\n \"output\": [],\n \"parallel_tool_calls\": true,\n \"temperature\": null,\n \"tool_choice\": null,\n \"tools\": null,\n \"top_p\": null,\n \"max_output_tokens\": null,\n \"previous_response_id\": null,\n \"reasoning\": null,\n \"status\": \"queued\",\n \"text\": null,\n \"truncation\": null,\n \"usage\": null,\n \"user\": null,\n \"store\": null\n}\n```\n\nCác model được hỗ trợ: `gpt-image-2-2k`, `gpt-image-2-4k`, `nano-banana-pro`.",
         "operationId": "createResponse",
         "tags": [
           "Định dạng OpenAI (Responses)"
@@ -220,7 +220,24 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ResponsesRequest"
+                "$ref": "#/components/schemas/ResponsesRequest",
+                "properties": {}
+              },
+              "examples": {
+                "responses_image_async": {
+                  "summary": "Tạo ảnh không đồng bộ",
+                  "value": {
+                    "model": "gpt-image-2-2k",
+                    "input": "生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。",
+                    "stream": false,
+                    "tools": [
+                      {
+                        "type": "image_generation"
+                      }
+                    ],
+                    "background": true
+                  }
+                }
               }
             }
           },
@@ -233,6 +250,39 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResponsesResponse"
+                },
+                "examples": {
+                  "responses_image_async_queued": {
+                    "summary": "Phản hồi khi tạo không đồng bộ ảnh",
+                    "value": {
+                      "id": "resp_xxx",
+                      "created_at": 1780649146,
+                      "error": null,
+                      "incomplete_details": null,
+                      "instructions": null,
+                      "metadata": {
+                        "task_id": "010c31178d26436ca6194cde07931b33",
+                        "credits": "23"
+                      },
+                      "model": "gpt-image-2-2k",
+                      "object": "response",
+                      "output": [],
+                      "parallel_tool_calls": true,
+                      "temperature": null,
+                      "tool_choice": null,
+                      "tools": null,
+                      "top_p": null,
+                      "max_output_tokens": null,
+                      "previous_response_id": null,
+                      "reasoning": null,
+                      "status": "queued",
+                      "text": null,
+                      "truncation": null,
+                      "usage": null,
+                      "user": null,
+                      "store": null
+                    }
+                  }
                 }
               }
             },
@@ -257,7 +307,7 @@
       "post": {
         "summary": "Hình ảnh Gemini (Nano Banana)",
         "deprecated": false,
-        "description": "Tạo hình ảnh với Gemini.\n\nChuỗi Nano Banana hỗ trợ định dạng Dall-E của OpenAI (xem chi tiết tại liên kết [Định dạng DALL-E cho tạo ảnh OpenAI](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).\n\nBổ sung mô tả các trường tạo ảnh Gemini cho /v1beta/models/{model}:generateContent, tránh OpenAPI công khai bị mất description ở các trường lồng nhau.",
+        "description": "Tạo hình ảnh với Gemini.\n\nChuỗi Nano Banana hỗ trợ định dạng Dall-E của OpenAI (xem chi tiết tại liên kết [Định dạng DALL-E cho tạo ảnh OpenAI](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).\n\nGiao diện tương thích tạo ảnh Gemini. Đặt đầu vào văn bản hoặc hình ảnh trong `contents[].parts`, `generationConfig.responseModalities` thường truyền `IMAGE`, kích thước ảnh được kiểm soát qua `generationConfig.imageConfig.imageSize`.\n\n## Định giá cố định cho tạo ảnh\n\nCác mô hình ảnh sau được tính phí theo mỗi lần:\n\n| Mô hình | Định giá |\n|---|---|\n| `kling-image-v3` | 0.05 / lần |\n| `doubao-seedream-5-0-260128` | 0.05 / lần |\n| `doubao-seedream-4-5-251128` | 0.06 / lần |",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "Định dạng Gemini cho tạo ảnh"
@@ -412,7 +462,7 @@
       "post": {
         "summary": "Tạo hình ảnh (tương thích OpenAI Dall-E)",
         "deprecated": false,
-        "description": "OpenAI API tạo ảnh theo định dạng Dall-E.\n\n- `POST /v1/images/generations`: Tạo tác vụ tạo ảnh\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo ảnh\n- `n: number`: Tùy chọn, số lượng ảnh tạo\n- `size: string`: Tùy chọn, biểu thức kích thước hoặc độ phân giải\n- `quality: string`: Tùy chọn, mức chất lượng\n- `response_format: string`: Tùy chọn, định dạng trả về\n\nCác tham số mở rộng tương thích thường dùng:\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling Tham số mở rộng chuyên dụng:\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Dòng Nano Banana\n\nMô hình công khai:\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nMô tả khả năng:\n- `nano-banana`: Tạo ảnh từ văn bản cơ bản, cũng tương thích với chỉnh sửa ảnh\n- `nano-banana-pro*`: Phiên bản chất lượng cao hơn\n- `nano-banana-2*`: Họ phiên bản mới hơn\n- `*-2k` / `*-4k`: Mẫu độ phân giải cao\n\nTham số thường dùng:\n- Text-to-image: `model + prompt`\n- Chỉnh sửa ảnh: `model + prompt + image`, cũng tương thích với `image_urls`\n- Mở rộng thường dùng: `n` `size` `quality` `response_format`\n\nVí dụ:\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Dòng Seedream\n\nMô hình công khai:\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nMô tả khả năng:\n- Thống nhất gọi theo cách text-to-image\n- Khuyến nghị ưu tiên truyền tham số chuẩn: `prompt + model + size/aspect_ratio`\n\nTham số thường dùng:\n- `model + prompt`\n- Tùy chọn: `size` `aspect_ratio` `n`\n\n### 3.3 Kling Mô hình chính ảnh thông thường\n\nMô hình chính công khai:\n- `kling-image`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nMô tả khả năng:\n- Text-to-image: `model + model_name + prompt`\n- Image-to-image: thêm `image` trên cơ sở text-to-image\n- Multi-image-to-image: truyền `subject_image_list`, hoặc truyền nhiều `image_urls/images`\n- Outpainting: truyền `image` và tham số tỷ lệ mở rộng ảnh\n\nTham số thường dùng:\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Mô hình chính ảnh Omni\n\nMô hình chính công khai:\n- `kling-omni-image`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-image-o1`\n- `kling-v3-omni`\n\nTham số thường dùng:\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling Mô hình thử đồ ảo\n\nMô hình công khai:\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nTham số đầu vào tối thiểu:\n- `model + human_image + cloth_image`\n\nGiải thích:\n- Hai mô hình này bản thân đã là mô hình chính hoàn chỉnh, không cần truyền thêm `model_name`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
+        "description": "OpenAI API tạo ảnh theo định dạng Dall-E.\n\n- `POST /v1/images/generations`: Tạo tác vụ tạo ảnh\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo ảnh\n- `n: number`: Tùy chọn, số lượng ảnh tạo\n- `size: string`: Tùy chọn, biểu thức kích thước hoặc độ phân giải\n- `quality: string`: Tùy chọn, mức chất lượng\n- `response_format: string`: Tùy chọn, định dạng trả về\n\nCác tham số mở rộng tương thích thường dùng:\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling Tham số mở rộng chuyên dụng:\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Dòng Nano Banana\n\nMô hình công khai:\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nMô tả khả năng:\n- `nano-banana`: Tạo ảnh từ văn bản cơ bản, cũng tương thích với chỉnh sửa ảnh\n- `nano-banana-pro*`: Phiên bản chất lượng cao hơn\n- `nano-banana-2*`: Họ phiên bản mới hơn\n- `*-2k` / `*-4k`: Mẫu độ phân giải cao\n\nTham số thường dùng:\n- Text-to-image: `model + prompt`\n- Chỉnh sửa ảnh: `model + prompt + image`, cũng tương thích với `image_urls`\n- Mở rộng thường dùng: `n` `size` `quality` `response_format`\n\nVí dụ:\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Dòng Seedream\n\nMô hình công khai:\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nMô tả khả năng:\n- Thống nhất gọi theo cách text-to-image\n- Khuyến nghị ưu tiên truyền tham số chuẩn: `prompt + model + size/aspect_ratio`\n\nTham số thường dùng:\n- `model + prompt`\n- Tùy chọn: `size` `aspect_ratio` `n`\n\n### 3.3 Kling Mô hình chính ảnh thông thường\n\nMô hình chính công khai:\n- `kling-image`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nMô tả khả năng:\n- Text-to-image: `model + model_name + prompt`\n- Image-to-image: thêm `image` trên cơ sở text-to-image\n- Multi-image-to-image: truyền `subject_image_list`, hoặc truyền nhiều `image_urls/images`\n- Outpainting: truyền `image` và tham số tỷ lệ mở rộng ảnh\n\nTham số thường dùng:\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Mô hình chính ảnh Omni\n\nMô hình chính công khai:\n- `kling-omni-image`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-image-o1`\n- `kling-v3-omni`\n\nTham số thường dùng:\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling Mô hình thử đồ ảo\n\nMô hình công khai:\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nTham số đầu vào tối thiểu:\n- `model + human_image + cloth_image`\n\nGiải thích:\n- Hai mô hình này bản thân đã là mô hình chính hoàn chỉnh, không cần truyền thêm `model_name`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## Định giá cố định cho tạo/chỉnh sửa hình ảnh\n\nCác mô hình sau được tính phí theo từng lần trong `POST /v1/images/generations` và `POST /v1/images/edits`:\n\n| Mô hình | Định giá |\n|---|---|\n| `kling-image-v3` | 0.05 / lần |\n| `doubao-seedream-5-0-260128` | 0.05 / lần |\n| `doubao-seedream-4-5-251128` | 0.06 / lần |",
         "operationId": "createImageGeneration",
         "tags": [
           "Tạo hình ảnhOpenAI định dạng DALL-E"
@@ -585,7 +635,7 @@
       "post": {
         "summary": "Chỉnh sửa hình ảnh (tương thích với OpenAI Dall-E)",
         "deprecated": false,
-        "description": "OpenAI API chỉnh sửa hình ảnh định dạng Dall-E.",
+        "description": "OpenAI API chỉnh sửa hình ảnh định dạng Dall-E.\n\n- `POST /v1/images/edits`: Chỉnh sửa hình ảnh\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo ảnh\n- `n: number`: Tùy chọn, số lượng ảnh tạo\n- `size: string`: Tùy chọn, biểu thức kích thước hoặc độ phân giải\n- `quality: string`: Tùy chọn, mức chất lượng\n- `response_format: string`: Tùy chọn, định dạng trả về\n\nCác tham số mở rộng tương thích thường dùng:\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling Tham số mở rộng chuyên dụng:\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Dòng Nano Banana\n\nMô hình công khai:\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nMô tả khả năng:\n- `nano-banana`: Tạo ảnh từ văn bản cơ bản, cũng tương thích với chỉnh sửa ảnh\n- `nano-banana-pro*`: Phiên bản chất lượng cao hơn\n- `nano-banana-2*`: Họ phiên bản mới hơn\n- `*-2k` / `*-4k`: Mẫu độ phân giải cao\n\nTham số thường dùng:\n- Text-to-image: `model + prompt`\n- Chỉnh sửa ảnh: `model + prompt + image`, cũng tương thích với `image_urls`\n- Mở rộng thường dùng: `n` `size` `quality` `response_format`\n\nVí dụ:\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Dòng Seedream\n\nMô hình công khai:\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nMô tả khả năng:\n- Thống nhất gọi theo cách text-to-image\n- Khuyến nghị ưu tiên truyền tham số chuẩn: `prompt + model + size/aspect_ratio`\n\nTham số thường dùng:\n- `model + prompt`\n- Tùy chọn: `size` `aspect_ratio` `n`\n\n### 3.3 Kling Mô hình chính ảnh thông thường\n\nMô hình chính công khai:\n- `kling-image`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nMô tả khả năng:\n- Text-to-image: `model + model_name + prompt`\n- Image-to-image: thêm `image` trên cơ sở text-to-image\n- Multi-image-to-image: truyền `subject_image_list`, hoặc truyền nhiều `image_urls/images`\n- Outpainting: truyền `image` và tham số tỷ lệ mở rộng ảnh\n\nTham số thường dùng:\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Mô hình chính ảnh Omni\n\nMô hình chính công khai:\n- `kling-omni-image`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-image-o1`\n- `kling-v3-omni`\n\nTham số thường dùng:\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling Mô hình thử đồ ảo\n\nMô hình công khai:\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nTham số đầu vào tối thiểu:\n- `model + human_image + cloth_image`\n\nGiải thích:\n- Hai mô hình này bản thân đã là mô hình chính hoàn chỉnh, không cần truyền thêm `model_name`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## Định giá cố định cho tạo/chỉnh sửa hình ảnh\n\nCác mô hình sau được tính phí theo từng lần trong `POST /v1/images/generations` và `POST /v1/images/edits`:\n\n| Mô hình | Định giá |\n|---|---|\n| `kling-image-v3` | 0.05 / lần |\n| `doubao-seedream-5-0-260128` | 0.05 / lần |\n| `doubao-seedream-4-5-251128` | 0.06 / lần |",
         "operationId": "createImageEdit",
         "tags": [
           "Tạo hình ảnhOpenAI định dạng DALL-E"
@@ -600,12 +650,21 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "example": "dall-e-2"
+                    "example": "dall-e-2",
+                    "description": "Tên mô hình hình ảnh công khai.",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
                   },
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Hình ảnh cần chỉnh sửa"
+                    "description": "Đầu vào một ảnh, thường dùng cho tạo ảnh từ ảnh và mở rộng ảnh."
                   },
                   "mask": {
                     "type": "string",
@@ -614,11 +673,12 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Chỉnh sửa câu lệnh"
+                    "description": "Mô tả tạo ảnh. Với mô hình thử đồ ảo, có thể không truyền."
                   },
                   "n": {
                     "type": "integer",
-                    "default": 1
+                    "default": 1,
+                    "description": "Số lượng ảnh được tạo."
                   },
                   "size": {
                     "type": "string",
@@ -626,14 +686,16 @@
                       "256x256",
                       "512x512",
                       "1024x1024"
-                    ]
+                    ],
+                    "description": "Biểu thị kích thước hoặc độ phân giải."
                   },
                   "response_format": {
                     "type": "string",
                     "enum": [
                       "url",
                       "b64_json"
-                    ]
+                    ],
+                    "description": "Định dạng trả về."
                   },
                   "user": {
                     "type": "string"
@@ -644,6 +706,131 @@
                   "image",
                   "prompt"
                 ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "dall-e-2",
+                    "description": "Tên mô hình hình ảnh công khai.",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Đầu vào một ảnh, thường dùng cho tạo ảnh từ ảnh và mở rộng ảnh."
+                  },
+                  "mask": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Ảnh mặt nạ tùy chọn"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "Mô tả tạo ảnh. Với mô hình thử đồ ảo, có thể không truyền."
+                  },
+                  "n": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "Số lượng ảnh được tạo."
+                  },
+                  "size": {
+                    "type": "string",
+                    "enum": [
+                      "256x256",
+                      "512x512",
+                      "1024x1024"
+                    ],
+                    "description": "Biểu thị kích thước hoặc độ phân giải."
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "enum": [
+                      "url",
+                      "b64_json"
+                    ],
+                    "description": "Định dạng trả về."
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "model",
+                  "image",
+                  "prompt"
+                ]
+              },
+              "examples": {
+                "nano_banana_text2img": {
+                  "summary": "Nano Banana Tạo ảnh từ văn bản",
+                  "value": {
+                    "model": "nano-banana",
+                    "prompt": "a cute cat running in cloud",
+                    "n": 1,
+                    "size": "1024x1792"
+                  }
+                },
+                "seedream_text2img": {
+                  "summary": "Seedream tạo ảnh từ văn bản",
+                  "value": {
+                    "model": "doubao-seedream-3-0-t2i-250415",
+                    "prompt": "一张电影感海边日落人像",
+                    "size": "1536x1024",
+                    "n": 1
+                  }
+                },
+                "kling_text2img": {
+                  "summary": "Kling Tạo ảnh từ văn bản",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v3",
+                    "prompt": "海边日落，电影感人像",
+                    "aspect_ratio": "16:9",
+                    "n": 1
+                  }
+                },
+                "kling_img2img": {
+                  "summary": "Kling Tạo ảnh từ ảnh",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v2-1",
+                    "prompt": "改成赛博朋克夜景风格",
+                    "image": "https://example.com/input.png",
+                    "n": 1
+                  }
+                },
+                "kling_omni_image": {
+                  "summary": "Kling Ảnh Omni",
+                  "value": {
+                    "model": "kling-omni-image",
+                    "model_name": "kling-v3-omni",
+                    "prompt": "生成一张海边跳舞的图片",
+                    "element_list": [
+                      {
+                        "element_id": 835266081714884677
+                      }
+                    ]
+                  }
+                },
+                "kling_virtual_try_on": {
+                  "summary": "Kling Thử đồ ảo",
+                  "value": {
+                    "model": "kolors-virtual-try-on-v1",
+                    "human_image": "https://example.com/human.jpg",
+                    "cloth_image": "https://example.com/cloth.jpg"
+                  }
+                }
               }
             }
           }
@@ -679,7 +866,7 @@
       "post": {
         "summary": "Tạo video",
         "deprecated": false,
-        "description": "Giao diện tạo video định dạng tương thích OpenAI Sora. Hỗ trợ chế độ tạo từ văn bản thành video và tạo bằng ảnh/video tham chiếu.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` tạo tác vụ, lấy `id`\n2. Thăm dò `GET /v1/videos/{id}` cho đến khi `completed` hoặc `failed`\n3. Sau khi hoàn tất, ưu tiên sử dụng `video_url` trong kết quả trả về\n4. Nếu cần tải xuống thống nhất, gọi `GET /v1/videos/{id}/content`\n\nTham số cốt lõi:\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo video\n- `seconds: number|string`: Tùy chọn, thời lượng mục tiêu\n- `duration: number|string`: Tùy chọn, bí danh thời lượng\n- `size: string`: Tùy chọn, kích thước đầu ra\n- `mode: string`: Tùy chọn, các giá trị phổ biến `t2v` `i2v` `i2v_first_last` `reference_material`\n\nTham số tương thích thường dùng:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nCác tham số mở rộng thường dùng của Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Dòng Veo\n\nLưu ý: `stable`, `official` v.v. biểu thị các nhóm khác nhau, không phải hậu tố `model` dùng đối ngoại; khi gọi, vui lòng giữ `model` là tên mô hình cơ sở, nhóm tài khoản hoặc mã thông báo sẽ quyết định thực tế đi qua nhóm nào.\n\n#### Mô hình chính Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nKhuyến nghị:\n- Với video tạo từ văn bản thuần túy, ưu tiên dùng mô hình chính `veo3*` / `veo3.1*`\n- Với các tình huống tạo video từ ảnh hoặc từ tham chiếu, nên truyền rõ ràng `mode + image_url/reference_images`\n\n### 4.2 Dòng Sora\n\nMô hình cơ sở:\n- `sora-2`\n- `sora-2-pro`\n\nKhuyến nghị:\n- `sora-2*` phù hợp cho các lệnh gọi thông dụng\n- Nếu cần sử dụng các nhóm như `stable` / `official`, vui lòng giữ `model` là tên mô hình cơ sở, không thêm hậu tố vào sau tên mô hình.\n\n### 4.3 Dòng Seedance\n\nMô hình công khai:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nKhuyến nghị:\n- Với tạo video từ văn bản, ưu tiên `*-t2v-*` hoặc `pro / fast`\n- Với tạo video từ hình ảnh, ưu tiên `*-i2v-*`\n- Với các tình huống có tư liệu tham chiếu phức tạp, ưu tiên dùng `content`\n\n### 4.4 Dòng video Grok\n\nMô hình công khai:\n- `grok-imagine-1.0-video`\n- `grok-video-3`\n\nTham số thường dùng:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nVí dụ:\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Mô hình chính video Kling\n\nMô hình chính công khai:\n- `kling-video`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCác `mode` phổ biến:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nTham số đầu vào tối thiểu:\n- Tạo video từ văn bản: `model + model_name + prompt + mode=t2v`\n- Tạo video từ hình ảnh: `model + model_name + prompt + mode=i2v + image`\n- Tham chiếu nhiều ảnh: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Kéo dài video: `model + model_name + mode=extend + video_id`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Hướng dẫn gọi Gemini Omni\n\n- `gemini-omni` là tên mô hình video công khai của new-api, có thể trực tiếp gọi qua `POST /v1/videos`.\n- `mode=t2v`: tạo video từ văn bản, tham số đầu vào tối thiểu là `model + prompt`.\n- `mode=r2v`: tạo bằng ảnh/tư liệu tham chiếu, ảnh có thể đặt trong `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` hoặc `content`.\n- `mode=edit`: chỉnh sửa video, video có thể đặt trong `video`、`video_url`、`videos` hoặc `content`, đồng thời cũng có thể truyền ảnh tham chiếu.\n- Trường thời lượng có thể dùng `seconds` hoặc `duration`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.",
+        "description": "Giao diện tạo video định dạng tương thích OpenAI Sora. Hỗ trợ chế độ tạo từ văn bản thành video và tạo bằng ảnh/video tham chiếu.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` tạo tác vụ, lấy `id`\n2. Thăm dò `GET /v1/videos/{id}` cho đến khi `completed` hoặc `failed`\n3. Sau khi hoàn tất, ưu tiên sử dụng `video_url` trong kết quả trả về\n4. Nếu cần tải xuống thống nhất, gọi `GET /v1/videos/{id}/content`\n\nTham số cốt lõi:\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo video\n- `seconds: number|string`: Tùy chọn, thời lượng mục tiêu\n- `duration: number|string`: Tùy chọn, bí danh thời lượng\n- `size: string`: Tùy chọn, kích thước đầu ra\n- `mode: string`: Tùy chọn, các giá trị phổ biến `t2v` `i2v` `i2v_first_last` `reference_material`\n\nTham số tương thích thường dùng:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nCác tham số mở rộng thường dùng của Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Dòng Veo\n\nLưu ý: `stable`, `official` v.v. biểu thị các nhóm khác nhau, không phải hậu tố `model` dùng đối ngoại; khi gọi, vui lòng giữ `model` là tên mô hình cơ sở, nhóm tài khoản hoặc mã thông báo sẽ quyết định thực tế đi qua nhóm nào.\n\n#### Mô hình chính Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nKhuyến nghị:\n- Với video tạo từ văn bản thuần túy, ưu tiên dùng mô hình chính `veo3*` / `veo3.1*`\n- Với các tình huống tạo video từ ảnh hoặc từ tham chiếu, nên truyền rõ ràng `mode + image_url/reference_images`\n\n### 4.2 Dòng Sora\n\nMô hình cơ sở:\n- `sora-2`\n- `sora-2-pro`\n\nKhuyến nghị:\n- `sora-2*` phù hợp cho các lệnh gọi thông dụng\n- Nếu cần sử dụng các nhóm như `stable` / `official`, vui lòng giữ `model` là tên mô hình cơ sở, không thêm hậu tố vào sau tên mô hình.\n\n### 4.3 Dòng Seedance\n\nMô hình công khai:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nKhuyến nghị:\n- Với tạo video từ văn bản, ưu tiên `*-t2v-*` hoặc `pro / fast`\n- Với tạo video từ hình ảnh, ưu tiên `*-i2v-*`\n- Với các tình huống có tư liệu tham chiếu phức tạp, ưu tiên dùng `content`\n\n### 4.4 Dòng video Grok\n\nMô hình công khai:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nTham số thường dùng:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nVí dụ:\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Mô hình chính video Kling\n\nMô hình chính công khai:\n- `kling-video`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCác `mode` phổ biến:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nTham số đầu vào tối thiểu:\n- Tạo video từ văn bản: `model + model_name + prompt + mode=t2v`\n- Tạo video từ hình ảnh: `model + model_name + prompt + mode=i2v + image`\n- Tham chiếu nhiều ảnh: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Kéo dài video: `model + model_name + mode=extend + video_id`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Hướng dẫn gọi Gemini Omni\n\n- `gemini-omni` là tên mô hình video công khai của new-api, có thể trực tiếp gọi qua `POST /v1/videos`.\n- `mode=t2v`: tạo video từ văn bản, tham số đầu vào tối thiểu là `model + prompt`.\n- `mode=r2v`: tạo bằng ảnh/tư liệu tham chiếu, ảnh có thể đặt trong `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` hoặc `content`.\n- `mode=edit`: chỉnh sửa video, video có thể đặt trong `video`、`video_url`、`videos` hoặc `content`, đồng thời cũng có thể truyền ảnh tham chiếu.\n- Trường thời lượng có thể dùng `seconds` hoặc `duration`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.",
         "operationId": "createVideo",
         "tags": [
           "Định dạng tương thích Sora cho tạo video"
@@ -725,6 +912,7 @@
                       "veo3.1-pro-4k",
                       "kling-video",
                       "grok-imagine-1.0-video",
+                      "grok-imagine-video-1.5-preview",
                       "grok-video-3",
                       "viduq3-turbo",
                       "hailuo-video"
@@ -862,6 +1050,7 @@
                       "veo3.1-pro-4k",
                       "kling-video",
                       "grok-imagine-1.0-video",
+                      "grok-imagine-video-1.5-preview",
                       "grok-video-3",
                       "viduq3-turbo",
                       "hailuo-video"
@@ -1921,6 +2110,750 @@
         "x-drift-types": [],
         "x-mint": {
           "href": "/api-reference/vi/định-dạngkling-tạo-video/lấy-trạng-thái-tác-vụ-tạo-video-từ-ảnh-kling"
+        }
+      }
+    },
+    "/v1/responses/{response_id}": {
+      "get": {
+        "summary": "Phản hồi truy vấn (OpenAI Responses API)",
+        "description": "OpenAI Responses API giao diện truy vấn tác vụ bất đồng bộ. `response_id` Hãy sử dụng đầy đủ `id` được trả về khi tạo phản hồi, không cắt ngắn hoặc viết lại.\n\nTruy vấn tác vụ hình ảnh bất đồng bộ của OpenAI Responses API. `response_id` Phải sử dụng đầy đủ `id` do `POST /v1/responses` trả về, ví dụ `resp_xxx`.\n\n## Ví dụ truy vấn bất đồng bộ\n\n```http\nGET /v1/responses/resp_xxx\n```\n\nGiải thích tương đương của tham số đường dẫn:\n\n```json\n{\n \"response_id\": \"resp_xxx\"\n}\n```\n\nVí dụ phản hồi ở trạng thái hoàn tất:\n\n```json\n{\n \"id\": \"resp_xxx\",\n \"created_at\": 1780649146,\n \"error\": null,\n \"incomplete_details\": null,\n \"instructions\": null,\n \"metadata\": {},\n \"model\": \"gpt-image-2-2k\",\n \"object\": \"response\",\n \"output\": [\n {\n \"id\": \"ig_010c31178d26436ca6194cde07931b33_0\",\n \"result\": null,\n \"status\": \"completed\",\n \"type\": \"image_generation_call\",\n \"url\": \"https://example.png\"\n }\n ],\n \"parallel_tool_calls\": true,\n \"temperature\": null,\n \"tool_choice\": null,\n \"tools\": null,\n \"top_p\": null,\n \"max_output_tokens\": null,\n \"previous_response_id\": null,\n \"reasoning\": null,\n \"status\": \"completed\",\n \"text\": null,\n \"truncation\": null,\n \"usage\": null,\n \"user\": null,\n \"store\": null\n}\n```",
+        "tags": [
+          "Định dạng OpenAI (Responses)"
+        ],
+        "parameters": [
+          {
+            "name": "response_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "resp_xxx"
+            },
+            "description": "Tạo id đầy đủ được trả về trong phản hồi."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "resp_xxx",
+                      "description": "Response ID。"
+                    },
+                    "object": {
+                      "type": "string",
+                      "example": "response"
+                    },
+                    "created_at": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "in_progress",
+                      "description": "Trạng thái tác vụ, thường là `queued`, `in_progress`, `completed`, `failed`."
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "output": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string",
+                            "description": "URL hình ảnh sau khi tác vụ ảnh hoàn tất."
+                          }
+                        }
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "Siêu dữ liệu ID của tác vụ thượng nguồn."
+                        }
+                      }
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "description": "Đối tượng lỗi khi thất bại."
+                    }
+                  }
+                },
+                "examples": {
+                  "responses_image_async_completed": {
+                    "summary": "Kết quả trả về khi truy vấn bất đồng bộ tạo ảnh hoàn tất",
+                    "value": {
+                      "id": "resp_xxx",
+                      "created_at": 1780649146,
+                      "error": null,
+                      "incomplete_details": null,
+                      "instructions": null,
+                      "metadata": {},
+                      "model": "gpt-image-2-2k",
+                      "object": "response",
+                      "output": [
+                        {
+                          "id": "ig_010c31178d26436ca6194cde07931b33_0",
+                          "result": null,
+                          "status": "completed",
+                          "type": "image_generation_call",
+                          "url": "https://example.png"
+                        }
+                      ],
+                      "parallel_tool_calls": true,
+                      "temperature": null,
+                      "tool_choice": null,
+                      "tools": null,
+                      "top_p": null,
+                      "max_output_tokens": null,
+                      "previous_response_id": null,
+                      "reasoning": null,
+                      "status": "completed",
+                      "text": null,
+                      "truncation": null,
+                      "usage": null,
+                      "user": null,
+                      "store": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-openai-responses/phản-hồi-truy-vấn-openai-responses-api"
+        }
+      }
+    },
+    "/suno/submit/music": {
+      "post": {
+        "summary": "Tạo tác vụ tạo nhạc",
+        "description": "API gửi yêu cầu tạo nhạc, tương thích với đường dẫn `/suno/submit/music` cũ. Hỗ trợ Suno v5, MiniMax Music V2.6, Sonauto V3, Mureka V9, trả về task ID, sau đó truy vấn qua `/suno/fetch`.\n\nAPI gửi tác vụ tạo nhạc. Đường dẫn giữ nguyên `/suno/submit/music`, thực tế có thể chọn mô hình tạo nhạc qua `upstream_model`, `music_model`, `engine`, `model_id` hoặc `modelId`. API tạo trả về `task_id`, sau đó dùng `/suno/fetch/{task_id}` để truy vấn đầu ra.\n\n## Mô hình nhạc và bảng giá\n\n| Mô hình | Giá trị chọn | Bảng giá |\n|---|---|---|\n| Suno v5 | `suno-v5` | 0.38 / lần |\n| MiniMax Music V2.6 | `minimax-music-v2.6` | 0.15 / lần |\n| Sonauto V3 | `sonauto-v3` | 0.32 / lần |\n| Mureka V9 | `mureka-v9` | 0.24 / lần |\n\n## Chế độ mô tả prompt\n\nPhù hợp khi chỉ mô tả phong cách, cảm xúc, ngôn ngữ, kiểu giọng hát và bối cảnh; mô hình sẽ tự động tạo nội dung bài hát.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\",\n \"make_instrumental\": false\n}\n```\n\n## Nhạc nhẹ hoặc nhạc nền không lời\n\nCó thể dùng `light_music=true` hoặc `make_instrumental=true`. `light_music` biểu thị thiên về nhạc nhẹ/nhạc nền, `make_instrumental` biểu thị không tạo giọng hát.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## Chế độ nâng cao cho lời bài hát\n\nPhù hợp khi phía nghiệp vụ đã chuẩn bị sẵn lời bài hát và cần chỉ định tiêu đề cùng thẻ phong cách. Có thể truyền `custom_mode=true`, trường lời bài hát có thể dùng `lyrics`, `lyric`, `custom_lyrics` hoặc `customLyrics`.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"夏日海风\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\n海风吹过白色沙滩\\n[Chorus]\\n把夏天唱成一束光\"\n}\n```\n\n## Truy vấn\n\nSau khi tạo thành công, hãy lưu lại `data` task ID được trả về, ví dụ `task_xxx`, rồi gọi `GET /suno/fetch/{task_id}` để truy vấn trạng thái, địa chỉ âm thanh, ảnh bìa, tiêu đề, lời bài hát và thông tin đoạn dữ liệu gốc do upstream trả về.",
+        "tags": [
+          "Định dạng tác vụ tạo nhạc"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "model",
+                  "prompt"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "suno_music",
+                    "description": "Luôn truyền `suno_music`.",
+                    "enum": [
+                      "suno_music"
+                    ]
+                  },
+                  "upstream_model": {
+                    "type": "string",
+                    "example": "suno-v5",
+                    "description": "Giá trị lựa chọn mô hình âm nhạc, ví dụ `suno-v5`, `minimax-music-v2.6`, `sonauto-v3`, `mureka-v9`."
+                  },
+                  "music_model": {
+                    "type": "string",
+                    "description": "Tên bí danh tương thích của `upstream_model`."
+                  },
+                  "engine": {
+                    "type": "string",
+                    "description": "Tên bí danh tương thích của `upstream_model`."
+                  },
+                  "model_id": {
+                    "type": "string",
+                    "description": "Trường tương thích ID mô hình upstream."
+                  },
+                  "modelId": {
+                    "type": "string",
+                    "description": "Trường tương thích camelCase của `model_id`."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "Trong chế độ mô tả prompt, dùng cho phong cách âm nhạc, tâm trạng và bối cảnh; trong chế độ nâng cao của lời bài hát, có thể dùng làm trường tương thích với lời bài hát."
+                  },
+                  "gpt_description_prompt": {
+                    "type": "string",
+                    "description": "Mô tả trường tương thích với prompt của chế độ."
+                  },
+                  "make_instrumental": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Có tạo chỉ phần nhạc đệm thuần túy hay không."
+                  },
+                  "light_music": {
+                    "type": "boolean",
+                    "description": "Có tạo theo hướng nhạc nhẹ/nhạc nền không."
+                  },
+                  "pure_music": {
+                    "type": "boolean",
+                    "description": "Có tạo theo hướng nhạc không lời không."
+                  },
+                  "custom_mode": {
+                    "type": "boolean",
+                    "description": "Có sử dụng chế độ tùy chỉnh hay không."
+                  },
+                  "customMode": {
+                    "type": "boolean",
+                    "description": "Trường tương thích camelCase của `custom_mode`."
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "Tiêu đề bài hát."
+                  },
+                  "tags": {
+                    "type": "string",
+                    "description": "Thẻ phong cách, ví dụ `electro pop, female vocal`."
+                  },
+                  "style": {
+                    "type": "string",
+                    "description": "Trường tương thích kiểu dáng."
+                  },
+                  "genre": {
+                    "type": "string",
+                    "description": "Trường tương thích phong cách âm nhạc."
+                  },
+                  "genres": {
+                    "type": "string",
+                    "description": "Trường tương thích phong cách âm nhạc."
+                  },
+                  "lyrics": {
+                    "type": "string",
+                    "description": "Nội dung lời bài hát."
+                  },
+                  "lyric": {
+                    "type": "string",
+                    "description": "`lyrics` Tên bí danh tương thích."
+                  },
+                  "custom_lyrics": {
+                    "type": "string",
+                    "description": "`lyrics` Tên bí danh tương thích."
+                  },
+                  "customLyrics": {
+                    "type": "string",
+                    "description": "`lyrics` Tên bí danh tương thích."
+                  }
+                }
+              },
+              "examples": {
+                "music_submit_prompt": {
+                  "summary": "Tạo mô tả nhạc",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "suno-v5",
+                    "prompt": "轻快电子流行，夏日海边，女声 旋律",
+                    "make_instrumental": false
+                  }
+                },
+                "music_submit_light": {
+                  "summary": "Tạo nhạc nhẹ",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "minimax-music-v2.6",
+                    "prompt": "温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐",
+                    "light_music": true,
+                    "make_instrumental": true
+                  }
+                },
+                "music_submit_lyrics": {
+                  "summary": "Chế độ nâng cao lời bài hát",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "mureka-v9",
+                    "custom_mode": true,
+                    "title": "夏日海风",
+                    "tags": "electro pop, female vocal, bright summer",
+                    "lyrics": "[Verse]\n海风吹过白色沙滩\n[Chorus]\n把夏天唱成一束光"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "Khi thành công là `success`."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Thông báo lỗi hoặc thông báo nhắc."
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "ID tác vụ, dùng cho truy vấn sau này."
+                    }
+                  }
+                },
+                "examples": {
+                  "music_submit_success": {
+                    "summary": "Gửi yêu cầu tạo nhạc thành công",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": "task_xxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/tạo-tác-vụ-tạo-nhạc"
+        }
+      }
+    },
+    "/suno/fetch": {
+      "get": {
+        "summary": "Truy vấn tác vụ âm nhạc",
+        "description": "Truy vấn tác vụ tạo nhạc qua query `task_id`.\n\nAPI truy vấn tác vụ tạo nhạc. `data` do API tạo trả về chính là ID tác vụ; có thể dùng `GET /suno/fetch/{task_id}` để truy vấn một tác vụ đơn lẻ, hoặc dùng `POST /suno/fetch` để truy vấn hàng loạt.\n\n## Cách truy vấn\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nHoặc:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Đầu ra truy vấn\n\nGiữ nguyên cấu trúc tác vụ new-api ở lớp ngoài:\n\n- `code`: Khi thành công là `success`.\n- `message`: Thông báo lỗi hoặc thông báo gợi ý.\n- `data.task_id`: ID tác vụ.\n- `data.status`: Trạng thái tác vụ, các giá trị thường gặp gồm `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: Tiến độ tác vụ.\n- `data.result_url`: Địa chỉ kết quả có thể dùng sau khi thành công; nếu upstream trả về nhiều bài hát, lấy đoạn trong `data.data` làm chuẩn.\n- `data.data`: Dữ liệu gốc kết quả âm nhạc từ upstream, thường bao gồm mảng hoặc đối tượng các đoạn bài hát.\n\nVí dụ trạng thái thành công:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "Định dạng tác vụ tạo nhạc"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_xxx"
+            },
+            "description": "ID tác vụ được trả về khi gửi tác vụ âm nhạc."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "Khi thành công là `success`."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Thông báo lỗi hoặc thông báo nhắc."
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "ID của tác vụ."
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Trạng thái tác vụ, các giá trị thường gặp `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`."
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "Tiến độ tác vụ."
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "Địa chỉ kết quả khả dụng sau khi thành công."
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "URL âm thanh của bài hát."
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "URL ảnh bìa bài hát."
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "Tiêu đề bài hát."
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "Độ dài âm thanh."
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "Truy vấn tác vụ âm nhạc thành công",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-âm-nhạc"
+        }
+      },
+      "post": {
+        "summary": "Truy vấn tác vụ âm nhạc (JSON)",
+        "description": "Truy vấn tác vụ tạo nhạc thông qua JSON body.\n\nAPI truy vấn tác vụ tạo nhạc. `data` do API tạo trả về chính là ID tác vụ; có thể dùng `GET /suno/fetch/{task_id}` để truy vấn một tác vụ đơn lẻ, hoặc dùng `POST /suno/fetch` để truy vấn hàng loạt.\n\n## Cách truy vấn\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nHoặc:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Đầu ra truy vấn\n\nGiữ nguyên cấu trúc tác vụ new-api ở lớp ngoài:\n\n- `code`: Khi thành công là `success`.\n- `message`: Thông báo lỗi hoặc thông báo gợi ý.\n- `data.task_id`: ID tác vụ.\n- `data.status`: Trạng thái tác vụ, các giá trị thường gặp gồm `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: Tiến độ tác vụ.\n- `data.result_url`: Địa chỉ kết quả có thể dùng sau khi thành công; nếu upstream trả về nhiều bài hát, lấy đoạn trong `data.data` làm chuẩn.\n- `data.data`: Dữ liệu gốc kết quả âm nhạc từ upstream, thường bao gồm mảng hoặc đối tượng các đoạn bài hát.\n\nVí dụ trạng thái thành công:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "Định dạng tác vụ tạo nhạc"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "task_id"
+                ],
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "example": "task_xxx",
+                    "description": "ID tác vụ do giao diện nộp trả về."
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "`task_id` Tên bí danh tương thích."
+                  }
+                }
+              },
+              "examples": {
+                "suno_music_fetch": {
+                  "summary": "Truy vấn tác vụ âm nhạc",
+                  "value": {
+                    "task_id": "task_xxx"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "Khi thành công là `success`."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Thông báo lỗi hoặc thông báo nhắc."
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "ID của tác vụ."
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Trạng thái tác vụ, các giá trị thường gặp `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`."
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "Tiến độ tác vụ."
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "Địa chỉ kết quả khả dụng sau khi thành công."
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "URL âm thanh của bài hát."
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "URL ảnh bìa bài hát."
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "Tiêu đề bài hát."
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "Độ dài âm thanh."
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "Truy vấn tác vụ âm nhạc thành công",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-âm-nhạc-json"
+        }
+      }
+    },
+    "/suno/fetch/{task_id}": {
+      "get": {
+        "summary": "Truy vấn tác vụ nhạc theo ID",
+        "description": "Truy vấn tác vụ tạo nhạc thông qua path `task_id`.\n\nAPI truy vấn tác vụ tạo nhạc. `data` do API tạo trả về chính là ID tác vụ; có thể dùng `GET /suno/fetch/{task_id}` để truy vấn một tác vụ đơn lẻ, hoặc dùng `POST /suno/fetch` để truy vấn hàng loạt.\n\n## Cách truy vấn\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nHoặc:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Đầu ra truy vấn\n\nGiữ nguyên cấu trúc tác vụ new-api ở lớp ngoài:\n\n- `code`: Khi thành công là `success`.\n- `message`: Thông báo lỗi hoặc thông báo gợi ý.\n- `data.task_id`: ID tác vụ.\n- `data.status`: Trạng thái tác vụ, các giá trị thường gặp gồm `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: Tiến độ tác vụ.\n- `data.result_url`: Địa chỉ kết quả có thể dùng sau khi thành công; nếu upstream trả về nhiều bài hát, lấy đoạn trong `data.data` làm chuẩn.\n- `data.data`: Dữ liệu gốc kết quả âm nhạc từ upstream, thường bao gồm mảng hoặc đối tượng các đoạn bài hát.\n\nVí dụ trạng thái thành công:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "Định dạng tác vụ tạo nhạc"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_xxx"
+            },
+            "description": "ID tác vụ được trả về khi gửi tác vụ âm nhạc."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "Khi thành công là `success`."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Thông báo lỗi hoặc thông báo nhắc."
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "ID của tác vụ."
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Trạng thái tác vụ, các giá trị thường gặp `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`."
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "Tiến độ tác vụ."
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "Địa chỉ kết quả khả dụng sau khi thành công."
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "URL âm thanh của bài hát."
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "URL ảnh bìa bài hát."
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "Tiêu đề bài hát."
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "Độ dài âm thanh."
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "Truy vấn tác vụ âm nhạc thành công",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-nhạc-theo-id"
         }
       }
     },
@@ -6819,6 +7752,9 @@
     },
     {
       "name": "Tạo video Vidu"
+    },
+    {
+      "name": "Định dạng tác vụ tạo nhạc"
     }
   ],
   "x-doc-drift-summary": {

@@ -13,8 +13,11 @@ description: "Tài liệu tiếng Trung hiện tại dựa trên các giao diệ
   <Card title="Khả năng xử lý hình ảnh" icon="image">
     Cung cấp API tạo và chỉnh sửa ảnh của OpenAI, đồng thời giữ lại các định dạng dành riêng cho mô hình như tạo ảnh Gemini.
   </Card>
+  <Card title="Tạo nhạc" icon="music">
+    Cung cấp API tác vụ tạo nhạc, hỗ trợ mô tả bằng prompt, nhạc nhẹ/thuần đệm nhạc, chế độ nâng cao cho lời bài hát, và tra cứu kết quả qua task ID.
+  </Card>
   <Card title="Truy vấn tác vụ dài" icon="clock">
-    Các tác vụ video và một số tác vụ tạo nội dung sử dụng thống nhất ID tác vụ hoặc operation name để truy vấn, phù hợp cho việc tích hợp bất đồng bộ và kiểm tra lại.
+    Video, nhạc và một số tác vụ tạo nội dung dùng thống nhất task ID, response id hoặc operation name để tra cứu, phù hợp cho tích hợp bất đồng bộ và truy vấn lại.
   </Card>
 </CardGroup>
 
@@ -28,6 +31,12 @@ description: "Tài liệu tiếng Trung hiện tại dựa trên các giao diệ
 - `POST /v1/images/generations`
 - `POST /v1/images/edits`
 - `POST /v1beta/models/{model}:generateContent`
+
+### Nhạc
+- `POST /suno/submit/music`
+- `GET /suno/fetch/{task_id}`
+- `GET /suno/fetch`
+- `POST /suno/fetch`
 
 ### Video
 - `POST /v1/videos`
@@ -67,8 +76,8 @@ description: "Tài liệu tiếng Trung hiện tại dựa trên các giao diệ
 - `veo3`、`veo3-fast`、`veo3-fast-frames`、`veo3-frames`、`veo3-pro`、`veo3-pro-frames`、`veo3.1`、`veo3.1-4k`、`veo3.1-components`、`veo3.1-fast`、`veo3.1-pro`、`veo3.1-pro-4k`
 
 ### Grok
-- Tổng cộng 2 mô hình công khai
-- `grok-imagine-1.0-video`、`grok-video-3`
+- Tổng cộng 3 mô hình công khai
+- `grok-imagine-1.0-video`、`grok-imagine-video-1.5-preview`、`grok-video-3`
 
 ### Seedance
 - Tổng cộng 7 mô hình công khai

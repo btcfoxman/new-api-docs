@@ -54,9 +54,19 @@
                 ]
               },
               {
+                "group": "Music generation task format",
+                "pages": [
+                  "api-reference/en/music-generation-task-format/query-music-task",
+                  "api-reference/en/music-generation-task-format/query-music-task-json",
+                  "api-reference/en/music-generation-task-format/query-a-music-task-by-id",
+                  "api-reference/en/music-generation-task-format/create-a-music-generation-task"
+                ]
+              },
+              {
                 "group": "OpenAI Format (Responses)",
                 "pages": [
-                  "api-reference/en/openai-format-responses/create-response"
+                  "api-reference/en/openai-format-responses/create-response",
+                  "api-reference/en/openai-format-responses/query-responses-openai-responses-api"
                 ]
               },
               {
@@ -203,7 +213,8 @@
               {
                 "group": "OpenAI格式(Responses)",
                 "pages": [
-                  "api-reference/cn/openai格式responses/创建响应"
+                  "api-reference/cn/openai格式responses/创建响应",
+                  "api-reference/cn/openai格式responses/查询响应-openai-responses-api"
                 ]
               },
               {
@@ -272,6 +283,15 @@
                   "api-reference/cn/视频生成vidu格式/创建首尾帧视频vidu",
                   "api-reference/cn/视频生成vidu格式/查询任务vidu",
                   "api-reference/cn/视频生成vidu格式/创建文生视频vidu"
+                ]
+              },
+              {
+                "group": "音乐生成任务格式",
+                "pages": [
+                  "api-reference/cn/音乐生成任务格式/查询音乐任务",
+                  "api-reference/cn/音乐生成任务格式/查询音乐任务（json）",
+                  "api-reference/cn/音乐生成任务格式/按-id-查询音乐任务",
+                  "api-reference/cn/音乐生成任务格式/创建音乐生成任务"
                 ]
               }
             ]
@@ -364,7 +384,8 @@
               {
                 "group": "OpenAI格式（Responses）",
                 "pages": [
-                  "api-reference/zh-tw/openai格式（responses）/建立回應-openai-responses-api"
+                  "api-reference/zh-tw/openai格式（responses）/建立回應-openai-responses-api",
+                  "api-reference/zh-tw/openai格式（responses）/查詢回應-openai-responses-api"
                 ]
               },
               {
@@ -433,6 +454,15 @@
                 "pages": [
                   "api-reference/zh-tw/獲取模型列表/獲取模型列表",
                   "api-reference/zh-tw/獲取模型列表/取得-gemini-格式"
+                ]
+              },
+              {
+                "group": "音樂生成任務格式",
+                "pages": [
+                  "api-reference/zh-tw/音樂生成任務格式/查詢音樂任務",
+                  "api-reference/zh-tw/音樂生成任務格式/查詢音樂任務（json）",
+                  "api-reference/zh-tw/音樂生成任務格式/依-id-查詢音樂任務",
+                  "api-reference/zh-tw/音樂生成任務格式/建立音樂生成任務"
                 ]
               }
             ]
@@ -532,7 +562,8 @@
               {
                 "group": "Format OpenAI(Responses)",
                 "pages": [
-                  "api-reference/fr/format-openairesponses/créer-une-réponse-openai-responses-api"
+                  "api-reference/fr/format-openairesponses/créer-une-réponse-openai-responses-api",
+                  "api-reference/fr/format-openairesponses/réponses-de-requête-openai-responses-api"
                 ]
               },
               {
@@ -542,6 +573,15 @@
                   "api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-d’une-image-kling",
                   "api-reference/fr/format-de-génération-vidéo-kling/kling-génération-de-vidéo-à-partir-de-texte",
                   "api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-de-texte-kling"
+                ]
+              },
+              {
+                "group": "Format de tâche de génération musicale",
+                "pages": [
+                  "api-reference/fr/format-de-tâche-de-génération-musicale/consulter-la-tâche-musicale",
+                  "api-reference/fr/format-de-tâche-de-génération-musicale/consulter-les-tâches-musicales-json",
+                  "api-reference/fr/format-de-tâche-de-génération-musicale/interroger-la-tâche-musicale-par-id",
+                  "api-reference/fr/format-de-tâche-de-génération-musicale/créer-une-tâche-de-génération-musicale"
                 ]
               },
               {
@@ -686,7 +726,8 @@
               {
                 "group": "OpenAI形式（Responses）",
                 "pages": [
-                  "api-reference/ja/openai形式（responses）/レスポンスを作成-openai-responses-api"
+                  "api-reference/ja/openai形式（responses）/レスポンスを作成-openai-responses-api",
+                  "api-reference/ja/openai形式（responses）/クエリ応答-openai-responses-api"
                 ]
               },
               {
@@ -755,6 +796,15 @@
                 "pages": [
                   "api-reference/ja/画像生成openai-dall-e形式/画像を編集する（openai-dall-e互換）",
                   "api-reference/ja/画像生成openai-dall-e形式/画像を生成（openai-dall-e互換）"
+                ]
+              },
+              {
+                "group": "音楽生成タスクの形式",
+                "pages": [
+                  "api-reference/ja/音楽生成タスクの形式/音楽タスクを照会する",
+                  "api-reference/ja/音楽生成タスクの形式/音楽タスクを照会する（json）",
+                  "api-reference/ja/音楽生成タスクの形式/id-で音楽タスクを照会",
+                  "api-reference/ja/音楽生成タスクの形式/音楽生成タスクを作成する"
                 ]
               }
             ]
@@ -906,7 +956,17 @@
               {
                 "group": "Формат OpenAI (Responses)",
                 "pages": [
-                  "api-reference/ru/формат-openai-responses/создать-ответ-openai-responses-api"
+                  "api-reference/ru/формат-openai-responses/создать-ответ-openai-responses-api",
+                  "api-reference/ru/формат-openai-responses/ответы-на-запрос-openai-responses-api"
+                ]
+              },
+              {
+                "group": "Формат задачи генерации музыки",
+                "pages": [
+                  "api-reference/ru/формат-задачи-генерации-музыки/запрос-задач-музыки",
+                  "api-reference/ru/формат-задачи-генерации-музыки/запрос-музыкальных-задач-json",
+                  "api-reference/ru/формат-задачи-генерации-музыки/запросить-музыкальную-задачу-по-id",
+                  "api-reference/ru/формат-задачи-генерации-музыки/создать-задачу-генерации-музыки"
                 ]
               },
               {
@@ -1052,7 +1112,8 @@
               {
                 "group": "Định dạng OpenAI (Responses)",
                 "pages": [
-                  "api-reference/vi/định-dạng-openai-responses/tạo-phản-hồi-openai-phản-hồi-api"
+                  "api-reference/vi/định-dạng-openai-responses/tạo-phản-hồi-openai-phản-hồi-api",
+                  "api-reference/vi/định-dạng-openai-responses/phản-hồi-truy-vấn-openai-responses-api"
                 ]
               },
               {
@@ -1060,6 +1121,15 @@
                 "pages": [
                   "api-reference/vi/định-dạng-video-generation-omni-và-veo/tạo-video-định-dạng-omni-và-veo",
                   "api-reference/vi/định-dạng-video-generation-omni-và-veo/truy-vấn-tác-vụ-định-dạng-omni-và-veo"
+                ]
+              },
+              {
+                "group": "Định dạng tác vụ tạo nhạc",
+                "pages": [
+                  "api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-âm-nhạc",
+                  "api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-âm-nhạc-json",
+                  "api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-nhạc-theo-id",
+                  "api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/tạo-tác-vụ-tạo-nhạc"
                 ]
               },
               {

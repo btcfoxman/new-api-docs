@@ -13,8 +13,11 @@ description: "Текущая документация на китайском я
   <Card title="Возможности обработки изображений" icon="image">
     Предоставляются интерфейсы OpenAI для генерации и редактирования изображений, а также сохраняются специализированные форматы для моделей, таких как генерация изображений Gemini.
   </Card>
+  <Card title="Создание музыки" icon="music">
+    Предоставляет интерфейс для задач генерации музыки, поддерживает описание по промпту, лёгкую музыку/только инструментал, а также продвинутый режим с текстом песни; результаты можно запрашивать по ID задачи.
+  </Card>
   <Card title="Запрос длительных задач" icon="clock">
-    Запросы для видео и некоторых задач генерации унифицированы с использованием ID задачи или operation name, что удобно для асинхронной интеграции и последующей проверки.
+    Для видео, музыки и части задач генерации используется единый способ запроса по ID задачи, response id или operation name; подходит для асинхронной интеграции и повторной проверки.
   </Card>
 </CardGroup>
 
@@ -28,6 +31,12 @@ description: "Текущая документация на китайском я
 - `POST /v1/images/generations`
 - `POST /v1/images/edits`
 - `POST /v1beta/models/{model}:generateContent`
+
+### Музыка
+- `POST /suno/submit/music`
+- `GET /suno/fetch/{task_id}`
+- `GET /suno/fetch`
+- `POST /suno/fetch`
 
 ### Видео
 - `POST /v1/videos`
@@ -67,8 +76,8 @@ description: "Текущая документация на китайском я
 - `veo3`、`veo3-fast`、`veo3-fast-frames`、`veo3-frames`、`veo3-pro`、`veo3-pro-frames`、`veo3.1`、`veo3.1-4k`、`veo3.1-components`、`veo3.1-fast`、`veo3.1-pro`、`veo3.1-pro-4k`
 
 ### Grok
-- Всего 2 публичные модели
-- `grok-imagine-1.0-video`、`grok-video-3`
+- Всего 3 публичные модели
+- `grok-imagine-1.0-video`、`grok-imagine-video-1.5-preview`、`grok-video-3`
 
 ### Seedance
 - Всего 7 публичных моделей

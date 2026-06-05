@@ -9,6 +9,7 @@ Adapté à la plupart des scénarios d'intégration récents, à privilégier :
 
 - `POST /v1/chat/completions`
 - `POST /v1/responses`
+- `GET /v1/responses/{response_id}`
 - `POST /v1/images/generations`
 - `POST /v1/images/edits`
 - `POST /v1/videos`
@@ -28,6 +29,7 @@ Lorsque le modèle lui-même nécessite des champs spécifiques, une structure d
 - Vidu：`/ent/v2/text2video`、`/ent/v2/img2video`、`/ent/v2/start-end2video`、`/ent/v2/reference2video` 和 `/ent/v2/tasks/{task_id}/creations`
 - Omni et Veo : `gemini-omni` utilise `/v1/videos` ou `/api/v3/contents/generations/tasks` ; les chemins réservés natifs de Veo sont `/v1beta/models/{model}:predictLongRunning` et `/v1beta/{operation_name}`
 - Génération d'images Gemini : `/v1beta/models/{model}:generateContent`
+- Génération musicale : `/suno/submit/music` et `/suno/fetch/{task_id}`, prend en charge le mode de description par prompt, la musique légère/l’instrumental pur, et le mode avancé pour les paroles
 
 `gemini-omni` est le nom public du modèle vidéo ; il n’est pas nécessaire de se soucier du modèle amont interne. Pour les appels vidéo, utilisez de préférence `/v1/videos` ; vous pouvez aussi utiliser le format de tâche Seedance `/api/v3/contents/generations/tasks`. `mode=t2v/r2v/edit` représentent respectivement la génération de texte en vidéo, la génération par référence et l’édition vidéo ; le champ de durée correspond automatiquement aux formats de 4 / 6 / 8 / 10 secondes.
 

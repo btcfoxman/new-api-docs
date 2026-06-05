@@ -13,8 +13,11 @@ description: "La documentation actuelle en chinois se base sur les interfaces pu
   <Card title="Capacités d'imagerie" icon="image">
     Fournit des interfaces de génération et de modification d’images OpenAI, tout en conservant les formats spécifiques à certains modèles, comme la génération d’images Gemini.
   </Card>
+  <Card title="Génération musicale" icon="music">
+    Fournit une interface de tâche de génération musicale, prenant en charge la description par prompt, la musique légère / l’accompagnement instrumental seul, le mode avancé avec paroles, et permet de consulter le résultat via un ID de tâche.
+  </Card>
   <Card title="Requête de tâches longues" icon="clock">
-    La vidéo et certaines tâches de génération utilisent uniformément l'ID de tâche ou l'operation name pour les requêtes, ce qui est idéal pour l'intégration asynchrone et le suivi.
+    Les tâches de génération de vidéo, de musique et certaines autres tâches utilisent de façon unifiée un ID de tâche, un response id ou un operation name pour la consultation, ce qui convient aux intégrations asynchrones et aux vérifications ultérieures.
   </Card>
 </CardGroup>
 
@@ -28,6 +31,12 @@ description: "La documentation actuelle en chinois se base sur les interfaces pu
 - `POST /v1/images/generations`
 - `POST /v1/images/edits`
 - `POST /v1beta/models/{model}:generateContent`
+
+### Musique
+- `POST /suno/submit/music`
+- `GET /suno/fetch/{task_id}`
+- `GET /suno/fetch`
+- `POST /suno/fetch`
 
 ### Vidéo
 - `POST /v1/videos`
@@ -67,8 +76,8 @@ description: "La documentation actuelle en chinois se base sur les interfaces pu
 - `veo3`、`veo3-fast`、`veo3-fast-frames`、`veo3-frames`、`veo3-pro`、`veo3-pro-frames`、`veo3.1`、`veo3.1-4k`、`veo3.1-components`、`veo3.1-fast`、`veo3.1-pro`、`veo3.1-pro-4k`
 
 ### Grok
-- 2 modèles publics au total
-- `grok-imagine-1.0-video`、`grok-video-3`
+- Au total, 3 modèles publics
+- `grok-imagine-1.0-video`、`grok-imagine-video-1.5-preview`、`grok-video-3`
 
 ### Seedance
 - 7 modèles publics au total

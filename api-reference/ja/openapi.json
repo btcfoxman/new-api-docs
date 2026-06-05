@@ -210,7 +210,7 @@
       "post": {
         "summary": "レスポンスを作成 (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API、モデルのレスポンスを作成するために使用します。\nマルチターン対話、ツール呼び出し、推論などの機能をサポートしています。",
+        "description": "OpenAI Responses API、モデルのレスポンスを作成するために使用します。\nマルチターン対話、ツール呼び出し、推論などの機能をサポートしています。\n\nOpenAI Responses API の画像生成非同期ユースケースを補足します。`background=true` はバックグラウンドタスクの送信用です。作成 API はすぐに `status=queued` と完全な `id` を返し、その後この `id` を使って `GET /v1/responses/{response_id}` を呼び出し、結果を照会します。\n\n## 非同期画像生成フロー\n\n1. `POST /v1/responses` を呼び出し、リクエストボディに `tools=[{ \"type\": \"image_generation\" }]` と `background=true` を指定します。\n2. 作成 API が返す完全な `id` を保存します。たとえば `resp_xxx` です。切り詰めたり、書き換えたり、`metadata.task_id` のみを保存したりしないでください。\n3. `GET /v1/responses/{response_id}` を呼び出して照会し、`status=completed` または `status=failed` になるまで続けます。\n4. 成功後、`output[].url` を読み取り、画像リンクを取得します。\n\n### 非同期画像タスクの作成例\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n \"model\": \"gpt-image-2-2k\",\n \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n \"stream\": false,\n \"tools\": [\n {\n \"type\": \"image_generation\"\n }\n ],\n \"background\": true\n}\n```\n\n作成 API のレスポンス例：\n\n```json\n{\n \"id\": \"resp_xxx\",\n \"created_at\": 1780649146,\n \"error\": null,\n \"incomplete_details\": null,\n \"instructions\": null,\n \"metadata\": {\n \"task_id\": \"010c31178d26436ca6194cde07931b33\",\n \"credits\": \"23\"\n },\n \"model\": \"gpt-image-2-2k\",\n \"object\": \"response\",\n \"output\": [],\n \"parallel_tool_calls\": true,\n \"temperature\": null,\n \"tool_choice\": null,\n \"tools\": null,\n \"top_p\": null,\n \"max_output_tokens\": null,\n \"previous_response_id\": null,\n \"reasoning\": null,\n \"status\": \"queued\",\n \"text\": null,\n \"truncation\": null,\n \"usage\": null,\n \"user\": null,\n \"store\": null\n}\n```\n\n対応モデル：`gpt-image-2-2k`、`gpt-image-2-4k`、`nano-banana-pro`。",
         "operationId": "createResponse",
         "tags": [
           "OpenAI形式（Responses）"
@@ -220,7 +220,24 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ResponsesRequest"
+                "$ref": "#/components/schemas/ResponsesRequest",
+                "properties": {}
+              },
+              "examples": {
+                "responses_image_async": {
+                  "summary": "画像生成の非同期",
+                  "value": {
+                    "model": "gpt-image-2-2k",
+                    "input": "生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。",
+                    "stream": false,
+                    "tools": [
+                      {
+                        "type": "image_generation"
+                      }
+                    ],
+                    "background": true
+                  }
+                }
               }
             }
           },
@@ -233,6 +250,39 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResponsesResponse"
+                },
+                "examples": {
+                  "responses_image_async_queued": {
+                    "summary": "画像生成の非同期作成の返却",
+                    "value": {
+                      "id": "resp_xxx",
+                      "created_at": 1780649146,
+                      "error": null,
+                      "incomplete_details": null,
+                      "instructions": null,
+                      "metadata": {
+                        "task_id": "010c31178d26436ca6194cde07931b33",
+                        "credits": "23"
+                      },
+                      "model": "gpt-image-2-2k",
+                      "object": "response",
+                      "output": [],
+                      "parallel_tool_calls": true,
+                      "temperature": null,
+                      "tool_choice": null,
+                      "tools": null,
+                      "top_p": null,
+                      "max_output_tokens": null,
+                      "previous_response_id": null,
+                      "reasoning": null,
+                      "status": "queued",
+                      "text": null,
+                      "truncation": null,
+                      "usage": null,
+                      "user": null,
+                      "store": null
+                    }
+                  }
                 }
               }
             },
@@ -257,7 +307,7 @@
       "post": {
         "summary": "Gemini 画像(Nano Banana)",
         "deprecated": false,
-        "description": "Gemini 画像生成。\n\nNano BananaシリーズはOpenAI Dall-E 形式をサポートします（詳細はリンク [画像生成OpenAI DALL-E 形式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F) を参照）。\n\n/v1beta/models/{model}:generateContent の Gemini 画像生成フィールドの説明を補完し、公開 OpenAPI でネストされたフィールドの description が欠落するのを防ぎます。",
+        "description": "Gemini 画像生成。\n\nNano BananaシリーズはOpenAI Dall-E 形式をサポートします（詳細はリンク [画像生成OpenAI DALL-E 形式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F) を参照）。\n\nGemini 画像生成互換インターフェースです。`contents[].parts` にテキストまたは画像入力を入れ、`generationConfig.responseModalities` には通常 `IMAGE` を指定します。画像サイズは `generationConfig.imageConfig.imageSize` で制御します。\n\n## 画像生成の固定料金\n\n以下の画像モデルは1回ごとに課金されます：\n\n| モデル | 料金 |\n|---|---|\n| `kling-image-v3` | 0.05 / 回 |\n| `doubao-seedream-5-0-260128` | 0.05 / 回 |\n| `doubao-seedream-4-5-251128` | 0.06 / 回 |",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "画像生成Gemini形式"
@@ -412,7 +462,7 @@
       "post": {
         "summary": "画像を生成（OpenAI Dall-E互換）",
         "deprecated": false,
-        "description": "OpenAI Dall-E形式の画像生成API。\n\n- `POST /v1/images/generations`：画像生成タスクを作成\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、画像生成の説明\n- `n: number`：任意、生成枚数\n- `size: string`：任意、サイズまたは解像度の指定\n- `quality: string`：任意、品質レベル\n- `response_format: string`：任意、返却形式\n\nよく使われる互換拡張パラメータ：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 専用拡張パラメータ：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana シリーズ\n\n公開モデル：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n機能説明：\n- `nano-banana`：基本的なテキストから画像生成。画像編集にも対応\n- `nano-banana-pro*`：より高品質なバージョン\n- `nano-banana-2*`：更新されたバージョンファミリー\n- `*-2k` / `*-4k`：高解像度モデル\n\nよく使うパラメータ：\n- テキストから画像生成：`model + prompt`\n- 画像編集：`model + prompt + image`、`image_urls` にも対応\n- よく使われる拡張：`n` `size` `quality` `response_format`\n\n例:\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Seedream シリーズ\n\n公開モデル：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n機能説明：\n- テキストから画像生成として統一して呼び出します\n- 標準パラメータを優先して渡すことを推奨します：`prompt + model + size/aspect_ratio`\n\nよく使うパラメータ：\n- `model + prompt`\n- 任意：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 汎用画像メインモデル\n\n公開メインモデル：\n- `kling-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n機能説明：\n- テキストから画像生成：`model + model_name + prompt`\n- 画像から画像生成：テキストから画像生成をベースに `image` を追加\n- 複数画像から画像生成：`subject_image_list` を渡すか、複数の `image_urls/images` を渡します\n- アウトペイント：`image` とアウトペイント比率パラメータを渡します\n\nよく使うパラメータ：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n例:\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Omni画像メインモデル\n\n公開メインモデル：\n- `kling-omni-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\nよく使うパラメータ：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n例:\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling バーチャル試着モデル\n\n公開モデル：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入力パラメータ：\n- `model + human_image + cloth_image`\n\n説明：\n- これら2つのモデル自体が完全なメインモデルであるため、`model_name` を追加で渡す必要はありません\n\n例:\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
+        "description": "OpenAI Dall-E形式の画像生成API。\n\n- `POST /v1/images/generations`：画像生成タスクを作成\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、画像生成の説明\n- `n: number`：任意、生成枚数\n- `size: string`：任意、サイズまたは解像度の指定\n- `quality: string`：任意、品質レベル\n- `response_format: string`：任意、返却形式\n\nよく使われる互換拡張パラメータ：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 専用拡張パラメータ：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana シリーズ\n\n公開モデル：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n機能説明：\n- `nano-banana`：基本的なテキストから画像生成。画像編集にも対応\n- `nano-banana-pro*`：より高品質なバージョン\n- `nano-banana-2*`：更新されたバージョンファミリー\n- `*-2k` / `*-4k`：高解像度モデル\n\nよく使うパラメータ：\n- テキストから画像生成：`model + prompt`\n- 画像編集：`model + prompt + image`、`image_urls` にも対応\n- よく使われる拡張：`n` `size` `quality` `response_format`\n\n例:\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Seedream シリーズ\n\n公開モデル：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n機能説明：\n- テキストから画像生成として統一して呼び出します\n- 標準パラメータを優先して渡すことを推奨します：`prompt + model + size/aspect_ratio`\n\nよく使うパラメータ：\n- `model + prompt`\n- 任意：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 汎用画像メインモデル\n\n公開メインモデル：\n- `kling-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n機能説明：\n- テキストから画像生成：`model + model_name + prompt`\n- 画像から画像生成：テキストから画像生成をベースに `image` を追加\n- 複数画像から画像生成：`subject_image_list` を渡すか、複数の `image_urls/images` を渡します\n- アウトペイント：`image` とアウトペイント比率パラメータを渡します\n\nよく使うパラメータ：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n例:\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Omni画像メインモデル\n\n公開メインモデル：\n- `kling-omni-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\nよく使うパラメータ：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n例:\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling バーチャル試着モデル\n\n公開モデル：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入力パラメータ：\n- `model + human_image + cloth_image`\n\n説明：\n- これら2つのモデル自体が完全なメインモデルであるため、`model_name` を追加で渡す必要はありません\n\n例:\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## 画像生成/編集の固定価格\n\n以下のモデルは `POST /v1/images/generations` と `POST /v1/images/edits` で従量課金されます：\n\n| モデル | 料金 |\n|---|---|\n| `kling-image-v3` | 0.05 / 回 |\n| `doubao-seedream-5-0-260128` | 0.05 / 回 |\n| `doubao-seedream-4-5-251128` | 0.06 / 回 |",
         "operationId": "createImageGeneration",
         "tags": [
           "画像生成OpenAI DALL-E形式"
@@ -585,7 +635,7 @@
       "post": {
         "summary": "画像を編集する（OpenAI Dall-E互換）",
         "deprecated": false,
-        "description": "OpenAI Dall-E形式の画像編集インターフェース。",
+        "description": "OpenAI Dall-E形式の画像編集インターフェース。\n\n- `POST /v1/images/edits`：画像を編集\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、画像生成の説明\n- `n: number`：任意、生成枚数\n- `size: string`：任意、サイズまたは解像度の指定\n- `quality: string`：任意、品質レベル\n- `response_format: string`：任意、返却形式\n\nよく使われる互換拡張パラメータ：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 専用拡張パラメータ：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana シリーズ\n\n公開モデル：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n機能説明：\n- `nano-banana`：基本的なテキストから画像生成。画像編集にも対応\n- `nano-banana-pro*`：より高品質なバージョン\n- `nano-banana-2*`：更新されたバージョンファミリー\n- `*-2k` / `*-4k`：高解像度モデル\n\nよく使うパラメータ：\n- テキストから画像生成：`model + prompt`\n- 画像編集：`model + prompt + image`、`image_urls` にも対応\n- よく使われる拡張：`n` `size` `quality` `response_format`\n\n例:\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Seedream シリーズ\n\n公開モデル：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n機能説明：\n- テキストから画像生成として統一して呼び出します\n- 標準パラメータを優先して渡すことを推奨します：`prompt + model + size/aspect_ratio`\n\nよく使うパラメータ：\n- `model + prompt`\n- 任意：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 汎用画像メインモデル\n\n公開メインモデル：\n- `kling-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n機能説明：\n- テキストから画像生成：`model + model_name + prompt`\n- 画像から画像生成：テキストから画像生成をベースに `image` を追加\n- 複数画像から画像生成：`subject_image_list` を渡すか、複数の `image_urls/images` を渡します\n- アウトペイント：`image` とアウトペイント比率パラメータを渡します\n\nよく使うパラメータ：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n例:\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Omni画像メインモデル\n\n公開メインモデル：\n- `kling-omni-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\nよく使うパラメータ：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n例:\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling バーチャル試着モデル\n\n公開モデル：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入力パラメータ：\n- `model + human_image + cloth_image`\n\n説明：\n- これら2つのモデル自体が完全なメインモデルであるため、`model_name` を追加で渡す必要はありません\n\n例:\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## 画像生成/編集の固定価格\n\n以下のモデルは `POST /v1/images/generations` と `POST /v1/images/edits` で従量課金されます：\n\n| モデル | 料金 |\n|---|---|\n| `kling-image-v3` | 0.05 / 回 |\n| `doubao-seedream-5-0-260128` | 0.05 / 回 |\n| `doubao-seedream-4-5-251128` | 0.06 / 回 |",
         "operationId": "createImageEdit",
         "tags": [
           "画像生成OpenAI DALL-E形式"
@@ -600,12 +650,21 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "example": "dall-e-2"
+                    "example": "dall-e-2",
+                    "description": "外部向け画像モデル名。",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
                   },
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "編集対象の画像"
+                    "description": "単一画像入力。画像生成から画像生成、拡張によく使用されます。"
                   },
                   "mask": {
                     "type": "string",
@@ -614,11 +673,12 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "プロンプトを編集"
+                    "description": "画像生成の説明です。バーチャル試着モデルでは省略可能です。"
                   },
                   "n": {
                     "type": "integer",
-                    "default": 1
+                    "default": 1,
+                    "description": "生成枚数。"
                   },
                   "size": {
                     "type": "string",
@@ -626,14 +686,16 @@
                       "256x256",
                       "512x512",
                       "1024x1024"
-                    ]
+                    ],
+                    "description": "サイズまたは解像度の表現。"
                   },
                   "response_format": {
                     "type": "string",
                     "enum": [
                       "url",
                       "b64_json"
-                    ]
+                    ],
+                    "description": "返却形式。"
                   },
                   "user": {
                     "type": "string"
@@ -644,6 +706,131 @@
                   "image",
                   "prompt"
                 ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "dall-e-2",
+                    "description": "外部向け画像モデル名。",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "単一画像入力。画像生成から画像生成、拡張によく使用されます。"
+                  },
+                  "mask": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "オプションのマスク画像"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "画像生成の説明です。バーチャル試着モデルでは省略可能です。"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "生成枚数。"
+                  },
+                  "size": {
+                    "type": "string",
+                    "enum": [
+                      "256x256",
+                      "512x512",
+                      "1024x1024"
+                    ],
+                    "description": "サイズまたは解像度の表現。"
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "enum": [
+                      "url",
+                      "b64_json"
+                    ],
+                    "description": "返却形式。"
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "model",
+                  "image",
+                  "prompt"
+                ]
+              },
+              "examples": {
+                "nano_banana_text2img": {
+                  "summary": "Nano Banana テキストから画像生成",
+                  "value": {
+                    "model": "nano-banana",
+                    "prompt": "a cute cat running in cloud",
+                    "n": 1,
+                    "size": "1024x1792"
+                  }
+                },
+                "seedream_text2img": {
+                  "summary": "Seedream テキストから画像生成",
+                  "value": {
+                    "model": "doubao-seedream-3-0-t2i-250415",
+                    "prompt": "一张电影感海边日落人像",
+                    "size": "1536x1024",
+                    "n": 1
+                  }
+                },
+                "kling_text2img": {
+                  "summary": "Kling テキストから画像を生成",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v3",
+                    "prompt": "海边日落，电影感人像",
+                    "aspect_ratio": "16:9",
+                    "n": 1
+                  }
+                },
+                "kling_img2img": {
+                  "summary": "Kling 画像から画像へ",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v2-1",
+                    "prompt": "改成赛博朋克夜景风格",
+                    "image": "https://example.com/input.png",
+                    "n": 1
+                  }
+                },
+                "kling_omni_image": {
+                  "summary": "Kling Omni 画像",
+                  "value": {
+                    "model": "kling-omni-image",
+                    "model_name": "kling-v3-omni",
+                    "prompt": "生成一张海边跳舞的图片",
+                    "element_list": [
+                      {
+                        "element_id": 835266081714884677
+                      }
+                    ]
+                  }
+                },
+                "kling_virtual_try_on": {
+                  "summary": "Kling バーチャル試着",
+                  "value": {
+                    "model": "kolors-virtual-try-on-v1",
+                    "human_image": "https://example.com/human.jpg",
+                    "cloth_image": "https://example.com/cloth.jpg"
+                  }
+                }
               }
             }
           }
@@ -679,7 +866,7 @@
       "post": {
         "summary": "動画の生成",
         "deprecated": false,
-        "description": "OpenAI Sora 互換形式の動画生成インターフェース。テキストから動画の生成と、画像/動画参照による生成モードに対応しています。\n\n- `POST /v1/videos`：動画タスクの作成\n- `GET /v1/videos/{video_id}`：タスクステータスの照会\n- `GET /v1/videos/{video_id}/content`：動画のバイナリコンテンツを取得\n\n現在は外部に提供されていません：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` でタスクを作成し、`id` を取得\n2. `GET /v1/videos/{id}` を `completed` または `failed` になるまでポーリング\n3. 完了後は、レスポンス内の `video_url` を優先して使用\n4. 統一的にダウンロードする必要がある場合は、`GET /v1/videos/{id}/content` を呼び出す\n\n主要パラメータ：\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、動画生成の説明\n- `seconds: number|string`：任意、目標の長さ\n- `duration: number|string`：任意、長さのエイリアス\n- `size: string`：任意、出力サイズ\n- `mode: string`：任意、一般的な値 `t2v` `i2v` `i2v_first_last` `reference_material`\n\nよく使われる互換パラメータ：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling のよく使う拡張パラメータ：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo シリーズ\n\n説明：`stable`、`official` などは異なるグループを示しており、外部向けの `model` サフィックスではありません。呼び出し時は `model` をベースモデル名のままにしてください。実際にどのグループが使われるかは、アカウントまたはトークンのグループによって決まります。\n\n#### Veo 3.x メインモデル\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n推奨:\n- テキストのみから動画を生成する場合は、`veo3*` / `veo3.1*` メインモデルを優先して使用\n- 画像からの動画生成や参照ベースの動画生成シーンでは、`mode + image_url/reference_images` を明示的に渡すことを推奨\n\n### 4.2 Sora シリーズ\n\n基本モデル：\n- `sora-2`\n- `sora-2-pro`\n\n推奨:\n- `sora-2*` は汎用的な呼び出しに適しています\n- `stable` / `official` などのグループを使用する場合は、`model` をベースモデル名のままにし、モデル名の末尾にサフィックスを追加しないでください。\n\n### 4.3 Seedance シリーズ\n\n公開モデル：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n推奨:\n- テキストから動画を生成する場合は、`*-t2v-*` または `pro / fast` を優先してください\n- 画像から動画を生成する場合は、`*-i2v-*` を優先してください\n- 複雑な参考素材を用いるシナリオでは、`content` を優先して使用してください\n\n### 4.4 Grok 動画シリーズ\n\n公開モデル：\n- `grok-imagine-1.0-video`\n- `grok-video-3`\n\nよく使うパラメータ：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n例:\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Kling 動画メインモデル\n\n公開メインモデル：\n- `kling-video`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n一般的な `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入力パラメータ：\n- テキストから動画: `model + model_name + prompt + mode=t2v`\n- 画像から動画: `model + model_name + prompt + mode=i2v + image`\n- 複数画像参照: `model + model_name + prompt + mode=multi_i2v + image_list`\n- 動画の延長: `model + model_name + mode=extend + video_id`\n\n例:\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入力パラメータ：`model + prompt`\n\n- `mode=i2v`\n- 最小入力パラメータ：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入力パラメータ：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入力パラメータ：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入力パラメータ：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni の呼び出し方法\n\n- `gemini-omni` は new-api の外部公開動画モデル名で、`POST /v1/videos` を直接利用できます。\n- `mode=t2v`：テキストから動画を生成します。最小入力パラメータは `model + prompt` です。\n- `mode=r2v`：参照画像/参照素材による生成。画像は `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference`、または `content` に設定できます。\n- `mode=edit`：動画編集。動画は `video`、`video_url`、`videos`、または `content` に設定でき、参照画像も同時に送信できます。\n- 再生時間フィールドは `seconds` または `duration` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。",
+        "description": "OpenAI Sora 互換形式の動画生成インターフェース。テキストから動画の生成と、画像/動画参照による生成モードに対応しています。\n\n- `POST /v1/videos`：動画タスクの作成\n- `GET /v1/videos/{video_id}`：タスクステータスの照会\n- `GET /v1/videos/{video_id}/content`：動画のバイナリコンテンツを取得\n\n現在は外部に提供されていません：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` でタスクを作成し、`id` を取得\n2. `GET /v1/videos/{id}` を `completed` または `failed` になるまでポーリング\n3. 完了後は、レスポンス内の `video_url` を優先して使用\n4. 統一的にダウンロードする必要がある場合は、`GET /v1/videos/{id}/content` を呼び出す\n\n主要パラメータ：\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、動画生成の説明\n- `seconds: number|string`：任意、目標の長さ\n- `duration: number|string`：任意、長さのエイリアス\n- `size: string`：任意、出力サイズ\n- `mode: string`：任意、一般的な値 `t2v` `i2v` `i2v_first_last` `reference_material`\n\nよく使われる互換パラメータ：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling のよく使う拡張パラメータ：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo シリーズ\n\n説明：`stable`、`official` などは異なるグループを示しており、外部向けの `model` サフィックスではありません。呼び出し時は `model` をベースモデル名のままにしてください。実際にどのグループが使われるかは、アカウントまたはトークンのグループによって決まります。\n\n#### Veo 3.x メインモデル\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n推奨:\n- テキストのみから動画を生成する場合は、`veo3*` / `veo3.1*` メインモデルを優先して使用\n- 画像からの動画生成や参照ベースの動画生成シーンでは、`mode + image_url/reference_images` を明示的に渡すことを推奨\n\n### 4.2 Sora シリーズ\n\n基本モデル：\n- `sora-2`\n- `sora-2-pro`\n\n推奨:\n- `sora-2*` は汎用的な呼び出しに適しています\n- `stable` / `official` などのグループを使用する場合は、`model` をベースモデル名のままにし、モデル名の末尾にサフィックスを追加しないでください。\n\n### 4.3 Seedance シリーズ\n\n公開モデル：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n推奨:\n- テキストから動画を生成する場合は、`*-t2v-*` または `pro / fast` を優先してください\n- 画像から動画を生成する場合は、`*-i2v-*` を優先してください\n- 複雑な参考素材を用いるシナリオでは、`content` を優先して使用してください\n\n### 4.4 Grok 動画シリーズ\n\n公開モデル：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nよく使うパラメータ：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n例:\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Kling 動画メインモデル\n\n公開メインモデル：\n- `kling-video`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n一般的な `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入力パラメータ：\n- テキストから動画: `model + model_name + prompt + mode=t2v`\n- 画像から動画: `model + model_name + prompt + mode=i2v + image`\n- 複数画像参照: `model + model_name + prompt + mode=multi_i2v + image_list`\n- 動画の延長: `model + model_name + mode=extend + video_id`\n\n例:\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入力パラメータ：`model + prompt`\n\n- `mode=i2v`\n- 最小入力パラメータ：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入力パラメータ：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入力パラメータ：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入力パラメータ：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni の呼び出し方法\n\n- `gemini-omni` は new-api の外部公開動画モデル名で、`POST /v1/videos` を直接利用できます。\n- `mode=t2v`：テキストから動画を生成します。最小入力パラメータは `model + prompt` です。\n- `mode=r2v`：参照画像/参照素材による生成。画像は `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference`、または `content` に設定できます。\n- `mode=edit`：動画編集。動画は `video`、`video_url`、`videos`、または `content` に設定でき、参照画像も同時に送信できます。\n- 再生時間フィールドは `seconds` または `duration` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。",
         "operationId": "createVideo",
         "tags": [
           "動画生成Sora対応形式"
@@ -725,6 +912,7 @@
                       "veo3.1-pro-4k",
                       "kling-video",
                       "grok-imagine-1.0-video",
+                      "grok-imagine-video-1.5-preview",
                       "grok-video-3",
                       "viduq3-turbo",
                       "hailuo-video"
@@ -862,6 +1050,7 @@
                       "veo3.1-pro-4k",
                       "kling-video",
                       "grok-imagine-1.0-video",
+                      "grok-imagine-video-1.5-preview",
                       "grok-video-3",
                       "viduq3-turbo",
                       "hailuo-video"
@@ -1921,6 +2110,750 @@
         "x-drift-types": [],
         "x-mint": {
           "href": "/api-reference/ja/動画生成kling形式/kling-の画像から動画へのタスク状態を取得"
+        }
+      }
+    },
+    "/v1/responses/{response_id}": {
+      "get": {
+        "summary": "クエリ応答 (OpenAI Responses API)",
+        "description": "OpenAI Responses API の非同期タスク照会API。`response_id` 作成レスポンスで返された完全な `id` を使用してください。切り詰めたり書き換えたりしないでください。\n\nOpenAI Responses API の非同期画像タスクを照会します。`response_id` `POST /v1/responses` が返す完全な `id` を使用する必要があります。例: `resp_xxx`。\n\n## 非同期照会の例\n\n```http\nGET /v1/responses/resp_xxx\n```\n\nパスパラメータの対応説明：\n\n```json\n{\n \"response_id\": \"resp_xxx\"\n}\n```\n\n完了状態の返却例：\n\n```json\n{\n \"id\": \"resp_xxx\",\n \"created_at\": 1780649146,\n \"error\": null,\n \"incomplete_details\": null,\n \"instructions\": null,\n \"metadata\": {},\n \"model\": \"gpt-image-2-2k\",\n \"object\": \"response\",\n \"output\": [\n {\n \"id\": \"ig_010c31178d26436ca6194cde07931b33_0\",\n \"result\": null,\n \"status\": \"completed\",\n \"type\": \"image_generation_call\",\n \"url\": \"https://example.png\"\n }\n ],\n \"parallel_tool_calls\": true,\n \"temperature\": null,\n \"tool_choice\": null,\n \"tools\": null,\n \"top_p\": null,\n \"max_output_tokens\": null,\n \"previous_response_id\": null,\n \"reasoning\": null,\n \"status\": \"completed\",\n \"text\": null,\n \"truncation\": null,\n \"usage\": null,\n \"user\": null,\n \"store\": null\n}\n```",
+        "tags": [
+          "OpenAI形式（Responses）"
+        ],
+        "parameters": [
+          {
+            "name": "response_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "resp_xxx"
+            },
+            "description": "レスポンスで返される完全な ID を作成します。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "resp_xxx",
+                      "description": "Response ID。"
+                    },
+                    "object": {
+                      "type": "string",
+                      "example": "response"
+                    },
+                    "created_at": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "in_progress",
+                      "description": "タスクのステータス。一般的には `queued`、`in_progress`、`completed`、`failed` があります。"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "output": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string",
+                            "description": "画像タスク完了後の画像URL。"
+                          }
+                        }
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "上流タスク ID のメタデータ。"
+                        }
+                      }
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "description": "失敗時のエラーオブジェクト。"
+                    }
+                  }
+                },
+                "examples": {
+                  "responses_image_async_completed": {
+                    "summary": "画像生成の非同期クエリ完了時の返却",
+                    "value": {
+                      "id": "resp_xxx",
+                      "created_at": 1780649146,
+                      "error": null,
+                      "incomplete_details": null,
+                      "instructions": null,
+                      "metadata": {},
+                      "model": "gpt-image-2-2k",
+                      "object": "response",
+                      "output": [
+                        {
+                          "id": "ig_010c31178d26436ca6194cde07931b33_0",
+                          "result": null,
+                          "status": "completed",
+                          "type": "image_generation_call",
+                          "url": "https://example.png"
+                        }
+                      ],
+                      "parallel_tool_calls": true,
+                      "temperature": null,
+                      "tool_choice": null,
+                      "tools": null,
+                      "top_p": null,
+                      "max_output_tokens": null,
+                      "previous_response_id": null,
+                      "reasoning": null,
+                      "status": "completed",
+                      "text": null,
+                      "truncation": null,
+                      "usage": null,
+                      "user": null,
+                      "store": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/openai形式（responses）/クエリ応答-openai-responses-api"
+        }
+      }
+    },
+    "/suno/submit/music": {
+      "post": {
+        "summary": "音楽生成タスクを作成する",
+        "description": "音楽生成の送信インターフェース。旧 `/suno/submit/music` パスと互換性があります。Suno v5、MiniMax Music V2.6、Sonauto V3、Mureka V9 をサポートし、タスク ID を返します。後続は `/suno/fetch` で照会します。\n\n音楽生成タスクの送信インターフェースです。パスは `/suno/submit/music` のままです。実際には `upstream_model`、`music_model`、`engine`、`model_id`、または `modelId` で音楽生成モデルを選択できます。作成インターフェースは `task_id` を返し、その後 `/suno/fetch/{task_id}` で出力を照会します。\n\n## 音楽モデルと料金\n\n| モデル | 選択値 | 料金 |\n|---|---|---|\n| Suno v5 | `suno-v5` | 0.38 / 回 |\n| MiniMax Music V2.6 | `minimax-music-v2.6` | 0.15 / 回 |\n| Sonauto V3 | `sonauto-v3` | 0.32 / 回 |\n| Mureka V9 | `mureka-v9` | 0.24 / 回 |\n\n## プロンプト記述モード\n\nスタイル、感情、言語、歌手タイプ、シーンのみを記述する場合に適しており、モデルが自動的に楽曲内容を生成します。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\",\n \"make_instrumental\": false\n}\n```\n\n## インストゥルメンタルまたは純伴奏\n\n`light_music=true` または `make_instrumental=true` を使用できます。`light_music` はインストゥルメンタル／BGM 寄りであることを示し、`make_instrumental` は歌唱ボーカルを生成しないことを示します。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## 歌詞の詳細モード\n\n業務側ですでに歌詞が用意されており、タイトルとスタイルタグを指定する必要がある場合に適しています。`custom_mode=true` を指定でき、歌詞フィールドには `lyrics`、`lyric`、`custom_lyrics`、または `customLyrics` を使用できます。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"夏日海风\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\n海风吹过白色沙滩\\n[Chorus]\\n把夏天唱成一束光\"\n}\n```\n\n## 照会\n\n作成成功後、返却された `data` のタスク ID を保存します。たとえば `task_xxx` です。`GET /suno/fetch/{task_id}` を呼び出して、状態、音声 URL、カバー、タイトル、歌詞、および上流から返された元のセグメント情報を照会します。",
+        "tags": [
+          "音楽生成タスクの形式"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "model",
+                  "prompt"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "suno_music",
+                    "description": "`suno_music` を固定で送信します。",
+                    "enum": [
+                      "suno_music"
+                    ]
+                  },
+                  "upstream_model": {
+                    "type": "string",
+                    "example": "suno-v5",
+                    "description": "音楽モデルの選択値。例: `suno-v5`、`minimax-music-v2.6`、`sonauto-v3`、`mureka-v9`。"
+                  },
+                  "music_model": {
+                    "type": "string",
+                    "description": "`upstream_model` の互換エイリアス。"
+                  },
+                  "engine": {
+                    "type": "string",
+                    "description": "`upstream_model` の互換エイリアス。"
+                  },
+                  "model_id": {
+                    "type": "string",
+                    "description": "上位モデル ID 互換フィールド。"
+                  },
+                  "modelId": {
+                    "type": "string",
+                    "description": "`model_id` の camelCase 互換フィールド。"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "プロンプト記述モードでは、音楽スタイル、感情、シーンを指定します。歌詞の高度モードでは、歌詞互換フィールドとして使用できます。"
+                  },
+                  "gpt_description_prompt": {
+                    "type": "string",
+                    "description": "記述モードのプロンプト互換フィールド。"
+                  },
+                  "make_instrumental": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "純粋な伴奏のみを生成するか。"
+                  },
+                  "light_music": {
+                    "type": "boolean",
+                    "description": "軽音楽/バックグラウンドミュージックの方向で生成するかどうか。"
+                  },
+                  "pure_music": {
+                    "type": "boolean",
+                    "description": "インストゥルメンタル方向で生成するかどうか。"
+                  },
+                  "custom_mode": {
+                    "type": "boolean",
+                    "description": "カスタムモードを使用するかどうか。"
+                  },
+                  "customMode": {
+                    "type": "boolean",
+                    "description": "`custom_mode` の camelCase 互換フィールド。"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "曲のタイトル。"
+                  },
+                  "tags": {
+                    "type": "string",
+                    "description": "スタイルタグ、例えば `electro pop, female vocal`。"
+                  },
+                  "style": {
+                    "type": "string",
+                    "description": "スタイル互換フィールド。"
+                  },
+                  "genre": {
+                    "type": "string",
+                    "description": "ジャンル互換フィールド。"
+                  },
+                  "genres": {
+                    "type": "string",
+                    "description": "ジャンル互換フィールド。"
+                  },
+                  "lyrics": {
+                    "type": "string",
+                    "description": "歌詞の内容。"
+                  },
+                  "lyric": {
+                    "type": "string",
+                    "description": "`lyrics` 互換エイリアス。"
+                  },
+                  "custom_lyrics": {
+                    "type": "string",
+                    "description": "`lyrics` 互換エイリアス。"
+                  },
+                  "customLyrics": {
+                    "type": "string",
+                    "description": "`lyrics` 互換エイリアス。"
+                  }
+                }
+              },
+              "examples": {
+                "music_submit_prompt": {
+                  "summary": "音楽説明生成",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "suno-v5",
+                    "prompt": "轻快电子流行，夏日海边，女声 旋律",
+                    "make_instrumental": false
+                  }
+                },
+                "music_submit_light": {
+                  "summary": "軽音楽生成",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "minimax-music-v2.6",
+                    "prompt": "温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐",
+                    "light_music": true,
+                    "make_instrumental": true
+                  }
+                },
+                "music_submit_lyrics": {
+                  "summary": "歌詞の高度モード",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "mureka-v9",
+                    "custom_mode": true,
+                    "title": "夏日海风",
+                    "tags": "electro pop, female vocal, bright summer",
+                    "lyrics": "[Verse]\n海风吹过白色沙滩\n[Chorus]\n把夏天唱成一束光"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "成功時は `success` です。"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "エラーまたはヒントメッセージ。"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "後続のクエリに使用するタスク ID。"
+                    }
+                  }
+                },
+                "examples": {
+                  "music_submit_success": {
+                    "summary": "音楽生成の送信に成功しました",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": "task_xxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/音楽生成タスクの形式/音楽生成タスクを作成する"
+        }
+      }
+    },
+    "/suno/fetch": {
+      "get": {
+        "summary": "音楽タスクを照会する",
+        "description": "query `task_id` を使って音楽生成タスクを取得します。\n\n音楽生成タスクの取得APIです。作成APIが返す `data` はタスク ID であり、`GET /suno/fetch/{task_id}` で単一タスクを取得でき、`POST /suno/fetch` で一括取得もできます。\n\n## 取得方法\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nまたは：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 取得結果\n\n外側は new-api のタスク構造を維持します：\n\n- `code`：成功時は `success` です。\n- `message`：エラーまたは案内メッセージ。\n- `data.task_id`：タスク ID。\n- `data.status`：タスクの状態。代表的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。\n- `data.progress`：タスクの進捗。\n- `data.result_url`：成功後に利用可能な結果URL。上流が複数曲を返す場合は、`data.data` 内のスニペットを基準とします。\n- `data.data`：上流の音楽結果の生データ。通常は曲のスニペットの配列またはオブジェクトを含みます。\n\n成功時の例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "音楽生成タスクの形式"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_xxx"
+            },
+            "description": "音楽タスクを送信した際に返されるタスク ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "成功時は `success` です。"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "エラーまたはヒントメッセージ。"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "タスク ID。"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "タスクの状態。一般的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。"
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "タスクの進捗。"
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "成功後に使用できる結果のアドレス。"
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "楽曲音声の URL。"
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "曲のカバー画像の URL。"
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "曲のタイトル。"
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "音声の長さ。"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "音楽タスクの照会に成功しました",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/音楽生成タスクの形式/音楽タスクを照会する"
+        }
+      },
+      "post": {
+        "summary": "音楽タスクを照会する（JSON）",
+        "description": "JSON body を使用して音楽生成タスクを照会します。\n\n音楽生成タスクの取得APIです。作成APIが返す `data` はタスク ID であり、`GET /suno/fetch/{task_id}` で単一タスクを取得でき、`POST /suno/fetch` で一括取得もできます。\n\n## 取得方法\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nまたは：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 取得結果\n\n外側は new-api のタスク構造を維持します：\n\n- `code`：成功時は `success` です。\n- `message`：エラーまたは案内メッセージ。\n- `data.task_id`：タスク ID。\n- `data.status`：タスクの状態。代表的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。\n- `data.progress`：タスクの進捗。\n- `data.result_url`：成功後に利用可能な結果URL。上流が複数曲を返す場合は、`data.data` 内のスニペットを基準とします。\n- `data.data`：上流の音楽結果の生データ。通常は曲のスニペットの配列またはオブジェクトを含みます。\n\n成功時の例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "音楽生成タスクの形式"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "task_id"
+                ],
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "example": "task_xxx",
+                    "description": "送信APIが返すタスクID。"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "`task_id` 互換エイリアス。"
+                  }
+                }
+              },
+              "examples": {
+                "suno_music_fetch": {
+                  "summary": "音楽タスクの照会",
+                  "value": {
+                    "task_id": "task_xxx"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "成功時は `success` です。"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "エラーまたはヒントメッセージ。"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "タスク ID。"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "タスクの状態。一般的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。"
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "タスクの進捗。"
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "成功後に使用できる結果のアドレス。"
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "楽曲音声の URL。"
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "曲のカバー画像の URL。"
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "曲のタイトル。"
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "音声の長さ。"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "音楽タスクの照会に成功しました",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/音楽生成タスクの形式/音楽タスクを照会する（json）"
+        }
+      }
+    },
+    "/suno/fetch/{task_id}": {
+      "get": {
+        "summary": "ID で音楽タスクを照会",
+        "description": "path `task_id` で音楽生成タスクを照会します。\n\n音楽生成タスクの取得APIです。作成APIが返す `data` はタスク ID であり、`GET /suno/fetch/{task_id}` で単一タスクを取得でき、`POST /suno/fetch` で一括取得もできます。\n\n## 取得方法\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nまたは：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 取得結果\n\n外側は new-api のタスク構造を維持します：\n\n- `code`：成功時は `success` です。\n- `message`：エラーまたは案内メッセージ。\n- `data.task_id`：タスク ID。\n- `data.status`：タスクの状態。代表的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。\n- `data.progress`：タスクの進捗。\n- `data.result_url`：成功後に利用可能な結果URL。上流が複数曲を返す場合は、`data.data` 内のスニペットを基準とします。\n- `data.data`：上流の音楽結果の生データ。通常は曲のスニペットの配列またはオブジェクトを含みます。\n\n成功時の例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "音楽生成タスクの形式"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_xxx"
+            },
+            "description": "音楽タスクを送信した際に返されるタスク ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "成功時は `success` です。"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "エラーまたはヒントメッセージ。"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "タスク ID。"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "タスクの状態。一般的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。"
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "タスクの進捗。"
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "成功後に使用できる結果のアドレス。"
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "楽曲音声の URL。"
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "曲のカバー画像の URL。"
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "曲のタイトル。"
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "音声の長さ。"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "音楽タスクの照会に成功しました",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ja/音楽生成タスクの形式/id-で音楽タスクを照会"
         }
       }
     },
@@ -6819,6 +7752,9 @@
     },
     {
       "name": "Video generation Vidu"
+    },
+    {
+      "name": "音楽生成タスクの形式"
     }
   ],
   "x-doc-drift-summary": {

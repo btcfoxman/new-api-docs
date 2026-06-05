@@ -210,7 +210,7 @@
       "post": {
         "summary": "Créer une réponse (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API, utilisé pour créer des réponses de modèle.\nPrend en charge le dialogue multi-tours, l'appel d'outils, le raisonnement et d'autres fonctionnalités.",
+        "description": "OpenAI Responses API, utilisé pour créer des réponses de modèle.\nPrend en charge le dialogue multi-tours, l'appel d'outils, le raisonnement et d'autres fonctionnalités.\n\nAjoute des cas d’usage asynchrones de génération d’images pour OpenAI Responses API. `background=true` sert à soumettre des tâches en arrière-plan ; l’interface de création renvoie immédiatement `status=queued` et `id` complets, puis utilise ce `id` pour appeler `GET /v1/responses/{response_id}` et interroger le résultat.\n\n## Flux de génération asynchrone d’images\n\n1. Appelez `POST /v1/responses` et transmettez `tools=[{ \"type\": \"image_generation\" }]` dans le corps de la requête, avec `background=true`.\n2. Enregistrez le `id` complet renvoyé par l’interface de création, par exemple `resp_xxx`. Ne le tronquez pas, ne le réécrivez pas et ne conservez pas uniquement `metadata.task_id`.\n3. Appelez `GET /v1/responses/{response_id}` pour interroger, jusqu’à `status=completed` ou `status=failed`.\n4. Une fois l’opération réussie, lisez `output[].url` pour obtenir le lien de l’image.\n\n### Exemple de création d’une tâche d’image asynchrone\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n \"model\": \"gpt-image-2-2k\",\n \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n \"stream\": false,\n \"tools\": [\n {\n \"type\": \"image_generation\"\n }\n ],\n \"background\": true\n}\n```\n\nExemple de réponse de l’interface de création :\n\n```json\n{\n \"id\": \"resp_xxx\",\n \"created_at\": 1780649146,\n \"error\": null,\n \"incomplete_details\": null,\n \"instructions\": null,\n \"metadata\": {\n \"task_id\": \"010c31178d26436ca6194cde07931b33\",\n \"credits\": \"23\"\n },\n \"model\": \"gpt-image-2-2k\",\n \"object\": \"response\",\n \"output\": [],\n \"parallel_tool_calls\": true,\n \"temperature\": null,\n \"tool_choice\": null,\n \"tools\": null,\n \"top_p\": null,\n \"max_output_tokens\": null,\n \"previous_response_id\": null,\n \"reasoning\": null,\n \"status\": \"queued\",\n \"text\": null,\n \"truncation\": null,\n \"usage\": null,\n \"user\": null,\n \"store\": null\n}\n```\n\nModèles pris en charge : `gpt-image-2-2k`, `gpt-image-2-4k`, `nano-banana-pro`.",
         "operationId": "createResponse",
         "tags": [
           "Format OpenAI(Responses)"
@@ -220,7 +220,24 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ResponsesRequest"
+                "$ref": "#/components/schemas/ResponsesRequest",
+                "properties": {}
+              },
+              "examples": {
+                "responses_image_async": {
+                  "summary": "Génération d’images asynchrone",
+                  "value": {
+                    "model": "gpt-image-2-2k",
+                    "input": "生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。",
+                    "stream": false,
+                    "tools": [
+                      {
+                        "type": "image_generation"
+                      }
+                    ],
+                    "background": true
+                  }
+                }
               }
             }
           },
@@ -233,6 +250,39 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResponsesResponse"
+                },
+                "examples": {
+                  "responses_image_async_queued": {
+                    "summary": "Retour de création asynchrone de génération d'image",
+                    "value": {
+                      "id": "resp_xxx",
+                      "created_at": 1780649146,
+                      "error": null,
+                      "incomplete_details": null,
+                      "instructions": null,
+                      "metadata": {
+                        "task_id": "010c31178d26436ca6194cde07931b33",
+                        "credits": "23"
+                      },
+                      "model": "gpt-image-2-2k",
+                      "object": "response",
+                      "output": [],
+                      "parallel_tool_calls": true,
+                      "temperature": null,
+                      "tool_choice": null,
+                      "tools": null,
+                      "top_p": null,
+                      "max_output_tokens": null,
+                      "previous_response_id": null,
+                      "reasoning": null,
+                      "status": "queued",
+                      "text": null,
+                      "truncation": null,
+                      "usage": null,
+                      "user": null,
+                      "store": null
+                    }
+                  }
                 }
               }
             },
@@ -257,7 +307,7 @@
       "post": {
         "summary": "Images Gemini (Nano Banana)",
         "deprecated": false,
-        "description": "Génération d'images Gemini.\n\nLa série Nano Banana prend en charge le format Dall-E OpenAI (voir le lien [format DALL-E de génération d’images OpenAI](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).\n\nAjout de la description des champs de génération d’images Gemini pour /v1beta/models/{model}:generateContent, afin d’éviter que OpenAPI public perde la description sur les champs imbriqués.",
+        "description": "Génération d'images Gemini.\n\nLa série Nano Banana prend en charge le format Dall-E OpenAI (voir le lien [format DALL-E de génération d’images OpenAI](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).\n\nInterface compatible avec la génération d’images Gemini. Placez une entrée texte ou image dans `contents[].parts`, `generationConfig.responseModalities` transmet généralement `IMAGE`, et la taille de l’image est contrôlée via `generationConfig.imageConfig.imageSize`.\n\n## Tarification fixe pour la génération d’images\n\nLes modèles d’image suivants sont facturés à l’usage :\n\n| Modèle | Tarification |\n|---|---|\n| `kling-image-v3` | 0,05 / fois |\n| `doubao-seedream-5-0-260128` | 0,05 / fois |\n| `doubao-seedream-4-5-251128` | 0,06 / fois |",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "Format Gemini pour la génération d’images"
@@ -412,7 +462,7 @@
       "post": {
         "summary": "Générer des images（OpenAI compatible avec Dall-E）",
         "deprecated": false,
-        "description": "OpenAI Interface de génération d’images au format Dall-E.\n\n- `POST /v1/images/generations` : créer une tâche de génération d’image\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération d’image\n- `n: number` : facultatif, nombre d’images à générer\n- `size: string` : facultatif, format de taille ou de résolution\n- `quality: string` : facultatif, niveau de qualité\n- `response_format: string` : facultatif, format de retour\n\nParamètres d’extension de compatibilité courants :\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling Paramètres d’extension dédiés :\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Série Nano Banana\n\nModèle exposé :\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nDescription des capacités :\n- `nano-banana` : génération d’image à partir de texte de base, compatible aussi avec l’édition d’image\n- `nano-banana-pro*` : version de qualité supérieure\n- `nano-banana-2*` : famille de versions plus récente\n- `*-2k` / `*-4k` : modèles haute résolution\n\nParamètres courants :\n- Génération d’image à partir de texte : `model + prompt`\n- Édition d’image : `model + prompt + image`, compatible aussi avec `image_urls`\n- Extensions courantes : `n` `size` `quality` `response_format`\n\nExemple :\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Série Seedream\n\nModèle exposé :\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nDescription des capacités :\n- Appel unifié en génération d’image à partir de texte\n- Il est recommandé de transmettre en priorité les paramètres standard : `prompt + model + size/aspect_ratio`\n\nParamètres courants :\n- `model + prompt`\n- Optionnel : `size` `aspect_ratio` `n`\n\n### 3.3 Kling Modèle principal d’images standard\n\nModèle principal exposé :\n- `kling-image`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nDescription des capacités :\n- Génération d’image à partir de texte : `model + model_name + prompt`\n- Génération d’image à partir d’image : ajoutez `image` sur la base de la génération d’image à partir de texte\n- Génération d’image à partir de plusieurs images : transmettez `subject_image_list`, ou plusieurs `image_urls/images`\n- Extension d’image : transmettez `image` et le paramètre de ratio d’extension\n\nParamètres courants :\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Modèle principal d’images Omni\n\nModèle principal exposé :\n- `kling-omni-image`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-image-o1`\n- `kling-v3-omni`\n\nParamètres courants :\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling Modèle d’essayage virtuel\n\nModèle exposé :\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nParamètres d’entrée minimaux :\n- `model + human_image + cloth_image`\n\nRemarque :\n- Ces deux modèles sont eux-mêmes des modèles principaux complets ; il n’est pas nécessaire de transmettre `model_name` à nouveau.\n\nExemple :\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
+        "description": "OpenAI Interface de génération d’images au format Dall-E.\n\n- `POST /v1/images/generations` : créer une tâche de génération d’image\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération d’image\n- `n: number` : facultatif, nombre d’images à générer\n- `size: string` : facultatif, format de taille ou de résolution\n- `quality: string` : facultatif, niveau de qualité\n- `response_format: string` : facultatif, format de retour\n\nParamètres d’extension de compatibilité courants :\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling Paramètres d’extension dédiés :\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Série Nano Banana\n\nModèle exposé :\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nDescription des capacités :\n- `nano-banana` : génération d’image à partir de texte de base, compatible aussi avec l’édition d’image\n- `nano-banana-pro*` : version de qualité supérieure\n- `nano-banana-2*` : famille de versions plus récente\n- `*-2k` / `*-4k` : modèles haute résolution\n\nParamètres courants :\n- Génération d’image à partir de texte : `model + prompt`\n- Édition d’image : `model + prompt + image`, compatible aussi avec `image_urls`\n- Extensions courantes : `n` `size` `quality` `response_format`\n\nExemple :\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Série Seedream\n\nModèle exposé :\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nDescription des capacités :\n- Appel unifié en génération d’image à partir de texte\n- Il est recommandé de transmettre en priorité les paramètres standard : `prompt + model + size/aspect_ratio`\n\nParamètres courants :\n- `model + prompt`\n- Optionnel : `size` `aspect_ratio` `n`\n\n### 3.3 Kling Modèle principal d’images standard\n\nModèle principal exposé :\n- `kling-image`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nDescription des capacités :\n- Génération d’image à partir de texte : `model + model_name + prompt`\n- Génération d’image à partir d’image : ajoutez `image` sur la base de la génération d’image à partir de texte\n- Génération d’image à partir de plusieurs images : transmettez `subject_image_list`, ou plusieurs `image_urls/images`\n- Extension d’image : transmettez `image` et le paramètre de ratio d’extension\n\nParamètres courants :\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Modèle principal d’images Omni\n\nModèle principal exposé :\n- `kling-omni-image`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-image-o1`\n- `kling-v3-omni`\n\nParamètres courants :\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling Modèle d’essayage virtuel\n\nModèle exposé :\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nParamètres d’entrée minimaux :\n- `model + human_image + cloth_image`\n\nRemarque :\n- Ces deux modèles sont eux-mêmes des modèles principaux complets ; il n’est pas nécessaire de transmettre `model_name` à nouveau.\n\nExemple :\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## Tarification fixe pour la génération et l’édition d’images\n\nLes modèles suivants sont facturés à l’unité dans `POST /v1/images/generations` et `POST /v1/images/edits` :\n\n| Modèle | Tarification |\n|---|---|\n| `kling-image-v3` | 0,05 / fois |\n| `doubao-seedream-5-0-260128` | 0,05 / fois |\n| `doubao-seedream-4-5-251128` | 0,06 / fois |",
         "operationId": "createImageGeneration",
         "tags": [
           "Génération d’imagesOpenAI au format DALL-E"
@@ -585,7 +635,7 @@
       "post": {
         "summary": "Modifier l’image (compatible avec OpenAI Dall-E)",
         "deprecated": false,
-        "description": "OpenAI Interface de retouche d’images au format Dall-E.",
+        "description": "OpenAI Interface de retouche d’images au format Dall-E.\n\n- `POST /v1/images/edits` : modifier l’image\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération d’image\n- `n: number` : facultatif, nombre d’images à générer\n- `size: string` : facultatif, format de taille ou de résolution\n- `quality: string` : facultatif, niveau de qualité\n- `response_format: string` : facultatif, format de retour\n\nParamètres d’extension de compatibilité courants :\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling Paramètres d’extension dédiés :\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Série Nano Banana\n\nModèle exposé :\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nDescription des capacités :\n- `nano-banana` : génération d’image à partir de texte de base, compatible aussi avec l’édition d’image\n- `nano-banana-pro*` : version de qualité supérieure\n- `nano-banana-2*` : famille de versions plus récente\n- `*-2k` / `*-4k` : modèles haute résolution\n\nParamètres courants :\n- Génération d’image à partir de texte : `model + prompt`\n- Édition d’image : `model + prompt + image`, compatible aussi avec `image_urls`\n- Extensions courantes : `n` `size` `quality` `response_format`\n\nExemple :\n\n```json\n{\n\"model\": \"nano-banana\",\n\"prompt\": \"a cute cat running in cloud\",\n\"n\": 1,\n\"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n\"model\": \"nano-banana-pro\",\n\"prompt\": \"把主体改成赛博朋克夜景\",\n\"image\": \"https://example.com/input.png\",\n\"n\": 1\n}\n```\n\n### 3.2 Série Seedream\n\nModèle exposé :\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nDescription des capacités :\n- Appel unifié en génération d’image à partir de texte\n- Il est recommandé de transmettre en priorité les paramètres standard : `prompt + model + size/aspect_ratio`\n\nParamètres courants :\n- `model + prompt`\n- Optionnel : `size` `aspect_ratio` `n`\n\n### 3.3 Kling Modèle principal d’images standard\n\nModèle principal exposé :\n- `kling-image`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nDescription des capacités :\n- Génération d’image à partir de texte : `model + model_name + prompt`\n- Génération d’image à partir d’image : ajoutez `image` sur la base de la génération d’image à partir de texte\n- Génération d’image à partir de plusieurs images : transmettez `subject_image_list`, ou plusieurs `image_urls/images`\n- Extension d’image : transmettez `image` et le paramètre de ratio d’extension\n\nParamètres courants :\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-image\",\n\"model_name\": \"kling-v3\",\n\"prompt\": \"海边日落，电影感人像\",\n\"aspect_ratio\": \"16:9\",\n\"n\": 1\n}\n```\n\n### 3.4 Kling Modèle principal d’images Omni\n\nModèle principal exposé :\n- `kling-omni-image`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-image-o1`\n- `kling-v3-omni`\n\nParamètres courants :\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-omni-image\",\n\"model_name\": \"kling-v3-omni\",\n\"prompt\": \"生成一张海边跳舞的图片\",\n\"element_list\": [\n{ \"element_id\": 835266081714884677 }\n]\n}\n```\n\n### 3.5 Kling Modèle d’essayage virtuel\n\nModèle exposé :\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nParamètres d’entrée minimaux :\n- `model + human_image + cloth_image`\n\nRemarque :\n- Ces deux modèles sont eux-mêmes des modèles principaux complets ; il n’est pas nécessaire de transmettre `model_name` à nouveau.\n\nExemple :\n\n```json\n{\n\"model\": \"kolors-virtual-try-on-v1\",\n\"human_image\": \"https://example.com/human.jpg\",\n\"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## Tarification fixe pour la génération et l’édition d’images\n\nLes modèles suivants sont facturés à l’unité dans `POST /v1/images/generations` et `POST /v1/images/edits` :\n\n| Modèle | Tarification |\n|---|---|\n| `kling-image-v3` | 0,05 / fois |\n| `doubao-seedream-5-0-260128` | 0,05 / fois |\n| `doubao-seedream-4-5-251128` | 0,06 / fois |",
         "operationId": "createImageEdit",
         "tags": [
           "Génération d’imagesOpenAI au format DALL-E"
@@ -600,12 +650,21 @@
                 "properties": {
                   "model": {
                     "type": "string",
-                    "example": "dall-e-2"
+                    "example": "dall-e-2",
+                    "description": "Nom du modèle d’image exposé publiquement.",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
                   },
                   "image": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Image à modifier"
+                    "description": "Entrée d’une seule image, couramment utilisée pour l’image-à-image et l’agrandissement d’image."
                   },
                   "mask": {
                     "type": "string",
@@ -614,11 +673,12 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Modifier le prompt"
+                    "description": "Description de génération d’image. Ce paramètre peut être omis pour le modèle d’essayage virtuel."
                   },
                   "n": {
                     "type": "integer",
-                    "default": 1
+                    "default": 1,
+                    "description": "Nombre d’images à générer."
                   },
                   "size": {
                     "type": "string",
@@ -626,14 +686,16 @@
                       "256x256",
                       "512x512",
                       "1024x1024"
-                    ]
+                    ],
+                    "description": "Expression de la taille ou de la résolution."
                   },
                   "response_format": {
                     "type": "string",
                     "enum": [
                       "url",
                       "b64_json"
-                    ]
+                    ],
+                    "description": "Format de retour."
                   },
                   "user": {
                     "type": "string"
@@ -644,6 +706,131 @@
                   "image",
                   "prompt"
                 ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "dall-e-2",
+                    "description": "Nom du modèle d’image exposé publiquement.",
+                    "enum": [
+                      "nano-banana",
+                      "doubao-seedream-3-0-t2i-250415",
+                      "kling-image",
+                      "kling-omni-image",
+                      "kolors-virtual-try-on-v1",
+                      "kolors-virtual-try-on-v1-5"
+                    ]
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Entrée d’une seule image, couramment utilisée pour l’image-à-image et l’agrandissement d’image."
+                  },
+                  "mask": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Image de masque facultative"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "Description de génération d’image. Ce paramètre peut être omis pour le modèle d’essayage virtuel."
+                  },
+                  "n": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "Nombre d’images à générer."
+                  },
+                  "size": {
+                    "type": "string",
+                    "enum": [
+                      "256x256",
+                      "512x512",
+                      "1024x1024"
+                    ],
+                    "description": "Expression de la taille ou de la résolution."
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "enum": [
+                      "url",
+                      "b64_json"
+                    ],
+                    "description": "Format de retour."
+                  },
+                  "user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "model",
+                  "image",
+                  "prompt"
+                ]
+              },
+              "examples": {
+                "nano_banana_text2img": {
+                  "summary": "Nano Banana génération d’images à partir de texte",
+                  "value": {
+                    "model": "nano-banana",
+                    "prompt": "a cute cat running in cloud",
+                    "n": 1,
+                    "size": "1024x1792"
+                  }
+                },
+                "seedream_text2img": {
+                  "summary": "Génération d’images à partir de texte avec Seedream",
+                  "value": {
+                    "model": "doubao-seedream-3-0-t2i-250415",
+                    "prompt": "一张电影感海边日落人像",
+                    "size": "1536x1024",
+                    "n": 1
+                  }
+                },
+                "kling_text2img": {
+                  "summary": "Kling Génération d’images à partir de texte",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v3",
+                    "prompt": "海边日落，电影感人像",
+                    "aspect_ratio": "16:9",
+                    "n": 1
+                  }
+                },
+                "kling_img2img": {
+                  "summary": "Kling Image à image",
+                  "value": {
+                    "model": "kling-image",
+                    "model_name": "kling-v2-1",
+                    "prompt": "改成赛博朋克夜景风格",
+                    "image": "https://example.com/input.png",
+                    "n": 1
+                  }
+                },
+                "kling_omni_image": {
+                  "summary": "Kling image Omni",
+                  "value": {
+                    "model": "kling-omni-image",
+                    "model_name": "kling-v3-omni",
+                    "prompt": "生成一张海边跳舞的图片",
+                    "element_list": [
+                      {
+                        "element_id": 835266081714884677
+                      }
+                    ]
+                  }
+                },
+                "kling_virtual_try_on": {
+                  "summary": "Kling essayage virtuel",
+                  "value": {
+                    "model": "kolors-virtual-try-on-v1",
+                    "human_image": "https://example.com/human.jpg",
+                    "cloth_image": "https://example.com/cloth.jpg"
+                  }
+                }
               }
             }
           }
@@ -679,7 +866,7 @@
       "post": {
         "summary": "Créer une vidéo",
         "deprecated": false,
-        "description": "OpenAI Sora interface de génération vidéo compatible avec les formats. Prend en charge la génération texte-vers-vidéo ainsi que les modes de génération à partir d’une image/vidéo de référence.\n\n- `POST /v1/videos` : Créer une tâche vidéo\n- `GET /v1/videos/{video_id}` : Consulter l'état de la tâche\n- `GET /v1/videos/{video_id}/content` : obtenir le contenu binaire de la vidéo\n\nActuellement non disponible pour les utilisateurs externes :\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n1. Créez une tâche via `POST /v1/videos` et obtenez `id`\n2. Interrogez `GET /v1/videos/{id}` jusqu’à `completed` ou `failed`\n3. Une fois terminé, utilisez en priorité `video_url` renvoyé dans la réponse\n4. Si un téléchargement unifié est nécessaire, appelez `GET /v1/videos/{id}/content`\n\nParamètres principaux :\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération de la vidéo\n- `seconds: number|string` : facultatif, durée cible\n- `duration: number|string` : facultatif, alias de durée\n- `size: string` : facultatif, taille de sortie\n- `mode: string` : facultatif, valeurs courantes `t2v` `i2v` `i2v_first_last` `reference_material`\n\nParamètres de compatibilité courants :\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nParamètres d’extension courants de Kling :\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 série Veo\n\nRemarque : `stable`, `official`, etc. indiquent différents groupes et ne sont pas des suffixes `model` exposés à l’extérieur ; lors de l’appel, veuillez conserver `model` comme nom de modèle de base, et le groupe réellement utilisé sera déterminé par le groupe du compte ou du jeton.\n\n#### modèle principal Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte seul, utilisez en priorité les modèles principaux `veo3*` / `veo3.1*`\n- Pour les scénarios de génération de vidéo à partir d’image ou avec image de référence, il est recommandé de transmettre explicitement `mode + image_url/reference_images`\n\n### 4.2 série Sora\n\nModèles de base :\n- `sora-2`\n- `sora-2-pro`\n\nRecommandations :\n- `sora-2*` convient aux appels généraux\n- Si vous devez utiliser des groupes tels que `stable` / `official`, veuillez conserver `model` comme nom de modèle de base et ne pas ajouter de suffixe au nom du modèle.\n\n### 4.3 série Seedance\n\nModèle exposé :\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte, privilégiez `*-t2v-*` ou `pro / fast`\n- Pour la génération de vidéo à partir d'image, privilégiez `*-i2v-*`\n- Pour les scénarios avec des éléments de référence complexes, utilisez en priorité `content`\n\n### 4.4 série vidéo Grok\n\nModèle exposé :\n- `grok-imagine-1.0-video`\n- `grok-video-3`\n\nParamètres courants :\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExemple :\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 modèle principal vidéo Kling\n\nModèle principal exposé :\n- `kling-video`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n`mode` courants :\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nParamètres d’entrée minimaux :\n- Génération de vidéo à partir de texte : `model + model_name + prompt + mode=t2v`\n- Génération de vidéo à partir d'image : `model + model_name + prompt + mode=i2v + image`\n- Référence multi-image : `model + model_name + prompt + mode=multi_i2v + image_list`\n- Extension de vidéo : `model + model_name + mode=extend + video_id`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Entrée minimale : `model + prompt`\n\n- `mode=i2v`\n- Entrée minimale : `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Entrée minimale : `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Entrée minimale : `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Entrée minimale : `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Instructions d’appel Gemini Omni\n\n- `gemini-omni` est le nom public du modèle vidéo de new-api, utilisable directement via `POST /v1/videos`.\n- `mode=t2v` : génération texte-vers-vidéo, le paramètre d’entrée minimal est `model + prompt`.\n- `mode=r2v` : génération à partir d’une image/ressource de référence ; l’image peut être placée dans `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference` ou `content`.\n- `mode=edit` : édition vidéo ; la vidéo peut être placée dans `video`, `video_url`, `videos` ou `content`, et une image de référence peut également être fournie.\n- Le champ de durée peut utiliser `seconds` ou `duration` ; il sera automatiquement aligné sur les paliers de 4 / 6 / 8 / 10 secondes.",
+        "description": "OpenAI Sora interface de génération vidéo compatible avec les formats. Prend en charge la génération texte-vers-vidéo ainsi que les modes de génération à partir d’une image/vidéo de référence.\n\n- `POST /v1/videos` : Créer une tâche vidéo\n- `GET /v1/videos/{video_id}` : Consulter l'état de la tâche\n- `GET /v1/videos/{video_id}/content` : obtenir le contenu binaire de la vidéo\n\nActuellement non disponible pour les utilisateurs externes :\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n1. Créez une tâche via `POST /v1/videos` et obtenez `id`\n2. Interrogez `GET /v1/videos/{id}` jusqu’à `completed` ou `failed`\n3. Une fois terminé, utilisez en priorité `video_url` renvoyé dans la réponse\n4. Si un téléchargement unifié est nécessaire, appelez `GET /v1/videos/{id}/content`\n\nParamètres principaux :\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération de la vidéo\n- `seconds: number|string` : facultatif, durée cible\n- `duration: number|string` : facultatif, alias de durée\n- `size: string` : facultatif, taille de sortie\n- `mode: string` : facultatif, valeurs courantes `t2v` `i2v` `i2v_first_last` `reference_material`\n\nParamètres de compatibilité courants :\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nParamètres d’extension courants de Kling :\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 série Veo\n\nRemarque : `stable`, `official`, etc. indiquent différents groupes et ne sont pas des suffixes `model` exposés à l’extérieur ; lors de l’appel, veuillez conserver `model` comme nom de modèle de base, et le groupe réellement utilisé sera déterminé par le groupe du compte ou du jeton.\n\n#### modèle principal Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte seul, utilisez en priorité les modèles principaux `veo3*` / `veo3.1*`\n- Pour les scénarios de génération de vidéo à partir d’image ou avec image de référence, il est recommandé de transmettre explicitement `mode + image_url/reference_images`\n\n### 4.2 série Sora\n\nModèles de base :\n- `sora-2`\n- `sora-2-pro`\n\nRecommandations :\n- `sora-2*` convient aux appels généraux\n- Si vous devez utiliser des groupes tels que `stable` / `official`, veuillez conserver `model` comme nom de modèle de base et ne pas ajouter de suffixe au nom du modèle.\n\n### 4.3 série Seedance\n\nModèle exposé :\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte, privilégiez `*-t2v-*` ou `pro / fast`\n- Pour la génération de vidéo à partir d'image, privilégiez `*-i2v-*`\n- Pour les scénarios avec des éléments de référence complexes, utilisez en priorité `content`\n\n### 4.4 série vidéo Grok\n\nModèle exposé :\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nParamètres courants :\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExemple :\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 modèle principal vidéo Kling\n\nModèle principal exposé :\n- `kling-video`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n`mode` courants :\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nParamètres d’entrée minimaux :\n- Génération de vidéo à partir de texte : `model + model_name + prompt + mode=t2v`\n- Génération de vidéo à partir d'image : `model + model_name + prompt + mode=i2v + image`\n- Référence multi-image : `model + model_name + prompt + mode=multi_i2v + image_list`\n- Extension de vidéo : `model + model_name + mode=extend + video_id`\n\nExemple :\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Entrée minimale : `model + prompt`\n\n- `mode=i2v`\n- Entrée minimale : `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Entrée minimale : `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Entrée minimale : `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Entrée minimale : `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Instructions d’appel Gemini Omni\n\n- `gemini-omni` est le nom public du modèle vidéo de new-api, utilisable directement via `POST /v1/videos`.\n- `mode=t2v` : génération texte-vers-vidéo, le paramètre d’entrée minimal est `model + prompt`.\n- `mode=r2v` : génération à partir d’une image/ressource de référence ; l’image peut être placée dans `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference` ou `content`.\n- `mode=edit` : édition vidéo ; la vidéo peut être placée dans `video`, `video_url`, `videos` ou `content`, et une image de référence peut également être fournie.\n- Le champ de durée peut utiliser `seconds` ou `duration` ; il sera automatiquement aligné sur les paliers de 4 / 6 / 8 / 10 secondes.",
         "operationId": "createVideo",
         "tags": [
           "Formats compatibles avec la génération de vidéosSora"
@@ -725,6 +912,7 @@
                       "veo3.1-pro-4k",
                       "kling-video",
                       "grok-imagine-1.0-video",
+                      "grok-imagine-video-1.5-preview",
                       "grok-video-3",
                       "viduq3-turbo",
                       "hailuo-video"
@@ -862,6 +1050,7 @@
                       "veo3.1-pro-4k",
                       "kling-video",
                       "grok-imagine-1.0-video",
+                      "grok-imagine-video-1.5-preview",
                       "grok-video-3",
                       "viduq3-turbo",
                       "hailuo-video"
@@ -1921,6 +2110,750 @@
         "x-drift-types": [],
         "x-mint": {
           "href": "/api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-d’une-image-kling"
+        }
+      }
+    },
+    "/v1/responses/{response_id}": {
+      "get": {
+        "summary": "Réponses de requête (OpenAI Responses API)",
+        "description": "OpenAI Responses API Interface de requête asynchrone des tâches. `response_id` Utilisez l’intégralité de `id` renvoyée lors de la création de la réponse, sans la tronquer ni la réécrire.\n\nInterroge les tâches d’images asynchrones OpenAI Responses API. `response_id` Vous devez utiliser l’intégralité de `id` renvoyée par `POST /v1/responses`, par exemple `resp_xxx`.\n\n## Exemple de requête asynchrone\n\n```http\nGET /v1/responses/resp_xxx\n```\n\nDescription équivalente des paramètres de chemin :\n\n```json\n{\n \"response_id\": \"resp_xxx\"\n}\n```\n\nExemple de réponse à l’état terminé :\n\n```json\n{\n \"id\": \"resp_xxx\",\n \"created_at\": 1780649146,\n \"error\": null,\n \"incomplete_details\": null,\n \"instructions\": null,\n \"metadata\": {},\n \"model\": \"gpt-image-2-2k\",\n \"object\": \"response\",\n \"output\": [\n {\n \"id\": \"ig_010c31178d26436ca6194cde07931b33_0\",\n \"result\": null,\n \"status\": \"completed\",\n \"type\": \"image_generation_call\",\n \"url\": \"https://example.png\"\n }\n ],\n \"parallel_tool_calls\": true,\n \"temperature\": null,\n \"tool_choice\": null,\n \"tools\": null,\n \"top_p\": null,\n \"max_output_tokens\": null,\n \"previous_response_id\": null,\n \"reasoning\": null,\n \"status\": \"completed\",\n \"text\": null,\n \"truncation\": null,\n \"usage\": null,\n \"user\": null,\n \"store\": null\n}\n```",
+        "tags": [
+          "Format OpenAI(Responses)"
+        ],
+        "parameters": [
+          {
+            "name": "response_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "resp_xxx"
+            },
+            "description": "Crée l’ID complet renvoyé dans la réponse."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "resp_xxx",
+                      "description": "Response ID。"
+                    },
+                    "object": {
+                      "type": "string",
+                      "example": "response"
+                    },
+                    "created_at": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "in_progress",
+                      "description": "Statut de la tâche, généralement `queued`, `in_progress`, `completed` et `failed`."
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "output": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string",
+                            "description": "URL de l’image une fois la tâche d’image terminée."
+                          }
+                        }
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "Métadonnées de l’ID de la tâche en amont."
+                        }
+                      }
+                    },
+                    "error": {
+                      "type": "object",
+                      "nullable": true,
+                      "description": "Objet d’erreur en cas d’échec."
+                    }
+                  }
+                },
+                "examples": {
+                  "responses_image_async_completed": {
+                    "summary": "Retour renvoyé une fois la requête asynchrone de génération d’image terminée",
+                    "value": {
+                      "id": "resp_xxx",
+                      "created_at": 1780649146,
+                      "error": null,
+                      "incomplete_details": null,
+                      "instructions": null,
+                      "metadata": {},
+                      "model": "gpt-image-2-2k",
+                      "object": "response",
+                      "output": [
+                        {
+                          "id": "ig_010c31178d26436ca6194cde07931b33_0",
+                          "result": null,
+                          "status": "completed",
+                          "type": "image_generation_call",
+                          "url": "https://example.png"
+                        }
+                      ],
+                      "parallel_tool_calls": true,
+                      "temperature": null,
+                      "tool_choice": null,
+                      "tools": null,
+                      "top_p": null,
+                      "max_output_tokens": null,
+                      "previous_response_id": null,
+                      "reasoning": null,
+                      "status": "completed",
+                      "text": null,
+                      "truncation": null,
+                      "usage": null,
+                      "user": null,
+                      "store": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-openairesponses/réponses-de-requête-openai-responses-api"
+        }
+      }
+    },
+    "/suno/submit/music": {
+      "post": {
+        "summary": "Créer une tâche de génération musicale",
+        "description": "Interface de soumission pour la génération musicale, compatible avec l’ancien chemin `/suno/submit/music`. Prend en charge Suno v5, MiniMax Music V2.6, Sonauto V3 et Mureka V9, renvoie un ID de tâche, puis permet une consultation ultérieure via `/suno/fetch`.\n\nInterface de soumission de tâches de génération musicale. Le chemin reste `/suno/submit/music` ; en pratique, vous pouvez choisir le modèle de génération musicale via `upstream_model`, `music_model`, `engine`, `model_id` ou `modelId`. L’interface de création renvoie `task_id`, puis `/suno/fetch/{task_id}` permet de consulter la sortie.\n\n## Modèles musicaux et tarification\n\n| Modèle | Valeur de sélection | Tarification |\n|---|---|---|\n| Suno v5 | `suno-v5` | 0.38 / appel |\n| MiniMax Music V2.6 | `minimax-music-v2.6` | 0.15 / appel |\n| Sonauto V3 | `sonauto-v3` | 0.32 / appel |\n| Mureka V9 | `mureka-v9` | 0.24 / appel |\n\n## Mode de description par prompt\n\nConvient lorsque vous décrivez uniquement le style, l’ambiance, la langue, le type de voix et le contexte ; le modèle génère automatiquement le contenu de la chanson.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\",\n \"make_instrumental\": false\n}\n```\n\n## Musique légère ou instrumental pur\n\nVous pouvez utiliser `light_music=true` ou `make_instrumental=true`. `light_music` indique une tendance musique légère/musique d’ambiance, et `make_instrumental` indique de ne pas générer de voix chantée.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## Mode avancé des paroles\n\nConvient lorsque l’équipe métier a déjà préparé les paroles et doit spécifier un titre ainsi que des balises de style. Vous pouvez transmettre `custom_mode=true` ; pour le champ des paroles, utilisez `lyrics`, `lyric`, `custom_lyrics` ou `customLyrics`.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"夏日海风\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\n海风吹过白色沙滩\\n[Chorus]\\n把夏天唱成一束光\"\n}\n```\n\n## Consultation\n\nAprès la création réussie, enregistrez l’ID de tâche `data` renvoyé, par exemple `task_xxx`, puis appelez `GET /suno/fetch/{task_id}` pour consulter le statut, l’URL audio, la couverture, le titre, les paroles et les informations de segments bruts renvoyées en amont.",
+        "tags": [
+          "Format de tâche de génération musicale"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "model",
+                  "prompt"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "suno_music",
+                    "description": "Transmettez固定 `suno_music`.",
+                    "enum": [
+                      "suno_music"
+                    ]
+                  },
+                  "upstream_model": {
+                    "type": "string",
+                    "example": "suno-v5",
+                    "description": "Valeurs de sélection du modèle musical, par exemple `suno-v5`, `minimax-music-v2.6`, `sonauto-v3`, `mureka-v9`."
+                  },
+                  "music_model": {
+                    "type": "string",
+                    "description": "Alias de compatibilité de `upstream_model`."
+                  },
+                  "engine": {
+                    "type": "string",
+                    "description": "Alias de compatibilité de `upstream_model`."
+                  },
+                  "model_id": {
+                    "type": "string",
+                    "description": "Champ de compatibilité pour l'ID du modèle en amont."
+                  },
+                  "modelId": {
+                    "type": "string",
+                    "description": "Champ de compatibilité camelCase de `model_id`."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "En mode de description par prompt, il s’agit du style musical, de l’humeur et du contexte ; en mode avancé pour les paroles, ce champ peut être utilisé comme champ compatible avec les paroles."
+                  },
+                  "gpt_description_prompt": {
+                    "type": "string",
+                    "description": "Champ compatible avec les instructions du mode descriptif."
+                  },
+                  "make_instrumental": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Générer uniquement l’accompagnement."
+                  },
+                  "light_music": {
+                    "type": "boolean",
+                    "description": "Générer dans une orientation musique légère/musique de fond."
+                  },
+                  "pure_music": {
+                    "type": "boolean",
+                    "description": "Générer en orientant vers de la musique pure."
+                  },
+                  "custom_mode": {
+                    "type": "boolean",
+                    "description": "Utiliser le mode personnalisé ou non."
+                  },
+                  "customMode": {
+                    "type": "boolean",
+                    "description": "Champ de compatibilité camelCase de `custom_mode`."
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "Titre de la chanson."
+                  },
+                  "tags": {
+                    "type": "string",
+                    "description": "Balises de style, par exemple `electro pop, female vocal`."
+                  },
+                  "style": {
+                    "type": "string",
+                    "description": "Champ compatible avec le style."
+                  },
+                  "genre": {
+                    "type": "string",
+                    "description": "Champ de compatibilité des styles musicaux."
+                  },
+                  "genres": {
+                    "type": "string",
+                    "description": "Champ de compatibilité des styles musicaux."
+                  },
+                  "lyrics": {
+                    "type": "string",
+                    "description": "Contenu des paroles."
+                  },
+                  "lyric": {
+                    "type": "string",
+                    "description": "`lyrics` alias compatible."
+                  },
+                  "custom_lyrics": {
+                    "type": "string",
+                    "description": "`lyrics` alias compatible."
+                  },
+                  "customLyrics": {
+                    "type": "string",
+                    "description": "`lyrics` alias compatible."
+                  }
+                }
+              },
+              "examples": {
+                "music_submit_prompt": {
+                  "summary": "Génération de descriptions musicales",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "suno-v5",
+                    "prompt": "轻快电子流行，夏日海边，女声 旋律",
+                    "make_instrumental": false
+                  }
+                },
+                "music_submit_light": {
+                  "summary": "Génération de musique légère",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "minimax-music-v2.6",
+                    "prompt": "温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐",
+                    "light_music": true,
+                    "make_instrumental": true
+                  }
+                },
+                "music_submit_lyrics": {
+                  "summary": "Mode avancé des paroles",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "mureka-v9",
+                    "custom_mode": true,
+                    "title": "夏日海风",
+                    "tags": "electro pop, female vocal, bright summer",
+                    "lyrics": "[Verse]\n海风吹过白色沙滩\n[Chorus]\n把夏天唱成一束光"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "En cas de succès, `success`."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message d'erreur ou de notification."
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "ID de tâche, utilisé pour les requêtes ultérieures."
+                    }
+                  }
+                },
+                "examples": {
+                  "music_submit_success": {
+                    "summary": "Soumission de génération musicale réussie",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": "task_xxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-tâche-de-génération-musicale/créer-une-tâche-de-génération-musicale"
+        }
+      }
+    },
+    "/suno/fetch": {
+      "get": {
+        "summary": "Consulter la tâche musicale",
+        "description": "Interrogez les tâches de génération musicale via query `task_id`.\n\nInterface de requête des tâches de génération musicale. Le `data` renvoyé par l’interface de création correspond à l’ID de tâche ; vous pouvez interroger une tâche unique via `GET /suno/fetch/{task_id}`, ou effectuer une requête groupée via `POST /suno/fetch`.\n\n## Méthodes de requête\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nOu :\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Sortie de la requête\n\nLa couche externe conserve la structure de tâche new-api :\n\n- `code` : vaut `success` en cas de succès.\n- `message` : message d’erreur ou d’information.\n- `data.task_id` : ID de la tâche.\n- `data.status` : état de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress` : progression de la tâche.\n- `data.result_url` : adresse du résultat disponible après succès ; si l’amont renvoie plusieurs morceaux, se référer aux fragments dans `data.data`.\n- `data.data` : données brutes du résultat musical en amont, contenant généralement un tableau ou un objet de fragments de morceaux.\n\nExemple d’état de succès :\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "Format de tâche de génération musicale"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_xxx"
+            },
+            "description": "ID de tâche renvoyé lors de la soumission de la tâche musicale."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "En cas de succès, `success`."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message d'erreur ou de notification."
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "ID de la tâche."
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "État de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`."
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "Progression de la tâche."
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "URL du résultat disponible après réussite."
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "URL de l’audio de la chanson."
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "URL de la pochette du morceau."
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "Titre de la chanson."
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "Durée audio."
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "La requête de la tâche musicale a réussi",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-tâche-de-génération-musicale/consulter-la-tâche-musicale"
+        }
+      },
+      "post": {
+        "summary": "Consulter les tâches musicales (JSON)",
+        "description": "Interroger la tâche de génération musicale via le body JSON.\n\nInterface de requête des tâches de génération musicale. Le `data` renvoyé par l’interface de création correspond à l’ID de tâche ; vous pouvez interroger une tâche unique via `GET /suno/fetch/{task_id}`, ou effectuer une requête groupée via `POST /suno/fetch`.\n\n## Méthodes de requête\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nOu :\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Sortie de la requête\n\nLa couche externe conserve la structure de tâche new-api :\n\n- `code` : vaut `success` en cas de succès.\n- `message` : message d’erreur ou d’information.\n- `data.task_id` : ID de la tâche.\n- `data.status` : état de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress` : progression de la tâche.\n- `data.result_url` : adresse du résultat disponible après succès ; si l’amont renvoie plusieurs morceaux, se référer aux fragments dans `data.data`.\n- `data.data` : données brutes du résultat musical en amont, contenant généralement un tableau ou un objet de fragments de morceaux.\n\nExemple d’état de succès :\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "Format de tâche de génération musicale"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "task_id"
+                ],
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "example": "task_xxx",
+                    "description": "ID de tâche renvoyé par l’interface de soumission."
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "`task_id` alias compatible."
+                  }
+                }
+              },
+              "examples": {
+                "suno_music_fetch": {
+                  "summary": "Requête de tâche musicale",
+                  "value": {
+                    "task_id": "task_xxx"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "En cas de succès, `success`."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message d'erreur ou de notification."
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "ID de la tâche."
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "État de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`."
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "Progression de la tâche."
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "URL du résultat disponible après réussite."
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "URL de l’audio de la chanson."
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "URL de la pochette du morceau."
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "Titre de la chanson."
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "Durée audio."
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "La requête de la tâche musicale a réussi",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-tâche-de-génération-musicale/consulter-les-tâches-musicales-json"
+        }
+      }
+    },
+    "/suno/fetch/{task_id}": {
+      "get": {
+        "summary": "Interroger la tâche musicale par ID",
+        "description": "Interrogez la tâche de génération musicale via le path `task_id`.\n\nInterface de requête des tâches de génération musicale. Le `data` renvoyé par l’interface de création correspond à l’ID de tâche ; vous pouvez interroger une tâche unique via `GET /suno/fetch/{task_id}`, ou effectuer une requête groupée via `POST /suno/fetch`.\n\n## Méthodes de requête\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nOu :\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Sortie de la requête\n\nLa couche externe conserve la structure de tâche new-api :\n\n- `code` : vaut `success` en cas de succès.\n- `message` : message d’erreur ou d’information.\n- `data.task_id` : ID de la tâche.\n- `data.status` : état de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress` : progression de la tâche.\n- `data.result_url` : adresse du résultat disponible après succès ; si l’amont renvoie plusieurs morceaux, se référer aux fragments dans `data.data`.\n- `data.data` : données brutes du résultat musical en amont, contenant généralement un tableau ou un objet de fragments de morceaux.\n\nExemple d’état de succès :\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "tags": [
+          "Format de tâche de génération musicale"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_xxx"
+            },
+            "description": "ID de tâche renvoyé lors de la soumission de la tâche musicale."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "success",
+                      "description": "En cas de succès, `success`."
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message d'erreur ou de notification."
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string",
+                          "description": "ID de la tâche."
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "État de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`."
+                        },
+                        "progress": {
+                          "type": "string",
+                          "description": "Progression de la tâche."
+                        },
+                        "result_url": {
+                          "type": "string",
+                          "description": "URL du résultat disponible après réussite."
+                        },
+                        "data": {
+                          "type": "string",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "audio_url": {
+                                "type": "string",
+                                "description": "URL de l’audio de la chanson."
+                              },
+                              "image_url": {
+                                "type": "string",
+                                "description": "URL de la pochette du morceau."
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "Titre de la chanson."
+                              },
+                              "metadata": {
+                                "type": "object",
+                                "properties": {
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "Durée audio."
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "music_fetch_success": {
+                    "summary": "La requête de la tâche musicale a réussi",
+                    "value": {
+                      "code": "success",
+                      "message": "",
+                      "data": {
+                        "task_id": "task_xxx",
+                        "platform": "suno",
+                        "action": "MUSIC",
+                        "status": "SUCCESS",
+                        "progress": "100%",
+                        "result_url": "https://example.com/audio.mp3",
+                        "properties": {
+                          "upstream_model_name": "suno_music",
+                          "origin_model_name": "suno-v5"
+                        },
+                        "data": [
+                          {
+                            "id": "clip_xxx",
+                            "title": "夏日海风",
+                            "audio_url": "https://example.com/audio.mp3",
+                            "image_url": "https://example.com/cover.jpg",
+                            "model_name": "suno-v5",
+                            "metadata": {
+                              "duration": 180,
+                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-tâche-de-génération-musicale/interroger-la-tâche-musicale-par-id"
         }
       }
     },
@@ -6819,6 +7752,9 @@
     },
     {
       "name": "Génération vidéo Vidu"
+    },
+    {
+      "name": "Format de tâche de génération musicale"
     }
   ],
   "x-doc-drift-summary": {
