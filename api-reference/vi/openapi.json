@@ -2242,7 +2242,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "Tạo tác vụ tạo nhạc",
-        "description": "API gửi yêu cầu tạo nhạc, tương thích với đường dẫn `/suno/submit/music` cũ. Hỗ trợ Suno v5, MiniMax Music V2.6, Sonauto V3, Mureka V9, trả về task ID, sau đó truy vấn qua `/suno/fetch`.\n\nAPI gửi tác vụ tạo nhạc. Đường dẫn giữ nguyên `/suno/submit/music`, thực tế có thể chọn mô hình tạo nhạc qua `upstream_model`, `music_model`, `engine`, `model_id` hoặc `modelId`. API tạo trả về `task_id`, sau đó dùng `/suno/fetch/{task_id}` để truy vấn đầu ra.\n\n## Mô hình nhạc và bảng giá\n\n| Mô hình | Giá trị chọn | Bảng giá |\n|---|---|---|\n| Suno v5 | `suno-v5` | 0.38 / lần |\n| MiniMax Music V2.6 | `minimax-music-v2.6` | 0.15 / lần |\n| Sonauto V3 | `sonauto-v3` | 0.32 / lần |\n| Mureka V9 | `mureka-v9` | 0.24 / lần |\n\n## Chế độ mô tả prompt\n\nPhù hợp khi chỉ mô tả phong cách, cảm xúc, ngôn ngữ, kiểu giọng hát và bối cảnh; mô hình sẽ tự động tạo nội dung bài hát.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\",\n \"make_instrumental\": false\n}\n```\n\n## Nhạc nhẹ hoặc nhạc nền không lời\n\nCó thể dùng `light_music=true` hoặc `make_instrumental=true`. `light_music` biểu thị thiên về nhạc nhẹ/nhạc nền, `make_instrumental` biểu thị không tạo giọng hát.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## Chế độ nâng cao cho lời bài hát\n\nPhù hợp khi phía nghiệp vụ đã chuẩn bị sẵn lời bài hát và cần chỉ định tiêu đề cùng thẻ phong cách. Có thể truyền `custom_mode=true`, trường lời bài hát có thể dùng `lyrics`, `lyric`, `custom_lyrics` hoặc `customLyrics`.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"夏日海风\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\n海风吹过白色沙滩\\n[Chorus]\\n把夏天唱成一束光\"\n}\n```\n\n## Truy vấn\n\nSau khi tạo thành công, hãy lưu lại `data` task ID được trả về, ví dụ `task_xxx`, rồi gọi `GET /suno/fetch/{task_id}` để truy vấn trạng thái, địa chỉ âm thanh, ảnh bìa, tiêu đề, lời bài hát và thông tin đoạn dữ liệu gốc do upstream trả về.",
+        "description": "API gửi yêu cầu tạo nhạc, tương thích với đường dẫn `/suno/submit/music` cũ. Trả về ID tác vụ, sau đó truy vấn qua `/suno/fetch/{task_id}`.\n\nAPI gửi tác vụ tạo nhạc. Đường dẫn giữ nguyên `/suno/submit/music`; trên thực tế có thể chọn engine tạo qua `upstream_model`, `music_model`, `engine`, `model_id` hoặc `modelId`. API tạo trả về `task_id`, sau đó dùng `/suno/fetch/{task_id}` để truy vấn đầu ra.\n\n## Chế độ mô tả prompt\n\nPhù hợp khi chỉ mô tả phong cách, cảm xúc, ngôn ngữ, kiểu giọng hát và bối cảnh; mô hình sẽ tự động tạo nội dung bài hát.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"\",\n \"make_instrumental\": false\n}\n```\n\n## Nhạc nhẹ hoặc nhạc nền không lời\n\nCó thể dùng `light_music=true` hoặc `make_instrumental=true`. `light_music` biểu thị thiên về nhạc nhẹ/nhạc nền, `make_instrumental` biểu thị không tạo giọng hát.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## Chế độ nâng cao cho lời bài hát\n\nPhù hợp khi phía nghiệp vụ đã chuẩn bị sẵn lời bài hát và cần chỉ định tiêu đề cùng thẻ phong cách. Có thể truyền `custom_mode=true`, trường lời bài hát có thể dùng `lyrics`, `lyric`, `custom_lyrics` hoặc `customLyrics`.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"Summer Sea Breeze\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Truy vấn\n\nSau khi tạo thành công, hãy lưu lại `data` task ID được trả về, ví dụ `task_xxx`, rồi gọi `GET /suno/fetch/{task_id}` để truy vấn trạng thái, địa chỉ âm thanh, ảnh bìa, tiêu đề, lời bài hát và thông tin đoạn dữ liệu gốc do upstream trả về.",
         "tags": [
           "Định dạng tác vụ tạo nhạc"
         ],
@@ -2268,7 +2268,7 @@
                   "upstream_model": {
                     "type": "string",
                     "example": "suno-v5",
-                    "description": "Giá trị lựa chọn mô hình âm nhạc, ví dụ `suno-v5`, `minimax-music-v2.6`, `sonauto-v3`, `mureka-v9`."
+                    "description": "Tạo giá trị lựa chọn của công cụ sinh."
                   },
                   "music_model": {
                     "type": "string",
@@ -2359,7 +2359,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "suno-v5",
-                    "prompt": "轻快电子流行，夏日海边，女声 旋律",
+                    "prompt": "Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"",
                     "make_instrumental": false
                   }
                 },
@@ -2368,7 +2368,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "minimax-music-v2.6",
-                    "prompt": "温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐",
+                    "prompt": "Warm cafe background music with soft piano and strings, relaxing and cinematic.",
                     "light_music": true,
                     "make_instrumental": true
                   }
@@ -2379,9 +2379,9 @@
                     "model": "suno_music",
                     "upstream_model": "mureka-v9",
                     "custom_mode": true,
-                    "title": "夏日海风",
+                    "title": "Summer Sea Breeze",
                     "tags": "electro pop, female vocal, bright summer",
-                    "lyrics": "[Verse]\n海风吹过白色沙滩\n[Chorus]\n把夏天唱成一束光"
+                    "lyrics": "[Verse]\nSea breeze moves across the white sand\n[Chorus]\nTurn the summer into a beam of light"
                   }
                 }
               }
@@ -2434,298 +2434,10 @@
         }
       }
     },
-    "/suno/fetch": {
-      "get": {
-        "summary": "Truy vấn tác vụ âm nhạc",
-        "description": "Truy vấn tác vụ tạo nhạc qua query `task_id`.\n\nAPI truy vấn tác vụ tạo nhạc. `data` do API tạo trả về chính là ID tác vụ; có thể dùng `GET /suno/fetch/{task_id}` để truy vấn một tác vụ đơn lẻ, hoặc dùng `POST /suno/fetch` để truy vấn hàng loạt.\n\n## Cách truy vấn\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nHoặc:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Đầu ra truy vấn\n\nGiữ nguyên cấu trúc tác vụ new-api ở lớp ngoài:\n\n- `code`: Khi thành công là `success`.\n- `message`: Thông báo lỗi hoặc thông báo gợi ý.\n- `data.task_id`: ID tác vụ.\n- `data.status`: Trạng thái tác vụ, các giá trị thường gặp gồm `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: Tiến độ tác vụ.\n- `data.result_url`: Địa chỉ kết quả có thể dùng sau khi thành công; nếu upstream trả về nhiều bài hát, lấy đoạn trong `data.data` làm chuẩn.\n- `data.data`: Dữ liệu gốc kết quả âm nhạc từ upstream, thường bao gồm mảng hoặc đối tượng các đoạn bài hát.\n\nVí dụ trạng thái thành công:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "Định dạng tác vụ tạo nhạc"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "task_xxx"
-            },
-            "description": "ID tác vụ được trả về khi gửi tác vụ âm nhạc."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "Khi thành công là `success`."
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Thông báo lỗi hoặc thông báo nhắc."
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "ID của tác vụ."
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "Trạng thái tác vụ, các giá trị thường gặp `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`."
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "Tiến độ tác vụ."
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "Địa chỉ kết quả khả dụng sau khi thành công."
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "URL âm thanh của bài hát."
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "URL ảnh bìa bài hát."
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "Tiêu đề bài hát."
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "Độ dài âm thanh."
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "Truy vấn tác vụ âm nhạc thành công",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-âm-nhạc"
-        }
-      },
-      "post": {
-        "summary": "Truy vấn tác vụ âm nhạc (JSON)",
-        "description": "Truy vấn tác vụ tạo nhạc thông qua JSON body.\n\nAPI truy vấn tác vụ tạo nhạc. `data` do API tạo trả về chính là ID tác vụ; có thể dùng `GET /suno/fetch/{task_id}` để truy vấn một tác vụ đơn lẻ, hoặc dùng `POST /suno/fetch` để truy vấn hàng loạt.\n\n## Cách truy vấn\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nHoặc:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Đầu ra truy vấn\n\nGiữ nguyên cấu trúc tác vụ new-api ở lớp ngoài:\n\n- `code`: Khi thành công là `success`.\n- `message`: Thông báo lỗi hoặc thông báo gợi ý.\n- `data.task_id`: ID tác vụ.\n- `data.status`: Trạng thái tác vụ, các giá trị thường gặp gồm `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: Tiến độ tác vụ.\n- `data.result_url`: Địa chỉ kết quả có thể dùng sau khi thành công; nếu upstream trả về nhiều bài hát, lấy đoạn trong `data.data` làm chuẩn.\n- `data.data`: Dữ liệu gốc kết quả âm nhạc từ upstream, thường bao gồm mảng hoặc đối tượng các đoạn bài hát.\n\nVí dụ trạng thái thành công:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "Định dạng tác vụ tạo nhạc"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "task_id"
-                ],
-                "properties": {
-                  "task_id": {
-                    "type": "string",
-                    "example": "task_xxx",
-                    "description": "ID tác vụ do giao diện nộp trả về."
-                  },
-                  "id": {
-                    "type": "string",
-                    "description": "`task_id` Tên bí danh tương thích."
-                  }
-                }
-              },
-              "examples": {
-                "suno_music_fetch": {
-                  "summary": "Truy vấn tác vụ âm nhạc",
-                  "value": {
-                    "task_id": "task_xxx"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "Khi thành công là `success`."
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Thông báo lỗi hoặc thông báo nhắc."
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "ID của tác vụ."
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "Trạng thái tác vụ, các giá trị thường gặp `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`."
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "Tiến độ tác vụ."
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "Địa chỉ kết quả khả dụng sau khi thành công."
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "URL âm thanh của bài hát."
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "URL ảnh bìa bài hát."
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "Tiêu đề bài hát."
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "Độ dài âm thanh."
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "Truy vấn tác vụ âm nhạc thành công",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-âm-nhạc-json"
-        }
-      }
-    },
     "/suno/fetch/{task_id}": {
       "get": {
         "summary": "Truy vấn tác vụ nhạc theo ID",
-        "description": "Truy vấn tác vụ tạo nhạc thông qua path `task_id`.\n\nAPI truy vấn tác vụ tạo nhạc. `data` do API tạo trả về chính là ID tác vụ; có thể dùng `GET /suno/fetch/{task_id}` để truy vấn một tác vụ đơn lẻ, hoặc dùng `POST /suno/fetch` để truy vấn hàng loạt.\n\n## Cách truy vấn\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nHoặc:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Đầu ra truy vấn\n\nGiữ nguyên cấu trúc tác vụ new-api ở lớp ngoài:\n\n- `code`: Khi thành công là `success`.\n- `message`: Thông báo lỗi hoặc thông báo gợi ý.\n- `data.task_id`: ID tác vụ.\n- `data.status`: Trạng thái tác vụ, các giá trị thường gặp gồm `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: Tiến độ tác vụ.\n- `data.result_url`: Địa chỉ kết quả có thể dùng sau khi thành công; nếu upstream trả về nhiều bài hát, lấy đoạn trong `data.data` làm chuẩn.\n- `data.data`: Dữ liệu gốc kết quả âm nhạc từ upstream, thường bao gồm mảng hoặc đối tượng các đoạn bài hát.\n\nVí dụ trạng thái thành công:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "description": "Truy vấn tác vụ tạo nhạc thông qua path `task_id`.\n\nAPI truy vấn tác vụ tạo nhạc. `data` trả về từ API tạo chính là ID tác vụ, dùng `GET /suno/fetch/{task_id}` để truy vấn một tác vụ đơn.\n\n## Cách truy vấn\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## Đầu ra truy vấn\n\nGiữ nguyên cấu trúc tác vụ new-api ở lớp ngoài:\n\n- `code`: Khi thành công là `success`.\n- `message`: Thông báo lỗi hoặc thông báo gợi ý.\n- `data.task_id`: ID tác vụ.\n- `data.status`: Trạng thái tác vụ, các giá trị thường gặp gồm `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: Tiến độ tác vụ.\n- `data.result_url`: Địa chỉ kết quả có thể dùng sau khi thành công; nếu upstream trả về nhiều bài hát, lấy đoạn trong `data.data` làm chuẩn.\n- `data.data`: Dữ liệu gốc kết quả âm nhạc từ upstream, thường bao gồm mảng hoặc đối tượng các đoạn bài hát.\n\nVí dụ trạng thái thành công:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
         "tags": [
           "Định dạng tác vụ tạo nhạc"
         ],

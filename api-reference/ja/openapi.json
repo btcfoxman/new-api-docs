@@ -2242,7 +2242,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "音楽生成タスクを作成する",
-        "description": "音楽生成の送信インターフェース。旧 `/suno/submit/music` パスと互換性があります。Suno v5、MiniMax Music V2.6、Sonauto V3、Mureka V9 をサポートし、タスク ID を返します。後続は `/suno/fetch` で照会します。\n\n音楽生成タスクの送信インターフェースです。パスは `/suno/submit/music` のままです。実際には `upstream_model`、`music_model`、`engine`、`model_id`、または `modelId` で音楽生成モデルを選択できます。作成インターフェースは `task_id` を返し、その後 `/suno/fetch/{task_id}` で出力を照会します。\n\n## 音楽モデルと料金\n\n| モデル | 選択値 | 料金 |\n|---|---|---|\n| Suno v5 | `suno-v5` | 0.38 / 回 |\n| MiniMax Music V2.6 | `minimax-music-v2.6` | 0.15 / 回 |\n| Sonauto V3 | `sonauto-v3` | 0.32 / 回 |\n| Mureka V9 | `mureka-v9` | 0.24 / 回 |\n\n## プロンプト記述モード\n\nスタイル、感情、言語、歌手タイプ、シーンのみを記述する場合に適しており、モデルが自動的に楽曲内容を生成します。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\",\n \"make_instrumental\": false\n}\n```\n\n## インストゥルメンタルまたは純伴奏\n\n`light_music=true` または `make_instrumental=true` を使用できます。`light_music` はインストゥルメンタル／BGM 寄りであることを示し、`make_instrumental` は歌唱ボーカルを生成しないことを示します。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## 歌詞の詳細モード\n\n業務側ですでに歌詞が用意されており、タイトルとスタイルタグを指定する必要がある場合に適しています。`custom_mode=true` を指定でき、歌詞フィールドには `lyrics`、`lyric`、`custom_lyrics`、または `customLyrics` を使用できます。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"夏日海风\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\n海风吹过白色沙滩\\n[Chorus]\\n把夏天唱成一束光\"\n}\n```\n\n## 照会\n\n作成成功後、返却された `data` のタスク ID を保存します。たとえば `task_xxx` です。`GET /suno/fetch/{task_id}` を呼び出して、状態、音声 URL、カバー、タイトル、歌詞、および上流から返された元のセグメント情報を照会します。",
+        "description": "音楽生成の送信インターフェース。旧 `/suno/submit/music` パスと互換性があります。タスク ID を返し、後続は `/suno/fetch/{task_id}` で照会します。\n\n音楽生成タスクの送信インターフェース。パスは `/suno/submit/music` のままで、実際には `upstream_model`、`music_model`、`engine`、`model_id`、または `modelId` で生成エンジンを選択できます。作成インターフェースは `task_id` を返し、その後 `/suno/fetch/{task_id}` で出力を照会します。\n\n## プロンプト記述モード\n\nスタイル、感情、言語、歌手タイプ、シーンのみを記述する場合に適しており、モデルが自動的に楽曲内容を生成します。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"\",\n \"make_instrumental\": false\n}\n```\n\n## インストゥルメンタルまたは純伴奏\n\n`light_music=true` または `make_instrumental=true` を使用できます。`light_music` はインストゥルメンタル／BGM 寄りであることを示し、`make_instrumental` は歌唱ボーカルを生成しないことを示します。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## 歌詞の詳細モード\n\n業務側ですでに歌詞が用意されており、タイトルとスタイルタグを指定する必要がある場合に適しています。`custom_mode=true` を指定でき、歌詞フィールドには `lyrics`、`lyric`、`custom_lyrics`、または `customLyrics` を使用できます。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"Summer Sea Breeze\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 照会\n\n作成成功後、返却された `data` のタスク ID を保存します。たとえば `task_xxx` です。`GET /suno/fetch/{task_id}` を呼び出して、状態、音声 URL、カバー、タイトル、歌詞、および上流から返された元のセグメント情報を照会します。",
         "tags": [
           "音楽生成タスクの形式"
         ],
@@ -2268,7 +2268,7 @@
                   "upstream_model": {
                     "type": "string",
                     "example": "suno-v5",
-                    "description": "音楽モデルの選択値。例: `suno-v5`、`minimax-music-v2.6`、`sonauto-v3`、`mureka-v9`。"
+                    "description": "生成エンジンの選択値。"
                   },
                   "music_model": {
                     "type": "string",
@@ -2359,7 +2359,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "suno-v5",
-                    "prompt": "轻快电子流行，夏日海边，女声 旋律",
+                    "prompt": "Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"",
                     "make_instrumental": false
                   }
                 },
@@ -2368,7 +2368,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "minimax-music-v2.6",
-                    "prompt": "温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐",
+                    "prompt": "Warm cafe background music with soft piano and strings, relaxing and cinematic.",
                     "light_music": true,
                     "make_instrumental": true
                   }
@@ -2379,9 +2379,9 @@
                     "model": "suno_music",
                     "upstream_model": "mureka-v9",
                     "custom_mode": true,
-                    "title": "夏日海风",
+                    "title": "Summer Sea Breeze",
                     "tags": "electro pop, female vocal, bright summer",
-                    "lyrics": "[Verse]\n海风吹过白色沙滩\n[Chorus]\n把夏天唱成一束光"
+                    "lyrics": "[Verse]\nSea breeze moves across the white sand\n[Chorus]\nTurn the summer into a beam of light"
                   }
                 }
               }
@@ -2434,298 +2434,10 @@
         }
       }
     },
-    "/suno/fetch": {
-      "get": {
-        "summary": "音楽タスクを照会する",
-        "description": "query `task_id` を使って音楽生成タスクを取得します。\n\n音楽生成タスクの取得APIです。作成APIが返す `data` はタスク ID であり、`GET /suno/fetch/{task_id}` で単一タスクを取得でき、`POST /suno/fetch` で一括取得もできます。\n\n## 取得方法\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nまたは：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 取得結果\n\n外側は new-api のタスク構造を維持します：\n\n- `code`：成功時は `success` です。\n- `message`：エラーまたは案内メッセージ。\n- `data.task_id`：タスク ID。\n- `data.status`：タスクの状態。代表的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。\n- `data.progress`：タスクの進捗。\n- `data.result_url`：成功後に利用可能な結果URL。上流が複数曲を返す場合は、`data.data` 内のスニペットを基準とします。\n- `data.data`：上流の音楽結果の生データ。通常は曲のスニペットの配列またはオブジェクトを含みます。\n\n成功時の例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "音楽生成タスクの形式"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "task_xxx"
-            },
-            "description": "音楽タスクを送信した際に返されるタスク ID。"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "成功時は `success` です。"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "エラーまたはヒントメッセージ。"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "タスク ID。"
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "タスクの状態。一般的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。"
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "タスクの進捗。"
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "成功後に使用できる結果のアドレス。"
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "楽曲音声の URL。"
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "曲のカバー画像の URL。"
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "曲のタイトル。"
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "音声の長さ。"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "音楽タスクの照会に成功しました",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ja/音楽生成タスクの形式/音楽タスクを照会する"
-        }
-      },
-      "post": {
-        "summary": "音楽タスクを照会する（JSON）",
-        "description": "JSON body を使用して音楽生成タスクを照会します。\n\n音楽生成タスクの取得APIです。作成APIが返す `data` はタスク ID であり、`GET /suno/fetch/{task_id}` で単一タスクを取得でき、`POST /suno/fetch` で一括取得もできます。\n\n## 取得方法\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nまたは：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 取得結果\n\n外側は new-api のタスク構造を維持します：\n\n- `code`：成功時は `success` です。\n- `message`：エラーまたは案内メッセージ。\n- `data.task_id`：タスク ID。\n- `data.status`：タスクの状態。代表的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。\n- `data.progress`：タスクの進捗。\n- `data.result_url`：成功後に利用可能な結果URL。上流が複数曲を返す場合は、`data.data` 内のスニペットを基準とします。\n- `data.data`：上流の音楽結果の生データ。通常は曲のスニペットの配列またはオブジェクトを含みます。\n\n成功時の例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "音楽生成タスクの形式"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "task_id"
-                ],
-                "properties": {
-                  "task_id": {
-                    "type": "string",
-                    "example": "task_xxx",
-                    "description": "送信APIが返すタスクID。"
-                  },
-                  "id": {
-                    "type": "string",
-                    "description": "`task_id` 互換エイリアス。"
-                  }
-                }
-              },
-              "examples": {
-                "suno_music_fetch": {
-                  "summary": "音楽タスクの照会",
-                  "value": {
-                    "task_id": "task_xxx"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "成功時は `success` です。"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "エラーまたはヒントメッセージ。"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "タスク ID。"
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "タスクの状態。一般的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。"
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "タスクの進捗。"
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "成功後に使用できる結果のアドレス。"
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "楽曲音声の URL。"
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "曲のカバー画像の URL。"
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "曲のタイトル。"
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "音声の長さ。"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "音楽タスクの照会に成功しました",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ja/音楽生成タスクの形式/音楽タスクを照会する（json）"
-        }
-      }
-    },
     "/suno/fetch/{task_id}": {
       "get": {
         "summary": "ID で音楽タスクを照会",
-        "description": "path `task_id` で音楽生成タスクを照会します。\n\n音楽生成タスクの取得APIです。作成APIが返す `data` はタスク ID であり、`GET /suno/fetch/{task_id}` で単一タスクを取得でき、`POST /suno/fetch` で一括取得もできます。\n\n## 取得方法\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nまたは：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 取得結果\n\n外側は new-api のタスク構造を維持します：\n\n- `code`：成功時は `success` です。\n- `message`：エラーまたは案内メッセージ。\n- `data.task_id`：タスク ID。\n- `data.status`：タスクの状態。代表的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。\n- `data.progress`：タスクの進捗。\n- `data.result_url`：成功後に利用可能な結果URL。上流が複数曲を返す場合は、`data.data` 内のスニペットを基準とします。\n- `data.data`：上流の音楽結果の生データ。通常は曲のスニペットの配列またはオブジェクトを含みます。\n\n成功時の例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "description": "path `task_id` で音楽生成タスクを照会します。\n\n音楽生成タスクの照会インターフェースです。作成インターフェースが返す `data` がタスク ID であり、`GET /suno/fetch/{task_id}` を通じて単一タスクを照会します。\n\n## 取得方法\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## 取得結果\n\n外側は new-api のタスク構造を維持します：\n\n- `code`：成功時は `success` です。\n- `message`：エラーまたは案内メッセージ。\n- `data.task_id`：タスク ID。\n- `data.status`：タスクの状態。代表的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。\n- `data.progress`：タスクの進捗。\n- `data.result_url`：成功後に利用可能な結果URL。上流が複数曲を返す場合は、`data.data` 内のスニペットを基準とします。\n- `data.data`：上流の音楽結果の生データ。通常は曲のスニペットの配列またはオブジェクトを含みます。\n\n成功時の例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
         "tags": [
           "音楽生成タスクの形式"
         ],

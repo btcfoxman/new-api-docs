@@ -2242,7 +2242,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "创建音乐生成任务",
-        "description": "音乐生成提交接口，兼容旧 `/suno/submit/music` 路径。支持 Suno v5、MiniMax Music V2.6、Sonauto V3、Mureka V9，返回任务 ID，后续通过 `/suno/fetch` 查询。\n\n音乐生成任务提交接口。路径保持 `/suno/submit/music`，实际可通过 `upstream_model`、`music_model`、`engine`、`model_id` 或 `modelId` 选择音乐生成模型。创建接口返回 `task_id`，随后用 `/suno/fetch/{task_id}` 查询输出。\n\n## 音乐模型与计价\n\n| 模型 | 选择值 | 计价 |\n|---|---|---|\n| Suno v5 | `suno-v5` | 0.38 / 次 |\n| MiniMax Music V2.6 | `minimax-music-v2.6` | 0.15 / 次 |\n| Sonauto V3 | `sonauto-v3` | 0.32 / 次 |\n| Mureka V9 | `mureka-v9` | 0.24 / 次 |\n\n## 提示词描述模式\n\n适合只描述风格、情绪、语言、歌手类型和场景，由模型自动生成歌曲内容。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\",\n \"make_instrumental\": false\n}\n```\n\n## 轻音乐或纯伴奏\n\n可使用 `light_music=true` 或 `make_instrumental=true`。`light_music` 表示偏轻音乐/背景音乐，`make_instrumental` 表示不生成演唱人声。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## 歌词高级模式\n\n适合业务侧已经准备好歌词，需要指定标题和风格标签。可传 `custom_mode=true`，歌词字段可用 `lyrics`、`lyric`、`custom_lyrics` 或 `customLyrics`。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"夏日海风\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\n海风吹过白色沙滩\\n[Chorus]\\n把夏天唱成一束光\"\n}\n```\n\n## 查询\n\n创建成功后保存返回的 `data` 任务 ID，例如 `task_xxx`，调用 `GET /suno/fetch/{task_id}` 查询状态、音频地址、封面、标题、歌词和上游返回的原始片段信息。",
+        "description": "音乐生成提交接口，兼容旧 `/suno/submit/music` 路径。返回任务 ID，后续通过 `/suno/fetch/{task_id}` 查询。\n\n音乐生成任务提交接口。路径保持 `/suno/submit/music`，实际可通过 `upstream_model`、`music_model`、`engine`、`model_id` 或 `modelId` 选择生成引擎。创建接口返回 `task_id`，随后用 `/suno/fetch/{task_id}` 查询输出。\n\n## 提示词描述模式\n\n适合只描述风格、情绪、语言、歌手类型和场景，由模型自动生成歌曲内容。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"\",\n \"make_instrumental\": false\n}\n```\n\n## 轻音乐或纯伴奏\n\n可使用 `light_music=true` 或 `make_instrumental=true`。`light_music` 表示偏轻音乐/背景音乐，`make_instrumental` 表示不生成演唱人声。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## 歌词高级模式\n\n适合业务侧已经准备好歌词，需要指定标题和风格标签。可传 `custom_mode=true`，歌词字段可用 `lyrics`、`lyric`、`custom_lyrics` 或 `customLyrics`。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"Summer Sea Breeze\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 查询\n\n创建成功后保存返回的 `data` 任务 ID，例如 `task_xxx`，调用 `GET /suno/fetch/{task_id}` 查询状态、音频地址、封面、标题、歌词和上游返回的原始片段信息。",
         "tags": [
           "音乐生成任务格式"
         ],
@@ -2268,7 +2268,7 @@
                   "upstream_model": {
                     "type": "string",
                     "example": "suno-v5",
-                    "description": "音乐模型选择值，例如 `suno-v5`、`minimax-music-v2.6`、`sonauto-v3`、`mureka-v9`。"
+                    "description": "生成引擎选择值。"
                   },
                   "music_model": {
                     "type": "string",
@@ -2359,7 +2359,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "suno-v5",
-                    "prompt": "轻快电子流行，夏日海边，女声 旋律",
+                    "prompt": "Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"",
                     "make_instrumental": false
                   }
                 },
@@ -2368,7 +2368,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "minimax-music-v2.6",
-                    "prompt": "温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐",
+                    "prompt": "Warm cafe background music with soft piano and strings, relaxing and cinematic.",
                     "light_music": true,
                     "make_instrumental": true
                   }
@@ -2379,9 +2379,9 @@
                     "model": "suno_music",
                     "upstream_model": "mureka-v9",
                     "custom_mode": true,
-                    "title": "夏日海风",
+                    "title": "Summer Sea Breeze",
                     "tags": "electro pop, female vocal, bright summer",
-                    "lyrics": "[Verse]\n海风吹过白色沙滩\n[Chorus]\n把夏天唱成一束光"
+                    "lyrics": "[Verse]\nSea breeze moves across the white sand\n[Chorus]\nTurn the summer into a beam of light"
                   }
                 }
               }
@@ -2434,298 +2434,10 @@
         }
       }
     },
-    "/suno/fetch": {
-      "get": {
-        "summary": "查询音乐任务",
-        "description": "通过 query `task_id` 查询音乐生成任务。\n\n音乐生成任务查询接口。创建接口返回的 `data` 即任务 ID，可通过 `GET /suno/fetch/{task_id}` 查询单个任务，也可通过 `POST /suno/fetch` 批量查询。\n\n## 查询方式\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n或：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 查询输出\n\n外层保持 new-api 任务结构：\n\n- `code`：成功时为 `success`。\n- `message`：错误或提示信息。\n- `data.task_id`：任务 ID。\n- `data.status`：任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。\n- `data.progress`：任务进度。\n- `data.result_url`：成功后可用的结果地址，若上游返回多首歌曲，以 `data.data` 内片段为准。\n- `data.data`：上游音乐结果原始数据，通常包含歌曲片段数组或对象。\n\n成功态示例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "音乐生成任务格式"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "task_xxx"
-            },
-            "description": "提交音乐任务返回的任务 ID。"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "成功时为 `success`。"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "错误或提示信息。"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "任务 ID。"
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。"
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "任务进度。"
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "成功后可用的结果地址。"
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "歌曲音频 URL。"
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "歌曲封面 URL。"
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "歌曲标题。"
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "音频时长。"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "音乐任务查询成功",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/音乐生成任务格式/查询音乐任务"
-        }
-      },
-      "post": {
-        "summary": "查询音乐任务（JSON）",
-        "description": "通过 JSON body 查询音乐生成任务。\n\n音乐生成任务查询接口。创建接口返回的 `data` 即任务 ID，可通过 `GET /suno/fetch/{task_id}` 查询单个任务，也可通过 `POST /suno/fetch` 批量查询。\n\n## 查询方式\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n或：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 查询输出\n\n外层保持 new-api 任务结构：\n\n- `code`：成功时为 `success`。\n- `message`：错误或提示信息。\n- `data.task_id`：任务 ID。\n- `data.status`：任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。\n- `data.progress`：任务进度。\n- `data.result_url`：成功后可用的结果地址，若上游返回多首歌曲，以 `data.data` 内片段为准。\n- `data.data`：上游音乐结果原始数据，通常包含歌曲片段数组或对象。\n\n成功态示例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "音乐生成任务格式"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "task_id"
-                ],
-                "properties": {
-                  "task_id": {
-                    "type": "string",
-                    "example": "task_xxx",
-                    "description": "提交接口返回的任务 ID。"
-                  },
-                  "id": {
-                    "type": "string",
-                    "description": "`task_id` 兼容别名。"
-                  }
-                }
-              },
-              "examples": {
-                "suno_music_fetch": {
-                  "summary": "音乐任务查询",
-                  "value": {
-                    "task_id": "task_xxx"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "成功时为 `success`。"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "错误或提示信息。"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "任务 ID。"
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。"
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "任务进度。"
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "成功后可用的结果地址。"
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "歌曲音频 URL。"
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "歌曲封面 URL。"
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "歌曲标题。"
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "音频时长。"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "音乐任务查询成功",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/cn/音乐生成任务格式/查询音乐任务（json）"
-        }
-      }
-    },
     "/suno/fetch/{task_id}": {
       "get": {
         "summary": "按 ID 查询音乐任务",
-        "description": "通过 path `task_id` 查询音乐生成任务。\n\n音乐生成任务查询接口。创建接口返回的 `data` 即任务 ID，可通过 `GET /suno/fetch/{task_id}` 查询单个任务，也可通过 `POST /suno/fetch` 批量查询。\n\n## 查询方式\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n或：\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## 查询输出\n\n外层保持 new-api 任务结构：\n\n- `code`：成功时为 `success`。\n- `message`：错误或提示信息。\n- `data.task_id`：任务 ID。\n- `data.status`：任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。\n- `data.progress`：任务进度。\n- `data.result_url`：成功后可用的结果地址，若上游返回多首歌曲，以 `data.data` 内片段为准。\n- `data.data`：上游音乐结果原始数据，通常包含歌曲片段数组或对象。\n\n成功态示例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "description": "通过 path `task_id` 查询音乐生成任务。\n\n音乐生成任务查询接口。创建接口返回的 `data` 即任务 ID，通过 `GET /suno/fetch/{task_id}` 查询单个任务。\n\n## 查询方式\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## 查询输出\n\n外层保持 new-api 任务结构：\n\n- `code`：成功时为 `success`。\n- `message`：错误或提示信息。\n- `data.task_id`：任务 ID。\n- `data.status`：任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。\n- `data.progress`：任务进度。\n- `data.result_url`：成功后可用的结果地址，若上游返回多首歌曲，以 `data.data` 内片段为准。\n- `data.data`：上游音乐结果原始数据，通常包含歌曲片段数组或对象。\n\n成功态示例：\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
         "tags": [
           "音乐生成任务格式"
         ],

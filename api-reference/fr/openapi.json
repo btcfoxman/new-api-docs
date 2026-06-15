@@ -2242,7 +2242,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "Créer une tâche de génération musicale",
-        "description": "Interface de soumission pour la génération musicale, compatible avec l’ancien chemin `/suno/submit/music`. Prend en charge Suno v5, MiniMax Music V2.6, Sonauto V3 et Mureka V9, renvoie un ID de tâche, puis permet une consultation ultérieure via `/suno/fetch`.\n\nInterface de soumission de tâches de génération musicale. Le chemin reste `/suno/submit/music` ; en pratique, vous pouvez choisir le modèle de génération musicale via `upstream_model`, `music_model`, `engine`, `model_id` ou `modelId`. L’interface de création renvoie `task_id`, puis `/suno/fetch/{task_id}` permet de consulter la sortie.\n\n## Modèles musicaux et tarification\n\n| Modèle | Valeur de sélection | Tarification |\n|---|---|---|\n| Suno v5 | `suno-v5` | 0.38 / appel |\n| MiniMax Music V2.6 | `minimax-music-v2.6` | 0.15 / appel |\n| Sonauto V3 | `sonauto-v3` | 0.32 / appel |\n| Mureka V9 | `mureka-v9` | 0.24 / appel |\n\n## Mode de description par prompt\n\nConvient lorsque vous décrivez uniquement le style, l’ambiance, la langue, le type de voix et le contexte ; le modèle génère automatiquement le contenu de la chanson.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\",\n \"make_instrumental\": false\n}\n```\n\n## Musique légère ou instrumental pur\n\nVous pouvez utiliser `light_music=true` ou `make_instrumental=true`. `light_music` indique une tendance musique légère/musique d’ambiance, et `make_instrumental` indique de ne pas générer de voix chantée.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## Mode avancé des paroles\n\nConvient lorsque l’équipe métier a déjà préparé les paroles et doit spécifier un titre ainsi que des balises de style. Vous pouvez transmettre `custom_mode=true` ; pour le champ des paroles, utilisez `lyrics`, `lyric`, `custom_lyrics` ou `customLyrics`.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"夏日海风\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\n海风吹过白色沙滩\\n[Chorus]\\n把夏天唱成一束光\"\n}\n```\n\n## Consultation\n\nAprès la création réussie, enregistrez l’ID de tâche `data` renvoyé, par exemple `task_xxx`, puis appelez `GET /suno/fetch/{task_id}` pour consulter le statut, l’URL audio, la couverture, le titre, les paroles et les informations de segments bruts renvoyées en amont.",
+        "description": "Interface de soumission pour la génération musicale, compatible avec l’ancien chemin `/suno/submit/music`. Renvoie un ID de tâche, puis l’état peut être consulté via `/suno/fetch/{task_id}`.\n\nInterface de soumission de tâche de génération musicale. Le chemin reste `/suno/submit/music` ; le moteur de génération peut être sélectionné via `upstream_model`, `music_model`, `engine`, `model_id` ou `modelId`. L’interface de création renvoie `task_id`, puis `/suno/fetch/{task_id}` permet de consulter la sortie.\n\n## Mode de description par prompt\n\nConvient lorsque vous décrivez uniquement le style, l’ambiance, la langue, le type de voix et le contexte ; le modèle génère automatiquement le contenu de la chanson.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"\",\n \"make_instrumental\": false\n}\n```\n\n## Musique légère ou instrumental pur\n\nVous pouvez utiliser `light_music=true` ou `make_instrumental=true`. `light_music` indique une tendance musique légère/musique d’ambiance, et `make_instrumental` indique de ne pas générer de voix chantée.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## Mode avancé des paroles\n\nConvient lorsque l’équipe métier a déjà préparé les paroles et doit spécifier un titre ainsi que des balises de style. Vous pouvez transmettre `custom_mode=true` ; pour le champ des paroles, utilisez `lyrics`, `lyric`, `custom_lyrics` ou `customLyrics`.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"Summer Sea Breeze\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Consultation\n\nAprès la création réussie, enregistrez l’ID de tâche `data` renvoyé, par exemple `task_xxx`, puis appelez `GET /suno/fetch/{task_id}` pour consulter le statut, l’URL audio, la couverture, le titre, les paroles et les informations de segments bruts renvoyées en amont.",
         "tags": [
           "Format de tâche de génération musicale"
         ],
@@ -2268,7 +2268,7 @@
                   "upstream_model": {
                     "type": "string",
                     "example": "suno-v5",
-                    "description": "Valeurs de sélection du modèle musical, par exemple `suno-v5`, `minimax-music-v2.6`, `sonauto-v3`, `mureka-v9`."
+                    "description": "Génère la valeur de sélection du moteur."
                   },
                   "music_model": {
                     "type": "string",
@@ -2359,7 +2359,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "suno-v5",
-                    "prompt": "轻快电子流行，夏日海边，女声 旋律",
+                    "prompt": "Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"",
                     "make_instrumental": false
                   }
                 },
@@ -2368,7 +2368,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "minimax-music-v2.6",
-                    "prompt": "温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐",
+                    "prompt": "Warm cafe background music with soft piano and strings, relaxing and cinematic.",
                     "light_music": true,
                     "make_instrumental": true
                   }
@@ -2379,9 +2379,9 @@
                     "model": "suno_music",
                     "upstream_model": "mureka-v9",
                     "custom_mode": true,
-                    "title": "夏日海风",
+                    "title": "Summer Sea Breeze",
                     "tags": "electro pop, female vocal, bright summer",
-                    "lyrics": "[Verse]\n海风吹过白色沙滩\n[Chorus]\n把夏天唱成一束光"
+                    "lyrics": "[Verse]\nSea breeze moves across the white sand\n[Chorus]\nTurn the summer into a beam of light"
                   }
                 }
               }
@@ -2434,298 +2434,10 @@
         }
       }
     },
-    "/suno/fetch": {
-      "get": {
-        "summary": "Consulter la tâche musicale",
-        "description": "Interrogez les tâches de génération musicale via query `task_id`.\n\nInterface de requête des tâches de génération musicale. Le `data` renvoyé par l’interface de création correspond à l’ID de tâche ; vous pouvez interroger une tâche unique via `GET /suno/fetch/{task_id}`, ou effectuer une requête groupée via `POST /suno/fetch`.\n\n## Méthodes de requête\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nOu :\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Sortie de la requête\n\nLa couche externe conserve la structure de tâche new-api :\n\n- `code` : vaut `success` en cas de succès.\n- `message` : message d’erreur ou d’information.\n- `data.task_id` : ID de la tâche.\n- `data.status` : état de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress` : progression de la tâche.\n- `data.result_url` : adresse du résultat disponible après succès ; si l’amont renvoie plusieurs morceaux, se référer aux fragments dans `data.data`.\n- `data.data` : données brutes du résultat musical en amont, contenant généralement un tableau ou un objet de fragments de morceaux.\n\nExemple d’état de succès :\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "Format de tâche de génération musicale"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "task_xxx"
-            },
-            "description": "ID de tâche renvoyé lors de la soumission de la tâche musicale."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "En cas de succès, `success`."
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Message d'erreur ou de notification."
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "ID de la tâche."
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "État de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`."
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "Progression de la tâche."
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "URL du résultat disponible après réussite."
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "URL de l’audio de la chanson."
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "URL de la pochette du morceau."
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "Titre de la chanson."
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "Durée audio."
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "La requête de la tâche musicale a réussi",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/fr/format-de-tâche-de-génération-musicale/consulter-la-tâche-musicale"
-        }
-      },
-      "post": {
-        "summary": "Consulter les tâches musicales (JSON)",
-        "description": "Interroger la tâche de génération musicale via le body JSON.\n\nInterface de requête des tâches de génération musicale. Le `data` renvoyé par l’interface de création correspond à l’ID de tâche ; vous pouvez interroger une tâche unique via `GET /suno/fetch/{task_id}`, ou effectuer une requête groupée via `POST /suno/fetch`.\n\n## Méthodes de requête\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nOu :\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Sortie de la requête\n\nLa couche externe conserve la structure de tâche new-api :\n\n- `code` : vaut `success` en cas de succès.\n- `message` : message d’erreur ou d’information.\n- `data.task_id` : ID de la tâche.\n- `data.status` : état de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress` : progression de la tâche.\n- `data.result_url` : adresse du résultat disponible après succès ; si l’amont renvoie plusieurs morceaux, se référer aux fragments dans `data.data`.\n- `data.data` : données brutes du résultat musical en amont, contenant généralement un tableau ou un objet de fragments de morceaux.\n\nExemple d’état de succès :\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "Format de tâche de génération musicale"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "task_id"
-                ],
-                "properties": {
-                  "task_id": {
-                    "type": "string",
-                    "example": "task_xxx",
-                    "description": "ID de tâche renvoyé par l’interface de soumission."
-                  },
-                  "id": {
-                    "type": "string",
-                    "description": "`task_id` alias compatible."
-                  }
-                }
-              },
-              "examples": {
-                "suno_music_fetch": {
-                  "summary": "Requête de tâche musicale",
-                  "value": {
-                    "task_id": "task_xxx"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "En cas de succès, `success`."
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Message d'erreur ou de notification."
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "ID de la tâche."
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "État de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`."
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "Progression de la tâche."
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "URL du résultat disponible après réussite."
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "URL de l’audio de la chanson."
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "URL de la pochette du morceau."
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "Titre de la chanson."
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "Durée audio."
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "La requête de la tâche musicale a réussi",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/fr/format-de-tâche-de-génération-musicale/consulter-les-tâches-musicales-json"
-        }
-      }
-    },
     "/suno/fetch/{task_id}": {
       "get": {
         "summary": "Interroger la tâche musicale par ID",
-        "description": "Interrogez la tâche de génération musicale via le path `task_id`.\n\nInterface de requête des tâches de génération musicale. Le `data` renvoyé par l’interface de création correspond à l’ID de tâche ; vous pouvez interroger une tâche unique via `GET /suno/fetch/{task_id}`, ou effectuer une requête groupée via `POST /suno/fetch`.\n\n## Méthodes de requête\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nOu :\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Sortie de la requête\n\nLa couche externe conserve la structure de tâche new-api :\n\n- `code` : vaut `success` en cas de succès.\n- `message` : message d’erreur ou d’information.\n- `data.task_id` : ID de la tâche.\n- `data.status` : état de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress` : progression de la tâche.\n- `data.result_url` : adresse du résultat disponible après succès ; si l’amont renvoie plusieurs morceaux, se référer aux fragments dans `data.data`.\n- `data.data` : données brutes du résultat musical en amont, contenant généralement un tableau ou un objet de fragments de morceaux.\n\nExemple d’état de succès :\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "description": "Interrogez la tâche de génération musicale via le path `task_id`.\n\nInterface de requête des tâches de génération musicale. Le `data` renvoyé par l'interface de création est l'ID de tâche ; utilisez `GET /suno/fetch/{task_id}` pour interroger une tâche unique.\n\n## Méthodes de requête\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## Sortie de la requête\n\nLa couche externe conserve la structure de tâche new-api :\n\n- `code` : vaut `success` en cas de succès.\n- `message` : message d’erreur ou d’information.\n- `data.task_id` : ID de la tâche.\n- `data.status` : état de la tâche, valeurs courantes `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress` : progression de la tâche.\n- `data.result_url` : adresse du résultat disponible après succès ; si l’amont renvoie plusieurs morceaux, se référer aux fragments dans `data.data`.\n- `data.data` : données brutes du résultat musical en amont, contenant généralement un tableau ou un objet de fragments de morceaux.\n\nExemple d’état de succès :\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
         "tags": [
           "Format de tâche de génération musicale"
         ],

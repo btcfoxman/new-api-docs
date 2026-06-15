@@ -2242,7 +2242,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "Создать задачу генерации музыки",
-        "description": "Интерфейс отправки задачи на генерацию музыки, совместим со старым путем `/suno/submit/music`. Поддерживает Suno v5, MiniMax Music V2.6, Sonauto V3 и Mureka V9, возвращает ID задачи; затем можно запросить через `/suno/fetch`.\n\nИнтерфейс отправки задачи на генерацию музыки. Путь остается `/suno/submit/music`, а на практике можно выбрать модель генерации музыки через `upstream_model`, `music_model`, `engine`, `model_id` или `modelId`. Интерфейс создания возвращает `task_id`, после чего для запроса результата используется `/suno/fetch/{task_id}`.\n\n## Модели музыки и стоимость\n\n| Модель | Значение выбора | Стоимость |\n|---|---|---|\n| Suno v5 | `suno-v5` | 0.38 / раз |\n| MiniMax Music V2.6 | `minimax-music-v2.6` | 0.15 / раз |\n| Sonauto V3 | `sonauto-v3` | 0.32 / раз |\n| Mureka V9 | `mureka-v9` | 0.24 / раз |\n\n## Режим описания промпта\n\nПодходит, если нужно описать только стиль, настроение, язык, тип исполнителя и сцену, а модель автоматически сгенерирует содержимое песни.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\",\n \"make_instrumental\": false\n}\n```\n\n## Легкая музыка или чистый аккомпанемент\n\nМожно использовать `light_music=true` или `make_instrumental=true`. `light_music` означает уклон в легкую/фоновую музыку, а `make_instrumental` — не генерировать вокал.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## Расширенный режим текста песни\n\nПодходит, если на стороне бизнеса уже подготовлен текст песни и нужно указать заголовок и теги стиля. Можно передать `custom_mode=true`, а для поля текста песни можно использовать `lyrics`, `lyric`, `custom_lyrics` или `customLyrics`.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"夏日海风\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\n海风吹过白色沙滩\\n[Chorus]\\n把夏天唱成一束光\"\n}\n```\n\n## Запрос\n\nПосле успешного создания сохраните возвращенный `data` ID задачи, например `task_xxx`, и вызовите `GET /suno/fetch/{task_id}`, чтобы получить статус, URL аудио, обложку, заголовок, текст песни и исходные фрагменты, возвращенные upstream.",
+        "description": "Интерфейс отправки задачи на генерацию музыки, совместимый со старым путем `/suno/submit/music`. Возвращает ID задачи; далее статус можно запросить через `/suno/fetch/{task_id}`.\n\nИнтерфейс отправки задачи на генерацию музыки. Путь сохраняется как `/suno/submit/music`, а фактически можно выбрать движок генерации через `upstream_model`, `music_model`, `engine`, `model_id` или `modelId`. Интерфейс создания возвращает `task_id`, после чего с помощью `/suno/fetch/{task_id}` запрашивается результат.\n\n## Режим описания промпта\n\nПодходит, если нужно описать только стиль, настроение, язык, тип исполнителя и сцену, а модель автоматически сгенерирует содержимое песни.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"\",\n \"make_instrumental\": false\n}\n```\n\n## Легкая музыка или чистый аккомпанемент\n\nМожно использовать `light_music=true` или `make_instrumental=true`. `light_music` означает уклон в легкую/фоновую музыку, а `make_instrumental` — не генерировать вокал.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## Расширенный режим текста песни\n\nПодходит, если на стороне бизнеса уже подготовлен текст песни и нужно указать заголовок и теги стиля. Можно передать `custom_mode=true`, а для поля текста песни можно использовать `lyrics`, `lyric`, `custom_lyrics` или `customLyrics`.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"Summer Sea Breeze\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Запрос\n\nПосле успешного создания сохраните возвращенный `data` ID задачи, например `task_xxx`, и вызовите `GET /suno/fetch/{task_id}`, чтобы получить статус, URL аудио, обложку, заголовок, текст песни и исходные фрагменты, возвращенные upstream.",
         "tags": [
           "Формат задачи генерации музыки"
         ],
@@ -2268,7 +2268,7 @@
                   "upstream_model": {
                     "type": "string",
                     "example": "suno-v5",
-                    "description": "Значения выбора музыкальной модели, например `suno-v5`, `minimax-music-v2.6`, `sonauto-v3` и `mureka-v9`."
+                    "description": "Значение выбора генераторного движка."
                   },
                   "music_model": {
                     "type": "string",
@@ -2359,7 +2359,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "suno-v5",
-                    "prompt": "轻快电子流行，夏日海边，女声 旋律",
+                    "prompt": "Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"",
                     "make_instrumental": false
                   }
                 },
@@ -2368,7 +2368,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "minimax-music-v2.6",
-                    "prompt": "温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐",
+                    "prompt": "Warm cafe background music with soft piano and strings, relaxing and cinematic.",
                     "light_music": true,
                     "make_instrumental": true
                   }
@@ -2379,9 +2379,9 @@
                     "model": "suno_music",
                     "upstream_model": "mureka-v9",
                     "custom_mode": true,
-                    "title": "夏日海风",
+                    "title": "Summer Sea Breeze",
                     "tags": "electro pop, female vocal, bright summer",
-                    "lyrics": "[Verse]\n海风吹过白色沙滩\n[Chorus]\n把夏天唱成一束光"
+                    "lyrics": "[Verse]\nSea breeze moves across the white sand\n[Chorus]\nTurn the summer into a beam of light"
                   }
                 }
               }
@@ -2434,298 +2434,10 @@
         }
       }
     },
-    "/suno/fetch": {
-      "get": {
-        "summary": "Запрос задач музыки",
-        "description": "Запрашивайте задачу генерации музыки через query `task_id`.\n\nИнтерфейс запроса задач генерации музыки. `data`, возвращаемый интерфейсом создания, является ID задачи; с помощью `GET /suno/fetch/{task_id}` можно запросить одну задачу, а с помощью `POST /suno/fetch` — выполнить пакетный запрос.\n\n## Способы запроса\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nИли:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Результат запроса\n\nВнешний слой сохраняет структуру задачи new-api:\n\n- `code`: при успехе — `success`.\n- `message`: сообщение об ошибке или подсказка.\n- `data.task_id`: ID задачи.\n- `data.status`: статус задачи; типичные значения: `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: прогресс задачи.\n- `data.result_url`: доступный после успеха адрес результата; если вышестоящий сервис возвращает несколько песен, ориентируйтесь на фрагмент внутри `data.data`.\n- `data.data`: исходные данные результата музыки от вышестоящего сервиса, обычно содержат массив или объект фрагментов песни.\n\nПример успешного состояния:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "Формат задачи генерации музыки"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "task_xxx"
-            },
-            "description": "ID задачи, возвращаемый при отправке музыкальной задачи."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "При успешном выполнении — `success`."
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Сообщение об ошибке или подсказке."
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "ID задачи."
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "Статус задачи, распространённые значения `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`."
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "Ход выполнения задачи."
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "Адрес результата, доступный после успешного завершения."
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "URL аудио песни."
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "URL обложки песни."
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "Название песни."
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "Длительность аудио."
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "Запрос музыкальной задачи выполнен успешно",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ru/формат-задачи-генерации-музыки/запрос-задач-музыки"
-        }
-      },
-      "post": {
-        "summary": "Запрос музыкальных задач (JSON)",
-        "description": "Запросить задачу генерации музыки через JSON body.\n\nИнтерфейс запроса задач генерации музыки. `data`, возвращаемый интерфейсом создания, является ID задачи; с помощью `GET /suno/fetch/{task_id}` можно запросить одну задачу, а с помощью `POST /suno/fetch` — выполнить пакетный запрос.\n\n## Способы запроса\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nИли:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Результат запроса\n\nВнешний слой сохраняет структуру задачи new-api:\n\n- `code`: при успехе — `success`.\n- `message`: сообщение об ошибке или подсказка.\n- `data.task_id`: ID задачи.\n- `data.status`: статус задачи; типичные значения: `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: прогресс задачи.\n- `data.result_url`: доступный после успеха адрес результата; если вышестоящий сервис возвращает несколько песен, ориентируйтесь на фрагмент внутри `data.data`.\n- `data.data`: исходные данные результата музыки от вышестоящего сервиса, обычно содержат массив или объект фрагментов песни.\n\nПример успешного состояния:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "Формат задачи генерации музыки"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "task_id"
-                ],
-                "properties": {
-                  "task_id": {
-                    "type": "string",
-                    "example": "task_xxx",
-                    "description": "ID задачи, возвращаемый интерфейсом отправки."
-                  },
-                  "id": {
-                    "type": "string",
-                    "description": "`task_id` Совместимый псевдоним."
-                  }
-                }
-              },
-              "examples": {
-                "suno_music_fetch": {
-                  "summary": "Запрос музыкальной задачи",
-                  "value": {
-                    "task_id": "task_xxx"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "При успешном выполнении — `success`."
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Сообщение об ошибке или подсказке."
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "ID задачи."
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "Статус задачи, распространённые значения `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`."
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "Ход выполнения задачи."
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "Адрес результата, доступный после успешного завершения."
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "URL аудио песни."
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "URL обложки песни."
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "Название песни."
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "Длительность аудио."
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "Запрос музыкальной задачи выполнен успешно",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ru/формат-задачи-генерации-музыки/запрос-музыкальных-задач-json"
-        }
-      }
-    },
     "/suno/fetch/{task_id}": {
       "get": {
         "summary": "Запросить музыкальную задачу по ID",
-        "description": "Через path `task_id` запросить задачу генерации музыки.\n\nИнтерфейс запроса задач генерации музыки. `data`, возвращаемый интерфейсом создания, является ID задачи; с помощью `GET /suno/fetch/{task_id}` можно запросить одну задачу, а с помощью `POST /suno/fetch` — выполнить пакетный запрос.\n\n## Способы запроса\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nИли:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Результат запроса\n\nВнешний слой сохраняет структуру задачи new-api:\n\n- `code`: при успехе — `success`.\n- `message`: сообщение об ошибке или подсказка.\n- `data.task_id`: ID задачи.\n- `data.status`: статус задачи; типичные значения: `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: прогресс задачи.\n- `data.result_url`: доступный после успеха адрес результата; если вышестоящий сервис возвращает несколько песен, ориентируйтесь на фрагмент внутри `data.data`.\n- `data.data`: исходные данные результата музыки от вышестоящего сервиса, обычно содержат массив или объект фрагментов песни.\n\nПример успешного состояния:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "description": "Через path `task_id` запросить задачу генерации музыки.\n\nИнтерфейс для запроса задачи генерации музыки. `data`, возвращаемый интерфейсом создания, — это ID задачи; используйте `GET /suno/fetch/{task_id}` для запроса отдельной задачи.\n\n## Способы запроса\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## Результат запроса\n\nВнешний слой сохраняет структуру задачи new-api:\n\n- `code`: при успехе — `success`.\n- `message`: сообщение об ошибке или подсказка.\n- `data.task_id`: ID задачи.\n- `data.status`: статус задачи; типичные значения: `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, `FAILURE`.\n- `data.progress`: прогресс задачи.\n- `data.result_url`: доступный после успеха адрес результата; если вышестоящий сервис возвращает несколько песен, ориентируйтесь на фрагмент внутри `data.data`.\n- `data.data`: исходные данные результата музыки от вышестоящего сервиса, обычно содержат массив или объект фрагментов песни.\n\nПример успешного состояния:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
         "tags": [
           "Формат задачи генерации музыки"
         ],

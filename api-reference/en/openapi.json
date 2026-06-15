@@ -2242,7 +2242,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "Create a music generation task",
-        "description": "Music generation submission endpoint, compatible with the legacy `/suno/submit/music` path. Supports Suno v5, MiniMax Music V2.6, Sonauto V3, and Mureka V9, returns a task ID, and can later be queried via `/suno/fetch`.\n\nMusic generation task submission endpoint. The path remains `/suno/submit/music`, and the music generation model can actually be selected via `upstream_model`, `music_model`, `engine`, `model_id`, or `modelId`. The create endpoint returns `task_id`, and you can then use `/suno/fetch/{task_id}` to query the output.\n\n## Music Models and Pricing\n\n| Model | Selection Value | Pricing |\n|---|---|---|\n| Suno v5 | `suno-v5` | 0.38 / request |\n| MiniMax Music V2.6 | `minimax-music-v2.6` | 0.15 / request |\n| Sonauto V3 | `sonauto-v3` | 0.32 / request |\n| Mureka V9 | `mureka-v9` | 0.24 / request |\n\n## Prompt Description Mode\n\nSuitable for describing only the style, mood, language, singer type, and scenario, with the model automatically generating the song content.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\",\n \"make_instrumental\": false\n}\n```\n\n## Light Music or Instrumental Only\n\nYou can use `light_music=true` or `make_instrumental=true`. `light_music` indicates a preference for light music/background music, and `make_instrumental` indicates that no sung vocals will be generated.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## Advanced Lyrics Mode\n\nSuitable when the business side has already prepared the lyrics and needs to specify the title and style tags. `custom_mode=true` can be passed, and the lyrics field can use `lyrics`, `lyric`, `custom_lyrics`, or `customLyrics`.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"夏日海风\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\n海风吹过白色沙滩\\n[Chorus]\\n把夏天唱成一束光\"\n}\n```\n\n## Query\n\nAfter creation succeeds, save the returned `data` task ID, such as `task_xxx`, and call `GET /suno/fetch/{task_id}` to query the status, audio URL, cover, title, lyrics, and the upstream raw fragment information.",
+        "description": "Music generation submission API, compatible with the legacy `/suno/submit/music` path. Returns a task ID, which can later be queried via `/suno/fetch/{task_id}`.\n\nMusic generation task submission API. The path remains `/suno/submit/music`; in practice, `upstream_model`, `music_model`, `engine`, `model_id`, or `modelId` can be used to select the generation engine. The creation API returns `task_id`, and the output can then be queried with `/suno/fetch/{task_id}`.\n\n## Prompt Description Mode\n\nSuitable for describing only the style, mood, language, singer type, and scenario, with the model automatically generating the song content.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"\",\n \"make_instrumental\": false\n}\n```\n\n## Light Music or Instrumental Only\n\nYou can use `light_music=true` or `make_instrumental=true`. `light_music` indicates a preference for light music/background music, and `make_instrumental` indicates that no sung vocals will be generated.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"minimax-music-v2.6\",\n \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n \"light_music\": true,\n \"make_instrumental\": true\n}\n```\n\n## Advanced Lyrics Mode\n\nSuitable when the business side has already prepared the lyrics and needs to specify the title and style tags. `custom_mode=true` can be passed, and the lyrics field can use `lyrics`, `lyric`, `custom_lyrics`, or `customLyrics`.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"mureka-v9\",\n \"custom_mode\": true,\n \"title\": \"Summer Sea Breeze\",\n \"tags\": \"electro pop, female vocal, bright summer\",\n \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Query\n\nAfter creation succeeds, save the returned `data` task ID, such as `task_xxx`, and call `GET /suno/fetch/{task_id}` to query the status, audio URL, cover, title, lyrics, and the upstream raw fragment information.",
         "tags": [
           "Music generation task format"
         ],
@@ -2268,7 +2268,7 @@
                   "upstream_model": {
                     "type": "string",
                     "example": "suno-v5",
-                    "description": "Music model selection values, for example `suno-v5`, `minimax-music-v2.6`, `sonauto-v3`, `mureka-v9`."
+                    "description": "Generation engine selection value."
                   },
                   "music_model": {
                     "type": "string",
@@ -2359,7 +2359,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "suno-v5",
-                    "prompt": "轻快电子流行，夏日海边，女声 旋律",
+                    "prompt": "Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"",
                     "make_instrumental": false
                   }
                 },
@@ -2368,7 +2368,7 @@
                   "value": {
                     "model": "suno_music",
                     "upstream_model": "minimax-music-v2.6",
-                    "prompt": "温暖治愈的咖啡馆背景音乐，轻柔钢琴和弦乐",
+                    "prompt": "Warm cafe background music with soft piano and strings, relaxing and cinematic.",
                     "light_music": true,
                     "make_instrumental": true
                   }
@@ -2379,9 +2379,9 @@
                     "model": "suno_music",
                     "upstream_model": "mureka-v9",
                     "custom_mode": true,
-                    "title": "夏日海风",
+                    "title": "Summer Sea Breeze",
                     "tags": "electro pop, female vocal, bright summer",
-                    "lyrics": "[Verse]\n海风吹过白色沙滩\n[Chorus]\n把夏天唱成一束光"
+                    "lyrics": "[Verse]\nSea breeze moves across the white sand\n[Chorus]\nTurn the summer into a beam of light"
                   }
                 }
               }
@@ -2434,298 +2434,10 @@
         }
       }
     },
-    "/suno/fetch": {
-      "get": {
-        "summary": "Query music task",
-        "description": "Query music generation tasks via query `task_id`.\n\nMusic generation task query API. The `data` returned by the create API is the task ID. You can query a single task via `GET /suno/fetch/{task_id}`, or query in batch via `POST /suno/fetch`.\n\n## Query methods\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nOr:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Query output\n\nKeep the outer new-api task structure:\n\n- `code`: `success` on success.\n- `message`: Error or message information.\n- `data.task_id`: Task ID.\n- `data.status`: Task status, common values are `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, and `FAILURE`.\n- `data.progress`: Task progress.\n- `data.result_url`: Result URL available after success. If the upstream returns multiple songs, the fragment in `data.data` prevails.\n- `data.data`: Raw upstream music result data, usually containing an array or object of song fragments.\n\nSuccess example:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "Music generation task format"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "task_xxx"
-            },
-            "description": "The task ID returned when submitting a music task."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "On success, `success`."
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Error or warning message."
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "Task ID."
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "Task status, common values are `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, and `FAILURE`."
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "Task progress."
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "The result URL available after success."
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "Song audio URL."
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "Song cover URL."
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "Song title."
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "Audio duration."
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "Music task query succeeded",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/en/music-generation-task-format/query-music-task"
-        }
-      },
-      "post": {
-        "summary": "Query music task (JSON)",
-        "description": "Query music generation tasks through the JSON body.\n\nMusic generation task query API. The `data` returned by the create API is the task ID. You can query a single task via `GET /suno/fetch/{task_id}`, or query in batch via `POST /suno/fetch`.\n\n## Query methods\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nOr:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Query output\n\nKeep the outer new-api task structure:\n\n- `code`: `success` on success.\n- `message`: Error or message information.\n- `data.task_id`: Task ID.\n- `data.status`: Task status, common values are `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, and `FAILURE`.\n- `data.progress`: Task progress.\n- `data.result_url`: Result URL available after success. If the upstream returns multiple songs, the fragment in `data.data` prevails.\n- `data.data`: Raw upstream music result data, usually containing an array or object of song fragments.\n\nSuccess example:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
-        "tags": [
-          "Music generation task format"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "task_id"
-                ],
-                "properties": {
-                  "task_id": {
-                    "type": "string",
-                    "example": "task_xxx",
-                    "description": "Task ID returned by the submit API."
-                  },
-                  "id": {
-                    "type": "string",
-                    "description": "`task_id` Compatible alias."
-                  }
-                }
-              },
-              "examples": {
-                "suno_music_fetch": {
-                  "summary": "Music task query",
-                  "value": {
-                    "task_id": "task_xxx"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "success",
-                      "description": "On success, `success`."
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Error or warning message."
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "task_id": {
-                          "type": "string",
-                          "description": "Task ID."
-                        },
-                        "status": {
-                          "type": "string",
-                          "description": "Task status, common values are `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, and `FAILURE`."
-                        },
-                        "progress": {
-                          "type": "string",
-                          "description": "Task progress."
-                        },
-                        "result_url": {
-                          "type": "string",
-                          "description": "The result URL available after success."
-                        },
-                        "data": {
-                          "type": "string",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "audio_url": {
-                                "type": "string",
-                                "description": "Song audio URL."
-                              },
-                              "image_url": {
-                                "type": "string",
-                                "description": "Song cover URL."
-                              },
-                              "title": {
-                                "type": "string",
-                                "description": "Song title."
-                              },
-                              "metadata": {
-                                "type": "object",
-                                "properties": {
-                                  "duration": {
-                                    "type": "string",
-                                    "description": "Audio duration."
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "music_fetch_success": {
-                    "summary": "Music task query succeeded",
-                    "value": {
-                      "code": "success",
-                      "message": "",
-                      "data": {
-                        "task_id": "task_xxx",
-                        "platform": "suno",
-                        "action": "MUSIC",
-                        "status": "SUCCESS",
-                        "progress": "100%",
-                        "result_url": "https://example.com/audio.mp3",
-                        "properties": {
-                          "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
-                        },
-                        "data": [
-                          {
-                            "id": "clip_xxx",
-                            "title": "夏日海风",
-                            "audio_url": "https://example.com/audio.mp3",
-                            "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
-                            "metadata": {
-                              "duration": 180,
-                              "prompt": "轻快电子流行，夏日海边，女声 旋律"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/en/music-generation-task-format/query-music-task-json"
-        }
-      }
-    },
     "/suno/fetch/{task_id}": {
       "get": {
         "summary": "Query a music task by ID",
-        "description": "Query the music generation task through path `task_id`.\n\nMusic generation task query API. The `data` returned by the create API is the task ID. You can query a single task via `GET /suno/fetch/{task_id}`, or query in batch via `POST /suno/fetch`.\n\n## Query methods\n\n```http\nGET /suno/fetch/task_xxx\n```\n\nOr:\n\n```json\n{\n \"task_id\": \"task_xxx\"\n}\n```\n\n## Query output\n\nKeep the outer new-api task structure:\n\n- `code`: `success` on success.\n- `message`: Error or message information.\n- `data.task_id`: Task ID.\n- `data.status`: Task status, common values are `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, and `FAILURE`.\n- `data.progress`: Task progress.\n- `data.result_url`: Result URL available after success. If the upstream returns multiple songs, the fragment in `data.data` prevails.\n- `data.data`: Raw upstream music result data, usually containing an array or object of song fragments.\n\nSuccess example:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
+        "description": "Query the music generation task through path `task_id`.\n\nMusic generation task query API. The `data` returned by the create API is the task ID; use `GET /suno/fetch/{task_id}` to query a single task.\n\n## Query methods\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## Query output\n\nKeep the outer new-api task structure:\n\n- `code`: `success` on success.\n- `message`: Error or message information.\n- `data.task_id`: Task ID.\n- `data.status`: Task status, common values are `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, and `FAILURE`.\n- `data.progress`: Task progress.\n- `data.result_url`: Result URL available after success. If the upstream returns multiple songs, the fragment in `data.data` prevails.\n- `data.data`: Raw upstream music result data, usually containing an array or object of song fragments.\n\nSuccess example:\n\n```json\n{\n \"code\": \"success\",\n \"message\": \"\",\n \"data\": {\n \"task_id\": \"task_xxx\",\n \"platform\": \"suno\",\n \"action\": \"MUSIC\",\n \"status\": \"SUCCESS\",\n \"progress\": \"100%\",\n \"result_url\": \"https://example.com/audio.mp3\",\n \"properties\": {\n \"upstream_model_name\": \"suno_music\",\n \"origin_model_name\": \"suno-v5\"\n },\n \"data\": [\n {\n \"id\": \"clip_xxx\",\n \"title\": \"夏日海风\",\n \"audio_url\": \"https://example.com/audio.mp3\",\n \"image_url\": \"https://example.com/cover.jpg\",\n \"model_name\": \"suno-v5\",\n \"metadata\": {\n \"duration\": 180,\n \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n }\n }\n ]\n }\n}\n```",
         "tags": [
           "Music generation task format"
         ],

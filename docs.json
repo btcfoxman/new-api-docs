@@ -56,8 +56,6 @@
               {
                 "group": "Music generation task format",
                 "pages": [
-                  "api-reference/en/music-generation-task-format/query-music-task",
-                  "api-reference/en/music-generation-task-format/query-music-task-json",
                   "api-reference/en/music-generation-task-format/query-a-music-task-by-id",
                   "api-reference/en/music-generation-task-format/create-a-music-generation-task"
                 ]
@@ -288,8 +286,6 @@
               {
                 "group": "音乐生成任务格式",
                 "pages": [
-                  "api-reference/cn/音乐生成任务格式/查询音乐任务",
-                  "api-reference/cn/音乐生成任务格式/查询音乐任务（json）",
                   "api-reference/cn/音乐生成任务格式/按-id-查询音乐任务",
                   "api-reference/cn/音乐生成任务格式/创建音乐生成任务"
                 ]
@@ -459,8 +455,6 @@
               {
                 "group": "音樂生成任務格式",
                 "pages": [
-                  "api-reference/zh-tw/音樂生成任務格式/查詢音樂任務",
-                  "api-reference/zh-tw/音樂生成任務格式/查詢音樂任務（json）",
                   "api-reference/zh-tw/音樂生成任務格式/依-id-查詢音樂任務",
                   "api-reference/zh-tw/音樂生成任務格式/建立音樂生成任務"
                 ]
@@ -578,8 +572,6 @@
               {
                 "group": "Format de tâche de génération musicale",
                 "pages": [
-                  "api-reference/fr/format-de-tâche-de-génération-musicale/consulter-la-tâche-musicale",
-                  "api-reference/fr/format-de-tâche-de-génération-musicale/consulter-les-tâches-musicales-json",
                   "api-reference/fr/format-de-tâche-de-génération-musicale/interroger-la-tâche-musicale-par-id",
                   "api-reference/fr/format-de-tâche-de-génération-musicale/créer-une-tâche-de-génération-musicale"
                 ]
@@ -801,8 +793,6 @@
               {
                 "group": "音楽生成タスクの形式",
                 "pages": [
-                  "api-reference/ja/音楽生成タスクの形式/音楽タスクを照会する",
-                  "api-reference/ja/音楽生成タスクの形式/音楽タスクを照会する（json）",
                   "api-reference/ja/音楽生成タスクの形式/id-で音楽タスクを照会",
                   "api-reference/ja/音楽生成タスクの形式/音楽生成タスクを作成する"
                 ]
@@ -963,8 +953,6 @@
               {
                 "group": "Формат задачи генерации музыки",
                 "pages": [
-                  "api-reference/ru/формат-задачи-генерации-музыки/запрос-задач-музыки",
-                  "api-reference/ru/формат-задачи-генерации-музыки/запрос-музыкальных-задач-json",
                   "api-reference/ru/формат-задачи-генерации-музыки/запросить-музыкальную-задачу-по-id",
                   "api-reference/ru/формат-задачи-генерации-музыки/создать-задачу-генерации-музыки"
                 ]
@@ -1126,8 +1114,6 @@
               {
                 "group": "Định dạng tác vụ tạo nhạc",
                 "pages": [
-                  "api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-âm-nhạc",
-                  "api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-âm-nhạc-json",
                   "api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/truy-vấn-tác-vụ-nhạc-theo-id",
                   "api-reference/vi/định-dạng-tác-vụ-tạo-nhạc/tạo-tác-vụ-tạo-nhạc"
                 ]
