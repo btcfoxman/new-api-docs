@@ -866,7 +866,7 @@
       "post": {
         "summary": "Tạo video",
         "deprecated": false,
-        "description": "Giao diện tạo video định dạng tương thích OpenAI Sora. Hỗ trợ chế độ tạo từ văn bản thành video và tạo bằng ảnh/video tham chiếu.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` tạo tác vụ, lấy `id`\n2. Thăm dò `GET /v1/videos/{id}` cho đến khi `completed` hoặc `failed`\n3. Sau khi hoàn tất, ưu tiên sử dụng `video_url` trong kết quả trả về\n4. Nếu cần tải xuống thống nhất, gọi `GET /v1/videos/{id}/content`\n\nTham số cốt lõi:\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo video\n- `seconds: number|string`: Tùy chọn, thời lượng mục tiêu\n- `duration: number|string`: Tùy chọn, bí danh thời lượng\n- `size: string`: Tùy chọn, kích thước đầu ra\n- `mode: string`: Tùy chọn, các giá trị phổ biến `t2v` `i2v` `i2v_first_last` `reference_material`\n\nTham số tương thích thường dùng:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nCác tham số mở rộng thường dùng của Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Dòng Veo\n\nLưu ý: `stable`, `official` v.v. biểu thị các nhóm khác nhau, không phải hậu tố `model` dùng đối ngoại; khi gọi, vui lòng giữ `model` là tên mô hình cơ sở, nhóm tài khoản hoặc mã thông báo sẽ quyết định thực tế đi qua nhóm nào.\n\n#### Mô hình chính Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nKhuyến nghị:\n- Với video tạo từ văn bản thuần túy, ưu tiên dùng mô hình chính `veo3*` / `veo3.1*`\n- Với các tình huống tạo video từ ảnh hoặc từ tham chiếu, nên truyền rõ ràng `mode + image_url/reference_images`\n\n### 4.2 Dòng Sora\n\nMô hình cơ sở:\n- `sora-2`\n- `sora-2-pro`\n\nKhuyến nghị:\n- `sora-2*` phù hợp cho các lệnh gọi thông dụng\n- Nếu cần sử dụng các nhóm như `stable` / `official`, vui lòng giữ `model` là tên mô hình cơ sở, không thêm hậu tố vào sau tên mô hình.\n\n### 4.3 Dòng Seedance\n\nMô hình công khai:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nKhuyến nghị:\n- Với tạo video từ văn bản, ưu tiên `*-t2v-*` hoặc `pro / fast`\n- Với tạo video từ hình ảnh, ưu tiên `*-i2v-*`\n- Với các tình huống có tư liệu tham chiếu phức tạp, ưu tiên dùng `content`\n\n### 4.4 Dòng video Grok\n\nMô hình công khai:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nTham số thường dùng:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nVí dụ:\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Mô hình chính video Kling\n\nMô hình chính công khai:\n- `kling-video`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCác `mode` phổ biến:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nTham số đầu vào tối thiểu:\n- Tạo video từ văn bản: `model + model_name + prompt + mode=t2v`\n- Tạo video từ hình ảnh: `model + model_name + prompt + mode=i2v + image`\n- Tham chiếu nhiều ảnh: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Kéo dài video: `model + model_name + mode=extend + video_id`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Hướng dẫn gọi Gemini Omni\n\n- `gemini-omni` là tên mô hình video công khai của new-api, có thể trực tiếp gọi qua `POST /v1/videos`.\n- `mode=t2v`: tạo video từ văn bản, tham số đầu vào tối thiểu là `model + prompt`.\n- `mode=r2v`: tạo bằng ảnh/tư liệu tham chiếu, ảnh có thể đặt trong `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` hoặc `content`.\n- `mode=edit`: chỉnh sửa video, video có thể đặt trong `video`、`video_url`、`videos` hoặc `content`, đồng thời cũng có thể truyền ảnh tham chiếu.\n- Trường thời lượng có thể dùng `seconds` hoặc `duration`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.",
+        "description": "Giao diện tạo video định dạng tương thích OpenAI Sora. Hỗ trợ chế độ tạo từ văn bản thành video và tạo bằng ảnh/video tham chiếu.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` tạo tác vụ, lấy `id`\n2. Thăm dò `GET /v1/videos/{id}` cho đến khi `completed` hoặc `failed`\n3. Sau khi hoàn tất, ưu tiên sử dụng `video_url` trong kết quả trả về\n4. Nếu cần tải xuống thống nhất, gọi `GET /v1/videos/{id}/content`\n\nTham số cốt lõi:\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo video\n- `seconds: number|string`: Tùy chọn, thời lượng mục tiêu\n- `duration: number|string`: Tùy chọn, bí danh thời lượng\n- `size: string`: Tùy chọn, kích thước đầu ra\n- `mode: string`: Tùy chọn, các giá trị phổ biến `t2v` `i2v` `i2v_first_last` `reference_material`\n\nTham số tương thích thường dùng:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nCác tham số mở rộng thường dùng của Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Dòng Veo\n\nLưu ý: `stable`, `official` v.v. biểu thị các nhóm khác nhau, không phải hậu tố `model` dùng đối ngoại; khi gọi, vui lòng giữ `model` là tên mô hình cơ sở, nhóm tài khoản hoặc mã thông báo sẽ quyết định thực tế đi qua nhóm nào.\n\n#### Mô hình chính Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nKhuyến nghị:\n- Với video tạo từ văn bản thuần túy, ưu tiên dùng mô hình chính `veo3*` / `veo3.1*`\n- Với các tình huống tạo video từ ảnh hoặc từ tham chiếu, nên truyền rõ ràng `mode + image_url/reference_images`\n\n### 4.2 Dòng Sora\n\nMô hình cơ sở:\n- `sora-2`\n- `sora-2-pro`\n\nKhuyến nghị:\n- `sora-2*` phù hợp cho các lệnh gọi thông dụng\n- Nếu cần sử dụng các nhóm như `stable` / `official`, vui lòng giữ `model` là tên mô hình cơ sở, không thêm hậu tố vào sau tên mô hình.\n\nVí dụ yêu cầu:\n\n```json\n{\n\"size\": \"1280x720\",\n\"images\": [\"https://example.png\"],\n\"model\": \"sora-2\",\n\"prompt\": \"this is an example\",\n\"duration\": 12,\n\"fps\": \"24\",\n\"seed\": \"20231024\",\n\"mode\": \"i2v\"\n}\n```\n\n### 4.3 Dòng Seedance\n\nMô hình công khai:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nKhuyến nghị:\n- Với tạo video từ văn bản, ưu tiên `*-t2v-*` hoặc `pro / fast`\n- Với tạo video từ hình ảnh, ưu tiên `*-i2v-*`\n- Với các tình huống có tư liệu tham chiếu phức tạp, ưu tiên dùng `content`\n\nVí dụ yêu cầu:\n\n```json\n{\n\"size\": \"1280x720\",\n\"model\": \"doubao-seedance-2-0-fast-260128\",\n\"prompt\": \"this is an example\",\n\"duration\": 15,\n\"fps\": \"24\",\n\"seed\": \"20231024\",\n\"mode\": \"reference_material\",\n\"content\": [\n{\n\"type\": \"text\",\n\"text\": \"this is an example\"\n},\n{\n\"type\": \"image_url\",\n\"image_url\": {\n\"url\": \"https://example.png\"\n},\n\"role\": \"reference_image\",\n\"name\": \"image1\"\n},\n{\n\"type\": \"audio_url\",\n\"audio_url\": {\n\"url\": \"https://example.mp3\"\n},\n\"role\": \"reference_audio\",\n\"name\": \"audio1\"\n}\n]\n}\n```\n\n### 4.4 Dòng video Grok\n\nMô hình công khai:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nTham số thường dùng:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nVí dụ:\n\n```json\n{\n\"model\": \"grok-imagine-1.0-video\",\n\"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n\"reference_images\": [\n\"https://example.com/ref-1.jpg\"\n],\n\"seconds\": 10,\n\"aspect_ratio\": \"16:9\",\n\"resolution\": \"720P\"\n}\n```\n\n### 4.5 Mô hình chính video Kling\n\nMô hình chính công khai:\n- `kling-video`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCác `mode` phổ biến:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nTham số đầu vào tối thiểu:\n- Tạo video từ văn bản: `model + model_name + prompt + mode=t2v`\n- Tạo video từ hình ảnh: `model + model_name + prompt + mode=i2v + image`\n- Tham chiếu nhiều ảnh: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Kéo dài video: `model + model_name + mode=extend + video_id`\n\nVí dụ:\n\n```json\n{\n\"model\": \"kling-video\",\n\"model_name\": \"kling-v2-6\",\n\"mode\": \"t2v\",\n\"prompt\": \"海边日落镜头，电影感，风吹长发\",\n\"duration\": 5,\n\"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Hướng dẫn gọi Gemini Omni\n\n- `gemini-omni` là tên mô hình video công khai của new-api, có thể trực tiếp gọi qua `POST /v1/videos`.\n- `mode=t2v`: tạo video từ văn bản, tham số đầu vào tối thiểu là `model + prompt`.\n- `mode=r2v`: tạo bằng ảnh/tư liệu tham chiếu, ảnh có thể đặt trong `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` hoặc `content`.\n- `mode=edit`: chỉnh sửa video, video có thể đặt trong `video`、`video_url`、`videos` hoặc `content`, đồng thời cũng có thể truyền ảnh tham chiếu.\n- Trường thời lượng có thể dùng `seconds` hoặc `duration`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.",
         "operationId": "createVideo",
         "tags": [
           "Định dạng tương thích Sora cho tạo video"
@@ -1151,14 +1151,19 @@
                 ]
               },
               "examples": {
-                "openai_t2v": {
-                  "summary": "OpenAI t2v (prompt/model)",
+                "openai_i2v_json": {
+                  "summary": "OpenAI Sora i2v (application/json)",
                   "value": {
-                    "model": "sora-2",
-                    "prompt": "A cinematic drone shot over snowy mountains at sunrise",
-                    "seconds": "8",
                     "size": "1280x720",
-                    "response_format": "url"
+                    "images": [
+                      "https://example.png"
+                    ],
+                    "model": "sora-2",
+                    "prompt": "this is an example",
+                    "duration": 12,
+                    "fps": "24",
+                    "seed": "20231024",
+                    "mode": "i2v"
                   }
                 },
                 "openai_i2v_input_reference": {
@@ -1388,20 +1393,35 @@
                 "seedance_volc_content": {
                   "summary": "Seedance chế độ content của Volcengine Ark",
                   "value": {
-                    "model": "doubao-seedance-1-0-lite-i2v-250428",
+                    "size": "1280x720",
+                    "model": "doubao-seedance-2-0-fast-260128",
+                    "prompt": "this is an example",
+                    "duration": 15,
+                    "fps": "24",
+                    "seed": "20231024",
                     "mode": "reference_material",
                     "content": [
                       {
                         "type": "text",
-                        "text": "A cinematic teaser video with fast-paced action cuts"
+                        "text": "this is an example"
                       },
                       {
                         "type": "image_url",
-                        "image_url": "https://example.com/ref-1.jpg"
+                        "image_url": {
+                          "url": "https://example.png"
+                        },
+                        "role": "reference_image",
+                        "name": "image1"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://example.mp3"
+                        },
+                        "role": "reference_audio",
+                        "name": "audio1"
                       }
-                    ],
-                    "seconds": "5",
-                    "size": "1280x720"
+                    ]
                   }
                 },
                 "veo_first_last_frame": {
