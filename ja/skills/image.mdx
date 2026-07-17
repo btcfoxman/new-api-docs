@@ -1,0 +1,28 @@
+---
+title: "NowAPI Image"
+description: "Generate and edit images with NowAPI, including asynchronous Responses API image tasks."
+---
+
+`nowapi-image` は既定で `https://api.aiid.edu.kg` を呼び出し、`NOWAPI_API_KEY` から認証情報を読み取ります。
+
+## サポートされているコマンド
+
+| コマンド | API | 用途 |
+| --- | --- | --- |
+| `models` | `GET /v1/models` | 利用可能なモデルを照会 |
+| `generate` | `POST /v1/images/generations` | 画像を生成 |
+| `edit` | `POST /v1/images/edits` | 画像を編集 |
+| `responses-create` | `POST /v1/responses` | 非同期画像タスクを作成 |
+| `responses-get` | `GET /v1/responses/{response_id}` | 非同期画像タスクを照会 |
+
+## 呼び出し例
+
+```bash
+node scripts/nowapi-image.mjs models
+node scripts/nowapi-image.mjs generate --json image-request.json
+node scripts/nowapi-image.mjs edit --json edit-request.json
+node scripts/nowapi-image.mjs responses-create --json responses-request.json
+node scripts/nowapi-image.mjs responses-get --id resp_xxx
+```
+
+タスクを作成したら、返されたタスク ID を保存し、対応する照会コマンドで状態を取得します。長時間かかるタスクでは、単一の HTTP リクエストを待ち続けないでください。

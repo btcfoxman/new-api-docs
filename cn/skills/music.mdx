@@ -1,0 +1,24 @@
+---
+title: "NowAPI Music"
+description: "Create music generation tasks and query their results by task ID with NowAPI."
+---
+
+`nowapi-music` 默认调用 `https://api.aiid.edu.kg`，并从 `NOWAPI_API_KEY` 读取鉴权信息。
+
+## 支持的命令
+
+| 命令 | API | 用途 |
+| --- | --- | --- |
+| `models` | `GET /v1/models` | 查询可用模型 |
+| `create` | `POST /suno/submit/music` | 创建音乐任务 |
+| `status` | `GET /suno/fetch/{task_id}` | 按 ID 查询音乐任务 |
+
+## 调用示例
+
+```bash
+node scripts/nowapi-music.mjs models
+node scripts/nowapi-music.mjs create --json music-request.json
+node scripts/nowapi-music.mjs status --id task_xxx
+```
+
+创建任务后保存返回的任务 ID，再使用对应查询命令获取状态。长任务不要保持单次 HTTP 请求等待。

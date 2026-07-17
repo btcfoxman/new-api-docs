@@ -1,0 +1,29 @@
+---
+title: "NowAPI Video"
+description: "Create and query Sora-compatible and Seedance-compatible video generation tasks with NowAPI."
+---
+
+`nowapi-video` по умолчанию вызывает `https://api.aiid.edu.kg` и читает данные аутентификации из `NOWAPI_API_KEY`.
+
+## Поддерживаемые команды
+
+| Команда | API | Назначение |
+| --- | --- | --- |
+| `models` | `GET /v1/models` | Запрос доступных моделей |
+| `sora-create` | `POST /v1/videos` | Создать совместимую с Sora видеозадачу |
+| `sora-status` | `GET /v1/videos/{task_id}` | Запросить совместимую с Sora видеозадачу |
+| `sora-content` | `GET /v1/videos/{task_id}/content` | Скачать результат видео |
+| `seedance-create` | `POST /api/v3/contents/generations/tasks` | Создать видеозадачу Seedance |
+| `seedance-status` | `GET /api/v3/contents/generations/tasks/{task_id}` | Запросить видеозадачу Seedance |
+
+## Пример вызова
+
+```bash
+node scripts/nowapi-video.mjs models
+node scripts/nowapi-video.mjs sora-create --json video-request.json
+node scripts/nowapi-video.mjs sora-status --id video_xxx
+node scripts/nowapi-video.mjs seedance-create --json seedance-request.json
+node scripts/nowapi-video.mjs seedance-status --id task_xxx
+```
+
+После создания задачи сохраните возвращённый ID задачи, затем используйте соответствующую команду запроса, чтобы получить статус. Для длительных задач не оставляйте один запрос HTTP в ожидании.

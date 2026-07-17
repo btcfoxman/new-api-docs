@@ -1,0 +1,22 @@
+---
+title: "Hướng dẫn an toàn cho Skills"
+description: "Yêu cầu an toàn về API Key, nội dung phương tiện và nhiệm vụ của NowAPI Skills."
+---
+
+## API Key
+
+- Chỉ cung cấp thông qua biến môi trường `NOWAPI_API_KEY`.
+- Không ghi vào kho lưu trữ, tệp yêu cầu JSON, tệp Skill hoặc phản hồi của Agent.
+- Khi nghi ngờ bị lộ, hãy thu hồi ngay và tạo lại.
+
+## Nội dung phương tiện
+
+- Ưu tiên sử dụng liên kết phương tiện HTTPS có thể truy cập.
+- Không in toàn bộ base64, dữ liệu nhị phân hoặc Data URL quá dài trong log.
+- Chỉ gửi các tài nguyên hình ảnh, âm thanh và video mà bạn có quyền xử lý.
+
+## Tác vụ và chi phí
+
+- Trước khi gửi, Agent nên xác nhận mô hình, số lượng, thời lượng và độ phân giải.
+- Với tác vụ dài, hãy lưu ID tác vụ và lấy trạng thái qua API truy vấn.
+- Một lần truy vấn thất bại không có nghĩa là tác vụ tạo đã thất bại.

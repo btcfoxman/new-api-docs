@@ -1,0 +1,29 @@
+---
+title: "NowAPI Video"
+description: "Create and query Sora-compatible and Seedance-compatible video generation tasks with NowAPI."
+---
+
+`nowapi-video` mặc định gọi `https://api.aiid.edu.kg` và đọc thông tin xác thực từ `NOWAPI_API_KEY`.
+
+## Các lệnh được hỗ trợ
+
+| Lệnh | API | Mục đích |
+| --- | --- | --- |
+| `models` | `GET /v1/models` | Truy vấn các model khả dụng |
+| `sora-create` | `POST /v1/videos` | Tạo tác vụ video tương thích Sora |
+| `sora-status` | `GET /v1/videos/{task_id}` | Truy vấn tác vụ video tương thích Sora |
+| `sora-content` | `GET /v1/videos/{task_id}/content` | Tải xuống kết quả video |
+| `seedance-create` | `POST /api/v3/contents/generations/tasks` | Tạo tác vụ video Seedance |
+| `seedance-status` | `GET /api/v3/contents/generations/tasks/{task_id}` | Truy vấn tác vụ video Seedance |
+
+## Ví dụ gọi
+
+```bash
+node scripts/nowapi-video.mjs models
+node scripts/nowapi-video.mjs sora-create --json video-request.json
+node scripts/nowapi-video.mjs sora-status --id video_xxx
+node scripts/nowapi-video.mjs seedance-create --json seedance-request.json
+node scripts/nowapi-video.mjs seedance-status --id task_xxx
+```
+
+Sau khi tạo tác vụ, hãy lưu ID tác vụ được trả về, rồi dùng lệnh truy vấn tương ứng để lấy trạng thái. Với tác vụ dài, đừng giữ một yêu cầu HTTP duy nhất để chờ.

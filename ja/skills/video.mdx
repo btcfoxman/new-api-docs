@@ -1,0 +1,29 @@
+---
+title: "NowAPI Video"
+description: "Create and query Sora-compatible and Seedance-compatible video generation tasks with NowAPI."
+---
+
+`nowapi-video` は既定で `https://api.aiid.edu.kg` を呼び出し、`NOWAPI_API_KEY` から認証情報を読み取ります。
+
+## サポートされているコマンド
+
+| コマンド | API | 用途 |
+| --- | --- | --- |
+| `models` | `GET /v1/models` | 利用可能なモデルを照会 |
+| `sora-create` | `POST /v1/videos` | Sora 互換動画タスクを作成 |
+| `sora-status` | `GET /v1/videos/{task_id}` | Sora 互換動画タスクを照会 |
+| `sora-content` | `GET /v1/videos/{task_id}/content` | 動画結果をダウンロード |
+| `seedance-create` | `POST /api/v3/contents/generations/tasks` | Seedance 動画タスクを作成 |
+| `seedance-status` | `GET /api/v3/contents/generations/tasks/{task_id}` | Seedance 動画タスクを照会 |
+
+## 呼び出し例
+
+```bash
+node scripts/nowapi-video.mjs models
+node scripts/nowapi-video.mjs sora-create --json video-request.json
+node scripts/nowapi-video.mjs sora-status --id video_xxx
+node scripts/nowapi-video.mjs seedance-create --json seedance-request.json
+node scripts/nowapi-video.mjs seedance-status --id task_xxx
+```
+
+タスクを作成したら、返されたタスク ID を保存し、対応する照会コマンドで状態を取得します。長時間かかるタスクでは、単一の HTTP リクエストを待ち続けないでください。

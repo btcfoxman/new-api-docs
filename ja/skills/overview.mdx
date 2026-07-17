@@ -1,0 +1,29 @@
+---
+title: "Skills"
+description: "NowAPI の画像、動画、音楽の生成機能を Agent ツールに追加します。"
+---
+
+NowAPI Skills は、Codex、Claude Code などの Agent に安定したメディア生成ワークフローを提供します。
+
+## 利用可能な Skills
+
+| Skill | 機能 |
+| --- | --- |
+| `nowapi-image` | 画像生成、画像編集、非同期画像タスクの照会 |
+| `nowapi-video` | Sora と Seedance の動画タスク作成、照会、および結果取得 |
+| `nowapi-music` | 音楽タスクの作成と ID による照会 |
+
+## インストール
+
+```bash
+npx skills add https://docs.aiid.edu.kg
+```
+
+インストール後、`NOWAPI_API_KEY` を設定し、各 Skill の説明に従ってタスクを実行します。
+
+## 動作方式
+
+- モデルは実行時に `/v1/models` を通じて照会します。
+- 動画、音楽、非同期画像タスクは、作成と照会を分離する方式を採用します。
+- 複雑なリクエストは JSON ファイルで渡します。
+- Skills は API Key、完全な base64、またはメディアのバイナリ内容を出力しません。

@@ -1,0 +1,32 @@
+---
+title: "Быстрая установка"
+description: "Установите NowAPI Skills, настройте ключ API и убедитесь, что Agent может получить доступ к NowAPI."
+---
+
+## Требования к среде
+
+- Node.js 18 или более поздняя версия
+- Действительный NowAPI API Key
+- Инструмент, поддерживающий Agent Skills
+
+## Установка Skills
+
+```bash
+npx skills add https://docs.aiid.edu.kg
+```
+
+## Настройка переменных окружения
+
+```bash
+export NOWAPI_BASE_URL="https://api.aiid.edu.kg"
+export NOWAPI_API_KEY="YOUR_API_KEY"
+```
+
+PowerShell：
+
+```powershell
+$env:NOWAPI_BASE_URL="https://api.aiid.edu.kg"
+$env:NOWAPI_API_KEY="YOUR_API_KEY"
+```
+
+Не записывайте реальный API Key в репозиторий, файлы Skill или ответы в чате. После настройки попросите Agent выполнить команду `models` для любой Skill, чтобы проверить.

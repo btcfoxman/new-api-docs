@@ -124,6 +124,28 @@
             ]
           },
           {
+            "tab": "Skills",
+            "groups": [
+              {
+                "group": "Get started",
+                "pages": [
+                  "en/skills/overview",
+                  "en/skills/quickstart",
+                  "en/skills/agent-install",
+                  "en/skills/security"
+                ]
+              },
+              {
+                "group": "Media Skills",
+                "pages": [
+                  "en/skills/image",
+                  "en/skills/video",
+                  "en/skills/music"
+                ]
+              }
+            ]
+          },
+          {
             "tab": "Guides",
             "groups": [
               {
@@ -288,6 +310,28 @@
                 "pages": [
                   "api-reference/cn/音乐生成任务格式/按-id-查询音乐任务",
                   "api-reference/cn/音乐生成任务格式/创建音乐生成任务"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Skills",
+            "groups": [
+              {
+                "group": "开始使用",
+                "pages": [
+                  "cn/skills/overview",
+                  "cn/skills/quickstart",
+                  "cn/skills/agent-install",
+                  "cn/skills/security"
+                ]
+              },
+              {
+                "group": "媒体 Skills",
+                "pages": [
+                  "cn/skills/image",
+                  "cn/skills/video",
+                  "cn/skills/music"
                 ]
               }
             ]
@@ -462,6 +506,28 @@
             ]
           },
           {
+            "tab": "Skills",
+            "groups": [
+              {
+                "group": "開始使用",
+                "pages": [
+                  "zh-tw/skills/overview",
+                  "zh-tw/skills/quickstart",
+                  "zh-tw/skills/agent-install",
+                  "zh-tw/skills/security"
+                ]
+              },
+              {
+                "group": "媒體 Skills",
+                "pages": [
+                  "zh-tw/skills/image",
+                  "zh-tw/skills/video",
+                  "zh-tw/skills/music"
+                ]
+              }
+            ]
+          },
+          {
             "tab": "開發文檔",
             "groups": [
               {
@@ -626,6 +692,28 @@
                 "group": "OpenAIFormat (Chat)",
                 "pages": [
                   "api-reference/fr/openaiformat-chat/créer-une-conversation-de-chat"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Skills",
+            "groups": [
+              {
+                "group": "Bien démarrer",
+                "pages": [
+                  "fr/skills/overview",
+                  "fr/skills/quickstart",
+                  "fr/skills/agent-install",
+                  "fr/skills/security"
+                ]
+              },
+              {
+                "group": "Skills multimédias",
+                "pages": [
+                  "fr/skills/image",
+                  "fr/skills/video",
+                  "fr/skills/music"
                 ]
               }
             ]
@@ -800,6 +888,28 @@
             ]
           },
           {
+            "tab": "Skills",
+            "groups": [
+              {
+                "group": "はじめに",
+                "pages": [
+                  "ja/skills/overview",
+                  "ja/skills/quickstart",
+                  "ja/skills/agent-install",
+                  "ja/skills/security"
+                ]
+              },
+              {
+                "group": "メディア Skills",
+                "pages": [
+                  "ja/skills/image",
+                  "ja/skills/video",
+                  "ja/skills/music"
+                ]
+              }
+            ]
+          },
+          {
             "tab": "ガイド",
             "groups": [
               {
@@ -969,6 +1079,28 @@
             ]
           },
           {
+            "tab": "Skills",
+            "groups": [
+              {
+                "group": "Начало работы",
+                "pages": [
+                  "ru/skills/overview",
+                  "ru/skills/quickstart",
+                  "ru/skills/agent-install",
+                  "ru/skills/security"
+                ]
+              },
+              {
+                "group": "Медиа Skills",
+                "pages": [
+                  "ru/skills/image",
+                  "ru/skills/video",
+                  "ru/skills/music"
+                ]
+              }
+            ]
+          },
+          {
             "tab": "Руководства",
             "groups": [
               {
@@ -1133,6 +1265,28 @@
                   "api-reference/vi/định-dạngkling-tạo-video/lấy-trạng-thái-tác-vụ-tạo-video-từ-ảnh-kling",
                   "api-reference/vi/định-dạngkling-tạo-video/kling-tạo-video-từ-văn-bản",
                   "api-reference/vi/định-dạngkling-tạo-video/lấy-trạng-thái-tác-vụ-tạo-video-từ-văn-bản-kling"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Skills",
+            "groups": [
+              {
+                "group": "Bắt đầu",
+                "pages": [
+                  "vi/skills/overview",
+                  "vi/skills/quickstart",
+                  "vi/skills/agent-install",
+                  "vi/skills/security"
+                ]
+              },
+              {
+                "group": "Media Skills",
+                "pages": [
+                  "vi/skills/image",
+                  "vi/skills/video",
+                  "vi/skills/music"
                 ]
               }
             ]

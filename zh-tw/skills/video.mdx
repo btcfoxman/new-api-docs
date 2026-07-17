@@ -1,0 +1,29 @@
+---
+title: "NowAPI Video"
+description: "Create and query Sora-compatible and Seedance-compatible video generation tasks with NowAPI."
+---
+
+`nowapi-video` 預設呼叫 `https://api.aiid.edu.kg`，並從 `NOWAPI_API_KEY` 讀取驗證資訊。
+
+## 支援的命令
+
+| 命令 | API | 用途 |
+| --- | --- | --- |
+| `models` | `GET /v1/models` | 查詢可用模型 |
+| `sora-create` | `POST /v1/videos` | 建立 Sora 相容影片任務 |
+| `sora-status` | `GET /v1/videos/{task_id}` | 查詢 Sora 相容影片任務 |
+| `sora-content` | `GET /v1/videos/{task_id}/content` | 下載影片結果 |
+| `seedance-create` | `POST /api/v3/contents/generations/tasks` | 建立 Seedance 影片任務 |
+| `seedance-status` | `GET /api/v3/contents/generations/tasks/{task_id}` | 查詢 Seedance 影片任務 |
+
+## 呼叫範例
+
+```bash
+node scripts/nowapi-video.mjs models
+node scripts/nowapi-video.mjs sora-create --json video-request.json
+node scripts/nowapi-video.mjs sora-status --id video_xxx
+node scripts/nowapi-video.mjs seedance-create --json seedance-request.json
+node scripts/nowapi-video.mjs seedance-status --id task_xxx
+```
+
+建立任務後，保存回傳的任務 ID，再使用對應的查詢命令取得狀態。長任務不要維持單次 HTTP 請求等待。

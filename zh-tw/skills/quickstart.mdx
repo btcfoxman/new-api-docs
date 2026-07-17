@@ -1,0 +1,32 @@
+---
+title: "快速安裝"
+description: "安裝 NowAPI Skills，設定 API Key，並驗證 Agent 可以存取 NowAPI。"
+---
+
+## 環境需求
+
+- Node.js 18 或更高版本
+- 有效的 NowAPI API Key
+- 支援 Agent Skills 的工具
+
+## 安裝 Skills
+
+```bash
+npx skills add https://docs.aiid.edu.kg
+```
+
+## 設定環境變數
+
+```bash
+export NOWAPI_BASE_URL="https://api.aiid.edu.kg"
+export NOWAPI_API_KEY="YOUR_API_KEY"
+```
+
+PowerShell：
+
+```powershell
+$env:NOWAPI_BASE_URL="https://api.aiid.edu.kg"
+$env:NOWAPI_API_KEY="YOUR_API_KEY"
+```
+
+不要將真實的 API Key 寫入儲存庫、Skill 檔案或聊天回覆。設定後，讓 Agent 執行任意 Skill 的 `models` 命令進行驗證。

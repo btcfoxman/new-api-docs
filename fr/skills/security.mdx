@@ -1,0 +1,22 @@
+---
+title: "Consignes de sécurité pour Skills"
+description: "Clé API de Skills NowAPI, contenu multimédia et exigences de sécurité des tâches."
+---
+
+## API Key
+
+- Fourni uniquement via la variable d’environnement `NOWAPI_API_KEY`.
+- Ne l’écrivez pas dans le dépôt, les fichiers de requêtes JSON, les fichiers Skill ou les réponses de l’Agent.
+- En cas de suspicion de fuite, révoquez-le immédiatement et régénérez-le.
+
+## Contenu multimédia
+
+- Utilisez en priorité des liens multimédias HTTPS accessibles.
+- N’imprimez pas dans les journaux le base64 complet, les données binaires ou les URL Data trop longues.
+- Ne soumettez que les images, fichiers audio et vidéos que vous êtes autorisé à traiter.
+
+## Tâches et frais
+
+- Avant de soumettre, l’Agent doit vérifier le modèle, la quantité, la durée et la résolution.
+- Les tâches longues doivent enregistrer l’ID de tâche et obtenir leur état via l’API de requête.
+- Un échec de requête unique ne ნიშნავს pas que la tâche de génération a échoué.

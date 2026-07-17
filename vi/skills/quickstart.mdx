@@ -1,0 +1,32 @@
+---
+title: "Cài đặt nhanh"
+description: "Cài đặt NowAPI Skills, cấu hình API Key, và xác minh Agent có thể truy cập NowAPI."
+---
+
+## Yêu cầu môi trường
+
+- Node.js 18 hoặc phiên bản cao hơn
+- NowAPI API Key hợp lệ
+- Công cụ hỗ trợ Agent Skills
+
+## Cài đặt Skills
+
+```bash
+npx skills add https://docs.aiid.edu.kg
+```
+
+## Cấu hình biến môi trường
+
+```bash
+export NOWAPI_BASE_URL="https://api.aiid.edu.kg"
+export NOWAPI_API_KEY="YOUR_API_KEY"
+```
+
+PowerShell：
+
+```powershell
+$env:NOWAPI_BASE_URL="https://api.aiid.edu.kg"
+$env:NOWAPI_API_KEY="YOUR_API_KEY"
+```
+
+Không đưa API Key thật vào kho lưu trữ, tệp Skill hoặc phản hồi chat. Sau khi cấu hình, hãy để Agent chạy lệnh `models` của bất kỳ Skill nào để xác minh.

@@ -1,0 +1,28 @@
+---
+title: "NowAPI Image"
+description: "Generate and edit images with NowAPI, including asynchronous Responses API image tasks."
+---
+
+`nowapi-image` по умолчанию вызывает `https://api.aiid.edu.kg` и читает данные аутентификации из `NOWAPI_API_KEY`.
+
+## Поддерживаемые команды
+
+| Команда | API | Назначение |
+| --- | --- | --- |
+| `models` | `GET /v1/models` | Запрос доступных моделей |
+| `generate` | `POST /v1/images/generations` | Генерация изображений |
+| `edit` | `POST /v1/images/edits` | Редактирование изображений |
+| `responses-create` | `POST /v1/responses` | Создание асинхронной задачи на изображение |
+| `responses-get` | `GET /v1/responses/{response_id}` | Запрос асинхронной задачи на изображение |
+
+## Пример вызова
+
+```bash
+node scripts/nowapi-image.mjs models
+node scripts/nowapi-image.mjs generate --json image-request.json
+node scripts/nowapi-image.mjs edit --json edit-request.json
+node scripts/nowapi-image.mjs responses-create --json responses-request.json
+node scripts/nowapi-image.mjs responses-get --id resp_xxx
+```
+
+После создания задачи сохраните возвращённый ID задачи, затем используйте соответствующую команду запроса, чтобы получить статус. Для длительных задач не оставляйте один запрос HTTP в ожидании.

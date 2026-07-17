@@ -1,0 +1,29 @@
+---
+title: "Skills"
+description: "Install NowAPI's image, video, and music generation capabilities into the Agent tools."
+---
+
+NowAPI Skills provide a stable media generation workflow for Agents such as Codex and Claude Code.
+
+## Available Skills
+
+| Skill | Capabilities |
+| --- | --- |
+| `nowapi-image` | Image generation, image editing, asynchronous image task queries |
+| `nowapi-video` | Sora and Seedance video task creation, querying, and result retrieval |
+| `nowapi-music` | Music task creation and query by ID |
+
+## Installation
+
+```bash
+npx skills add https://docs.aiid.edu.kg
+```
+
+After installation, configure `NOWAPI_API_KEY`, then follow the instructions for the corresponding Skill to run tasks.
+
+## How It Works
+
+- The model performs queries through `/v1/models` at runtime.
+- Video, music, and asynchronous image tasks use separate creation and query steps.
+- Complex requests are passed in via JSON files.
+- Skills do not output API keys, full base64, or media binary content.

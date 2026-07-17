@@ -1,0 +1,24 @@
+---
+title: "NowAPI Music"
+description: "Create music generation tasks and query their results by task ID with NowAPI."
+---
+
+`nowapi-music` mặc định gọi `https://api.aiid.edu.kg` và đọc thông tin xác thực từ `NOWAPI_API_KEY`.
+
+## Các lệnh được hỗ trợ
+
+| Lệnh | API | Mục đích |
+| --- | --- | --- |
+| `models` | `GET /v1/models` | Truy vấn các model khả dụng |
+| `create` | `POST /suno/submit/music` | Tạo tác vụ nhạc |
+| `status` | `GET /suno/fetch/{task_id}` | Truy vấn tác vụ nhạc theo ID |
+
+## Ví dụ gọi
+
+```bash
+node scripts/nowapi-music.mjs models
+node scripts/nowapi-music.mjs create --json music-request.json
+node scripts/nowapi-music.mjs status --id task_xxx
+```
+
+Sau khi tạo tác vụ, hãy lưu ID tác vụ được trả về, rồi dùng lệnh truy vấn tương ứng để lấy trạng thái. Với tác vụ dài, đừng giữ một yêu cầu HTTP duy nhất để chờ.

@@ -1,0 +1,22 @@
+---
+title: "Skills Security Instructions"
+description: "NowAPI Skills API Key, media content, and task security requirements."
+---
+
+## API Key
+
+- Provide only through the `NOWAPI_API_KEY` environment variable.
+- Do not write it into the repository, JSON request files, Skill files, or Agent responses.
+- If leakage is suspected, revoke it immediately and regenerate it.
+
+## Media Content
+
+- Prefer accessible HTTPS media links.
+- Do not print full base64, binary data, or excessively long Data URLs in logs.
+- Submit only image, audio, and video assets you are authorized to handle.
+
+## Tasks and Billing
+
+- Before submitting, the Agent should confirm the model, quantity, duration, and resolution.
+- Long-running tasks should save the task ID and retrieve status through the query API.
+- A single query failure does not mean the generation task has failed.

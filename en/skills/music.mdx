@@ -1,0 +1,24 @@
+---
+title: "NowAPI Music"
+description: "Create music generation tasks and query their results by task ID with NowAPI."
+---
+
+`nowapi-music` uses `https://api.aiid.edu.kg` by default and reads authentication information from `NOWAPI_API_KEY`.
+
+## Supported Commands
+
+| Command | API | Purpose |
+| --- | --- | --- |
+| `models` | `GET /v1/models` | List available models |
+| `create` | `POST /suno/submit/music` | Create a music task |
+| `status` | `GET /suno/fetch/{task_id}` | Query a music task by ID |
+
+## Usage Examples
+
+```bash
+node scripts/nowapi-music.mjs models
+node scripts/nowapi-music.mjs create --json music-request.json
+node scripts/nowapi-music.mjs status --id task_xxx
+```
+
+After creating a task, save the returned task ID, then use the corresponding query command to get its status. For long-running tasks, do not keep a single HTTP request waiting.
