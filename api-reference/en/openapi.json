@@ -210,7 +210,7 @@
       "post": {
         "summary": "Create response (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API, used to create model responses.\nSupports multi-turn conversations, tool calling, reasoning, and other features.\n\nAdd asynchronous image generation examples for OpenAI Responses API. `background=true` is used to submit background tasks; the create API returns `status=queued` and the full `id` immediately, then use that `id` to call `GET /v1/responses/{response_id}` to query the result.\n\n## Asynchronous image generation flow\n\n1. Call `POST /v1/responses`, and pass `tools=[{ \"type\": \"image_generation\" }]` and `background=true` in the request body.\n2. Save the full `id` returned by the create API, for example `resp_xxx`. Do not truncate, rewrite, or save only `metadata.task_id`.\n3. Call `GET /v1/responses/{response_id}` to query until `status=completed` or `status=failed`.\n4. After success, read `output[].url` to get the image URL.\n\n### Example of creating an asynchronous image task\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\nCreate API response example:\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\",\n    \"credits\": \"23\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\nSupported models: `gpt-image-2-2k`, `gpt-image-2-4k`, and `nano-banana-pro`.",
+        "description": "OpenAI Responses API, used to create model responses.\nSupports multi-turn conversations, tool calling, reasoning, and other features.\n\nAdd asynchronous image generation examples for OpenAI Responses API. `background=true` is used to submit background tasks; the create API returns `status=queued` and the full `id` immediately, then use that `id` to call `GET /v1/responses/{response_id}` to query the result.\n\n## Asynchronous image generation flow\n\n1. Call `POST /v1/responses`, and pass `tools=[{ \"type\": \"image_generation\" }]` and `background=true` in the request body.\n2. Save the full `id` returned by the create API, for example `resp_xxx`. Do not truncate, rewrite, or save only `metadata.task_id`.\n3. Call `GET /v1/responses/{response_id}` to query until `status=completed` or `status=failed`.\n4. After success, read `output[].url` to get the image URL.\n\n### Example of creating an asynchronous image task\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\nCreate API response example:\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\nSupported models: `gpt-image-2-2k`, `gpt-image-2-4k`, and `nano-banana-pro`.",
         "operationId": "createResponse",
         "tags": [
           "OpenAI Format (Responses)"
@@ -261,8 +261,7 @@
                       "incomplete_details": null,
                       "instructions": null,
                       "metadata": {
-                        "task_id": "010c31178d26436ca6194cde07931b33",
-                        "credits": "23"
+                        "task_id": "010c31178d26436ca6194cde07931b33"
                       },
                       "model": "gpt-image-2-2k",
                       "object": "response",
@@ -307,7 +306,7 @@
       "post": {
         "summary": "Gemini Images (Nano Banana)",
         "deprecated": false,
-        "description": "Gemini image generation.\n\nNano Banana series supports the OpenAI Dall-E format (see [Image Generation OpenAI DALL-E Format](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).\n\nGemini image generation compatible API. Put text or image inputs in `contents[].parts`, `generationConfig.responseModalities` usually pass `IMAGE`, and control the image size through `generationConfig.imageConfig.imageSize`.\n\n## Fixed pricing for image generation\n\nThe following image models are billed per request:\n\n| Model | Pricing |\n|---|---|\n| `kling-image-v3` | 0.05 / request |\n| `doubao-seedream-5-0-260128` | 0.05 / request |\n| `doubao-seedream-4-5-251128` | 0.06 / request |",
+        "description": "Gemini image generation.\n\nNano Banana series supports the OpenAI Dall-E format (see [Image Generation OpenAI DALL-E Format](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)).\n\nGemini image generation compatible API. Put text or image inputs in `contents[].parts`, `generationConfig.responseModalities` usually pass `IMAGE`, and control the image size through `generationConfig.imageConfig.imageSize`.",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "Gemini Format for Image Generation"
@@ -462,7 +461,7 @@
       "post": {
         "summary": "Generate images (compatible with OpenAI Dall-E)",
         "deprecated": false,
-        "description": "OpenAI Dall-E-style image generation API.\n\n- `POST /v1/images/generations`: Create an image generation task\n\nStandard authentication headers:\n- `Content-Type: application/json`\n\n- `model: string`: Required, public model name\n- `prompt: string`: Recommended, image generation prompt\n- `n: number`: Optional, number of images to generate\n- `size: string`: Optional, size or resolution specification\n- `quality: string`: Optional, quality level\n- `response_format: string`: Optional, response format\n\nCommon compatible extension parameters:\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling Dedicated extension parameters:\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana Series\n\nPublic model:\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nCapabilities:\n- `nano-banana`: Basic text-to-image, also compatible with image editing\n- `nano-banana-pro*`: Higher-quality version\n- `nano-banana-2*`: Newer model family\n- `*-2k` / `*-4k`: High-resolution variants\n\nCommon parameters:\n- Text-to-image: `model + prompt`\n- Image editing: `model + prompt + image`, also compatible with `image_urls`\n- Common extensions: `n` `size` `quality` `response_format`\n\nExample:\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream Series\n\nPublic model:\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nCapabilities:\n- Use the text-to-image call uniformly\n- It is recommended to pass the standard parameter first: `prompt + model + size/aspect_ratio`\n\nCommon parameters:\n- `model + prompt`\n- Optional: `size` `aspect_ratio` `n`\n\n### 3.3 Kling Standard Image Main Model\n\nPublic base model:\n- `kling-image`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nCapabilities:\n- Text-to-image: `model + model_name + prompt`\n- Image-to-image: add `image` on top of text-to-image\n- Multi-image generation: pass `subject_image_list`, or pass multiple `image_urls/images`\n- Outpainting: pass `image` and the outpainting ratio parameter\n\nCommon parameters:\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni Image Main Model\n\nPublic base model:\n- `kling-omni-image`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-image-o1`\n- `kling-v3-omni`\n\nCommon parameters:\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling Virtual Try-On Model\n\nPublic model:\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nMinimum input parameters:\n- `model + human_image + cloth_image`\n\nDescription:\n- These two models are already complete primary models themselves, so there is no need to pass `model_name` again.\n\nExample:\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## Fixed pricing for image generation/editing\n\nThe following models are billed per request in `POST /v1/images/generations` and `POST /v1/images/edits`:\n\n| Model | Pricing |\n|---|---|\n| `kling-image-v3` | 0.05 / request |\n| `doubao-seedream-5-0-260128` | 0.05 / request |\n| `doubao-seedream-4-5-251128` | 0.06 / request |",
+        "description": "OpenAI Dall-E-style image generation API.\n\n- `POST /v1/images/generations`: Create an image generation task\n\nStandard authentication headers:\n- `Content-Type: application/json`\n\n- `model: string`: Required, public model name\n- `prompt: string`: Recommended, image generation prompt\n- `n: number`: Optional, number of images to generate\n- `size: string`: Optional, size or resolution specification\n- `quality: string`: Optional, quality level\n- `response_format: string`: Optional, response format\n\nCommon compatible extension parameters:\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling Dedicated extension parameters:\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana Series\n\nPublic model:\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nCapabilities:\n- `nano-banana`: Basic text-to-image, also compatible with image editing\n- `nano-banana-pro*`: Higher-quality version\n- `nano-banana-2*`: Newer model family\n- `*-2k` / `*-4k`: High-resolution variants\n\nCommon parameters:\n- Text-to-image: `model + prompt`\n- Image editing: `model + prompt + image`, also compatible with `image_urls`\n- Common extensions: `n` `size` `quality` `response_format`\n\nExample:\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream Series\n\nPublic model:\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nCapabilities:\n- Use the text-to-image call uniformly\n- It is recommended to pass the standard parameter first: `prompt + model + size/aspect_ratio`\n\nCommon parameters:\n- `model + prompt`\n- Optional: `size` `aspect_ratio` `n`\n\n### 3.3 Kling Standard Image Main Model\n\nPublic base model:\n- `kling-image`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nCapabilities:\n- Text-to-image: `model + model_name + prompt`\n- Image-to-image: add `image` on top of text-to-image\n- Multi-image generation: pass `subject_image_list`, or pass multiple `image_urls/images`\n- Outpainting: pass `image` and the outpainting ratio parameter\n\nCommon parameters:\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni Image Main Model\n\nPublic base model:\n- `kling-omni-image`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-image-o1`\n- `kling-v3-omni`\n\nCommon parameters:\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling Virtual Try-On Model\n\nPublic model:\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nMinimum input parameters:\n- `model + human_image + cloth_image`\n\nDescription:\n- These two models are already complete primary models themselves, so there is no need to pass `model_name` again.\n\nExample:\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageGeneration",
         "tags": [
           "Image generationOpenAI DALL-E format"
@@ -635,7 +634,7 @@
       "post": {
         "summary": "Edit images (OpenAI Dall-E compatible)",
         "deprecated": false,
-        "description": "OpenAI Dall-E-format image editing API.\n\n- `POST /v1/images/edits`: Edit image\n\nStandard authentication headers:\n- `Content-Type: application/json`\n\n- `model: string`: Required, public model name\n- `prompt: string`: Recommended, image generation prompt\n- `n: number`: Optional, number of images to generate\n- `size: string`: Optional, size or resolution specification\n- `quality: string`: Optional, quality level\n- `response_format: string`: Optional, response format\n\nCommon compatible extension parameters:\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling Dedicated extension parameters:\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana Series\n\nPublic model:\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nCapabilities:\n- `nano-banana`: Basic text-to-image, also compatible with image editing\n- `nano-banana-pro*`: Higher-quality version\n- `nano-banana-2*`: Newer model family\n- `*-2k` / `*-4k`: High-resolution variants\n\nCommon parameters:\n- Text-to-image: `model + prompt`\n- Image editing: `model + prompt + image`, also compatible with `image_urls`\n- Common extensions: `n` `size` `quality` `response_format`\n\nExample:\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream Series\n\nPublic model:\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nCapabilities:\n- Use the text-to-image call uniformly\n- It is recommended to pass the standard parameter first: `prompt + model + size/aspect_ratio`\n\nCommon parameters:\n- `model + prompt`\n- Optional: `size` `aspect_ratio` `n`\n\n### 3.3 Kling Standard Image Main Model\n\nPublic base model:\n- `kling-image`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nCapabilities:\n- Text-to-image: `model + model_name + prompt`\n- Image-to-image: add `image` on top of text-to-image\n- Multi-image generation: pass `subject_image_list`, or pass multiple `image_urls/images`\n- Outpainting: pass `image` and the outpainting ratio parameter\n\nCommon parameters:\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni Image Main Model\n\nPublic base model:\n- `kling-omni-image`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-image-o1`\n- `kling-v3-omni`\n\nCommon parameters:\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling Virtual Try-On Model\n\nPublic model:\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nMinimum input parameters:\n- `model + human_image + cloth_image`\n\nDescription:\n- These two models are already complete primary models themselves, so there is no need to pass `model_name` again.\n\nExample:\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## Fixed pricing for image generation/editing\n\nThe following models are billed per request in `POST /v1/images/generations` and `POST /v1/images/edits`:\n\n| Model | Pricing |\n|---|---|\n| `kling-image-v3` | 0.05 / request |\n| `doubao-seedream-5-0-260128` | 0.05 / request |\n| `doubao-seedream-4-5-251128` | 0.06 / request |",
+        "description": "OpenAI Dall-E-format image editing API.\n\n- `POST /v1/images/edits`: Edit image\n\nStandard authentication headers:\n- `Content-Type: application/json`\n\n- `model: string`: Required, public model name\n- `prompt: string`: Recommended, image generation prompt\n- `n: number`: Optional, number of images to generate\n- `size: string`: Optional, size or resolution specification\n- `quality: string`: Optional, quality level\n- `response_format: string`: Optional, response format\n\nCommon compatible extension parameters:\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling Dedicated extension parameters:\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana Series\n\nPublic model:\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\nCapabilities:\n- `nano-banana`: Basic text-to-image, also compatible with image editing\n- `nano-banana-pro*`: Higher-quality version\n- `nano-banana-2*`: Newer model family\n- `*-2k` / `*-4k`: High-resolution variants\n\nCommon parameters:\n- Text-to-image: `model + prompt`\n- Image editing: `model + prompt + image`, also compatible with `image_urls`\n- Common extensions: `n` `size` `quality` `response_format`\n\nExample:\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream Series\n\nPublic model:\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\nCapabilities:\n- Use the text-to-image call uniformly\n- It is recommended to pass the standard parameter first: `prompt + model + size/aspect_ratio`\n\nCommon parameters:\n- `model + prompt`\n- Optional: `size` `aspect_ratio` `n`\n\n### 3.3 Kling Standard Image Main Model\n\nPublic base model:\n- `kling-image`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\nCapabilities:\n- Text-to-image: `model + model_name + prompt`\n- Image-to-image: add `image` on top of text-to-image\n- Multi-image generation: pass `subject_image_list`, or pass multiple `image_urls/images`\n- Outpainting: pass `image` and the outpainting ratio parameter\n\nCommon parameters:\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni Image Main Model\n\nPublic base model:\n- `kling-omni-image`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-image-o1`\n- `kling-v3-omni`\n\nCommon parameters:\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling Virtual Try-On Model\n\nPublic model:\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\nMinimum input parameters:\n- `model + human_image + cloth_image`\n\nDescription:\n- These two models are already complete primary models themselves, so there is no need to pass `model_name` again.\n\nExample:\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageEdit",
         "tags": [
           "Image generationOpenAI DALL-E format"
@@ -2135,8 +2134,8 @@
     },
     "/suno/submit/music": {
       "post": {
-        "summary": "Create a music generation task",
-        "description": "Music generation submission API, compatible with the legacy `/suno/submit/music` path. Returns a task ID, which can later be queried via `/suno/fetch/{task_id}`.\n\nMusic generation task submission API. The path remains `/suno/submit/music`; in practice, `upstream_model`, `music_model`, `engine`, `model_id`, or `modelId` can be used to select the generation engine. The creation API returns `task_id`, and the output can then be queried with `/suno/fetch/{task_id}`.\n\n## Prompt Description Mode\n\nSuitable for describing only the style, mood, language, singer type, and scenario, with the model automatically generating the song content.\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"\",\n \"make_instrumental\": false\n}\n```\n\n## Light Music or Instrumental Only\n\nYou can use `light_music=true` or `make_instrumental=true`. `light_music` indicates a preference for light music/background music, and `make_instrumental` indicates that no sung vocals will be generated.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## Advanced Lyrics Mode\n\nSuitable when the business side has already prepared the lyrics and needs to specify the title and style tags. `custom_mode=true` can be passed, and the lyrics field can use `lyrics`, `lyric`, `custom_lyrics`, or `customLyrics`.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Query\n\nAfter creation succeeds, save the returned `data` task ID, such as `task_xxx`, and call `GET /suno/fetch/{task_id}` to query the status, audio URL, cover, title, lyrics, and the upstream raw fragment information.",
+        "summary": "Create a music or sound generation task",
+        "description": "Music and audio generation submission API, compatible with the legacy `/suno/submit/music` path. Returns a task ID, which can later be queried through `/suno/fetch/{task_id}`.\n\nMusic and audio generation task submission API. The path remains `/suno/submit/music`, and you can choose the generation engine via `upstream_model`, `music_model`, `engine`, `model_id`, or `modelId`. The create API returns `task_id`, which can then be used to query the output through `/suno/fetch/{task_id}`.\n\nIf `upstream_model` is not provided (or only `{\"model\":\"suno_music\"}` is provided), Suno v5.5 is used by default. To continue using the legacy Suno version, explicitly pass `\"upstream_model\":\"suno-v5\"`.\n\n## New models\n\n| Type | `upstream_model` / Alias | `modelId` |\n| --- | --- | ---: |\n| Music | `suno-v5.5` / `chirp-fenix` | 128 |\n| Sound | `seed-audio-1.0` | 126 |\n| Sound | `minimax-speech-2.8-hd` / `speech-2.8-hd` | 127 |\n| Music | `lyria-3-pro` / `lyria-3-pro-preview` | 129 |\n\n## Prompt Description Mode\n\nSuitable for describing only the style, mood, language, singer type, and scenario, with the model automatically generating the song content.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v5.5\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## Audio generation\n\nMiniMax Speech can override voice parameters via `extraParams` (or top-level same-name snake_case/camelCase fields).\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nWhen no voice parameters are provided for MiniMax Speech, the server sends `voice`, `outputFormat=mp3`, `sampleRate=32000`, `speed=1`, `volume=1`, and `pitch=0` from the example above by default.\n\nLyria 3 Pro uses `upstream_model=lyria-3-pro` (or `lyria-3-pro-preview`):\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## Light Music or Instrumental Only\n\nYou can use `light_music=true` or `make_instrumental=true`. `light_music` indicates a preference for light music/background music, and `make_instrumental` indicates that no sung vocals will be generated.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## Advanced Lyrics Mode\n\nSuitable when the business side has already prepared the lyrics and needs to specify the title and style tags. `custom_mode=true` can be passed, and the lyrics field can use `lyrics`, `lyric`, `custom_lyrics`, or `customLyrics`.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Query\n\nAfter creation succeeds, save the returned `data` task ID, such as `task_xxx`, and call `GET /suno/fetch/{task_id}` to query the status, audio URL, cover, title, lyrics, and the upstream raw fragment information.",
         "tags": [
           "Music generation task format"
         ],
@@ -2161,8 +2160,8 @@
                   },
                   "upstream_model": {
                     "type": "string",
-                    "example": "suno-v5",
-                    "description": "Generation engine selection value."
+                    "example": "suno-v5.5",
+                    "description": "Generation engine selection value; defaults to `suno-v5.5`, explicitly pass `suno-v5` to keep the legacy version."
                   },
                   "music_model": {
                     "type": "string",
@@ -2173,11 +2172,25 @@
                     "description": "Compatibility alias for `upstream_model`."
                   },
                   "model_id": {
-                    "type": "string",
-                    "description": "Compatibility field for upstream model ID."
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      }
+                    ],
+                    "description": "camelCase-compatible field for `model_id`."
                   },
                   "modelId": {
-                    "type": "string",
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      }
+                    ],
                     "description": "camelCase-compatible field for `model_id`."
                   },
                   "prompt": {
@@ -2187,6 +2200,100 @@
                   "gpt_description_prompt": {
                     "type": "string",
                     "description": "Describes the compatibility field for prompt mode."
+                  },
+                  "extraParams": {
+                    "type": "object",
+                    "description": "Voice parameters for MiniMax Speech 2.8 HD; a snake_case-compatible field for `extraParams`.",
+                    "properties": {
+                      "voice": {
+                        "type": "string",
+                        "default": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85"
+                      },
+                      "outputFormat": {
+                        "type": "string",
+                        "default": "mp3"
+                      },
+                      "sampleRate": {
+                        "type": "integer",
+                        "default": 32000
+                      },
+                      "speed": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "volume": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "pitch": {
+                        "type": "number",
+                        "default": 0
+                      }
+                    },
+                    "additionalProperties": true
+                  },
+                  "extra_params": {
+                    "type": "object",
+                    "description": "Voice parameters for MiniMax Speech 2.8 HD; a snake_case-compatible field for `extraParams`.",
+                    "properties": {
+                      "voice": {
+                        "type": "string",
+                        "default": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85"
+                      },
+                      "outputFormat": {
+                        "type": "string",
+                        "default": "mp3"
+                      },
+                      "sampleRate": {
+                        "type": "integer",
+                        "default": 32000
+                      },
+                      "speed": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "volume": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "pitch": {
+                        "type": "number",
+                        "default": 0
+                      }
+                    },
+                    "additionalProperties": true
+                  },
+                  "voice": {
+                    "type": "string",
+                    "description": "MiniMax Speech 2.8 HD voice, can cover `extraParams.voice`."
+                  },
+                  "output_format": {
+                    "type": "string",
+                    "description": "MiniMax Speech 2.8 HD output format."
+                  },
+                  "outputFormat": {
+                    "type": "string",
+                    "description": "camelCase-compatible field for `output_format`."
+                  },
+                  "sample_rate": {
+                    "type": "integer",
+                    "description": "MiniMax Speech 2.8 HD sample rate."
+                  },
+                  "sampleRate": {
+                    "type": "integer",
+                    "description": "camelCase-compatible field for `sample_rate`."
+                  },
+                  "speed": {
+                    "type": "number",
+                    "description": "Speech rate, default 1."
+                  },
+                  "volume": {
+                    "type": "number",
+                    "description": "Volume, default 1."
+                  },
+                  "pitch": {
+                    "type": "number",
+                    "description": "Tone, default is 0."
                   },
                   "make_instrumental": {
                     "type": "boolean",
@@ -2249,12 +2356,44 @@
               },
               "examples": {
                 "music_submit_prompt": {
-                  "summary": "Music Description Generation",
+                  "summary": "Suno v5.5 Music Generation",
                   "value": {
                     "model": "suno_music",
-                    "upstream_model": "suno-v5",
+                    "upstream_model": "suno-v5.5",
                     "prompt": "Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"",
                     "make_instrumental": false
+                  }
+                },
+                "music_submit_lyria": {
+                  "summary": "Lyria 3 Pro music generation",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "lyria-3-pro",
+                    "prompt": "Cinematic orchestral music with a hopeful finale."
+                  }
+                },
+                "audio_submit_seed": {
+                  "summary": "Seed Audio 1.0 Audio Generation",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "seed-audio-1.0",
+                    "prompt": "清晨海边的浪声与远处海鸥声。"
+                  }
+                },
+                "audio_submit_minimax_speech": {
+                  "summary": "MiniMax Speech 2.8 HD",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "minimax-speech-2.8-hd",
+                    "prompt": "欢迎使用新版语音生成服务。",
+                    "extraParams": {
+                      "voice": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85",
+                      "outputFormat": "mp3",
+                      "sampleRate": 32000,
+                      "speed": 1,
+                      "volume": 1,
+                      "pitch": 0
+                    }
                   }
                 },
                 "music_submit_light": {
@@ -2324,14 +2463,14 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/en/music-generation-task-format/create-a-music-generation-task"
+          "href": "/api-reference/en/music-generation-task-format/create-a-music-or-sound-generation-task"
         }
       }
     },
     "/suno/fetch/{task_id}": {
       "get": {
         "summary": "Query a music task by ID",
-        "description": "Query the music generation task through path `task_id`.\n\nMusic generation task query API. The `data` returned by the create API is the task ID; use `GET /suno/fetch/{task_id}` to query a single task.\n\n## Query methods\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## Query output\n\nKeep the outer new-api task structure:\n\n- `code`: `success` on success.\n- `message`: Error or message information.\n- `data.task_id`: Task ID.\n- `data.status`: Task status, common values are `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, and `FAILURE`.\n- `data.progress`: Task progress.\n- `data.result_url`: Result URL available after success. If the upstream returns multiple songs, the fragment in `data.data` prevails.\n- `data.data`: Raw upstream music result data, usually containing an array or object of song fragments.\n\nSuccess example:\n\n```json\n{\n  \"code\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"task_id\": \"task_xxx\",\n    \"platform\": \"suno\",\n    \"action\": \"MUSIC\",\n    \"status\": \"SUCCESS\",\n    \"progress\": \"100%\",\n    \"result_url\": \"https://example.com/audio.mp3\",\n    \"properties\": {\n      \"upstream_model_name\": \"suno_music\",\n      \"origin_model_name\": \"suno-v5\"\n    },\n    \"data\": [\n      {\n        \"id\": \"clip_xxx\",\n        \"title\": \"夏日海风\",\n        \"audio_url\": \"https://example.com/audio.mp3\",\n        \"image_url\": \"https://example.com/cover.jpg\",\n        \"model_name\": \"suno-v5\",\n        \"metadata\": {\n          \"duration\": 180,\n          \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n        }\n      }\n    ]\n  }\n}\n```",
+        "description": "Query the music generation task through path `task_id`.\n\nMusic generation task query API. The `data` returned by the create API is the task ID; use `GET /suno/fetch/{task_id}` to query a single task.\n\n## Query methods\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## Query output\n\nKeep the outer new-api task structure:\n\n- `code`: `success` on success.\n- `message`: Error or message information.\n- `data.task_id`: Task ID.\n- `data.status`: Task status, common values are `NOT_START`, `SUBMITTED`, `QUEUED`, `IN_PROGRESS`, `SUCCESS`, and `FAILURE`.\n- `data.progress`: Task progress.\n- `data.result_url`: Result URL available after success. If the upstream returns multiple songs, the fragment in `data.data` prevails.\n- `data.data`: Raw upstream music result data, usually containing an array or object of song fragments.\n\nSuccess example:\n\n```json\n{\n  \"code\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"task_id\": \"task_xxx\",\n    \"platform\": \"suno\",\n    \"action\": \"MUSIC\",\n    \"status\": \"SUCCESS\",\n    \"progress\": \"100%\",\n    \"result_url\": \"https://example.com/audio.mp3\",\n    \"properties\": {\n      \"upstream_model_name\": \"suno_music\",\n      \"origin_model_name\": \"suno-v5.5\"\n    },\n    \"data\": [\n      {\n        \"id\": \"clip_xxx\",\n        \"title\": \"夏日海风\",\n        \"audio_url\": \"https://example.com/audio.mp3\",\n        \"image_url\": \"https://example.com/cover.jpg\",\n        \"model_name\": \"suno-v5.5\",\n        \"metadata\": {\n          \"duration\": 180,\n          \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n        }\n      }\n    ]\n  }\n}\n```",
         "tags": [
           "Music generation task format"
         ],
@@ -2431,7 +2570,7 @@
                         "result_url": "https://example.com/audio.mp3",
                         "properties": {
                           "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
+                          "origin_model_name": "suno-v5.5"
                         },
                         "data": [
                           {
@@ -2439,7 +2578,7 @@
                             "title": "夏日海风",
                             "audio_url": "https://example.com/audio.mp3",
                             "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
+                            "model_name": "suno-v5.5",
                             "metadata": {
                               "duration": 180,
                               "prompt": "轻快电子流行，夏日海边，女声 旋律"
@@ -2466,7 +2605,7 @@
     "/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
         "summary": "Create video(HappyHorse)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nHappyHorse Alibaba video generation API, with public paths following the official DashScope protocol.\n\nSupports 5 external models: `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, and `happyhorse-1.0-video-edit`. Among them, `happyhorse-1.0` is an aggregated model and requires `mode` to distinguish `t2v`, `i2v`, `r2v`, and `video_edit`.\n\nThe public API keeps the official endpoint format; channel-specific prefixes are only concatenated internally when the gateway requests a specific upstream channel. Clients do not need to pass `X-DashScope-Async` explicitly; it is handled by the gateway or the official channel adapter layer.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the HappyHorse Alibaba official video generation format; the public paths keep the official endpoint format.\n\nSupported models:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nUnified request fields:\n- `model` (string, required): HappyHorse external model name. The aggregated model `happyhorse-1.0` must be used with `mode`.\n- `mode` (string, optional): Aggregated model mode; common values are `t2v`, `i2v`, `r2v`, and `video_edit`. You can omit this for fixed submodels.\n- `input.prompt` (string, required): Prompt for video generation or editing.\n- `input.media` (array[object], optional): Multimedia input. Use `first_frame` for image-to-video, `reference_image` for reference-to-video, and `video` plus optional `reference_image` for video editing.\n- `parameters.duration` (integer, optional): Generation duration, billed by second.\n- `parameters.resolution` (string, optional): Output resolution; common values are `720P` and `1080P`.\n- `parameters.ratio` (string, optional): Output aspect ratio, commonly used for text-to-video and reference-to-video.\n- `parameters.watermark` (boolean, optional): Whether to add a watermark.\n- `parameters.seed` (integer, optional): Random seed.\n\nCommon model/mode differences:\n- `HappyHorse 聚合模型`: Supports model happyhorse-1.0; the aggregated model uses mode to distinguish the final model.\n- `HappyHorse 文生视频`: Supports model happyhorse-1.0-t2v; official-format text-to-video.\n- `HappyHorse 首帧图生视频`: Supports model happyhorse-1.0-i2v; official-format first-frame image-to-video.\n- `HappyHorse 参考生视频`: Supports model happyhorse-1.0-r2v; official-format multi-reference image-to-video.\n- `HappyHorse 视频编辑`: Supports model happyhorse-1.0-video-edit; official-format video editing.",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nHappyHorse Alibaba video generation API, with public paths following the official DashScope protocol.\n\nSupports 5 external models: `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, and `happyhorse-1.0-video-edit`. Among them, `happyhorse-1.0` is an aggregated model and requires `mode` to distinguish `t2v`, `i2v`, `r2v`, and `video_edit`.\n\nThe public API keeps the official endpoint format; channel-specific prefixes are only concatenated internally when the gateway requests a specific upstream channel. Clients do not need to pass `X-DashScope-Async` explicitly; it is handled by the gateway or the official channel adapter layer.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the HappyHorse Alibaba official video generation format; the public paths keep the official endpoint format.\n\nSupported models:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nUnified request fields:\n- `model` (string, required): HappyHorse external model name. The aggregated model `happyhorse-1.0` must be used with `mode`.\n- `mode` (string, optional): Aggregated model mode; common values are `t2v`, `i2v`, `r2v`, and `video_edit`. You can omit this for fixed submodels.\n- `input.prompt` (string, required): Prompt for video generation or editing.\n- `input.media` (array[object], optional): Multimedia input. Use `first_frame` for image-to-video, `reference_image` for reference-to-video, and `video` plus optional `reference_image` for video editing.\n- `parameters.duration` (integer, optional): Generation duration, in seconds.\n- `parameters.resolution` (string, optional): Output resolution; common values are `720P` and `1080P`.\n- `parameters.ratio` (string, optional): Output aspect ratio, commonly used for text-to-video and reference-to-video.\n- `parameters.watermark` (boolean, optional): Whether to add a watermark.\n- `parameters.seed` (integer, optional): Random seed.\n\nCommon model/mode differences:\n- `HappyHorse 聚合模型`: Supports model happyhorse-1.0; the aggregated model uses mode to distinguish the final model.\n- `HappyHorse 文生视频`: Supports model happyhorse-1.0-t2v; official-format text-to-video.\n- `HappyHorse 首帧图生视频`: Supports model happyhorse-1.0-i2v; official-format first-frame image-to-video.\n- `HappyHorse 参考生视频`: Supports model happyhorse-1.0-r2v; official-format multi-reference image-to-video.\n- `HappyHorse 视频编辑`: Supports model happyhorse-1.0-video-edit; official-format video editing.",
         "operationId": "create__happyhorse__task",
         "tags": [
           "Video generation HappyHorse"
@@ -2562,7 +2701,7 @@
                       "duration": {
                         "type": "integer",
                         "example": 5,
-                        "description": "Generation duration, billed per second."
+                        "description": "Generation duration in seconds."
                       },
                       "watermark": {
                         "type": "boolean",
@@ -2712,7 +2851,7 @@
                       "properties": {
                         "duration": {
                           "type": "string",
-                          "description": "Billable duration, in seconds."
+                          "description": "Generation duration in seconds."
                         },
                         "SR": {
                           "type": "string",
@@ -2739,7 +2878,7 @@
     "/api/v1/tasks/{task_id}": {
       "get": {
         "summary": "Query task (HappyHorse)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nHappyHorse Alibaba video generation API, with public paths following the official DashScope protocol.\n\nSupports 5 external models: `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, and `happyhorse-1.0-video-edit`. Among them, `happyhorse-1.0` is an aggregated model and requires `mode` to distinguish `t2v`, `i2v`, `r2v`, and `video_edit`.\n\nThe public API keeps the official endpoint format; channel-specific prefixes are only concatenated internally when the gateway requests a specific upstream channel. Clients do not need to pass `X-DashScope-Async` explicitly; it is handled by the gateway or the official channel adapter layer.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the HappyHorse Alibaba official video generation format; the public paths keep the official endpoint format.\n\nSupported models:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nUnified request fields:\n- `model` (string, required): HappyHorse external model name. The aggregated model `happyhorse-1.0` must be used with `mode`.\n- `mode` (string, optional): Aggregated model mode; common values are `t2v`, `i2v`, `r2v`, and `video_edit`. You can omit this for fixed submodels.\n- `input.prompt` (string, required): Prompt for video generation or editing.\n- `input.media` (array[object], optional): Multimedia input. Use `first_frame` for image-to-video, `reference_image` for reference-to-video, and `video` plus optional `reference_image` for video editing.\n- `parameters.duration` (integer, optional): Generation duration, billed by second.\n- `parameters.resolution` (string, optional): Output resolution; common values are `720P` and `1080P`.\n- `parameters.ratio` (string, optional): Output aspect ratio, commonly used for text-to-video and reference-to-video.\n- `parameters.watermark` (boolean, optional): Whether to add a watermark.\n- `parameters.seed` (integer, optional): Random seed.\n\nCommon model/mode differences:\n- `HappyHorse 聚合模型`: Supports model happyhorse-1.0; the aggregated model uses mode to distinguish the final model.\n- `HappyHorse 文生视频`: Supports model happyhorse-1.0-t2v; official-format text-to-video.\n- `HappyHorse 首帧图生视频`: Supports model happyhorse-1.0-i2v; official-format first-frame image-to-video.\n- `HappyHorse 参考生视频`: Supports model happyhorse-1.0-r2v; official-format multi-reference image-to-video.\n- `HappyHorse 视频编辑`: Supports model happyhorse-1.0-video-edit; official-format video editing.",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nHappyHorse Alibaba video generation API, with public paths following the official DashScope protocol.\n\nSupports 5 external models: `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, and `happyhorse-1.0-video-edit`. Among them, `happyhorse-1.0` is an aggregated model and requires `mode` to distinguish `t2v`, `i2v`, `r2v`, and `video_edit`.\n\nThe public API keeps the official endpoint format; channel-specific prefixes are only concatenated internally when the gateway requests a specific upstream channel. Clients do not need to pass `X-DashScope-Async` explicitly; it is handled by the gateway or the official channel adapter layer.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the HappyHorse Alibaba official video generation format; the public paths keep the official endpoint format.\n\nSupported models:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nUnified request fields:\n- `model` (string, required): HappyHorse external model name. The aggregated model `happyhorse-1.0` must be used with `mode`.\n- `mode` (string, optional): Aggregated model mode; common values are `t2v`, `i2v`, `r2v`, and `video_edit`. You can omit this for fixed submodels.\n- `input.prompt` (string, required): Prompt for video generation or editing.\n- `input.media` (array[object], optional): Multimedia input. Use `first_frame` for image-to-video, `reference_image` for reference-to-video, and `video` plus optional `reference_image` for video editing.\n- `parameters.duration` (integer, optional): Generation duration, in seconds.\n- `parameters.resolution` (string, optional): Output resolution; common values are `720P` and `1080P`.\n- `parameters.ratio` (string, optional): Output aspect ratio, commonly used for text-to-video and reference-to-video.\n- `parameters.watermark` (boolean, optional): Whether to add a watermark.\n- `parameters.seed` (integer, optional): Random seed.\n\nCommon model/mode differences:\n- `HappyHorse 聚合模型`: Supports model happyhorse-1.0; the aggregated model uses mode to distinguish the final model.\n- `HappyHorse 文生视频`: Supports model happyhorse-1.0-t2v; official-format text-to-video.\n- `HappyHorse 首帧图生视频`: Supports model happyhorse-1.0-i2v; official-format first-frame image-to-video.\n- `HappyHorse 参考生视频`: Supports model happyhorse-1.0-r2v; official-format multi-reference image-to-video.\n- `HappyHorse 视频编辑`: Supports model happyhorse-1.0-video-edit; official-format video editing.",
         "operationId": "query__happyhorse__task",
         "tags": [
           "Video generation HappyHorse"
@@ -2808,7 +2947,7 @@
                       "properties": {
                         "duration": {
                           "type": "integer",
-                          "description": "Billable duration, in seconds."
+                          "description": "Generation duration in seconds."
                         },
                         "SR": {
                           "type": "integer",
@@ -3116,10 +3255,6 @@
                     },
                     "resolution": {
                       "type": "string"
-                    },
-                    "credits": {
-                      "type": "integer",
-                      "description": "Points consumed for this task."
                     },
                     "created_at": {
                       "type": "string"
@@ -3441,10 +3576,6 @@
                     "resolution": {
                       "type": "string"
                     },
-                    "credits": {
-                      "type": "integer",
-                      "description": "Points consumed for this task."
-                    },
                     "created_at": {
                       "type": "string"
                     },
@@ -3765,10 +3896,6 @@
                     "resolution": {
                       "type": "string"
                     },
-                    "credits": {
-                      "type": "integer",
-                      "description": "Points consumed for this task."
-                    },
                     "created_at": {
                       "type": "string"
                     },
@@ -4088,10 +4215,6 @@
                     "resolution": {
                       "type": "string"
                     },
-                    "credits": {
-                      "type": "integer",
-                      "description": "Points consumed for this task."
-                    },
                     "created_at": {
                       "type": "string"
                     },
@@ -4175,10 +4298,6 @@
                     },
                     "err_code": {
                       "type": "string"
-                    },
-                    "credits": {
-                      "type": "integer",
-                      "description": "Points consumed for this task."
                     },
                     "payload": {
                       "type": "string"
@@ -7171,12 +7290,6 @@
           "group": {
             "type": "string"
           },
-          "quota": {
-            "type": "integer"
-          },
-          "used_quota": {
-            "type": "integer"
-          },
           "request_count": {
             "type": "integer"
           }
@@ -7237,12 +7350,6 @@
           },
           "expired_time": {
             "type": "integer"
-          },
-          "remain_quota": {
-            "type": "integer"
-          },
-          "unlimited_quota": {
-            "type": "boolean"
           }
         }
       },
@@ -7259,9 +7366,6 @@
             "type": "string"
           },
           "status": {
-            "type": "integer"
-          },
-          "quota": {
             "type": "integer"
           },
           "created_time": {

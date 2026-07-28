@@ -210,7 +210,7 @@
       "post": {
         "summary": "レスポンスを作成 (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API、モデルのレスポンスを作成するために使用します。\nマルチターン対話、ツール呼び出し、推論などの機能をサポートしています。\n\nOpenAI Responses API の画像生成非同期ユースケースを補足します。`background=true` はバックグラウンドタスクの送信用です。作成 API はすぐに `status=queued` と完全な `id` を返し、その後この `id` を使って `GET /v1/responses/{response_id}` を呼び出し、結果を照会します。\n\n## 非同期画像生成フロー\n\n1. `POST /v1/responses` を呼び出し、リクエストボディに `tools=[{ \"type\": \"image_generation\" }]` と `background=true` を指定します。\n2. 作成 API が返す完全な `id` を保存します。たとえば `resp_xxx` です。切り詰めたり、書き換えたり、`metadata.task_id` のみを保存したりしないでください。\n3. `GET /v1/responses/{response_id}` を呼び出して照会し、`status=completed` または `status=failed` になるまで続けます。\n4. 成功後、`output[].url` を読み取り、画像リンクを取得します。\n\n### 非同期画像タスクの作成例\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\n作成 API のレスポンス例：\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\",\n    \"credits\": \"23\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\n対応モデル：`gpt-image-2-2k`、`gpt-image-2-4k`、`nano-banana-pro`。",
+        "description": "OpenAI Responses API、モデルのレスポンスを作成するために使用します。\nマルチターン対話、ツール呼び出し、推論などの機能をサポートしています。\n\nOpenAI Responses API の画像生成非同期ユースケースを補足します。`background=true` はバックグラウンドタスクの送信用です。作成 API はすぐに `status=queued` と完全な `id` を返し、その後この `id` を使って `GET /v1/responses/{response_id}` を呼び出し、結果を照会します。\n\n## 非同期画像生成フロー\n\n1. `POST /v1/responses` を呼び出し、リクエストボディに `tools=[{ \"type\": \"image_generation\" }]` と `background=true` を指定します。\n2. 作成 API が返す完全な `id` を保存します。たとえば `resp_xxx` です。切り詰めたり、書き換えたり、`metadata.task_id` のみを保存したりしないでください。\n3. `GET /v1/responses/{response_id}` を呼び出して照会し、`status=completed` または `status=failed` になるまで続けます。\n4. 成功後、`output[].url` を読み取り、画像リンクを取得します。\n\n### 非同期画像タスクの作成例\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\n作成 API のレスポンス例：\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\n対応モデル：`gpt-image-2-2k`、`gpt-image-2-4k`、`nano-banana-pro`。",
         "operationId": "createResponse",
         "tags": [
           "OpenAI形式（Responses）"
@@ -261,8 +261,7 @@
                       "incomplete_details": null,
                       "instructions": null,
                       "metadata": {
-                        "task_id": "010c31178d26436ca6194cde07931b33",
-                        "credits": "23"
+                        "task_id": "010c31178d26436ca6194cde07931b33"
                       },
                       "model": "gpt-image-2-2k",
                       "object": "response",
@@ -307,7 +306,7 @@
       "post": {
         "summary": "Gemini 画像(Nano Banana)",
         "deprecated": false,
-        "description": "Gemini 画像生成。\n\nNano BananaシリーズはOpenAI Dall-E 形式をサポートします（詳細はリンク [画像生成OpenAI DALL-E 形式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F) を参照）。\n\nGemini 画像生成互換インターフェースです。`contents[].parts` にテキストまたは画像入力を入れ、`generationConfig.responseModalities` には通常 `IMAGE` を指定します。画像サイズは `generationConfig.imageConfig.imageSize` で制御します。\n\n## 画像生成の固定料金\n\n以下の画像モデルは1回ごとに課金されます：\n\n| モデル | 料金 |\n|---|---|\n| `kling-image-v3` | 0.05 / 回 |\n| `doubao-seedream-5-0-260128` | 0.05 / 回 |\n| `doubao-seedream-4-5-251128` | 0.06 / 回 |",
+        "description": "Gemini 画像生成。\n\nNano BananaシリーズはOpenAI Dall-E 形式をサポートします（詳細はリンク [画像生成OpenAI DALL-E 形式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F) を参照）。\n\nGemini 画像生成互換インターフェースです。`contents[].parts` にテキストまたは画像入力を入れ、`generationConfig.responseModalities` には通常 `IMAGE` を指定します。画像サイズは `generationConfig.imageConfig.imageSize` で制御します。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "画像生成Gemini形式"
@@ -462,7 +461,7 @@
       "post": {
         "summary": "画像を生成（OpenAI Dall-E互換）",
         "deprecated": false,
-        "description": "OpenAI Dall-E形式の画像生成API。\n\n- `POST /v1/images/generations`：画像生成タスクを作成\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、画像生成の説明\n- `n: number`：任意、生成枚数\n- `size: string`：任意、サイズまたは解像度の指定\n- `quality: string`：任意、品質レベル\n- `response_format: string`：任意、返却形式\n\nよく使われる互換拡張パラメータ：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 専用拡張パラメータ：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana シリーズ\n\n公開モデル：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n機能説明：\n- `nano-banana`：基本的なテキストから画像生成。画像編集にも対応\n- `nano-banana-pro*`：より高品質なバージョン\n- `nano-banana-2*`：更新されたバージョンファミリー\n- `*-2k` / `*-4k`：高解像度モデル\n\nよく使うパラメータ：\n- テキストから画像生成：`model + prompt`\n- 画像編集：`model + prompt + image`、`image_urls` にも対応\n- よく使われる拡張：`n` `size` `quality` `response_format`\n\n例:\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream シリーズ\n\n公開モデル：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n機能説明：\n- テキストから画像生成として統一して呼び出します\n- 標準パラメータを優先して渡すことを推奨します：`prompt + model + size/aspect_ratio`\n\nよく使うパラメータ：\n- `model + prompt`\n- 任意：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 汎用画像メインモデル\n\n公開メインモデル：\n- `kling-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n機能説明：\n- テキストから画像生成：`model + model_name + prompt`\n- 画像から画像生成：テキストから画像生成をベースに `image` を追加\n- 複数画像から画像生成：`subject_image_list` を渡すか、複数の `image_urls/images` を渡します\n- アウトペイント：`image` とアウトペイント比率パラメータを渡します\n\nよく使うパラメータ：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n例:\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni画像メインモデル\n\n公開メインモデル：\n- `kling-omni-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\nよく使うパラメータ：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n例:\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling バーチャル試着モデル\n\n公開モデル：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入力パラメータ：\n- `model + human_image + cloth_image`\n\n説明：\n- これら2つのモデル自体が完全なメインモデルであるため、`model_name` を追加で渡す必要はありません\n\n例:\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## 画像生成/編集の固定価格\n\n以下のモデルは `POST /v1/images/generations` と `POST /v1/images/edits` で従量課金されます：\n\n| モデル | 料金 |\n|---|---|\n| `kling-image-v3` | 0.05 / 回 |\n| `doubao-seedream-5-0-260128` | 0.05 / 回 |\n| `doubao-seedream-4-5-251128` | 0.06 / 回 |",
+        "description": "OpenAI Dall-E形式の画像生成API。\n\n- `POST /v1/images/generations`：画像生成タスクを作成\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、画像生成の説明\n- `n: number`：任意、生成枚数\n- `size: string`：任意、サイズまたは解像度の指定\n- `quality: string`：任意、品質レベル\n- `response_format: string`：任意、返却形式\n\nよく使われる互換拡張パラメータ：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 専用拡張パラメータ：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana シリーズ\n\n公開モデル：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n機能説明：\n- `nano-banana`：基本的なテキストから画像生成。画像編集にも対応\n- `nano-banana-pro*`：より高品質なバージョン\n- `nano-banana-2*`：更新されたバージョンファミリー\n- `*-2k` / `*-4k`：高解像度モデル\n\nよく使うパラメータ：\n- テキストから画像生成：`model + prompt`\n- 画像編集：`model + prompt + image`、`image_urls` にも対応\n- よく使われる拡張：`n` `size` `quality` `response_format`\n\n例:\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream シリーズ\n\n公開モデル：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n機能説明：\n- テキストから画像生成として統一して呼び出します\n- 標準パラメータを優先して渡すことを推奨します：`prompt + model + size/aspect_ratio`\n\nよく使うパラメータ：\n- `model + prompt`\n- 任意：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 汎用画像メインモデル\n\n公開メインモデル：\n- `kling-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n機能説明：\n- テキストから画像生成：`model + model_name + prompt`\n- 画像から画像生成：テキストから画像生成をベースに `image` を追加\n- 複数画像から画像生成：`subject_image_list` を渡すか、複数の `image_urls/images` を渡します\n- アウトペイント：`image` とアウトペイント比率パラメータを渡します\n\nよく使うパラメータ：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n例:\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni画像メインモデル\n\n公開メインモデル：\n- `kling-omni-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\nよく使うパラメータ：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n例:\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling バーチャル試着モデル\n\n公開モデル：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入力パラメータ：\n- `model + human_image + cloth_image`\n\n説明：\n- これら2つのモデル自体が完全なメインモデルであるため、`model_name` を追加で渡す必要はありません\n\n例:\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageGeneration",
         "tags": [
           "画像生成OpenAI DALL-E形式"
@@ -635,7 +634,7 @@
       "post": {
         "summary": "画像を編集する（OpenAI Dall-E互換）",
         "deprecated": false,
-        "description": "OpenAI Dall-E形式の画像編集インターフェース。\n\n- `POST /v1/images/edits`：画像を編集\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、画像生成の説明\n- `n: number`：任意、生成枚数\n- `size: string`：任意、サイズまたは解像度の指定\n- `quality: string`：任意、品質レベル\n- `response_format: string`：任意、返却形式\n\nよく使われる互換拡張パラメータ：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 専用拡張パラメータ：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana シリーズ\n\n公開モデル：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n機能説明：\n- `nano-banana`：基本的なテキストから画像生成。画像編集にも対応\n- `nano-banana-pro*`：より高品質なバージョン\n- `nano-banana-2*`：更新されたバージョンファミリー\n- `*-2k` / `*-4k`：高解像度モデル\n\nよく使うパラメータ：\n- テキストから画像生成：`model + prompt`\n- 画像編集：`model + prompt + image`、`image_urls` にも対応\n- よく使われる拡張：`n` `size` `quality` `response_format`\n\n例:\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream シリーズ\n\n公開モデル：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n機能説明：\n- テキストから画像生成として統一して呼び出します\n- 標準パラメータを優先して渡すことを推奨します：`prompt + model + size/aspect_ratio`\n\nよく使うパラメータ：\n- `model + prompt`\n- 任意：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 汎用画像メインモデル\n\n公開メインモデル：\n- `kling-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n機能説明：\n- テキストから画像生成：`model + model_name + prompt`\n- 画像から画像生成：テキストから画像生成をベースに `image` を追加\n- 複数画像から画像生成：`subject_image_list` を渡すか、複数の `image_urls/images` を渡します\n- アウトペイント：`image` とアウトペイント比率パラメータを渡します\n\nよく使うパラメータ：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n例:\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni画像メインモデル\n\n公開メインモデル：\n- `kling-omni-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\nよく使うパラメータ：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n例:\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling バーチャル試着モデル\n\n公開モデル：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入力パラメータ：\n- `model + human_image + cloth_image`\n\n説明：\n- これら2つのモデル自体が完全なメインモデルであるため、`model_name` を追加で渡す必要はありません\n\n例:\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## 画像生成/編集の固定価格\n\n以下のモデルは `POST /v1/images/generations` と `POST /v1/images/edits` で従量課金されます：\n\n| モデル | 料金 |\n|---|---|\n| `kling-image-v3` | 0.05 / 回 |\n| `doubao-seedream-5-0-260128` | 0.05 / 回 |\n| `doubao-seedream-4-5-251128` | 0.06 / 回 |",
+        "description": "OpenAI Dall-E形式の画像編集インターフェース。\n\n- `POST /v1/images/edits`：画像を編集\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、画像生成の説明\n- `n: number`：任意、生成枚数\n- `size: string`：任意、サイズまたは解像度の指定\n- `quality: string`：任意、品質レベル\n- `response_format: string`：任意、返却形式\n\nよく使われる互換拡張パラメータ：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 専用拡張パラメータ：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana シリーズ\n\n公開モデル：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n機能説明：\n- `nano-banana`：基本的なテキストから画像生成。画像編集にも対応\n- `nano-banana-pro*`：より高品質なバージョン\n- `nano-banana-2*`：更新されたバージョンファミリー\n- `*-2k` / `*-4k`：高解像度モデル\n\nよく使うパラメータ：\n- テキストから画像生成：`model + prompt`\n- 画像編集：`model + prompt + image`、`image_urls` にも対応\n- よく使われる拡張：`n` `size` `quality` `response_format`\n\n例:\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream シリーズ\n\n公開モデル：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n機能説明：\n- テキストから画像生成として統一して呼び出します\n- 標準パラメータを優先して渡すことを推奨します：`prompt + model + size/aspect_ratio`\n\nよく使うパラメータ：\n- `model + prompt`\n- 任意：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 汎用画像メインモデル\n\n公開メインモデル：\n- `kling-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n機能説明：\n- テキストから画像生成：`model + model_name + prompt`\n- 画像から画像生成：テキストから画像生成をベースに `image` を追加\n- 複数画像から画像生成：`subject_image_list` を渡すか、複数の `image_urls/images` を渡します\n- アウトペイント：`image` とアウトペイント比率パラメータを渡します\n\nよく使うパラメータ：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n例:\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni画像メインモデル\n\n公開メインモデル：\n- `kling-omni-image`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\nよく使うパラメータ：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n例:\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling バーチャル試着モデル\n\n公開モデル：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入力パラメータ：\n- `model + human_image + cloth_image`\n\n説明：\n- これら2つのモデル自体が完全なメインモデルであるため、`model_name` を追加で渡す必要はありません\n\n例:\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageEdit",
         "tags": [
           "画像生成OpenAI DALL-E形式"
@@ -2135,8 +2134,8 @@
     },
     "/suno/submit/music": {
       "post": {
-        "summary": "音楽生成タスクを作成する",
-        "description": "音楽生成の送信インターフェース。旧 `/suno/submit/music` パスと互換性があります。タスク ID を返し、後続は `/suno/fetch/{task_id}` で照会します。\n\n音楽生成タスクの送信インターフェース。パスは `/suno/submit/music` のままで、実際には `upstream_model`、`music_model`、`engine`、`model_id`、または `modelId` で生成エンジンを選択できます。作成インターフェースは `task_id` を返し、その後 `/suno/fetch/{task_id}` で出力を照会します。\n\n## プロンプト記述モード\n\nスタイル、感情、言語、歌手タイプ、シーンのみを記述する場合に適しており、モデルが自動的に楽曲内容を生成します。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"\",\n \"make_instrumental\": false\n}\n```\n\n## インストゥルメンタルまたは純伴奏\n\n`light_music=true` または `make_instrumental=true` を使用できます。`light_music` はインストゥルメンタル／BGM 寄りであることを示し、`make_instrumental` は歌唱ボーカルを生成しないことを示します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌詞の詳細モード\n\n業務側ですでに歌詞が用意されており、タイトルとスタイルタグを指定する必要がある場合に適しています。`custom_mode=true` を指定でき、歌詞フィールドには `lyrics`、`lyric`、`custom_lyrics`、または `customLyrics` を使用できます。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 照会\n\n作成成功後、返却された `data` のタスク ID を保存します。たとえば `task_xxx` です。`GET /suno/fetch/{task_id}` を呼び出して、状態、音声 URL、カバー、タイトル、歌詞、および上流から返された元のセグメント情報を照会します。",
+        "summary": "音楽または音声生成タスクを作成する",
+        "description": "音楽および音声生成の送信 API。旧 `/suno/submit/music` パスと互換性があります。タスク ID を返し、後続は `/suno/fetch/{task_id}` で確認します。\n\n音楽および音声生成タスクの送信 API。パスは `/suno/submit/music` のままで、実際の生成エンジンは `upstream_model`、`music_model`、`engine`、`model_id`、または `modelId` で選択できます。作成 API は `task_id` を返し、その後 `/suno/fetch/{task_id}` で出力を確認します。\n\n`upstream_model` を指定しない場合（または `{\"model\":\"suno_music\"}` のみを指定した場合）、既定で Suno v5.5 を使用します。旧版 Suno を引き続き使用する場合は、`\"upstream_model\":\"suno-v5\"` を明示的に指定してください。\n\n## 新規追加モデル\n\n| タイプ | `upstream_model` / 別名 | `modelId` |\n| --- | --- | ---: |\n| 音楽 | `suno-v5.5` / `chirp-fenix` | 128 |\n| 音声 | `seed-audio-1.0` | 126 |\n| 音声 | `minimax-speech-2.8-hd` / `speech-2.8-hd` | 127 |\n| 音楽 | `lyria-3-pro` / `lyria-3-pro-preview` | 129 |\n\n## プロンプト記述モード\n\nスタイル、感情、言語、歌手タイプ、シーンのみを記述する場合に適しており、モデルが自動的に楽曲内容を生成します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v5.5\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## 音声生成\n\nMiniMax Speech は `extraParams`（またはトップレベルの同名 snake_case/camelCase フィールド）を介して音声パラメーターをオーバーライドできます。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nMiniMax Speech で音声パラメータが未指定の場合、サーバーは既定で上記の `voice`、`outputFormat=mp3`、`sampleRate=32000`、`speed=1`、`volume=1`、`pitch=0` を送信します。\n\nLyria 3 Pro は `upstream_model=lyria-3-pro`（または `lyria-3-pro-preview`）を使用します：\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## インストゥルメンタルまたは純伴奏\n\n`light_music=true` または `make_instrumental=true` を使用できます。`light_music` はインストゥルメンタル／BGM 寄りであることを示し、`make_instrumental` は歌唱ボーカルを生成しないことを示します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌詞の詳細モード\n\n業務側ですでに歌詞が用意されており、タイトルとスタイルタグを指定する必要がある場合に適しています。`custom_mode=true` を指定でき、歌詞フィールドには `lyrics`、`lyric`、`custom_lyrics`、または `customLyrics` を使用できます。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 照会\n\n作成成功後、返却された `data` のタスク ID を保存します。たとえば `task_xxx` です。`GET /suno/fetch/{task_id}` を呼び出して、状態、音声 URL、カバー、タイトル、歌詞、および上流から返された元のセグメント情報を照会します。",
         "tags": [
           "音楽生成タスクの形式"
         ],
@@ -2161,8 +2160,8 @@
                   },
                   "upstream_model": {
                     "type": "string",
-                    "example": "suno-v5",
-                    "description": "生成エンジンの選択値。"
+                    "example": "suno-v5.5",
+                    "description": "生成エンジンの選択値。デフォルトは `suno-v5.5` で、`suno-v5` を明示的に指定すると旧版を維持できます。"
                   },
                   "music_model": {
                     "type": "string",
@@ -2173,11 +2172,25 @@
                     "description": "`upstream_model` の互換エイリアス。"
                   },
                   "model_id": {
-                    "type": "string",
-                    "description": "上位モデル ID 互換フィールド。"
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      }
+                    ],
+                    "description": "`model_id` の camelCase 互換フィールド。"
                   },
                   "modelId": {
-                    "type": "string",
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      }
+                    ],
                     "description": "`model_id` の camelCase 互換フィールド。"
                   },
                   "prompt": {
@@ -2187,6 +2200,100 @@
                   "gpt_description_prompt": {
                     "type": "string",
                     "description": "記述モードのプロンプト互換フィールド。"
+                  },
+                  "extraParams": {
+                    "type": "object",
+                    "description": "MiniMax Speech 2.8 HD の音声パラメータ。`extraParams` の snake_case 互換フィールドです。",
+                    "properties": {
+                      "voice": {
+                        "type": "string",
+                        "default": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85"
+                      },
+                      "outputFormat": {
+                        "type": "string",
+                        "default": "mp3"
+                      },
+                      "sampleRate": {
+                        "type": "integer",
+                        "default": 32000
+                      },
+                      "speed": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "volume": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "pitch": {
+                        "type": "number",
+                        "default": 0
+                      }
+                    },
+                    "additionalProperties": true
+                  },
+                  "extra_params": {
+                    "type": "object",
+                    "description": "MiniMax Speech 2.8 HD の音声パラメータ。`extraParams` の snake_case 互換フィールドです。",
+                    "properties": {
+                      "voice": {
+                        "type": "string",
+                        "default": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85"
+                      },
+                      "outputFormat": {
+                        "type": "string",
+                        "default": "mp3"
+                      },
+                      "sampleRate": {
+                        "type": "integer",
+                        "default": 32000
+                      },
+                      "speed": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "volume": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "pitch": {
+                        "type": "number",
+                        "default": 0
+                      }
+                    },
+                    "additionalProperties": true
+                  },
+                  "voice": {
+                    "type": "string",
+                    "description": "MiniMax Speech 2.8 HDの音色。`extraParams.voice` を上書きできます。"
+                  },
+                  "output_format": {
+                    "type": "string",
+                    "description": "MiniMax Speech 2.8 HD の出力形式。"
+                  },
+                  "outputFormat": {
+                    "type": "string",
+                    "description": "`output_format` の camelCase 互換フィールド。"
+                  },
+                  "sample_rate": {
+                    "type": "integer",
+                    "description": "MiniMax Speech 2.8 HD のサンプリングレート。"
+                  },
+                  "sampleRate": {
+                    "type": "integer",
+                    "description": "`sample_rate` の camelCase 互換フィールド。"
+                  },
+                  "speed": {
+                    "type": "number",
+                    "description": "話速。既定値は 1 です。"
+                  },
+                  "volume": {
+                    "type": "number",
+                    "description": "音量。デフォルトは 1。"
+                  },
+                  "pitch": {
+                    "type": "number",
+                    "description": "ピッチ。デフォルトは 0 です。"
                   },
                   "make_instrumental": {
                     "type": "boolean",
@@ -2249,12 +2356,44 @@
               },
               "examples": {
                 "music_submit_prompt": {
-                  "summary": "音楽説明生成",
+                  "summary": "Suno v5.5 音楽生成",
                   "value": {
                     "model": "suno_music",
-                    "upstream_model": "suno-v5",
+                    "upstream_model": "suno-v5.5",
                     "prompt": "Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"",
                     "make_instrumental": false
+                  }
+                },
+                "music_submit_lyria": {
+                  "summary": "Lyria 3 Pro 音楽生成",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "lyria-3-pro",
+                    "prompt": "Cinematic orchestral music with a hopeful finale."
+                  }
+                },
+                "audio_submit_seed": {
+                  "summary": "Seed Audio 1.0 音声生成",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "seed-audio-1.0",
+                    "prompt": "清晨海边的浪声与远处海鸥声。"
+                  }
+                },
+                "audio_submit_minimax_speech": {
+                  "summary": "MiniMax Speech 2.8 HD",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "minimax-speech-2.8-hd",
+                    "prompt": "欢迎使用新版语音生成服务。",
+                    "extraParams": {
+                      "voice": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85",
+                      "outputFormat": "mp3",
+                      "sampleRate": 32000,
+                      "speed": 1,
+                      "volume": 1,
+                      "pitch": 0
+                    }
                   }
                 },
                 "music_submit_light": {
@@ -2324,14 +2463,14 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/ja/音楽生成タスクの形式/音楽生成タスクを作成する"
+          "href": "/api-reference/ja/音楽生成タスクの形式/音楽または音声生成タスクを作成する"
         }
       }
     },
     "/suno/fetch/{task_id}": {
       "get": {
         "summary": "ID で音楽タスクを照会",
-        "description": "path `task_id` で音楽生成タスクを照会します。\n\n音楽生成タスクの照会インターフェースです。作成インターフェースが返す `data` がタスク ID であり、`GET /suno/fetch/{task_id}` を通じて単一タスクを照会します。\n\n## 取得方法\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## 取得結果\n\n外側は new-api のタスク構造を維持します：\n\n- `code`：成功時は `success` です。\n- `message`：エラーまたは案内メッセージ。\n- `data.task_id`：タスク ID。\n- `data.status`：タスクの状態。代表的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。\n- `data.progress`：タスクの進捗。\n- `data.result_url`：成功後に利用可能な結果URL。上流が複数曲を返す場合は、`data.data` 内のスニペットを基準とします。\n- `data.data`：上流の音楽結果の生データ。通常は曲のスニペットの配列またはオブジェクトを含みます。\n\n成功時の例：\n\n```json\n{\n  \"code\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"task_id\": \"task_xxx\",\n    \"platform\": \"suno\",\n    \"action\": \"MUSIC\",\n    \"status\": \"SUCCESS\",\n    \"progress\": \"100%\",\n    \"result_url\": \"https://example.com/audio.mp3\",\n    \"properties\": {\n      \"upstream_model_name\": \"suno_music\",\n      \"origin_model_name\": \"suno-v5\"\n    },\n    \"data\": [\n      {\n        \"id\": \"clip_xxx\",\n        \"title\": \"夏日海风\",\n        \"audio_url\": \"https://example.com/audio.mp3\",\n        \"image_url\": \"https://example.com/cover.jpg\",\n        \"model_name\": \"suno-v5\",\n        \"metadata\": {\n          \"duration\": 180,\n          \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n        }\n      }\n    ]\n  }\n}\n```",
+        "description": "path `task_id` で音楽生成タスクを照会します。\n\n音楽生成タスクの照会インターフェースです。作成インターフェースが返す `data` がタスク ID であり、`GET /suno/fetch/{task_id}` を通じて単一タスクを照会します。\n\n## 取得方法\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## 取得結果\n\n外側は new-api のタスク構造を維持します：\n\n- `code`：成功時は `success` です。\n- `message`：エラーまたは案内メッセージ。\n- `data.task_id`：タスク ID。\n- `data.status`：タスクの状態。代表的な値は `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE` です。\n- `data.progress`：タスクの進捗。\n- `data.result_url`：成功後に利用可能な結果URL。上流が複数曲を返す場合は、`data.data` 内のスニペットを基準とします。\n- `data.data`：上流の音楽結果の生データ。通常は曲のスニペットの配列またはオブジェクトを含みます。\n\n成功時の例：\n\n```json\n{\n  \"code\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"task_id\": \"task_xxx\",\n    \"platform\": \"suno\",\n    \"action\": \"MUSIC\",\n    \"status\": \"SUCCESS\",\n    \"progress\": \"100%\",\n    \"result_url\": \"https://example.com/audio.mp3\",\n    \"properties\": {\n      \"upstream_model_name\": \"suno_music\",\n      \"origin_model_name\": \"suno-v5.5\"\n    },\n    \"data\": [\n      {\n        \"id\": \"clip_xxx\",\n        \"title\": \"夏日海风\",\n        \"audio_url\": \"https://example.com/audio.mp3\",\n        \"image_url\": \"https://example.com/cover.jpg\",\n        \"model_name\": \"suno-v5.5\",\n        \"metadata\": {\n          \"duration\": 180,\n          \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n        }\n      }\n    ]\n  }\n}\n```",
         "tags": [
           "音楽生成タスクの形式"
         ],
@@ -2431,7 +2570,7 @@
                         "result_url": "https://example.com/audio.mp3",
                         "properties": {
                           "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
+                          "origin_model_name": "suno-v5.5"
                         },
                         "data": [
                           {
@@ -2439,7 +2578,7 @@
                             "title": "夏日海风",
                             "audio_url": "https://example.com/audio.mp3",
                             "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
+                            "model_name": "suno-v5.5",
                             "metadata": {
                               "duration": 180,
                               "prompt": "轻快电子流行，夏日海边，女声 旋律"
@@ -2466,7 +2605,7 @@
     "/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
         "summary": "動画を作成(HappyHorse)",
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nHappyHorse アリの動画生成API。公開パスは DashScope の公式プロトコルに従います。\n\n対外公開モデルは 5 つサポートしています：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。このうち `happyhorse-1.0` は集約モデルで、`mode` により `t2v`、`i2v`、`r2v`、`video_edit` を区別する必要があります。\n\n公開APIは公式エンドポイント形式を維持します。チャネル専用プレフィックスは、ゲートウェイが特定の上流チャネルにリクエストする際の内部連結にのみ使用します。クライアントが `X-DashScope-Async` を明示的に渡す必要はなく、ゲートウェイまたは公式チャネル適配層が処理します。\n\nHappyHorse アリ公式の動画生成フォーマットにおける公開リクエストの骨子、タスク照会構造、および推奨検証テンプレートを補足します。公開パスは公式エンドポイント形式を維持します。\n\n対応モデル：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n共通リクエストフィールド：\n- `model` (string, 必須): HappyHorse の対外モデル名。集約モデル `happyhorse-1.0` は `mode` と併用する必要があります。\n- `mode` (string, 任意): 集約モデルのモード。一般的な値は `t2v`、`i2v`、`r2v`、`video_edit` です。固定サブモデルの場合は省略できます。\n- `input.prompt` (string, 必須): 動画生成または編集のプロンプト。\n- `input.media` (array[object], 任意): マルチメディア入力。画像から動画では `first_frame` を使用し、参照動画生成では `reference_image` を使用し、動画編集では `video` と任意の `reference_image` を使用します。\n- `parameters.duration` (integer, 任意): 生成時間。秒単位で課金されます。\n- `parameters.resolution` (string, 任意): 出力解像度。一般的な値は `720P`、`1080P` です。\n- `parameters.ratio` (string, 任意): 出力アスペクト比。テキストから動画、参照から動画でよく使用されます。\n- `parameters.watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n- `parameters.seed` (integer, 任意): 乱数シード。\n\n代表的なモデル/モードの違い：\n- `HappyHorse 聚合模型`: 対応モデルは happyhorse-1.0。集約モデルは mode で最終モデルを区別します。\n- `HappyHorse 文生视频`: 対応モデルは happyhorse-1.0-t2v。公式フォーマットのテキストから動画です。\n- `HappyHorse 首帧图生视频`: 対応モデルは happyhorse-1.0-i2v。公式フォーマットの先頭フレーム画像から動画です。\n- `HappyHorse 参考生视频`: 対応モデルは happyhorse-1.0-r2v。公式フォーマットの複数参照画像から動画です。\n- `HappyHorse 视频编辑`: 対応モデルは happyhorse-1.0-video-edit。公式フォーマットの動画編集です。",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nHappyHorse アリの動画生成API。公開パスは DashScope の公式プロトコルに従います。\n\n対外公開モデルは 5 つサポートしています：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。このうち `happyhorse-1.0` は集約モデルで、`mode` により `t2v`、`i2v`、`r2v`、`video_edit` を区別する必要があります。\n\n公開APIは公式エンドポイント形式を維持します。チャネル専用プレフィックスは、ゲートウェイが特定の上流チャネルにリクエストする際の内部連結にのみ使用します。クライアントが `X-DashScope-Async` を明示的に渡す必要はなく、ゲートウェイまたは公式チャネル適配層が処理します。\n\nHappyHorse アリ公式の動画生成フォーマットにおける公開リクエストの骨子、タスク照会構造、および推奨検証テンプレートを補足します。公開パスは公式エンドポイント形式を維持します。\n\n対応モデル：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n共通リクエストフィールド：\n- `model` (string, 必須): HappyHorse の対外モデル名。集約モデル `happyhorse-1.0` は `mode` と併用する必要があります。\n- `mode` (string, 任意): 集約モデルのモード。一般的な値は `t2v`、`i2v`、`r2v`、`video_edit` です。固定サブモデルの場合は省略できます。\n- `input.prompt` (string, 必須): 動画生成または編集のプロンプト。\n- `input.media` (array[object], 任意): マルチメディア入力。画像から動画では `first_frame` を使用し、参照動画生成では `reference_image` を使用し、動画編集では `video` と任意の `reference_image` を使用します。\n- `parameters.duration` (integer, 任意): 生成時間（秒単位）。\n- `parameters.resolution` (string, 任意): 出力解像度。一般的な値は `720P`、`1080P` です。\n- `parameters.ratio` (string, 任意): 出力アスペクト比。テキストから動画、参照から動画でよく使用されます。\n- `parameters.watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n- `parameters.seed` (integer, 任意): 乱数シード。\n\n代表的なモデル/モードの違い：\n- `HappyHorse 聚合模型`: 対応モデルは happyhorse-1.0。集約モデルは mode で最終モデルを区別します。\n- `HappyHorse 文生视频`: 対応モデルは happyhorse-1.0-t2v。公式フォーマットのテキストから動画です。\n- `HappyHorse 首帧图生视频`: 対応モデルは happyhorse-1.0-i2v。公式フォーマットの先頭フレーム画像から動画です。\n- `HappyHorse 参考生视频`: 対応モデルは happyhorse-1.0-r2v。公式フォーマットの複数参照画像から動画です。\n- `HappyHorse 视频编辑`: 対応モデルは happyhorse-1.0-video-edit。公式フォーマットの動画編集です。",
         "operationId": "create__happyhorse__task",
         "tags": [
           "動画生成HappyHorseアリ"
@@ -2562,7 +2701,7 @@
                       "duration": {
                         "type": "integer",
                         "example": 5,
-                        "description": "生成時間。秒単位で課金されます。"
+                        "description": "生成時間（秒）。"
                       },
                       "watermark": {
                         "type": "boolean",
@@ -2712,7 +2851,7 @@
                       "properties": {
                         "duration": {
                           "type": "string",
-                          "description": "課金対象の通話時間。単位は秒です。"
+                          "description": "生成時間（秒）。"
                         },
                         "SR": {
                           "type": "string",
@@ -2739,7 +2878,7 @@
     "/api/v1/tasks/{task_id}": {
       "get": {
         "summary": "タスクを照会(HappyHorse)",
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nHappyHorse アリの動画生成API。公開パスは DashScope の公式プロトコルに従います。\n\n対外公開モデルは 5 つサポートしています：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。このうち `happyhorse-1.0` は集約モデルで、`mode` により `t2v`、`i2v`、`r2v`、`video_edit` を区別する必要があります。\n\n公開APIは公式エンドポイント形式を維持します。チャネル専用プレフィックスは、ゲートウェイが特定の上流チャネルにリクエストする際の内部連結にのみ使用します。クライアントが `X-DashScope-Async` を明示的に渡す必要はなく、ゲートウェイまたは公式チャネル適配層が処理します。\n\nHappyHorse アリ公式の動画生成フォーマットにおける公開リクエストの骨子、タスク照会構造、および推奨検証テンプレートを補足します。公開パスは公式エンドポイント形式を維持します。\n\n対応モデル：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n共通リクエストフィールド：\n- `model` (string, 必須): HappyHorse の対外モデル名。集約モデル `happyhorse-1.0` は `mode` と併用する必要があります。\n- `mode` (string, 任意): 集約モデルのモード。一般的な値は `t2v`、`i2v`、`r2v`、`video_edit` です。固定サブモデルの場合は省略できます。\n- `input.prompt` (string, 必須): 動画生成または編集のプロンプト。\n- `input.media` (array[object], 任意): マルチメディア入力。画像から動画では `first_frame` を使用し、参照動画生成では `reference_image` を使用し、動画編集では `video` と任意の `reference_image` を使用します。\n- `parameters.duration` (integer, 任意): 生成時間。秒単位で課金されます。\n- `parameters.resolution` (string, 任意): 出力解像度。一般的な値は `720P`、`1080P` です。\n- `parameters.ratio` (string, 任意): 出力アスペクト比。テキストから動画、参照から動画でよく使用されます。\n- `parameters.watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n- `parameters.seed` (integer, 任意): 乱数シード。\n\n代表的なモデル/モードの違い：\n- `HappyHorse 聚合模型`: 対応モデルは happyhorse-1.0。集約モデルは mode で最終モデルを区別します。\n- `HappyHorse 文生视频`: 対応モデルは happyhorse-1.0-t2v。公式フォーマットのテキストから動画です。\n- `HappyHorse 首帧图生视频`: 対応モデルは happyhorse-1.0-i2v。公式フォーマットの先頭フレーム画像から動画です。\n- `HappyHorse 参考生视频`: 対応モデルは happyhorse-1.0-r2v。公式フォーマットの複数参照画像から動画です。\n- `HappyHorse 视频编辑`: 対応モデルは happyhorse-1.0-video-edit。公式フォーマットの動画編集です。",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nHappyHorse アリの動画生成API。公開パスは DashScope の公式プロトコルに従います。\n\n対外公開モデルは 5 つサポートしています：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。このうち `happyhorse-1.0` は集約モデルで、`mode` により `t2v`、`i2v`、`r2v`、`video_edit` を区別する必要があります。\n\n公開APIは公式エンドポイント形式を維持します。チャネル専用プレフィックスは、ゲートウェイが特定の上流チャネルにリクエストする際の内部連結にのみ使用します。クライアントが `X-DashScope-Async` を明示的に渡す必要はなく、ゲートウェイまたは公式チャネル適配層が処理します。\n\nHappyHorse アリ公式の動画生成フォーマットにおける公開リクエストの骨子、タスク照会構造、および推奨検証テンプレートを補足します。公開パスは公式エンドポイント形式を維持します。\n\n対応モデル：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n共通リクエストフィールド：\n- `model` (string, 必須): HappyHorse の対外モデル名。集約モデル `happyhorse-1.0` は `mode` と併用する必要があります。\n- `mode` (string, 任意): 集約モデルのモード。一般的な値は `t2v`、`i2v`、`r2v`、`video_edit` です。固定サブモデルの場合は省略できます。\n- `input.prompt` (string, 必須): 動画生成または編集のプロンプト。\n- `input.media` (array[object], 任意): マルチメディア入力。画像から動画では `first_frame` を使用し、参照動画生成では `reference_image` を使用し、動画編集では `video` と任意の `reference_image` を使用します。\n- `parameters.duration` (integer, 任意): 生成時間（秒単位）。\n- `parameters.resolution` (string, 任意): 出力解像度。一般的な値は `720P`、`1080P` です。\n- `parameters.ratio` (string, 任意): 出力アスペクト比。テキストから動画、参照から動画でよく使用されます。\n- `parameters.watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n- `parameters.seed` (integer, 任意): 乱数シード。\n\n代表的なモデル/モードの違い：\n- `HappyHorse 聚合模型`: 対応モデルは happyhorse-1.0。集約モデルは mode で最終モデルを区別します。\n- `HappyHorse 文生视频`: 対応モデルは happyhorse-1.0-t2v。公式フォーマットのテキストから動画です。\n- `HappyHorse 首帧图生视频`: 対応モデルは happyhorse-1.0-i2v。公式フォーマットの先頭フレーム画像から動画です。\n- `HappyHorse 参考生视频`: 対応モデルは happyhorse-1.0-r2v。公式フォーマットの複数参照画像から動画です。\n- `HappyHorse 视频编辑`: 対応モデルは happyhorse-1.0-video-edit。公式フォーマットの動画編集です。",
         "operationId": "query__happyhorse__task",
         "tags": [
           "動画生成HappyHorseアリ"
@@ -2808,7 +2947,7 @@
                       "properties": {
                         "duration": {
                           "type": "integer",
-                          "description": "課金対象の通話時間。単位は秒です。"
+                          "description": "生成時間（秒）。"
                         },
                         "SR": {
                           "type": "integer",
@@ -3116,10 +3255,6 @@
                     },
                     "resolution": {
                       "type": "string"
-                    },
-                    "credits": {
-                      "type": "integer",
-                      "description": "今回のタスクで消費されたポイント。"
                     },
                     "created_at": {
                       "type": "string"
@@ -3441,10 +3576,6 @@
                     "resolution": {
                       "type": "string"
                     },
-                    "credits": {
-                      "type": "integer",
-                      "description": "今回のタスクで消費されたポイント。"
-                    },
                     "created_at": {
                       "type": "string"
                     },
@@ -3765,10 +3896,6 @@
                     "resolution": {
                       "type": "string"
                     },
-                    "credits": {
-                      "type": "integer",
-                      "description": "今回のタスクで消費されたポイント。"
-                    },
                     "created_at": {
                       "type": "string"
                     },
@@ -4088,10 +4215,6 @@
                     "resolution": {
                       "type": "string"
                     },
-                    "credits": {
-                      "type": "integer",
-                      "description": "今回のタスクで消費されたポイント。"
-                    },
                     "created_at": {
                       "type": "string"
                     },
@@ -4175,10 +4298,6 @@
                     },
                     "err_code": {
                       "type": "string"
-                    },
-                    "credits": {
-                      "type": "integer",
-                      "description": "今回のタスクで消費されたポイント。"
                     },
                     "payload": {
                       "type": "string"
@@ -7171,12 +7290,6 @@
           "group": {
             "type": "string"
           },
-          "quota": {
-            "type": "integer"
-          },
-          "used_quota": {
-            "type": "integer"
-          },
           "request_count": {
             "type": "integer"
           }
@@ -7237,12 +7350,6 @@
           },
           "expired_time": {
             "type": "integer"
-          },
-          "remain_quota": {
-            "type": "integer"
-          },
-          "unlimited_quota": {
-            "type": "boolean"
           }
         }
       },
@@ -7259,9 +7366,6 @@
             "type": "string"
           },
           "status": {
-            "type": "integer"
-          },
-          "quota": {
             "type": "integer"
           },
           "created_time": {

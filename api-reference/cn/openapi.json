@@ -210,7 +210,7 @@
       "post": {
         "summary": "创建响应 (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API，用于创建模型响应。\n支持多轮对话、工具调用、推理等功能。\n\n补充 OpenAI Responses API 的图片生成异步用例。`background=true` 用于提交后台任务，创建接口会立即返回 `status=queued` 和完整 `id`，随后使用该 `id` 调用 `GET /v1/responses/{response_id}` 查询结果。\n\n## 异步图片生成流程\n\n1. 调用 `POST /v1/responses`，请求体中传 `tools=[{ \"type\": \"image_generation\" }]` 且 `background=true`。\n2. 保存创建接口返回的完整 `id`，例如 `resp_xxx`。不要截断、重写或只保存 `metadata.task_id`。\n3. 调用 `GET /v1/responses/{response_id}` 查询，直到 `status=completed` 或 `status=failed`。\n4. 成功后读取 `output[].url` 获取图片链接。\n\n### 创建异步图片任务示例\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\n创建接口返回示例：\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\",\n    \"credits\": \"23\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\n支持模型：`gpt-image-2-2k`、`gpt-image-2-4k`、`nano-banana-pro`。",
+        "description": "OpenAI Responses API，用于创建模型响应。\n支持多轮对话、工具调用、推理等功能。\n\n补充 OpenAI Responses API 的图片生成异步用例。`background=true` 用于提交后台任务，创建接口会立即返回 `status=queued` 和完整 `id`，随后使用该 `id` 调用 `GET /v1/responses/{response_id}` 查询结果。\n\n## 异步图片生成流程\n\n1. 调用 `POST /v1/responses`，请求体中传 `tools=[{ \"type\": \"image_generation\" }]` 且 `background=true`。\n2. 保存创建接口返回的完整 `id`，例如 `resp_xxx`。不要截断、重写或只保存 `metadata.task_id`。\n3. 调用 `GET /v1/responses/{response_id}` 查询，直到 `status=completed` 或 `status=failed`。\n4. 成功后读取 `output[].url` 获取图片链接。\n\n### 创建异步图片任务示例\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\n创建接口返回示例：\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\n支持模型：`gpt-image-2-2k`、`gpt-image-2-4k`、`nano-banana-pro`。",
         "operationId": "createResponse",
         "tags": [
           "OpenAI格式(Responses)"
@@ -261,8 +261,7 @@
                       "incomplete_details": null,
                       "instructions": null,
                       "metadata": {
-                        "task_id": "010c31178d26436ca6194cde07931b33",
-                        "credits": "23"
+                        "task_id": "010c31178d26436ca6194cde07931b33"
                       },
                       "model": "gpt-image-2-2k",
                       "object": "response",
@@ -307,7 +306,7 @@
       "post": {
         "summary": "Gemini 图片(Nano Banana)",
         "deprecated": false,
-        "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成OpenAI DALL-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)）。\n\nGemini 图片生成兼容接口。`contents[].parts` 中放文本或图片输入，`generationConfig.responseModalities` 通常传 `IMAGE`，图片尺寸通过 `generationConfig.imageConfig.imageSize` 控制。\n\n## 图片生成固定计价\n\n以下图片模型按次计费：\n\n| 模型 | 计价 |\n|---|---|\n| `kling-image-v3` | 0.05 / 次 |\n| `doubao-seedream-5-0-260128` | 0.05 / 次 |\n| `doubao-seedream-4-5-251128` | 0.06 / 次 |",
+        "description": "Gemini 图片生成。\n\nNano Banana系列支持OpenAI Dall-E格式（详见链接 [图片生成OpenAI DALL-E格式](#tag/%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90OpenAI%20DALL-E%E6%A0%BC%E5%BC%8F)）。\n\nGemini 图片生成兼容接口。`contents[].parts` 中放文本或图片输入，`generationConfig.responseModalities` 通常传 `IMAGE`，图片尺寸通过 `generationConfig.imageConfig.imageSize` 控制。",
         "operationId": "geminiRelayV1Beta",
         "tags": [
           "图片生成Gemini格式"
@@ -462,7 +461,7 @@
       "post": {
         "summary": "生成图像（OpenAI Dall-E兼容）",
         "deprecated": false,
-        "description": "OpenAI Dall-E格式图片生成接口。\n\n- `POST /v1/images/generations`：创建图片生成任务\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，图片生成描述\n- `n: number`：可选，生成张数\n- `size: string`：可选，尺寸或分辨率表达\n- `quality: string`：可选，质量等级\n- `response_format: string`：可选，返回格式\n\n常用兼容扩展参数：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 专用扩展参数：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana 系列\n\n对外模型：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n能力说明：\n- `nano-banana`：基础文生图，也兼容图编辑\n- `nano-banana-pro*`：更高质量版本\n- `nano-banana-2*`：更新版本族\n- `*-2k` / `*-4k`：高分辨率型号\n\n常用参数：\n- 文生图：`model + prompt`\n- 图编辑：`model + prompt + image`，也兼容 `image_urls`\n- 常用扩展：`n` `size` `quality` `response_format`\n\n示例：\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream 系列\n\n对外模型：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n能力说明：\n- 统一按文生图调用\n- 建议优先传标准参数：`prompt + model + size/aspect_ratio`\n\n常用参数：\n- `model + prompt`\n- 可选：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 常规图片主模型\n\n对外主模型：\n- `kling-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n能力说明：\n- 文生图：`model + model_name + prompt`\n- 图生图：在文生图基础上增加 `image`\n- 多图生图：传 `subject_image_list`，或传多张 `image_urls/images`\n- 扩图：传 `image` 和扩图比例参数\n\n常用参数：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni 图片主模型\n\n对外主模型：\n- `kling-omni-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\n常用参数：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling 虚拟试衣模型\n\n对外模型：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入参：\n- `model + human_image + cloth_image`\n\n说明：\n- 这两个模型本身就是完整主模型，不需要再传 `model_name`\n\n示例：\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## 图片生成/编辑固定计价\n\n以下模型在 `POST /v1/images/generations` 与 `POST /v1/images/edits` 中按次计费：\n\n| 模型 | 计价 |\n|---|---|\n| `kling-image-v3` | 0.05 / 次 |\n| `doubao-seedream-5-0-260128` | 0.05 / 次 |\n| `doubao-seedream-4-5-251128` | 0.06 / 次 |",
+        "description": "OpenAI Dall-E格式图片生成接口。\n\n- `POST /v1/images/generations`：创建图片生成任务\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，图片生成描述\n- `n: number`：可选，生成张数\n- `size: string`：可选，尺寸或分辨率表达\n- `quality: string`：可选，质量等级\n- `response_format: string`：可选，返回格式\n\n常用兼容扩展参数：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 专用扩展参数：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana 系列\n\n对外模型：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n能力说明：\n- `nano-banana`：基础文生图，也兼容图编辑\n- `nano-banana-pro*`：更高质量版本\n- `nano-banana-2*`：更新版本族\n- `*-2k` / `*-4k`：高分辨率型号\n\n常用参数：\n- 文生图：`model + prompt`\n- 图编辑：`model + prompt + image`，也兼容 `image_urls`\n- 常用扩展：`n` `size` `quality` `response_format`\n\n示例：\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream 系列\n\n对外模型：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n能力说明：\n- 统一按文生图调用\n- 建议优先传标准参数：`prompt + model + size/aspect_ratio`\n\n常用参数：\n- `model + prompt`\n- 可选：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 常规图片主模型\n\n对外主模型：\n- `kling-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n能力说明：\n- 文生图：`model + model_name + prompt`\n- 图生图：在文生图基础上增加 `image`\n- 多图生图：传 `subject_image_list`，或传多张 `image_urls/images`\n- 扩图：传 `image` 和扩图比例参数\n\n常用参数：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni 图片主模型\n\n对外主模型：\n- `kling-omni-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\n常用参数：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling 虚拟试衣模型\n\n对外模型：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入参：\n- `model + human_image + cloth_image`\n\n说明：\n- 这两个模型本身就是完整主模型，不需要再传 `model_name`\n\n示例：\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageGeneration",
         "tags": [
           "图片生成OpenAI DALL-E格式"
@@ -635,7 +634,7 @@
       "post": {
         "summary": "编辑图像（OpenAI Dall-E兼容）",
         "deprecated": false,
-        "description": "OpenAI Dall-E格式图片编辑接口。\n\n- `POST /v1/images/edits`：编辑图片\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，图片生成描述\n- `n: number`：可选，生成张数\n- `size: string`：可选，尺寸或分辨率表达\n- `quality: string`：可选，质量等级\n- `response_format: string`：可选，返回格式\n\n常用兼容扩展参数：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 专用扩展参数：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana 系列\n\n对外模型：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n能力说明：\n- `nano-banana`：基础文生图，也兼容图编辑\n- `nano-banana-pro*`：更高质量版本\n- `nano-banana-2*`：更新版本族\n- `*-2k` / `*-4k`：高分辨率型号\n\n常用参数：\n- 文生图：`model + prompt`\n- 图编辑：`model + prompt + image`，也兼容 `image_urls`\n- 常用扩展：`n` `size` `quality` `response_format`\n\n示例：\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream 系列\n\n对外模型：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n能力说明：\n- 统一按文生图调用\n- 建议优先传标准参数：`prompt + model + size/aspect_ratio`\n\n常用参数：\n- `model + prompt`\n- 可选：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 常规图片主模型\n\n对外主模型：\n- `kling-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n能力说明：\n- 文生图：`model + model_name + prompt`\n- 图生图：在文生图基础上增加 `image`\n- 多图生图：传 `subject_image_list`，或传多张 `image_urls/images`\n- 扩图：传 `image` 和扩图比例参数\n\n常用参数：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni 图片主模型\n\n对外主模型：\n- `kling-omni-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\n常用参数：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling 虚拟试衣模型\n\n对外模型：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入参：\n- `model + human_image + cloth_image`\n\n说明：\n- 这两个模型本身就是完整主模型，不需要再传 `model_name`\n\n示例：\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```\n\n## 图片生成/编辑固定计价\n\n以下模型在 `POST /v1/images/generations` 与 `POST /v1/images/edits` 中按次计费：\n\n| 模型 | 计价 |\n|---|---|\n| `kling-image-v3` | 0.05 / 次 |\n| `doubao-seedream-5-0-260128` | 0.05 / 次 |\n| `doubao-seedream-4-5-251128` | 0.06 / 次 |",
+        "description": "OpenAI Dall-E格式图片编辑接口。\n\n- `POST /v1/images/edits`：编辑图片\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，图片生成描述\n- `n: number`：可选，生成张数\n- `size: string`：可选，尺寸或分辨率表达\n- `quality: string`：可选，质量等级\n- `response_format: string`：可选，返回格式\n\n常用兼容扩展参数：\n- `image`\n- `image_url`\n- `image_urls`\n- `image_list`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `negative_prompt`\n- `aspect_ratio`\n- `resolution`\n- `callback_url`\n- `external_task_id`\n\nKling 专用扩展参数：\n- `model_name`\n- `element_list`\n- `result_type`\n- `series_amount`\n- `human_image`\n- `cloth_image`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n### 3.1 Nano Banana 系列\n\n对外模型：\n- `nano-banana`\n- `nano-banana-pro`\n- `nano-banana-pro-2k`\n- `nano-banana-pro-4k`\n- `nano-banana-2`\n- `nano-banana-2-2k`\n- `nano-banana-2-4k`\n\n能力说明：\n- `nano-banana`：基础文生图，也兼容图编辑\n- `nano-banana-pro*`：更高质量版本\n- `nano-banana-2*`：更新版本族\n- `*-2k` / `*-4k`：高分辨率型号\n\n常用参数：\n- 文生图：`model + prompt`\n- 图编辑：`model + prompt + image`，也兼容 `image_urls`\n- 常用扩展：`n` `size` `quality` `response_format`\n\n示例：\n\n```json\n{\n  \"model\": \"nano-banana\",\n  \"prompt\": \"a cute cat running in cloud\",\n  \"n\": 1,\n  \"size\": \"1024x1792\"\n}\n```\n\n```json\n{\n  \"model\": \"nano-banana-pro\",\n  \"prompt\": \"把主体改成赛博朋克夜景\",\n  \"image\": \"https://example.com/input.png\",\n  \"n\": 1\n}\n```\n\n### 3.2 Seedream 系列\n\n对外模型：\n- `doubao-seedream-3-0-t2i-250415`\n- `doubao-seedream-4-0-250828`\n- `doubao-seedream-4-5-251128`\n- `doubao-seedream-5-0-260128`\n\n能力说明：\n- 统一按文生图调用\n- 建议优先传标准参数：`prompt + model + size/aspect_ratio`\n\n常用参数：\n- `model + prompt`\n- 可选：`size` `aspect_ratio` `n`\n\n### 3.3 Kling 常规图片主模型\n\n对外主模型：\n- `kling-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v2`\n- `kling-v2-new`\n- `kling-v2-1`\n- `kling-v3`\n\n能力说明：\n- 文生图：`model + model_name + prompt`\n- 图生图：在文生图基础上增加 `image`\n- 多图生图：传 `subject_image_list`，或传多张 `image_urls/images`\n- 扩图：传 `image` 和扩图比例参数\n\n常用参数：\n- `image`\n- `subject_image_list`\n- `scene_image`\n- `style_image`\n- `aspect_ratio`\n- `resolution`\n- `up_expansion_ratio`\n- `down_expansion_ratio`\n- `left_expansion_ratio`\n- `right_expansion_ratio`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-image\",\n  \"model_name\": \"kling-v3\",\n  \"prompt\": \"海边日落，电影感人像\",\n  \"aspect_ratio\": \"16:9\",\n  \"n\": 1\n}\n```\n\n### 3.4 Kling Omni 图片主模型\n\n对外主模型：\n- `kling-omni-image`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-image-o1`\n- `kling-v3-omni`\n\n常用参数：\n- `image_list`\n- `element_list`\n- `resolution`\n- `aspect_ratio`\n- `result_type`\n- `series_amount`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-omni-image\",\n  \"model_name\": \"kling-v3-omni\",\n  \"prompt\": \"生成一张海边跳舞的图片\",\n  \"element_list\": [\n    {\n      \"element_id\": 835266081714884677\n    }\n  ]\n}\n```\n\n### 3.5 Kling 虚拟试衣模型\n\n对外模型：\n- `kolors-virtual-try-on-v1`\n- `kolors-virtual-try-on-v1-5`\n\n最小入参：\n- `model + human_image + cloth_image`\n\n说明：\n- 这两个模型本身就是完整主模型，不需要再传 `model_name`\n\n示例：\n\n```json\n{\n  \"model\": \"kolors-virtual-try-on-v1\",\n  \"human_image\": \"https://example.com/human.jpg\",\n  \"cloth_image\": \"https://example.com/cloth.jpg\"\n}\n```",
         "operationId": "createImageEdit",
         "tags": [
           "图片生成OpenAI DALL-E格式"
@@ -2135,8 +2134,8 @@
     },
     "/suno/submit/music": {
       "post": {
-        "summary": "创建音乐生成任务",
-        "description": "音乐生成提交接口，兼容旧 `/suno/submit/music` 路径。返回任务 ID，后续通过 `/suno/fetch/{task_id}` 查询。\n\n音乐生成任务提交接口。路径保持 `/suno/submit/music`，实际可通过 `upstream_model`、`music_model`、`engine`、`model_id` 或 `modelId` 选择生成引擎。创建接口返回 `task_id`，随后用 `/suno/fetch/{task_id}` 查询输出。\n\n## 提示词描述模式\n\n适合只描述风格、情绪、语言、歌手类型和场景，由模型自动生成歌曲内容。\n\n```json\n{\n \"model\": \"suno_music\",\n \"upstream_model\": \"suno-v5\",\n \"prompt\": \"Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"\",\n \"make_instrumental\": false\n}\n```\n\n## 轻音乐或纯伴奏\n\n可使用 `light_music=true` 或 `make_instrumental=true`。`light_music` 表示偏轻音乐/背景音乐，`make_instrumental` 表示不生成演唱人声。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌词高级模式\n\n适合业务侧已经准备好歌词，需要指定标题和风格标签。可传 `custom_mode=true`，歌词字段可用 `lyrics`、`lyric`、`custom_lyrics` 或 `customLyrics`。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 查询\n\n创建成功后保存返回的 `data` 任务 ID，例如 `task_xxx`，调用 `GET /suno/fetch/{task_id}` 查询状态、音频地址、封面、标题、歌词和上游返回的原始片段信息。",
+        "summary": "创建音乐或声音生成任务",
+        "description": "音乐与声音生成提交接口，兼容旧 `/suno/submit/music` 路径。返回任务 ID，后续通过 `/suno/fetch/{task_id}` 查询。\n\n音乐与声音生成任务提交接口。路径保持 `/suno/submit/music`，实际可通过 `upstream_model`、`music_model`、`engine`、`model_id` 或 `modelId` 选择生成引擎。创建接口返回 `task_id`，随后用 `/suno/fetch/{task_id}` 查询输出。\n\n未传 `upstream_model`（或只传 `{\"model\":\"suno_music\"}`）时，默认使用 Suno v5.5。需要继续使用旧版 Suno 时，请显式传 `\"upstream_model\":\"suno-v5\"`。\n\n## 新增模型\n\n| 类型 | `upstream_model` / 别名 | `modelId` |\n| --- | --- | ---: |\n| 音乐 | `suno-v5.5` / `chirp-fenix` | 128 |\n| 声音 | `seed-audio-1.0` | 126 |\n| 声音 | `minimax-speech-2.8-hd` / `speech-2.8-hd` | 127 |\n| 音乐 | `lyria-3-pro` / `lyria-3-pro-preview` | 129 |\n\n## 提示词描述模式\n\n适合只描述风格、情绪、语言、歌手类型和场景，由模型自动生成歌曲内容。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v5.5\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## 声音生成\n\nMiniMax Speech 可通过 `extraParams`（或顶层同名 snake_case/camelCase 字段）覆盖语音参数。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nMiniMax Speech 未传语音参数时，服务端默认发送上例中的 `voice`、`outputFormat=mp3`、`sampleRate=32000`、`speed=1`、`volume=1` 和 `pitch=0`。\n\nLyria 3 Pro 使用 `upstream_model=lyria-3-pro`（或 `lyria-3-pro-preview`）：\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## 轻音乐或纯伴奏\n\n可使用 `light_music=true` 或 `make_instrumental=true`。`light_music` 表示偏轻音乐/背景音乐，`make_instrumental` 表示不生成演唱人声。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌词高级模式\n\n适合业务侧已经准备好歌词，需要指定标题和风格标签。可传 `custom_mode=true`，歌词字段可用 `lyrics`、`lyric`、`custom_lyrics` 或 `customLyrics`。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 查询\n\n创建成功后保存返回的 `data` 任务 ID，例如 `task_xxx`，调用 `GET /suno/fetch/{task_id}` 查询状态、音频地址、封面、标题、歌词和上游返回的原始片段信息。",
         "tags": [
           "音乐生成任务格式"
         ],
@@ -2161,8 +2160,8 @@
                   },
                   "upstream_model": {
                     "type": "string",
-                    "example": "suno-v5",
-                    "description": "生成引擎选择值。"
+                    "example": "suno-v5.5",
+                    "description": "生成引擎选择值；默认 `suno-v5.5`，显式传 `suno-v5` 可保留旧版。"
                   },
                   "music_model": {
                     "type": "string",
@@ -2173,11 +2172,25 @@
                     "description": "`upstream_model` 的兼容别名。"
                   },
                   "model_id": {
-                    "type": "string",
-                    "description": "上游模型 ID 兼容字段。"
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      }
+                    ],
+                    "description": "`model_id` 的 camelCase 兼容字段。"
                   },
                   "modelId": {
-                    "type": "string",
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      }
+                    ],
                     "description": "`model_id` 的 camelCase 兼容字段。"
                   },
                   "prompt": {
@@ -2187,6 +2200,100 @@
                   "gpt_description_prompt": {
                     "type": "string",
                     "description": "描述模式提示词兼容字段。"
+                  },
+                  "extraParams": {
+                    "type": "object",
+                    "description": "MiniMax Speech 2.8 HD 的语音参数；是 `extraParams` 的 snake_case 兼容字段。",
+                    "properties": {
+                      "voice": {
+                        "type": "string",
+                        "default": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85"
+                      },
+                      "outputFormat": {
+                        "type": "string",
+                        "default": "mp3"
+                      },
+                      "sampleRate": {
+                        "type": "integer",
+                        "default": 32000
+                      },
+                      "speed": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "volume": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "pitch": {
+                        "type": "number",
+                        "default": 0
+                      }
+                    },
+                    "additionalProperties": true
+                  },
+                  "extra_params": {
+                    "type": "object",
+                    "description": "MiniMax Speech 2.8 HD 的语音参数；是 `extraParams` 的 snake_case 兼容字段。",
+                    "properties": {
+                      "voice": {
+                        "type": "string",
+                        "default": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85"
+                      },
+                      "outputFormat": {
+                        "type": "string",
+                        "default": "mp3"
+                      },
+                      "sampleRate": {
+                        "type": "integer",
+                        "default": 32000
+                      },
+                      "speed": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "volume": {
+                        "type": "number",
+                        "default": 1
+                      },
+                      "pitch": {
+                        "type": "number",
+                        "default": 0
+                      }
+                    },
+                    "additionalProperties": true
+                  },
+                  "voice": {
+                    "type": "string",
+                    "description": "MiniMax Speech 2.8 HD 音色，可覆盖 `extraParams.voice`。"
+                  },
+                  "output_format": {
+                    "type": "string",
+                    "description": "MiniMax Speech 2.8 HD 输出格式。"
+                  },
+                  "outputFormat": {
+                    "type": "string",
+                    "description": "`output_format` 的 camelCase 兼容字段。"
+                  },
+                  "sample_rate": {
+                    "type": "integer",
+                    "description": "MiniMax Speech 2.8 HD 采样率。"
+                  },
+                  "sampleRate": {
+                    "type": "integer",
+                    "description": "`sample_rate` 的 camelCase 兼容字段。"
+                  },
+                  "speed": {
+                    "type": "number",
+                    "description": "语速，默认 1。"
+                  },
+                  "volume": {
+                    "type": "number",
+                    "description": "音量，默认 1。"
+                  },
+                  "pitch": {
+                    "type": "number",
+                    "description": "音调，默认 0。"
                   },
                   "make_instrumental": {
                     "type": "boolean",
@@ -2249,12 +2356,44 @@
               },
               "examples": {
                 "music_submit_prompt": {
-                  "summary": "音乐描述生成",
+                  "summary": "Suno v5.5 音乐生成",
                   "value": {
                     "model": "suno_music",
-                    "upstream_model": "suno-v5",
+                    "upstream_model": "suno-v5.5",
                     "prompt": "Imitating \"Billie Jean,\" create a DJ song with the theme of \"the artificial intelligence revolution.\"",
                     "make_instrumental": false
+                  }
+                },
+                "music_submit_lyria": {
+                  "summary": "Lyria 3 Pro 音乐生成",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "lyria-3-pro",
+                    "prompt": "Cinematic orchestral music with a hopeful finale."
+                  }
+                },
+                "audio_submit_seed": {
+                  "summary": "Seed Audio 1.0 声音生成",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "seed-audio-1.0",
+                    "prompt": "清晨海边的浪声与远处海鸥声。"
+                  }
+                },
+                "audio_submit_minimax_speech": {
+                  "summary": "MiniMax Speech 2.8 HD",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "minimax-speech-2.8-hd",
+                    "prompt": "欢迎使用新版语音生成服务。",
+                    "extraParams": {
+                      "voice": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85",
+                      "outputFormat": "mp3",
+                      "sampleRate": 32000,
+                      "speed": 1,
+                      "volume": 1,
+                      "pitch": 0
+                    }
                   }
                 },
                 "music_submit_light": {
@@ -2324,14 +2463,14 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/cn/音乐生成任务格式/创建音乐生成任务"
+          "href": "/api-reference/cn/音乐生成任务格式/创建音乐或声音生成任务"
         }
       }
     },
     "/suno/fetch/{task_id}": {
       "get": {
         "summary": "按 ID 查询音乐任务",
-        "description": "通过 path `task_id` 查询音乐生成任务。\n\n音乐生成任务查询接口。创建接口返回的 `data` 即任务 ID，通过 `GET /suno/fetch/{task_id}` 查询单个任务。\n\n## 查询方式\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## 查询输出\n\n外层保持 new-api 任务结构：\n\n- `code`：成功时为 `success`。\n- `message`：错误或提示信息。\n- `data.task_id`：任务 ID。\n- `data.status`：任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。\n- `data.progress`：任务进度。\n- `data.result_url`：成功后可用的结果地址，若上游返回多首歌曲，以 `data.data` 内片段为准。\n- `data.data`：上游音乐结果原始数据，通常包含歌曲片段数组或对象。\n\n成功态示例：\n\n```json\n{\n  \"code\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"task_id\": \"task_xxx\",\n    \"platform\": \"suno\",\n    \"action\": \"MUSIC\",\n    \"status\": \"SUCCESS\",\n    \"progress\": \"100%\",\n    \"result_url\": \"https://example.com/audio.mp3\",\n    \"properties\": {\n      \"upstream_model_name\": \"suno_music\",\n      \"origin_model_name\": \"suno-v5\"\n    },\n    \"data\": [\n      {\n        \"id\": \"clip_xxx\",\n        \"title\": \"夏日海风\",\n        \"audio_url\": \"https://example.com/audio.mp3\",\n        \"image_url\": \"https://example.com/cover.jpg\",\n        \"model_name\": \"suno-v5\",\n        \"metadata\": {\n          \"duration\": 180,\n          \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n        }\n      }\n    ]\n  }\n}\n```",
+        "description": "通过 path `task_id` 查询音乐生成任务。\n\n音乐生成任务查询接口。创建接口返回的 `data` 即任务 ID，通过 `GET /suno/fetch/{task_id}` 查询单个任务。\n\n## 查询方式\n\n```http\nGET /suno/fetch/task_xxx\n```\n\n## 查询输出\n\n外层保持 new-api 任务结构：\n\n- `code`：成功时为 `success`。\n- `message`：错误或提示信息。\n- `data.task_id`：任务 ID。\n- `data.status`：任务状态，常见值 `NOT_START`、`SUBMITTED`、`QUEUED`、`IN_PROGRESS`、`SUCCESS`、`FAILURE`。\n- `data.progress`：任务进度。\n- `data.result_url`：成功后可用的结果地址，若上游返回多首歌曲，以 `data.data` 内片段为准。\n- `data.data`：上游音乐结果原始数据，通常包含歌曲片段数组或对象。\n\n成功态示例：\n\n```json\n{\n  \"code\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"task_id\": \"task_xxx\",\n    \"platform\": \"suno\",\n    \"action\": \"MUSIC\",\n    \"status\": \"SUCCESS\",\n    \"progress\": \"100%\",\n    \"result_url\": \"https://example.com/audio.mp3\",\n    \"properties\": {\n      \"upstream_model_name\": \"suno_music\",\n      \"origin_model_name\": \"suno-v5.5\"\n    },\n    \"data\": [\n      {\n        \"id\": \"clip_xxx\",\n        \"title\": \"夏日海风\",\n        \"audio_url\": \"https://example.com/audio.mp3\",\n        \"image_url\": \"https://example.com/cover.jpg\",\n        \"model_name\": \"suno-v5.5\",\n        \"metadata\": {\n          \"duration\": 180,\n          \"prompt\": \"轻快电子流行，夏日海边，女声 旋律\"\n        }\n      }\n    ]\n  }\n}\n```",
         "tags": [
           "音乐生成任务格式"
         ],
@@ -2431,7 +2570,7 @@
                         "result_url": "https://example.com/audio.mp3",
                         "properties": {
                           "upstream_model_name": "suno_music",
-                          "origin_model_name": "suno-v5"
+                          "origin_model_name": "suno-v5.5"
                         },
                         "data": [
                           {
@@ -2439,7 +2578,7 @@
                             "title": "夏日海风",
                             "audio_url": "https://example.com/audio.mp3",
                             "image_url": "https://example.com/cover.jpg",
-                            "model_name": "suno-v5",
+                            "model_name": "suno-v5.5",
                             "metadata": {
                               "duration": 180,
                               "prompt": "轻快电子流行，夏日海边，女声 旋律"
@@ -2466,7 +2605,7 @@
     "/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
         "summary": "创建视频(HappyHorse)",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nHappyHorse 阿里视频生成接口，公开路径遵循 DashScope 官方协议。\n\n支持 5 个对外模型：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。其中 `happyhorse-1.0` 是聚合模型，需要通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。\n\n公开接口保持官方端点格式；渠道专用前缀仅用于网关请求特定上游渠道时内部拼接。客户端不需要显式传 `X-DashScope-Async`，由网关或官方渠道适配层处理。\n\n补充 HappyHorse 阿里官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持官方端点格式。\n\n支持模型：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n统一请求字段：\n- `model` (string, 必填): HappyHorse 对外模型名。聚合模型 `happyhorse-1.0` 需配合 `mode` 使用。\n- `mode` (string, 可选): 聚合模型模式，常见值为 `t2v`、`i2v`、`r2v`、`video_edit`。固定子模型可不传。\n- `input.prompt` (string, 必填): 视频生成或编辑提示词。\n- `input.media` (array[object], 可选): 多媒体输入。图生视频使用 `first_frame`，参考生视频使用 `reference_image`，视频编辑使用 `video` 和可选 `reference_image`。\n- `parameters.duration` (integer, 可选): 生成时长，按秒计费。\n- `parameters.resolution` (string, 可选): 输出分辨率，常见值 `720P`、`1080P`。\n- `parameters.ratio` (string, 可选): 输出宽高比，文生视频和参考生视频常用。\n- `parameters.watermark` (boolean, 可选): 是否添加水印。\n- `parameters.seed` (integer, 可选): 随机种子。\n\n常见模型/模式差异：\n- `HappyHorse 聚合模型`: 支持模型 happyhorse-1.0；聚合模型通过 mode 区分最终模型。\n- `HappyHorse 文生视频`: 支持模型 happyhorse-1.0-t2v；官方格式文生视频。\n- `HappyHorse 首帧图生视频`: 支持模型 happyhorse-1.0-i2v；官方格式首帧图生视频。\n- `HappyHorse 参考生视频`: 支持模型 happyhorse-1.0-r2v；官方格式多参考图生视频。\n- `HappyHorse 视频编辑`: 支持模型 happyhorse-1.0-video-edit；官方格式视频编辑。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nHappyHorse 阿里视频生成接口，公开路径遵循 DashScope 官方协议。\n\n支持 5 个对外模型：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。其中 `happyhorse-1.0` 是聚合模型，需要通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。\n\n公开接口保持官方端点格式；渠道专用前缀仅用于网关请求特定上游渠道时内部拼接。客户端不需要显式传 `X-DashScope-Async`，由网关或官方渠道适配层处理。\n\n补充 HappyHorse 阿里官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持官方端点格式。\n\n支持模型：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n统一请求字段：\n- `model` (string, 必填): HappyHorse 对外模型名。聚合模型 `happyhorse-1.0` 需配合 `mode` 使用。\n- `mode` (string, 可选): 聚合模型模式，常见值为 `t2v`、`i2v`、`r2v`、`video_edit`。固定子模型可不传。\n- `input.prompt` (string, 必填): 视频生成或编辑提示词。\n- `input.media` (array[object], 可选): 多媒体输入。图生视频使用 `first_frame`，参考生视频使用 `reference_image`，视频编辑使用 `video` 和可选 `reference_image`。\n- `parameters.duration` (integer, 可选): 生成时长，单位秒。\n- `parameters.resolution` (string, 可选): 输出分辨率，常见值 `720P`、`1080P`。\n- `parameters.ratio` (string, 可选): 输出宽高比，文生视频和参考生视频常用。\n- `parameters.watermark` (boolean, 可选): 是否添加水印。\n- `parameters.seed` (integer, 可选): 随机种子。\n\n常见模型/模式差异：\n- `HappyHorse 聚合模型`: 支持模型 happyhorse-1.0；聚合模型通过 mode 区分最终模型。\n- `HappyHorse 文生视频`: 支持模型 happyhorse-1.0-t2v；官方格式文生视频。\n- `HappyHorse 首帧图生视频`: 支持模型 happyhorse-1.0-i2v；官方格式首帧图生视频。\n- `HappyHorse 参考生视频`: 支持模型 happyhorse-1.0-r2v；官方格式多参考图生视频。\n- `HappyHorse 视频编辑`: 支持模型 happyhorse-1.0-video-edit；官方格式视频编辑。",
         "operationId": "create__happyhorse__task",
         "tags": [
           "视频生成HappyHorse阿里"
@@ -2562,7 +2701,7 @@
                       "duration": {
                         "type": "integer",
                         "example": 5,
-                        "description": "生成时长，按秒计费。"
+                        "description": "生成时长，单位秒。"
                       },
                       "watermark": {
                         "type": "boolean",
@@ -2712,7 +2851,7 @@
                       "properties": {
                         "duration": {
                           "type": "string",
-                          "description": "计费时长，单位秒。"
+                          "description": "生成时长，单位秒。"
                         },
                         "SR": {
                           "type": "string",
@@ -2739,7 +2878,7 @@
     "/api/v1/tasks/{task_id}": {
       "get": {
         "summary": "查询任务(HappyHorse)",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nHappyHorse 阿里视频生成接口，公开路径遵循 DashScope 官方协议。\n\n支持 5 个对外模型：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。其中 `happyhorse-1.0` 是聚合模型，需要通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。\n\n公开接口保持官方端点格式；渠道专用前缀仅用于网关请求特定上游渠道时内部拼接。客户端不需要显式传 `X-DashScope-Async`，由网关或官方渠道适配层处理。\n\n补充 HappyHorse 阿里官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持官方端点格式。\n\n支持模型：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n统一请求字段：\n- `model` (string, 必填): HappyHorse 对外模型名。聚合模型 `happyhorse-1.0` 需配合 `mode` 使用。\n- `mode` (string, 可选): 聚合模型模式，常见值为 `t2v`、`i2v`、`r2v`、`video_edit`。固定子模型可不传。\n- `input.prompt` (string, 必填): 视频生成或编辑提示词。\n- `input.media` (array[object], 可选): 多媒体输入。图生视频使用 `first_frame`，参考生视频使用 `reference_image`，视频编辑使用 `video` 和可选 `reference_image`。\n- `parameters.duration` (integer, 可选): 生成时长，按秒计费。\n- `parameters.resolution` (string, 可选): 输出分辨率，常见值 `720P`、`1080P`。\n- `parameters.ratio` (string, 可选): 输出宽高比，文生视频和参考生视频常用。\n- `parameters.watermark` (boolean, 可选): 是否添加水印。\n- `parameters.seed` (integer, 可选): 随机种子。\n\n常见模型/模式差异：\n- `HappyHorse 聚合模型`: 支持模型 happyhorse-1.0；聚合模型通过 mode 区分最终模型。\n- `HappyHorse 文生视频`: 支持模型 happyhorse-1.0-t2v；官方格式文生视频。\n- `HappyHorse 首帧图生视频`: 支持模型 happyhorse-1.0-i2v；官方格式首帧图生视频。\n- `HappyHorse 参考生视频`: 支持模型 happyhorse-1.0-r2v；官方格式多参考图生视频。\n- `HappyHorse 视频编辑`: 支持模型 happyhorse-1.0-video-edit；官方格式视频编辑。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nHappyHorse 阿里视频生成接口，公开路径遵循 DashScope 官方协议。\n\n支持 5 个对外模型：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。其中 `happyhorse-1.0` 是聚合模型，需要通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。\n\n公开接口保持官方端点格式；渠道专用前缀仅用于网关请求特定上游渠道时内部拼接。客户端不需要显式传 `X-DashScope-Async`，由网关或官方渠道适配层处理。\n\n补充 HappyHorse 阿里官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持官方端点格式。\n\n支持模型：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n统一请求字段：\n- `model` (string, 必填): HappyHorse 对外模型名。聚合模型 `happyhorse-1.0` 需配合 `mode` 使用。\n- `mode` (string, 可选): 聚合模型模式，常见值为 `t2v`、`i2v`、`r2v`、`video_edit`。固定子模型可不传。\n- `input.prompt` (string, 必填): 视频生成或编辑提示词。\n- `input.media` (array[object], 可选): 多媒体输入。图生视频使用 `first_frame`，参考生视频使用 `reference_image`，视频编辑使用 `video` 和可选 `reference_image`。\n- `parameters.duration` (integer, 可选): 生成时长，单位秒。\n- `parameters.resolution` (string, 可选): 输出分辨率，常见值 `720P`、`1080P`。\n- `parameters.ratio` (string, 可选): 输出宽高比，文生视频和参考生视频常用。\n- `parameters.watermark` (boolean, 可选): 是否添加水印。\n- `parameters.seed` (integer, 可选): 随机种子。\n\n常见模型/模式差异：\n- `HappyHorse 聚合模型`: 支持模型 happyhorse-1.0；聚合模型通过 mode 区分最终模型。\n- `HappyHorse 文生视频`: 支持模型 happyhorse-1.0-t2v；官方格式文生视频。\n- `HappyHorse 首帧图生视频`: 支持模型 happyhorse-1.0-i2v；官方格式首帧图生视频。\n- `HappyHorse 参考生视频`: 支持模型 happyhorse-1.0-r2v；官方格式多参考图生视频。\n- `HappyHorse 视频编辑`: 支持模型 happyhorse-1.0-video-edit；官方格式视频编辑。",
         "operationId": "query__happyhorse__task",
         "tags": [
           "视频生成HappyHorse阿里"
@@ -2808,7 +2947,7 @@
                       "properties": {
                         "duration": {
                           "type": "integer",
-                          "description": "计费时长，单位秒。"
+                          "description": "生成时长，单位秒。"
                         },
                         "SR": {
                           "type": "integer",
@@ -3116,10 +3255,6 @@
                     },
                     "resolution": {
                       "type": "string"
-                    },
-                    "credits": {
-                      "type": "integer",
-                      "description": "本次任务消耗的积分。"
                     },
                     "created_at": {
                       "type": "string"
@@ -3441,10 +3576,6 @@
                     "resolution": {
                       "type": "string"
                     },
-                    "credits": {
-                      "type": "integer",
-                      "description": "本次任务消耗的积分。"
-                    },
                     "created_at": {
                       "type": "string"
                     },
@@ -3765,10 +3896,6 @@
                     "resolution": {
                       "type": "string"
                     },
-                    "credits": {
-                      "type": "integer",
-                      "description": "本次任务消耗的积分。"
-                    },
                     "created_at": {
                       "type": "string"
                     },
@@ -4088,10 +4215,6 @@
                     "resolution": {
                       "type": "string"
                     },
-                    "credits": {
-                      "type": "integer",
-                      "description": "本次任务消耗的积分。"
-                    },
                     "created_at": {
                       "type": "string"
                     },
@@ -4175,10 +4298,6 @@
                     },
                     "err_code": {
                       "type": "string"
-                    },
-                    "credits": {
-                      "type": "integer",
-                      "description": "本次任务消耗的积分。"
                     },
                     "payload": {
                       "type": "string"
@@ -7171,12 +7290,6 @@
           "group": {
             "type": "string"
           },
-          "quota": {
-            "type": "integer"
-          },
-          "used_quota": {
-            "type": "integer"
-          },
           "request_count": {
             "type": "integer"
           }
@@ -7237,12 +7350,6 @@
           },
           "expired_time": {
             "type": "integer"
-          },
-          "remain_quota": {
-            "type": "integer"
-          },
-          "unlimited_quota": {
-            "type": "boolean"
           }
         }
       },
@@ -7259,9 +7366,6 @@
             "type": "string"
           },
           "status": {
-            "type": "integer"
-          },
-          "quota": {
             "type": "integer"
           },
           "created_time": {
