@@ -25,6 +25,7 @@ description: "当前项目不是只有一种协议。为降低接入成本，公
 当模型本身需要专用字段、专用任务结构或原生查询协议时，公开原生接口：
 
 - Seedance：`/api/v3/contents/generations/tasks`
+- MiniMax / Hailuo：`minimax-h3` 和 `hailuo-2.3` 可使用 `/v1/videos`，也可通过 `/api/v3/contents/generations/tasks` 的任务格式接入
 - HappyHorse：`/api/v1/services/aigc/video-generation/video-synthesis` 和 `/api/v1/tasks/{task_id}`
 - Vidu：`/ent/v2/text2video`、`/ent/v2/img2video`、`/ent/v2/start-end2video`、`/ent/v2/reference2video` 和 `/ent/v2/tasks/{task_id}/creations`
 - Omni 与 Veo：`gemini-omni` 使用 `/v1/videos` 或 `/api/v3/contents/generations/tasks`；Veo 原生预留路径为 `/v1beta/models/{model}:predictLongRunning` 和 `/v1beta/{operation_name}`

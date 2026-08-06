@@ -199,9 +199,9 @@ Veo 主模型优先走 `/v1/videos` 兼容格式；`/v1beta/...` 为 Veo 原生�
 
 
 
-### Hailuo
+### MiniMax / Hailuo
 
-使用统一视频能力接入，适合文本生成视频场景。
+使用统一视频能力接入。`minimax-h3` 支持文生视频、图片参考和音频参考；`hailuo-2.3` 需要首帧图片，适合首帧图生视频。
 
 
 
@@ -209,7 +209,11 @@ Veo 主模型优先走 `/v1/videos` 兼容格式；`/v1beta/...` 为 Veo 原生�
 
 |---|---|
 
-| `hailuo*` | `/v1/videos` |
+| `minimax-h3` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+| `hailuo-2.3` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+| `hailuo*` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
 
 

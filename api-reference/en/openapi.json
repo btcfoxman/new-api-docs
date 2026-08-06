@@ -865,7 +865,7 @@
       "post": {
         "summary": "Create video",
         "deprecated": false,
-        "description": "OpenAI Sora video generation API in a compatible format. Supports text-to-video and image/video reference generation modes.\n\n- `POST /v1/videos`: Create video task\n- `GET /v1/videos/{video_id}`: Query task status\n- `GET /v1/videos/{video_id}/content`: Retrieve the video binary content\n\nCurrently not available externally:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nStandard authentication headers:\n- `Content-Type: application/json`\n\n1. Use `POST /v1/videos` to create a task and obtain `id`\n2. Poll `GET /v1/videos/{id}` until `completed` or `failed`\n3. After completion, prefer using `video_url` returned in the response\n4. For unified download, call `GET /v1/videos/{id}/content`\n\nCore parameters:\n- `model: string`: Required, public model name\n- `prompt: string`: Recommended, video generation description\n- `seconds: number|string`: Optional, target duration\n- `duration: number|string`: Optional, duration alias\n- `size: string`: Optional, output resolution\n- `mode: string`: Optional, common values: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nCommon compatibility parameters:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling common extended parameters:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo series\n\nNote: `stable`, `official`, and similar labels indicate different groups, not external `model` suffixes; when calling, keep `model` as the base model name, and let the account or token group determine which group is actually used.\n\n#### Veo 3.x main model\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommendations:\n- For text-to-video only, prefer the `veo3*` / `veo3.1*` base models\n- For image-to-video or reference-to-video scenarios, it is recommended to explicitly pass `mode + image_url/reference_images`\n\n### 4.2 Sora series\n\nBase models:\n- `sora-2`\n- `sora-2-pro`\n\nRecommendations:\n- `sora-2*` is suitable for general-purpose use\n- To use groups such as `stable` / `official`, keep `model` as the base model name and do not append any suffix to the model name.\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse series\n\nPublic model:\n- `happyhorse-1.0`\n\nRecommendations:\n- `happyhorse-1.0` are distinguished by `mode` into `t2v`, `i2v`, `r2v`, and `video_edit`.\n- In Sora-compatible format, it is recommended to pass media items in the `content` array for reference images.\n- Use `type=text` for text items and `type=image_url` for media items, and optionally use `role` and `name` to indicate the asset's purpose.\n\nRequest example:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance Series\n\nPublic model:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommendations:\n- For text-to-video, prefer `*-t2v-*` or `pro / fast`\n- For image-to-video, prefer `*-i2v-*`\n- For scenarios with complex reference materials, prefer `content`\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok Video Series\n\nPublic model:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nCommon parameters:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExample:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling Video Main Model\n\nPublic base model:\n- `kling-video`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCommon `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nMinimum input parameters:\n- Text-to-video: `model + model_name + prompt + mode=t2v`\n- Image-to-video: `model + model_name + prompt + mode=i2v + image`\n- Multi-image reference: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Video extension: `model + model_name + mode=extend + video_id`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Minimum input: `model + prompt`\n\n- `mode=i2v`\n- Minimum input: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Minimum input: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Minimum input: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Minimum input: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni usage instructions\n\n- `gemini-omni` is the publicly exposed video model name of new-api, and can be called directly via `POST /v1/videos`.\n- `mode=t2v`: text-to-video, with the minimum input parameter being `model + prompt`.\n- `mode=r2v`: reference image/reference material generation; images can be placed in `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference`, or `content`.\n- `mode=edit`: video editing; videos can be placed in `video`, `video_url`, `videos`, or `content`, and reference images can also be provided at the same time.\n- The duration field can use `seconds` or `duration`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.",
+        "description": "OpenAI Sora video generation API in a compatible format. Supports text-to-video and image/video reference generation modes.\n\n- `POST /v1/videos`: Create video task\n- `GET /v1/videos/{video_id}`: Query task status\n- `GET /v1/videos/{video_id}/content`: Retrieve the video binary content\n\nCurrently not available externally:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nStandard authentication headers:\n- `Content-Type: application/json`\n\n1. Use `POST /v1/videos` to create a task and obtain `id`\n2. Poll `GET /v1/videos/{id}` until `completed` or `failed`\n3. After completion, prefer using `video_url` returned in the response\n4. For unified download, call `GET /v1/videos/{id}/content`\n\nCore parameters:\n- `model: string`: Required, public model name\n- `prompt: string`: Recommended, video generation description\n- `seconds: number|string`: Optional, target duration\n- `duration: number|string`: Optional, duration alias\n- `size: string`: Optional, output resolution\n- `mode: string`: Optional, common values: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nCommon compatibility parameters:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling common extended parameters:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo series\n\nNote: `stable`, `official`, and similar labels indicate different groups, not external `model` suffixes; when calling, keep `model` as the base model name, and let the account or token group determine which group is actually used.\n\n#### Veo 3.x main model\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommendations:\n- For text-to-video only, prefer the `veo3*` / `veo3.1*` base models\n- For image-to-video or reference-to-video scenarios, it is recommended to explicitly pass `mode + image_url/reference_images`\n\n### 4.2 Sora series\n\nBase models:\n- `sora-2`\n- `sora-2-pro`\n\nRecommendations:\n- `sora-2*` is suitable for general-purpose use\n- To use groups such as `stable` / `official`, keep `model` as the base model name and do not append any suffix to the model name.\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse series\n\nPublic model:\n- `happyhorse-1.0`\n\nRecommendations:\n- `happyhorse-1.0` are distinguished by `mode` into `t2v`, `i2v`, `r2v`, and `video_edit`.\n- In Sora-compatible format, it is recommended to pass media items in the `content` array for reference images.\n- Use `type=text` for text items and `type=image_url` for media items, and optionally use `role` and `name` to indicate the asset's purpose.\n\nRequest example:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance Series\n\nPublic model:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommendations:\n- For text-to-video, prefer `*-t2v-*` or `pro / fast`\n- For image-to-video, prefer `*-i2v-*`\n- For scenarios with complex reference materials, prefer `content`\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok Video Series\n\nPublic model:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nCommon parameters:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExample:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling Video Main Model\n\nPublic base model:\n- `kling-video`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCommon `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nMinimum input parameters:\n- Text-to-video: `model + model_name + prompt + mode=t2v`\n- Image-to-video: `model + model_name + prompt + mode=i2v + image`\n- Multi-image reference: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Video extension: `model + model_name + mode=extend + video_id`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo Video Series\n\nPublic model:\n- `minimax-h3`\n- `hailuo-2.3`\n\nRecommendations:\n- `minimax-h3` supports text-to-video, image references, and audio references. We recommend mixing text and assets via `content`; you can also use compatible fields such as `image_urls` and `audio_urls`.\n- `hailuo-2.3` requires a first-frame image. We recommend passing the `image_url` field of `role=first_frame` in `content`, or using `image_urls` to pass the first-frame image.\n- `minimax-h3` commonly uses `duration=4~15` and `resolution=1440p`; `hailuo-2.3` commonly uses `duration=6` or `10` and `resolution=768p`.\n\n`minimax-h3` Example:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` Example:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Minimum input: `model + prompt`\n\n- `mode=i2v`\n- Minimum input: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Minimum input: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Minimum input: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Minimum input: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni usage instructions\n\n- `gemini-omni` is the publicly exposed video model name of new-api, and can be called directly via `POST /v1/videos`.\n- `mode=t2v`: text-to-video, with the minimum input parameter being `model + prompt`.\n- `mode=r2v`: reference image/reference material generation; images can be placed in `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference`, or `content`.\n- `mode=edit`: video editing; videos can be placed in `video`, `video_url`, `videos`, or `content`, and reference images can also be provided at the same time.\n- The duration field can use `seconds` or `duration`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.",
         "operationId": "createVideo",
         "tags": [
           "Video generation Sora compatible formats"
@@ -913,8 +913,9 @@
                       "grok-imagine-1.0-video",
                       "grok-imagine-video-1.5-preview",
                       "grok-video-3",
-                      "viduq3-turbo",
-                      "hailuo-video"
+                      "minimax-h3",
+                      "hailuo-2.3",
+                      "viduq3-turbo"
                     ],
                     "example": "sora-2"
                   },
@@ -1356,6 +1357,63 @@
                     "resolution": "720P"
                   }
                 },
+                "minimax_h3_sora_reference": {
+                  "summary": "MiniMax H3 multi-source video",
+                  "value": {
+                    "model": "minimax-h3",
+                    "prompt": "A cinematic product video with smooth camera motion",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Use the product image as reference and match the rhythm of the audio."
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image",
+                        "name": "product"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://example.com/music.mp3"
+                        },
+                        "role": "reference_audio",
+                        "name": "music"
+                      }
+                    ],
+                    "duration": 8,
+                    "resolution": "1440p",
+                    "aspect_ratio": "16:9",
+                    "generate_audio": true
+                  }
+                },
+                "hailuo_2_3_sora_first_frame": {
+                  "summary": "Hailuo 2.3 First-frame image-to-video",
+                  "value": {
+                    "model": "hailuo-2.3",
+                    "prompt": "The camera slowly pushes in, natural motion and cinematic lighting.",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "The camera slowly pushes in, natural motion and cinematic lighting."
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame",
+                        "name": "first"
+                      }
+                    ],
+                    "duration": 10,
+                    "resolution": "768p",
+                    "aspect_ratio": "16:9"
+                  }
+                },
                 "vidu_sora_t2v": {
                   "summary": "Vidu Sora t2v",
                   "value": {
@@ -1443,12 +1501,16 @@
                   }
                 },
                 "hailuo_text2video": {
-                  "summary": "Hailuo Text-to-Video",
+                  "summary": "Hailuo 2.3 First-frame image-to-video",
                   "value": {
-                    "model": "hailuo-video",
+                    "model": "hailuo-2.3",
                     "prompt": "A cinematic travel shot over the coastline",
+                    "image_urls": [
+                      "https://example.com/first-frame.jpg"
+                    ],
                     "duration": 6,
-                    "size": "1280x720"
+                    "resolution": "768p",
+                    "aspect_ratio": "16:9"
                   }
                 }
               }
@@ -4351,7 +4413,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "Create video (Seedance)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional, the Volcano Ark content array, mixing text, image, video, and audio materials.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n\nThe following fields are mainly used for compatibility with legacy clients and older protocols. For new integrations, please use the standard format in the “Request Example” on this page whenever possible: use the `content` array for text and reference materials, and use top-level `duration`, `ratio`, `resolution`, `fps`, and other fields for generation configuration.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- `content` text items are written as `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` image, video, and audio material items use the `image_url`, `video_url`, and `audio_url` object formats respectively, for example `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` can be used to identify the purpose of the material, and `name` can be referenced by name in prompts.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nGemini Omni invocation:\n- `gemini-omni` can also be invoked through this Seedance task API.\n- `mode=t2v` is used for text-to-video, `mode=r2v` for generation with reference images/reference materials, and `mode=edit` for video editing.\n- Text can be placed in the `text` item of `prompt` or `content`; images can be placed in `image_url / image_urls / reference_images / input_reference / content`; videos can be placed in `video_urls / content`.\n- The duration field can use `duration` or `seconds`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional, the Volcano Ark content array, mixing text, image, video, and audio materials.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n\nThe following fields are mainly used for compatibility with legacy clients and older protocols. For new integrations, please use the standard format in the “Request Example” on this page whenever possible: use the `content` array for text and reference materials, and use top-level `duration`, `ratio`, `resolution`, `fps`, and other fields for generation configuration.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- `content` text items are written as `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` image, video, and audio material items use the `image_url`, `video_url`, and `audio_url` object formats respectively, for example `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` can be used to identify the purpose of the material, and `name` can be referenced by name in prompts.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nGemini Omni invocation:\n- `gemini-omni` can also be invoked through this Seedance task API.\n- `mode=t2v` is used for text-to-video, `mode=r2v` for generation with reference images/reference materials, and `mode=edit` for video editing.\n- Text can be placed in the `text` item of `prompt` or `content`; images can be placed in `image_url / image_urls / reference_images / input_reference / content`; videos can be placed in `video_urls / content`.\n- The duration field can use `duration` or `seconds`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\nMiniMax / Hailuo Invocation:\n- `minimax-h3` can be invoked through this task API and supports text-to-video, image reference, and audio reference; text can be placed in the `prompt` or `content` text fields, and assets can be placed in fields such as `content`, `image_urls`, and `audio_urls`.\n- `hailuo-2.3` can be invoked through this task API. A first-frame image is required. It is recommended to pass the `image_url` item of `role=first_frame` in `content`.\n- `minimax-h3` commonly uses `duration=4~15` and `resolution=1440p`; `hailuo-2.3` commonly uses `duration=6` or `10` and `resolution=768p`.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
           "Video generation Seedance"
@@ -4370,7 +4432,6 @@
                   "model": {
                     "type": "string",
                     "example": "doubao-seedance-2-0-260128",
-                    "description": "Required. Model name. You can pass the external-facing Seedance model, or `gemini-omni`.",
                     "enum": [
                       "doubao-seedance-1-0-lite-i2v-250428",
                       "doubao-seedance-1-0-lite-t2v-250428",
@@ -4379,8 +4440,11 @@
                       "doubao-seedance-1-5-pro-251215",
                       "doubao-seedance-2-0-260128",
                       "doubao-seedance-2-0-fast-260128",
+                      "minimax-h3",
+                      "hailuo-2.3",
                       "gemini-omni"
-                    ]
+                    ],
+                    "description": "Required. Model name. You can pass the Seedance external model, `gemini-omni`, `minimax-h3`, or `hailuo-2.3`."
                   },
                   "prompt": {
                     "type": "string",
@@ -4611,6 +4675,63 @@
                     "size": "1280x720"
                   }
                 },
+                "minimax_h3_tasks_content": {
+                  "summary": "MiniMax H3 content task",
+                  "value": {
+                    "model": "minimax-h3",
+                    "prompt": "A cinematic product video with smooth camera motion",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Use the product image as reference and match the rhythm of the audio."
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image",
+                        "name": "product"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://example.com/music.mp3"
+                        },
+                        "role": "reference_audio",
+                        "name": "music"
+                      }
+                    ],
+                    "duration": 8,
+                    "resolution": "1440p",
+                    "ratio": "16:9",
+                    "generate_audio": true
+                  }
+                },
+                "hailuo_2_3_tasks_first_frame": {
+                  "summary": "Hailuo 2.3 First-frame image-to-video",
+                  "value": {
+                    "model": "hailuo-2.3",
+                    "prompt": "The camera slowly pushes in, natural motion and cinematic lighting.",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "The camera slowly pushes in, natural motion and cinematic lighting."
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame",
+                        "name": "first"
+                      }
+                    ],
+                    "duration": 10,
+                    "resolution": "768p",
+                    "ratio": "16:9"
+                  }
+                },
                 "gemini_omni_seedance_t2v": {
                   "summary": "Gemini Omni t2v",
                   "value": {
@@ -4759,7 +4880,7 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "Query task (Seedance)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional, the Volcano Ark content array, mixing text, image, video, and audio materials.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n\nThe following fields are mainly used for compatibility with legacy clients and older protocols. For new integrations, please use the standard format in the “Request Example” on this page whenever possible: use the `content` array for text and reference materials, and use top-level `duration`, `ratio`, `resolution`, `fps`, and other fields for generation configuration.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- `content` text items are written as `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` image, video, and audio material items use the `image_url`, `video_url`, and `audio_url` object formats respectively, for example `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` can be used to identify the purpose of the material, and `name` can be referenced by name in prompts.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nGemini Omni invocation:\n- `gemini-omni` can also be invoked through this Seedance task API.\n- `mode=t2v` is used for text-to-video, `mode=r2v` for generation with reference images/reference materials, and `mode=edit` for video editing.\n- Text can be placed in the `text` item of `prompt` or `content`; images can be placed in `image_url / image_urls / reference_images / input_reference / content`; videos can be placed in `video_urls / content`.\n- The duration field can use `duration` or `seconds`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Required. Primary description for video generation.\n- `content`: Optional, the Volcano Ark content array, mixing text, image, video, and audio materials.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n\nThe following fields are mainly used for compatibility with legacy clients and older protocols. For new integrations, please use the standard format in the “Request Example” on this page whenever possible: use the `content` array for text and reference materials, and use top-level `duration`, `ratio`, `resolution`, `fps`, and other fields for generation configuration.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- `content` text items are written as `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` image, video, and audio material items use the `image_url`, `video_url`, and `audio_url` object formats respectively, for example `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` can be used to identify the purpose of the material, and `name` can be referenced by name in prompts.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nGemini Omni invocation:\n- `gemini-omni` can also be invoked through this Seedance task API.\n- `mode=t2v` is used for text-to-video, `mode=r2v` for generation with reference images/reference materials, and `mode=edit` for video editing.\n- Text can be placed in the `text` item of `prompt` or `content`; images can be placed in `image_url / image_urls / reference_images / input_reference / content`; videos can be placed in `video_urls / content`.\n- The duration field can use `duration` or `seconds`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\nMiniMax / Hailuo Invocation:\n- `minimax-h3` can be invoked through this task API and supports text-to-video, image reference, and audio reference; text can be placed in the `prompt` or `content` text fields, and assets can be placed in fields such as `content`, `image_urls`, and `audio_urls`.\n- `hailuo-2.3` can be invoked through this task API. A first-frame image is required. It is recommended to pass the `image_url` item of `role=first_frame` in `content`.\n- `minimax-h3` commonly uses `duration=4~15` and `resolution=1440p`; `hailuo-2.3` commonly uses `duration=6` or `10` and `resolution=768p`.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
           "Video generation Seedance"

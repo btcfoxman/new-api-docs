@@ -865,7 +865,7 @@
       "post": {
         "summary": "動画の生成",
         "deprecated": false,
-        "description": "OpenAI Sora 互換形式の動画生成インターフェース。テキストから動画の生成と、画像/動画参照による生成モードに対応しています。\n\n- `POST /v1/videos`：動画タスクの作成\n- `GET /v1/videos/{video_id}`：タスクステータスの照会\n- `GET /v1/videos/{video_id}/content`：動画のバイナリコンテンツを取得\n\n現在は外部に提供されていません：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` でタスクを作成し、`id` を取得\n2. `GET /v1/videos/{id}` を `completed` または `failed` になるまでポーリング\n3. 完了後は、レスポンス内の `video_url` を優先して使用\n4. 統一的にダウンロードする必要がある場合は、`GET /v1/videos/{id}/content` を呼び出す\n\n主要パラメータ：\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、動画生成の説明\n- `seconds: number|string`：任意、目標の長さ\n- `duration: number|string`：任意、長さのエイリアス\n- `size: string`：任意、出力サイズ\n- `mode: string`：任意、一般的な値 `t2v` `i2v` `i2v_first_last` `reference_material`\n\nよく使われる互換パラメータ：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling のよく使う拡張パラメータ：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo シリーズ\n\n説明：`stable`、`official` などは異なるグループを示しており、外部向けの `model` サフィックスではありません。呼び出し時は `model` をベースモデル名のままにしてください。実際にどのグループが使われるかは、アカウントまたはトークンのグループによって決まります。\n\n#### Veo 3.x メインモデル\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n推奨:\n- テキストのみから動画を生成する場合は、`veo3*` / `veo3.1*` メインモデルを優先して使用\n- 画像からの動画生成や参照ベースの動画生成シーンでは、`mode + image_url/reference_images` を明示的に渡すことを推奨\n\n### 4.2 Sora シリーズ\n\n基本モデル：\n- `sora-2`\n- `sora-2-pro`\n\n推奨:\n- `sora-2*` は汎用的な呼び出しに適しています\n- `stable` / `official` などのグループを使用する場合は、`model` をベースモデル名のままにし、モデル名の末尾にサフィックスを追加しないでください。\n\nリクエスト例:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse シリーズ\n\n公開モデル：\n- `happyhorse-1.0`\n\n推奨:\n- `happyhorse-1.0` は `mode` によって `t2v`、`i2v`、`r2v`、`video_edit` を区別します。\n- Sora 互換形式では、参考画像には `content` 配列でメディア項目を渡すことを推奨します。\n- テキスト項目には `type=text` を使用し、メディア項目には `type=image_url` を使用します。必要に応じて `role`、`name` と組み合わせて素材の用途を示せます。\n\nリクエスト例:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance シリーズ\n\n公開モデル：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n推奨:\n- テキストから動画を生成する場合は、`*-t2v-*` または `pro / fast` を優先してください\n- 画像から動画を生成する場合は、`*-i2v-*` を優先してください\n- 複雑な参考素材を用いるシナリオでは、`content` を優先して使用してください\n\nリクエスト例:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok ビデオシリーズ\n\n公開モデル：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nよく使うパラメータ：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n例:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling ビデオメインモデル\n\n公開メインモデル：\n- `kling-video`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n一般的な `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入力パラメータ：\n- テキストから動画: `model + model_name + prompt + mode=t2v`\n- 画像から動画: `model + model_name + prompt + mode=i2v + image`\n- 複数画像参照: `model + model_name + prompt + mode=multi_i2v + image_list`\n- 動画の延長: `model + model_name + mode=extend + video_id`\n\n例:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入力パラメータ：`model + prompt`\n\n- `mode=i2v`\n- 最小入力パラメータ：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入力パラメータ：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入力パラメータ：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入力パラメータ：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni の呼び出し方法\n\n- `gemini-omni` は new-api の外部公開動画モデル名で、`POST /v1/videos` を直接利用できます。\n- `mode=t2v`：テキストから動画を生成します。最小入力パラメータは `model + prompt` です。\n- `mode=r2v`：参照画像/参照素材による生成。画像は `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference`、または `content` に設定できます。\n- `mode=edit`：動画編集。動画は `video`、`video_url`、`videos`、または `content` に設定でき、参照画像も同時に送信できます。\n- 再生時間フィールドは `seconds` または `duration` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。",
+        "description": "OpenAI Sora 互換形式の動画生成インターフェース。テキストから動画の生成と、画像/動画参照による生成モードに対応しています。\n\n- `POST /v1/videos`：動画タスクの作成\n- `GET /v1/videos/{video_id}`：タスクステータスの照会\n- `GET /v1/videos/{video_id}/content`：動画のバイナリコンテンツを取得\n\n現在は外部に提供されていません：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n標準認証ヘッダー：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` でタスクを作成し、`id` を取得\n2. `GET /v1/videos/{id}` を `completed` または `failed` になるまでポーリング\n3. 完了後は、レスポンス内の `video_url` を優先して使用\n4. 統一的にダウンロードする必要がある場合は、`GET /v1/videos/{id}/content` を呼び出す\n\n主要パラメータ：\n- `model: string`：必須、外部向けモデル名\n- `prompt: string`：推奨、動画生成の説明\n- `seconds: number|string`：任意、目標の長さ\n- `duration: number|string`：任意、長さのエイリアス\n- `size: string`：任意、出力サイズ\n- `mode: string`：任意、一般的な値 `t2v` `i2v` `i2v_first_last` `reference_material`\n\nよく使われる互換パラメータ：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling のよく使う拡張パラメータ：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo シリーズ\n\n説明：`stable`、`official` などは異なるグループを示しており、外部向けの `model` サフィックスではありません。呼び出し時は `model` をベースモデル名のままにしてください。実際にどのグループが使われるかは、アカウントまたはトークンのグループによって決まります。\n\n#### Veo 3.x メインモデル\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n推奨:\n- テキストのみから動画を生成する場合は、`veo3*` / `veo3.1*` メインモデルを優先して使用\n- 画像からの動画生成や参照ベースの動画生成シーンでは、`mode + image_url/reference_images` を明示的に渡すことを推奨\n\n### 4.2 Sora シリーズ\n\n基本モデル：\n- `sora-2`\n- `sora-2-pro`\n\n推奨:\n- `sora-2*` は汎用的な呼び出しに適しています\n- `stable` / `official` などのグループを使用する場合は、`model` をベースモデル名のままにし、モデル名の末尾にサフィックスを追加しないでください。\n\nリクエスト例:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse シリーズ\n\n公開モデル：\n- `happyhorse-1.0`\n\n推奨:\n- `happyhorse-1.0` は `mode` によって `t2v`、`i2v`、`r2v`、`video_edit` を区別します。\n- Sora 互換形式では、参考画像には `content` 配列でメディア項目を渡すことを推奨します。\n- テキスト項目には `type=text` を使用し、メディア項目には `type=image_url` を使用します。必要に応じて `role`、`name` と組み合わせて素材の用途を示せます。\n\nリクエスト例:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance シリーズ\n\n公開モデル：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n推奨:\n- テキストから動画を生成する場合は、`*-t2v-*` または `pro / fast` を優先してください\n- 画像から動画を生成する場合は、`*-i2v-*` を優先してください\n- 複雑な参考素材を用いるシナリオでは、`content` を優先して使用してください\n\nリクエスト例:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok ビデオシリーズ\n\n公開モデル：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nよく使うパラメータ：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n例:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling ビデオメインモデル\n\n公開メインモデル：\n- `kling-video`\n\n必須：\n- `model`\n- `model_name`\n\nサポートされる `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n一般的な `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入力パラメータ：\n- テキストから動画: `model + model_name + prompt + mode=t2v`\n- 画像から動画: `model + model_name + prompt + mode=i2v + image`\n- 複数画像参照: `model + model_name + prompt + mode=multi_i2v + image_list`\n- 動画の延長: `model + model_name + mode=extend + video_id`\n\n例:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo 動画シリーズ\n\n公開モデル：\n- `minimax-h3`\n- `hailuo-2.3`\n\n推奨:\n- `minimax-h3` はテキストから動画生成、画像参照、音声参照をサポートします。`content` でテキストと素材を混在させることを推奨します。`image_urls`、`audio_urls` などの互換フィールドも使用できます。\n- `hailuo-2.3` では最初のフレーム画像が必要です。`content` で `role=first_frame` の `image_url` 項目を渡すか、`image_urls` を使用して最初のフレーム画像を渡すことを推奨します。\n- `minimax-h3` でよく使うのは `duration=4~15`、`resolution=1440p` です。`hailuo-2.3` でよく使うのは `duration=6` または `10`、`resolution=768p` です。\n\n`minimax-h3` の例：\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` の例：\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入力パラメータ：`model + prompt`\n\n- `mode=i2v`\n- 最小入力パラメータ：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入力パラメータ：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入力パラメータ：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入力パラメータ：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni の呼び出し方法\n\n- `gemini-omni` は new-api の外部公開動画モデル名で、`POST /v1/videos` を直接利用できます。\n- `mode=t2v`：テキストから動画を生成します。最小入力パラメータは `model + prompt` です。\n- `mode=r2v`：参照画像/参照素材による生成。画像は `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference`、または `content` に設定できます。\n- `mode=edit`：動画編集。動画は `video`、`video_url`、`videos`、または `content` に設定でき、参照画像も同時に送信できます。\n- 再生時間フィールドは `seconds` または `duration` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。",
         "operationId": "createVideo",
         "tags": [
           "動画生成Sora対応形式"
@@ -913,8 +913,9 @@
                       "grok-imagine-1.0-video",
                       "grok-imagine-video-1.5-preview",
                       "grok-video-3",
-                      "viduq3-turbo",
-                      "hailuo-video"
+                      "minimax-h3",
+                      "hailuo-2.3",
+                      "viduq3-turbo"
                     ],
                     "example": "sora-2"
                   },
@@ -1356,6 +1357,63 @@
                     "resolution": "720P"
                   }
                 },
+                "minimax_h3_sora_reference": {
+                  "summary": "MiniMax H3 マルチ素材動画",
+                  "value": {
+                    "model": "minimax-h3",
+                    "prompt": "A cinematic product video with smooth camera motion",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Use the product image as reference and match the rhythm of the audio."
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image",
+                        "name": "product"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://example.com/music.mp3"
+                        },
+                        "role": "reference_audio",
+                        "name": "music"
+                      }
+                    ],
+                    "duration": 8,
+                    "resolution": "1440p",
+                    "aspect_ratio": "16:9",
+                    "generate_audio": true
+                  }
+                },
+                "hailuo_2_3_sora_first_frame": {
+                  "summary": "Hailuo 2.3 最初のフレーム画像から動画を生成",
+                  "value": {
+                    "model": "hailuo-2.3",
+                    "prompt": "The camera slowly pushes in, natural motion and cinematic lighting.",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "The camera slowly pushes in, natural motion and cinematic lighting."
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame",
+                        "name": "first"
+                      }
+                    ],
+                    "duration": 10,
+                    "resolution": "768p",
+                    "aspect_ratio": "16:9"
+                  }
+                },
                 "vidu_sora_t2v": {
                   "summary": "Vidu Sora t2v",
                   "value": {
@@ -1443,12 +1501,16 @@
                   }
                 },
                 "hailuo_text2video": {
-                  "summary": "Hailuo テキストから動画生成",
+                  "summary": "Hailuo 2.3 最初のフレーム画像から動画を生成",
                   "value": {
-                    "model": "hailuo-video",
+                    "model": "hailuo-2.3",
                     "prompt": "A cinematic travel shot over the coastline",
+                    "image_urls": [
+                      "https://example.com/first-frame.jpg"
+                    ],
                     "duration": 6,
-                    "size": "1280x720"
+                    "resolution": "768p",
+                    "aspect_ratio": "16:9"
                   }
                 }
               }
@@ -4351,7 +4413,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "動画を作成（Seedance）",
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意。Volcano Ark の content 配列で、テキスト、画像、動画、音声素材を混在して配置できます。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n\n以下のフィールドは主に既存クライアントおよび旧プロトコルとの互換性のために使用します。新規接続では、できるだけこのページの「リクエスト例」にある標準形式を使用してください。テキストと参考素材は `content` 配列を使用し、生成設定は最上位の `duration`、`ratio`、`resolution`、`fps` などのフィールドを使用します。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` テキスト項目の記述形式は `{ \"type\": \"text\", \"text\": \"测试文字\" }` です。\n- `content` 画像、動画、音声素材項目はそれぞれ `image_url`、`video_url`、`audio_url` のオブジェクト形式を使用します。例: `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` で素材の用途を識別でき、`name` はプロンプト内で名前指定による参照に使用できます。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\nGemini Omni の呼び出し：\n- `gemini-omni` は、本 Seedance タスク API からも呼び出せます。\n- `mode=t2v` はテキストから動画の生成に使用し、`mode=r2v` は参照画像/参照素材を用いた生成に使用し、`mode=edit` は動画編集に使用します。\n- テキストは `prompt` または `content` の `text` 項目に配置できます。画像は `image_url / image_urls / reference_images / input_reference / content` に、動画は `video_urls / content` に配置できます。\n- 再生時間フィールドは `duration` または `seconds` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意。Volcano Ark の content 配列で、テキスト、画像、動画、音声素材を混在して配置できます。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n\n以下のフィールドは主に既存クライアントおよび旧プロトコルとの互換性のために使用します。新規接続では、できるだけこのページの「リクエスト例」にある標準形式を使用してください。テキストと参考素材は `content` 配列を使用し、生成設定は最上位の `duration`、`ratio`、`resolution`、`fps` などのフィールドを使用します。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` テキスト項目の記述形式は `{ \"type\": \"text\", \"text\": \"测试文字\" }` です。\n- `content` 画像、動画、音声素材項目はそれぞれ `image_url`、`video_url`、`audio_url` のオブジェクト形式を使用します。例: `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` で素材の用途を識別でき、`name` はプロンプト内で名前指定による参照に使用できます。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\nGemini Omni の呼び出し：\n- `gemini-omni` は、本 Seedance タスク API からも呼び出せます。\n- `mode=t2v` はテキストから動画の生成に使用し、`mode=r2v` は参照画像/参照素材を用いた生成に使用し、`mode=edit` は動画編集に使用します。\n- テキストは `prompt` または `content` の `text` 項目に配置できます。画像は `image_url / image_urls / reference_images / input_reference / content` に、動画は `video_urls / content` に配置できます。\n- 再生時間フィールドは `duration` または `seconds` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。\n\nMiniMax / Hailuo の呼び出し：\n- `minimax-h3` は本タスク API で呼び出せます。テキストから動画生成、画像参照、音声参照に対応しています。テキストは `prompt` または `content` のテキスト項目に、素材は `content`、`image_urls`、`audio_urls` などのフィールドに指定できます。\n- `hailuo-2.3` は本タスク API で呼び出せます。最初のフレーム画像が必要です。`content` には `role=first_frame` の `image_url` 項目を渡すことを推奨します。\n- `minimax-h3` でよく使うのは `duration=4~15`、`resolution=1440p` です。`hailuo-2.3` でよく使うのは `duration=6` または `10`、`resolution=768p` です。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
           "Video generation Seedance"
@@ -4370,7 +4432,6 @@
                   "model": {
                     "type": "string",
                     "example": "doubao-seedance-2-0-260128",
-                    "description": "必須。モデル名。Seedance の公開モデルを指定することも、`gemini-omni` を指定することもできます。",
                     "enum": [
                       "doubao-seedance-1-0-lite-i2v-250428",
                       "doubao-seedance-1-0-lite-t2v-250428",
@@ -4379,8 +4440,11 @@
                       "doubao-seedance-1-5-pro-251215",
                       "doubao-seedance-2-0-260128",
                       "doubao-seedance-2-0-fast-260128",
+                      "minimax-h3",
+                      "hailuo-2.3",
                       "gemini-omni"
-                    ]
+                    ],
+                    "description": "必須。モデル名。Seedance 対外モデル、`gemini-omni`、`minimax-h3` または `hailuo-2.3` を指定できます。"
                   },
                   "prompt": {
                     "type": "string",
@@ -4611,6 +4675,63 @@
                     "size": "1280x720"
                   }
                 },
+                "minimax_h3_tasks_content": {
+                  "summary": "MiniMax H3 コンテンツタスク",
+                  "value": {
+                    "model": "minimax-h3",
+                    "prompt": "A cinematic product video with smooth camera motion",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Use the product image as reference and match the rhythm of the audio."
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image",
+                        "name": "product"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://example.com/music.mp3"
+                        },
+                        "role": "reference_audio",
+                        "name": "music"
+                      }
+                    ],
+                    "duration": 8,
+                    "resolution": "1440p",
+                    "ratio": "16:9",
+                    "generate_audio": true
+                  }
+                },
+                "hailuo_2_3_tasks_first_frame": {
+                  "summary": "Hailuo 2.3 最初のフレーム画像から動画を生成",
+                  "value": {
+                    "model": "hailuo-2.3",
+                    "prompt": "The camera slowly pushes in, natural motion and cinematic lighting.",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "The camera slowly pushes in, natural motion and cinematic lighting."
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame",
+                        "name": "first"
+                      }
+                    ],
+                    "duration": 10,
+                    "resolution": "768p",
+                    "ratio": "16:9"
+                  }
+                },
                 "gemini_omni_seedance_t2v": {
                   "summary": "Gemini Omni t2v",
                   "value": {
@@ -4759,7 +4880,7 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "タスクを照会する（Seedance）",
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意。Volcano Ark の content 配列で、テキスト、画像、動画、音声素材を混在して配置できます。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n\n以下のフィールドは主に既存クライアントおよび旧プロトコルとの互換性のために使用します。新規接続では、できるだけこのページの「リクエスト例」にある標準形式を使用してください。テキストと参考素材は `content` 配列を使用し、生成設定は最上位の `duration`、`ratio`、`resolution`、`fps` などのフィールドを使用します。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` テキスト項目の記述形式は `{ \"type\": \"text\", \"text\": \"测试文字\" }` です。\n- `content` 画像、動画、音声素材項目はそれぞれ `image_url`、`video_url`、`audio_url` のオブジェクト形式を使用します。例: `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` で素材の用途を識別でき、`name` はプロンプト内で名前指定による参照に使用できます。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\nGemini Omni の呼び出し：\n- `gemini-omni` は、本 Seedance タスク API からも呼び出せます。\n- `mode=t2v` はテキストから動画の生成に使用し、`mode=r2v` は参照画像/参照素材を用いた生成に使用し、`mode=edit` は動画編集に使用します。\n- テキストは `prompt` または `content` の `text` 項目に配置できます。画像は `image_url / image_urls / reference_images / input_reference / content` に、動画は `video_urls / content` に配置できます。\n- 再生時間フィールドは `duration` または `seconds` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意。Volcano Ark の content 配列で、テキスト、画像、動画、音声素材を混在して配置できます。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n\n以下のフィールドは主に既存クライアントおよび旧プロトコルとの互換性のために使用します。新規接続では、できるだけこのページの「リクエスト例」にある標準形式を使用してください。テキストと参考素材は `content` 配列を使用し、生成設定は最上位の `duration`、`ratio`、`resolution`、`fps` などのフィールドを使用します。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` テキスト項目の記述形式は `{ \"type\": \"text\", \"text\": \"测试文字\" }` です。\n- `content` 画像、動画、音声素材項目はそれぞれ `image_url`、`video_url`、`audio_url` のオブジェクト形式を使用します。例: `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` で素材の用途を識別でき、`name` はプロンプト内で名前指定による参照に使用できます。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\nGemini Omni の呼び出し：\n- `gemini-omni` は、本 Seedance タスク API からも呼び出せます。\n- `mode=t2v` はテキストから動画の生成に使用し、`mode=r2v` は参照画像/参照素材を用いた生成に使用し、`mode=edit` は動画編集に使用します。\n- テキストは `prompt` または `content` の `text` 項目に配置できます。画像は `image_url / image_urls / reference_images / input_reference / content` に、動画は `video_urls / content` に配置できます。\n- 再生時間フィールドは `duration` または `seconds` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。\n\nMiniMax / Hailuo の呼び出し：\n- `minimax-h3` は本タスク API で呼び出せます。テキストから動画生成、画像参照、音声参照に対応しています。テキストは `prompt` または `content` のテキスト項目に、素材は `content`、`image_urls`、`audio_urls` などのフィールドに指定できます。\n- `hailuo-2.3` は本タスク API で呼び出せます。最初のフレーム画像が必要です。`content` には `role=first_frame` の `image_url` 項目を渡すことを推奨します。\n- `minimax-h3` でよく使うのは `duration=4~15`、`resolution=1440p` です。`hailuo-2.3` でよく使うのは `duration=6` または `10`、`resolution=768p` です。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
           "Video generation Seedance"

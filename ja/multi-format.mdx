@@ -25,6 +25,7 @@ description: "現在のプロジェクトは単一のプロトコルのみに対
 モデル自体に専用フィールド、専用タスク構造、またはネイティブクエリプロトコルが必要な場合は、ネイティブインターフェースを公開します：
 
 - Seedance：`/api/v3/contents/generations/tasks`
+- MiniMax / Hailuo：`minimax-h3` と `hailuo-2.3` は `/v1/videos` を利用でき、`/api/v3/contents/generations/tasks` のタスク形式でも接続できます
 - HappyHorse：`/api/v1/services/aigc/video-generation/video-synthesis` と `/api/v1/tasks/{task_id}`
 - Vidu：`/ent/v2/text2video`、`/ent/v2/img2video`、`/ent/v2/start-end2video`、`/ent/v2/reference2video` 和 `/ent/v2/tasks/{task_id}/creations`
 - Omni と Veo：`gemini-omni` は `/v1/videos` または `/api/v3/contents/generations/tasks` を使用します。Veo のネイティブ予約済みパスは `/v1beta/models/{model}:predictLongRunning` と `/v1beta/{operation_name}` です

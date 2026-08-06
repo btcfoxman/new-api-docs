@@ -199,9 +199,9 @@ Veo のメインモデルは `/v1/videos` 互換フォーマットを優先し�
 
 
 
-### Hailuo
+### MiniMax / Hailuo
 
-統合ビデオ機能を使用してアクセスし、Text-to-Video（テキストからビデオ生成）シナリオに適しています。
+統一ビデオ機能で接続します。`minimax-h3` テキストからの動画生成、画像参照、音声参照に対応しています。`hailuo-2.3` 最初のフレーム画像が必要で、先頭フレーム画像からの動画生成に適しています。
 
 
 
@@ -209,7 +209,11 @@ Veo のメインモデルは `/v1/videos` 互換フォーマットを優先し�
 
 |---|---|
 
-| `hailuo*` | `/v1/videos` |
+| `minimax-h3` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+| `hailuo-2.3` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+| `hailuo*` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
 
 

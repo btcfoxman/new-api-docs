@@ -25,6 +25,7 @@ Features:
 Expose native interfaces when the model requires dedicated fields, specific task structures, or native query protocols:
 
 - Seedance：`/api/v3/contents/generations/tasks`
+- MiniMax / Hailuo: `minimax-h3` and `hailuo-2.3` can use `/v1/videos`, and can also be integrated via the task format of `/api/v3/contents/generations/tasks`
 - HappyHorse: `/api/v1/services/aigc/video-generation/video-synthesis` and `/api/v1/tasks/{task_id}`
 - Vidu：`/ent/v2/text2video`、`/ent/v2/img2video`、`/ent/v2/start-end2video`、`/ent/v2/reference2video` 和 `/ent/v2/tasks/{task_id}/creations`
 - Omni and Veo: `gemini-omni` uses `/v1/videos` or `/api/v3/contents/generations/tasks`; the native reserved paths for Veo are `/v1beta/models/{model}:predictLongRunning` and `/v1beta/{operation_name}`

@@ -199,9 +199,9 @@ L'interface dédiée au modèle et l'entrée vidéo unifiée sont toutes deux pu
 
 
 
-### Hailuo
+### MiniMax / Hailuo
 
-Utilise l'accès par capacité vidéo unifiée, adapté aux scénarios de génération de vidéo à partir de texte (Text-to-Video).
+Utilisez l’intégration via la capacité vidéo unifiée. `minimax-h3` Prend en charge le texte-vers-vidéo, la référence d’image et la référence audio ; `hailuo-2.3` nécessite une image de première image, adaptée à la génération vidéo à partir d’une image de première image.
 
 
 
@@ -209,7 +209,11 @@ Utilise l'accès par capacité vidéo unifiée, adapté aux scénarios de géné
 
 |---|---|
 
-| `hailuo*` | `/v1/videos` |
+| `minimax-h3` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+| `hailuo-2.3` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+| `hailuo*` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
 
 

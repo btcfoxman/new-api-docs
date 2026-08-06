@@ -199,9 +199,9 @@ Both the model-specific interface and the unified video entry point are availabl
 
 
 
-### Hailuo
+### MiniMax / Hailuo
 
-Integrate using unified video capabilities, suitable for text-to-video scenarios.
+Use the unified video capability for integration. `minimax-h3` Supports text-to-video, image references, and audio references; `hailuo-2.3` requires a first-frame image and is suitable for first-frame image-to-video.
 
 
 
@@ -209,7 +209,11 @@ Integrate using unified video capabilities, suitable for text-to-video scenarios
 
 |---|---|
 
-| `hailuo*` | `/v1/videos` |
+| `minimax-h3` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+| `hailuo-2.3` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
+| `hailuo*` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
 
 
