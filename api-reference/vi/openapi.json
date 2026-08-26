@@ -2666,11 +2666,11 @@
     },
     "/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
-        "summary": "Tạo video(HappyHorse)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nHappyHorse giao diện tạo video của Alibaba; đường dẫn công khai tuân theo giao thức chính thức của DashScope.\n\nHỗ trợ 5 mô hình đối ngoại: `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`. Trong đó `happyhorse-1.0` là mô hình tổng hợp, cần dùng `mode` để phân biệt `t2v`、`i2v`、`r2v`、`video_edit`.\n\nGiao diện công khai giữ nguyên định dạng endpoint chính thức; tiền tố riêng cho từng kênh chỉ được ghép nội bộ khi gateway gửi yêu cầu tới kênh upstream cụ thể. Client không cần truyền rõ `X-DashScope-Async`; gateway hoặc lớp thích ứng kênh chính thức sẽ xử lý.\n\nBổ sung khung yêu cầu công khai, cấu trúc truy vấn tác vụ và mẫu kiểm tra khuyến nghị cho định dạng tạo video chính thức của Alibaba HappyHorse; đường dẫn công khai giữ nguyên định dạng endpoint chính thức.\n\nMô hình hỗ trợ:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nCác trường yêu cầu thống nhất:\n- `model` (string, bắt buộc): Tên mô hình đối ngoại của HappyHorse. Mô hình tổng hợp `happyhorse-1.0` cần dùng cùng `mode`.\n- `mode` (string, tùy chọn): Chế độ mô hình tổng hợp, các giá trị thường dùng là `t2v`、`i2v`、`r2v`、`video_edit`. Với mô hình con cố định có thể không truyền.\n- `input.prompt` (string, bắt buộc): Prompt tạo hoặc chỉnh sửa video.\n- `input.media` (array[object], tùy chọn): Dữ liệu đầu vào đa phương tiện. Tạo video từ ảnh dùng `first_frame`, tạo video từ tham chiếu dùng `reference_image`, chỉnh sửa video dùng `video` và tùy chọn `reference_image`.\n- `parameters.duration` (integer, tùy chọn): Thời gian tạo, tính bằng giây.\n- `parameters.resolution` (string, tùy chọn): Độ phân giải đầu ra, giá trị thường dùng `720P`、`1080P`.\n- `parameters.ratio` (string, tùy chọn): Tỷ lệ khung hình đầu ra, thường dùng cho tạo video từ văn bản và từ tham chiếu.\n- `parameters.watermark` (boolean, tùy chọn): Có thêm watermark hay không.\n- `parameters.seed` (integer, tùy chọn): Seed ngẫu nhiên.\n\nKhác biệt thường gặp giữa mô hình/chế độ:\n- `HappyHorse 聚合模型`: Hỗ trợ mô hình happyhorse-1.0; mô hình tổng hợp phân biệt mô hình cuối cùng qua mode.\n- `HappyHorse 文生视频`: Hỗ trợ mô hình happyhorse-1.0-t2v; định dạng chính thức tạo video từ văn bản.\n- `HappyHorse 首帧图生视频`: Hỗ trợ mô hình happyhorse-1.0-i2v; định dạng chính thức tạo video từ ảnh khung đầu.\n- `HappyHorse 参考生视频`: Hỗ trợ mô hình happyhorse-1.0-r2v; định dạng chính thức tạo video từ nhiều ảnh tham chiếu.\n- `HappyHorse 视频编辑`: Hỗ trợ mô hình happyhorse-1.0-video-edit; định dạng chính thức chỉnh sửa video.",
-        "operationId": "create__happyhorse__task",
+        "summary": "Tạo video (HappyHorse và Wan)",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nHappyHorse và giao diện tạo video Wan; đường dẫn công khai tuân theo giao thức chính thức của DashScope.\n\nHappyHorse hỗ trợ `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, `happyhorse-1.0-video-edit`; Wan hỗ trợ `wan-3.0`, `wan-3.0-480p`, `wan-3.0-1080p`. Trong đó `happyhorse-1.0` là mô hình tổng hợp, cần phân biệt `t2v`, `i2v`, `r2v`, `video_edit` thông qua `mode`. Ba mô hình của Wan lần lượt cố định ở 720P, 480P, 1080P, hỗ trợ thời lượng 2～30 giây và tối đa 10 ảnh, 5 video, 5 audio tham chiếu.\n\nGiao diện công khai giữ nguyên định dạng endpoint chính thức; tiền tố riêng cho từng kênh chỉ được ghép nội bộ khi gateway gửi yêu cầu tới kênh upstream cụ thể. Client không cần truyền rõ `X-DashScope-Async`; gateway hoặc lớp thích ứng kênh chính thức sẽ xử lý.\n\nBổ sung khung yêu cầu công khai, cấu trúc truy vấn tác vụ và mẫu xác thực đề xuất cho định dạng tạo video HappyHorse và Wan; đường dẫn công khai giữ nguyên định dạng endpoint chính thức của DashScope.\n\nMô hình hỗ trợ:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit, wan-3.0, wan-3.0-480p, wan-3.0-1080p\n\nCác trường yêu cầu thống nhất:\n- `model` (string, bắt buộc): Tên mô hình công khai của HappyHorse hoặc Wan. Wan hỗ trợ `wan-3.0`, `wan-3.0-480p`, `wan-3.0-1080p`; mô hình tổng hợp HappyHorse `happyhorse-1.0` cần dùng cùng `mode`.\n- `mode` (string, tùy chọn): Chế độ mô hình tổng hợp, các giá trị thường dùng là `t2v`、`i2v`、`r2v`、`video_edit`. Với mô hình con cố định có thể không truyền.\n- `input.prompt` (string, bắt buộc): Prompt tạo hoặc chỉnh sửa video.\n- `input.media` (array[object], tùy chọn): Đầu vào đa phương tiện. Hỗ trợ `first_frame`, `last_frame`, `reference_image`, `reference_video`, `reference_audio`; Wan hỗ trợ tối đa 10 ảnh, 5 video, 5 audio.\n- `parameters.duration` (integer, tùy chọn): Thời gian tạo, tính bằng giây.\n- `parameters.resolution` (string, tùy chọn): Độ phân giải đầu ra. Ba mô hình của Wan lần lượt cố định ở `720P`, `480P`, `1080P`; các giá trị phổ biến của HappyHorse là `720P`, `1080P`.\n- `parameters.ratio` (string, tùy chọn): Tỷ lệ khung hình đầu ra, thường dùng cho tạo video từ văn bản và từ tham chiếu.\n- `parameters.watermark` (boolean, tùy chọn): Có thêm watermark hay không.\n- `parameters.seed` (integer, tùy chọn): Seed ngẫu nhiên.\n\nKhác biệt thường gặp giữa mô hình/chế độ:\n- `HappyHorse 聚合模型`: Hỗ trợ mô hình happyhorse-1.0; mô hình tổng hợp phân biệt mô hình cuối cùng qua mode.\n- `HappyHorse 文生视频`: Hỗ trợ mô hình happyhorse-1.0-t2v; định dạng chính thức tạo video từ văn bản.\n- `HappyHorse 首帧图生视频`: Hỗ trợ mô hình happyhorse-1.0-i2v; định dạng chính thức tạo video từ ảnh khung đầu.\n- `HappyHorse 参考生视频`: Hỗ trợ mô hình happyhorse-1.0-r2v; định dạng chính thức tạo video từ nhiều ảnh tham chiếu.\n- `HappyHorse 视频编辑`: Hỗ trợ mô hình happyhorse-1.0-video-edit; định dạng chính thức chỉnh sửa video.\n- `Wan 3.0 720P`: Hỗ trợ mô hình wan-3.0; tạo video tham chiếu đa phương thức theo định dạng chính thức của Wan 3.0.\n- `Wan 3.0 480P`: Hỗ trợ mô hình wan-3.0-480p; lời gọi theo định dạng chính thức của Wan 3.0 với 480P cố định.\n- `Wan 3.0 1080P`: Hỗ trợ mô hình wan-3.0-1080p; lời gọi theo định dạng chính thức của Wan 3.0 với 1080P cố định.",
+        "operationId": "create__happyhorse_wan_task",
         "tags": [
-          "Tạo videoHappyHorseAlibaba"
+          "Tạo video HappyHorse và Wan"
         ],
         "requestBody": {
           "required": true,
@@ -2690,10 +2690,13 @@
                       "happyhorse-1.0-t2v",
                       "happyhorse-1.0-i2v",
                       "happyhorse-1.0-r2v",
-                      "happyhorse-1.0-video-edit"
+                      "happyhorse-1.0-video-edit",
+                      "wan-3.0",
+                      "wan-3.0-480p",
+                      "wan-3.0-1080p"
                     ],
                     "example": "happyhorse-1.0-t2v",
-                    "description": "Tên mô hình hiển thị ra bên ngoài của HappyHorse. Mô hình tổng hợp `happyhorse-1.0` cần được sử dụng cùng với `mode`."
+                    "description": "HappyHorse hoặc tên mô hình Wan công khai. Wan hỗ trợ `wan-3.0`, `wan-3.0-480p`, `wan-3.0-1080p`; mô hình tổng hợp HappyHorse `happyhorse-1.0` cần được sử dụng cùng `mode`."
                   },
                   "mode": {
                     "type": "string",
@@ -2729,8 +2732,12 @@
                               "type": "string",
                               "enum": [
                                 "first_frame",
+                                "last_frame",
                                 "reference_image",
-                                "video"
+                                "reference_video",
+                                "reference_audio",
+                                "video",
+                                "audio"
                               ]
                             },
                             "url": {
@@ -2739,7 +2746,7 @@
                             }
                           }
                         },
-                        "description": "Đầu vào đa phương tiện. Tạo video từ hình ảnh sử dụng `first_frame`, tạo video tham chiếu sử dụng `reference_image`, chỉnh sửa video sử dụng `video` và tùy chọn `reference_image`."
+                        "description": "Đầu vào đa phương tiện. Hỗ trợ `first_frame`, `last_frame`, `reference_image`, `reference_video`, `reference_audio`; Wan hỗ trợ tối đa 10 ảnh, 5 video, 5 âm thanh."
                       }
                     }
                   },
@@ -2749,11 +2756,12 @@
                       "resolution": {
                         "type": "string",
                         "enum": [
+                          "480P",
                           "720P",
                           "1080P"
                         ],
                         "example": "720P",
-                        "description": "Độ phân giải đầu ra, các giá trị thường gặp `720P`、`1080P`."
+                        "description": "Độ phân giải đầu ra. Ba mô hình Wan lần lượt cố định `720P`, `480P`, `1080P`; giá trị thường gặp của HappyHorse là `720P`, `1080P`."
                       },
                       "ratio": {
                         "type": "string",
@@ -2871,6 +2879,74 @@
                       "resolution": "720P"
                     }
                   }
+                },
+                "wan_3_0_native": {
+                  "summary": "Wan 3.0 720P",
+                  "value": {
+                    "model": "wan-3.0",
+                    "input": {
+                      "prompt": "Keep the character consistent across all references",
+                      "media": [
+                        {
+                          "type": "reference_image",
+                          "url": "https://example.com/reference.jpg"
+                        },
+                        {
+                          "type": "reference_audio",
+                          "url": "https://example.com/reference.mp3"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
+                },
+                "wan_3_0_480p_native": {
+                  "summary": "Wan 3.0 480P",
+                  "value": {
+                    "model": "wan-3.0-480p",
+                    "input": {
+                      "prompt": "Create a smooth transition",
+                      "media": [
+                        {
+                          "type": "first_frame",
+                          "url": "https://example.com/first.jpg"
+                        },
+                        {
+                          "type": "last_frame",
+                          "url": "https://example.com/last.jpg"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "480P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
+                },
+                "wan_3_0_1080p_native": {
+                  "summary": "Wan 3.0 1080P",
+                  "value": {
+                    "model": "wan-3.0-1080p",
+                    "input": {
+                      "prompt": "Generate a cinematic reference video",
+                      "media": [
+                        {
+                          "type": "reference_video",
+                          "url": "https://example.com/reference.mp4"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "1080P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
                 }
               }
             }
@@ -2933,17 +3009,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/tạo-videohappyhorsealibaba/tạo-videohappyhorse"
+          "href": "/api-reference/vi/tạo-video-happyhorse-và-wan/tạo-video-happyhorse-và-wan"
         }
       }
     },
     "/api/v1/tasks/{task_id}": {
       "get": {
-        "summary": "Truy vấn tác vụ(HappyHorse)",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nHappyHorse giao diện tạo video của Alibaba; đường dẫn công khai tuân theo giao thức chính thức của DashScope.\n\nHỗ trợ 5 mô hình đối ngoại: `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`. Trong đó `happyhorse-1.0` là mô hình tổng hợp, cần dùng `mode` để phân biệt `t2v`、`i2v`、`r2v`、`video_edit`.\n\nGiao diện công khai giữ nguyên định dạng endpoint chính thức; tiền tố riêng cho từng kênh chỉ được ghép nội bộ khi gateway gửi yêu cầu tới kênh upstream cụ thể. Client không cần truyền rõ `X-DashScope-Async`; gateway hoặc lớp thích ứng kênh chính thức sẽ xử lý.\n\nBổ sung khung yêu cầu công khai, cấu trúc truy vấn tác vụ và mẫu kiểm tra khuyến nghị cho định dạng tạo video chính thức của Alibaba HappyHorse; đường dẫn công khai giữ nguyên định dạng endpoint chính thức.\n\nMô hình hỗ trợ:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nCác trường yêu cầu thống nhất:\n- `model` (string, bắt buộc): Tên mô hình đối ngoại của HappyHorse. Mô hình tổng hợp `happyhorse-1.0` cần dùng cùng `mode`.\n- `mode` (string, tùy chọn): Chế độ mô hình tổng hợp, các giá trị thường dùng là `t2v`、`i2v`、`r2v`、`video_edit`. Với mô hình con cố định có thể không truyền.\n- `input.prompt` (string, bắt buộc): Prompt tạo hoặc chỉnh sửa video.\n- `input.media` (array[object], tùy chọn): Dữ liệu đầu vào đa phương tiện. Tạo video từ ảnh dùng `first_frame`, tạo video từ tham chiếu dùng `reference_image`, chỉnh sửa video dùng `video` và tùy chọn `reference_image`.\n- `parameters.duration` (integer, tùy chọn): Thời gian tạo, tính bằng giây.\n- `parameters.resolution` (string, tùy chọn): Độ phân giải đầu ra, giá trị thường dùng `720P`、`1080P`.\n- `parameters.ratio` (string, tùy chọn): Tỷ lệ khung hình đầu ra, thường dùng cho tạo video từ văn bản và từ tham chiếu.\n- `parameters.watermark` (boolean, tùy chọn): Có thêm watermark hay không.\n- `parameters.seed` (integer, tùy chọn): Seed ngẫu nhiên.\n\nKhác biệt thường gặp giữa mô hình/chế độ:\n- `HappyHorse 聚合模型`: Hỗ trợ mô hình happyhorse-1.0; mô hình tổng hợp phân biệt mô hình cuối cùng qua mode.\n- `HappyHorse 文生视频`: Hỗ trợ mô hình happyhorse-1.0-t2v; định dạng chính thức tạo video từ văn bản.\n- `HappyHorse 首帧图生视频`: Hỗ trợ mô hình happyhorse-1.0-i2v; định dạng chính thức tạo video từ ảnh khung đầu.\n- `HappyHorse 参考生视频`: Hỗ trợ mô hình happyhorse-1.0-r2v; định dạng chính thức tạo video từ nhiều ảnh tham chiếu.\n- `HappyHorse 视频编辑`: Hỗ trợ mô hình happyhorse-1.0-video-edit; định dạng chính thức chỉnh sửa video.",
-        "operationId": "query__happyhorse__task",
+        "summary": "Truy vấn tác vụ (HappyHorse và Wan)",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nHappyHorse và giao diện tạo video Wan; đường dẫn công khai tuân theo giao thức chính thức của DashScope.\n\nHappyHorse hỗ trợ `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, `happyhorse-1.0-video-edit`; Wan hỗ trợ `wan-3.0`, `wan-3.0-480p`, `wan-3.0-1080p`. Trong đó `happyhorse-1.0` là mô hình tổng hợp, cần phân biệt `t2v`, `i2v`, `r2v`, `video_edit` thông qua `mode`. Ba mô hình của Wan lần lượt cố định ở 720P, 480P, 1080P, hỗ trợ thời lượng 2～30 giây và tối đa 10 ảnh, 5 video, 5 audio tham chiếu.\n\nGiao diện công khai giữ nguyên định dạng endpoint chính thức; tiền tố riêng cho từng kênh chỉ được ghép nội bộ khi gateway gửi yêu cầu tới kênh upstream cụ thể. Client không cần truyền rõ `X-DashScope-Async`; gateway hoặc lớp thích ứng kênh chính thức sẽ xử lý.\n\nBổ sung khung yêu cầu công khai, cấu trúc truy vấn tác vụ và mẫu xác thực đề xuất cho định dạng tạo video HappyHorse và Wan; đường dẫn công khai giữ nguyên định dạng endpoint chính thức của DashScope.\n\nMô hình hỗ trợ:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit, wan-3.0, wan-3.0-480p, wan-3.0-1080p\n\nCác trường yêu cầu thống nhất:\n- `model` (string, bắt buộc): Tên mô hình công khai của HappyHorse hoặc Wan. Wan hỗ trợ `wan-3.0`, `wan-3.0-480p`, `wan-3.0-1080p`; mô hình tổng hợp HappyHorse `happyhorse-1.0` cần dùng cùng `mode`.\n- `mode` (string, tùy chọn): Chế độ mô hình tổng hợp, các giá trị thường dùng là `t2v`、`i2v`、`r2v`、`video_edit`. Với mô hình con cố định có thể không truyền.\n- `input.prompt` (string, bắt buộc): Prompt tạo hoặc chỉnh sửa video.\n- `input.media` (array[object], tùy chọn): Đầu vào đa phương tiện. Hỗ trợ `first_frame`, `last_frame`, `reference_image`, `reference_video`, `reference_audio`; Wan hỗ trợ tối đa 10 ảnh, 5 video, 5 audio.\n- `parameters.duration` (integer, tùy chọn): Thời gian tạo, tính bằng giây.\n- `parameters.resolution` (string, tùy chọn): Độ phân giải đầu ra. Ba mô hình của Wan lần lượt cố định ở `720P`, `480P`, `1080P`; các giá trị phổ biến của HappyHorse là `720P`, `1080P`.\n- `parameters.ratio` (string, tùy chọn): Tỷ lệ khung hình đầu ra, thường dùng cho tạo video từ văn bản và từ tham chiếu.\n- `parameters.watermark` (boolean, tùy chọn): Có thêm watermark hay không.\n- `parameters.seed` (integer, tùy chọn): Seed ngẫu nhiên.\n\nKhác biệt thường gặp giữa mô hình/chế độ:\n- `HappyHorse 聚合模型`: Hỗ trợ mô hình happyhorse-1.0; mô hình tổng hợp phân biệt mô hình cuối cùng qua mode.\n- `HappyHorse 文生视频`: Hỗ trợ mô hình happyhorse-1.0-t2v; định dạng chính thức tạo video từ văn bản.\n- `HappyHorse 首帧图生视频`: Hỗ trợ mô hình happyhorse-1.0-i2v; định dạng chính thức tạo video từ ảnh khung đầu.\n- `HappyHorse 参考生视频`: Hỗ trợ mô hình happyhorse-1.0-r2v; định dạng chính thức tạo video từ nhiều ảnh tham chiếu.\n- `HappyHorse 视频编辑`: Hỗ trợ mô hình happyhorse-1.0-video-edit; định dạng chính thức chỉnh sửa video.\n- `Wan 3.0 720P`: Hỗ trợ mô hình wan-3.0; tạo video tham chiếu đa phương thức theo định dạng chính thức của Wan 3.0.\n- `Wan 3.0 480P`: Hỗ trợ mô hình wan-3.0-480p; lời gọi theo định dạng chính thức của Wan 3.0 với 480P cố định.\n- `Wan 3.0 1080P`: Hỗ trợ mô hình wan-3.0-1080p; lời gọi theo định dạng chính thức của Wan 3.0 với 1080P cố định.",
+        "operationId": "query__happyhorse_wan_task",
         "tags": [
-          "Tạo videoHappyHorseAlibaba"
+          "Tạo video HappyHorse và Wan"
         ],
         "parameters": [
           {
@@ -3035,7 +3111,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/vi/tạo-videohappyhorsealibaba/truy-vấn-tác-vụhappyhorse"
+          "href": "/api-reference/vi/tạo-video-happyhorse-và-wan/truy-vấn-tác-vụ-happyhorse-và-wan"
         }
       }
     },
@@ -7567,7 +7643,7 @@
       "name": "Lấy danh sách mô hình"
     },
     {
-      "name": "Tạo videoHappyHorseAlibaba"
+      "name": "Tạo video HappyHorse và Wan"
     },
     {
       "name": "Định dạngKling tạo video"

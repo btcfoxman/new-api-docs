@@ -2666,11 +2666,11 @@
     },
     "/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
-        "summary": "Create video(HappyHorse)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nHappyHorse Alibaba video generation API, with public paths following the official DashScope protocol.\n\nSupports 5 external models: `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, and `happyhorse-1.0-video-edit`. Among them, `happyhorse-1.0` is an aggregated model and requires `mode` to distinguish `t2v`, `i2v`, `r2v`, and `video_edit`.\n\nThe public API keeps the official endpoint format; channel-specific prefixes are only concatenated internally when the gateway requests a specific upstream channel. Clients do not need to pass `X-DashScope-Async` explicitly; it is handled by the gateway or the official channel adapter layer.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the HappyHorse Alibaba official video generation format; the public paths keep the official endpoint format.\n\nSupported models:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nUnified request fields:\n- `model` (string, required): HappyHorse external model name. The aggregated model `happyhorse-1.0` must be used with `mode`.\n- `mode` (string, optional): Aggregated model mode; common values are `t2v`, `i2v`, `r2v`, and `video_edit`. You can omit this for fixed submodels.\n- `input.prompt` (string, required): Prompt for video generation or editing.\n- `input.media` (array[object], optional): Multimedia input. Use `first_frame` for image-to-video, `reference_image` for reference-to-video, and `video` plus optional `reference_image` for video editing.\n- `parameters.duration` (integer, optional): Generation duration, in seconds.\n- `parameters.resolution` (string, optional): Output resolution; common values are `720P` and `1080P`.\n- `parameters.ratio` (string, optional): Output aspect ratio, commonly used for text-to-video and reference-to-video.\n- `parameters.watermark` (boolean, optional): Whether to add a watermark.\n- `parameters.seed` (integer, optional): Random seed.\n\nCommon model/mode differences:\n- `HappyHorse 聚合模型`: Supports model happyhorse-1.0; the aggregated model uses mode to distinguish the final model.\n- `HappyHorse 文生视频`: Supports model happyhorse-1.0-t2v; official-format text-to-video.\n- `HappyHorse 首帧图生视频`: Supports model happyhorse-1.0-i2v; official-format first-frame image-to-video.\n- `HappyHorse 参考生视频`: Supports model happyhorse-1.0-r2v; official-format multi-reference image-to-video.\n- `HappyHorse 视频编辑`: Supports model happyhorse-1.0-video-edit; official-format video editing.",
-        "operationId": "create__happyhorse__task",
+        "summary": "Create video (HappyHorse and Wan)",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nHappyHorse and the Wan video generation API, with public paths following the official DashScope protocol.\n\nHappyHorse supports `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, and `happyhorse-1.0-video-edit`; Wan supports `wan-3.0`, `wan-3.0-480p`, and `wan-3.0-1080p`. Among them, `happyhorse-1.0` is an aggregated model and must be distinguished via `mode` into `t2v`, `i2v`, `r2v`, and `video_edit`. The three Wan models are fixed at 720P, 480P, and 1080P respectively, and support 2 to 30 seconds plus up to 10 image, 5 video, and 5 audio references.\n\nThe public API keeps the official endpoint format; channel-specific prefixes are only concatenated internally when the gateway requests a specific upstream channel. Clients do not need to pass `X-DashScope-Async` explicitly; it is handled by the gateway or the official channel adapter layer.\n\nProvides the public request skeleton, task query structure, and recommended validation template for HappyHorse and Wan video generation formats; public paths follow the official DashScope endpoint format.\n\nSupported models:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit, wan-3.0, wan-3.0-480p, wan-3.0-1080p\n\nUnified request fields:\n- `model` (string, required): The external model name for HappyHorse or Wan. Wan supports `wan-3.0`, `wan-3.0-480p`, and `wan-3.0-1080p`; the HappyHorse aggregated model `happyhorse-1.0` must be used together with `mode`.\n- `mode` (string, optional): Aggregated model mode; common values are `t2v`, `i2v`, `r2v`, and `video_edit`. You can omit this for fixed submodels.\n- `input.prompt` (string, required): Prompt for video generation or editing.\n- `input.media` (array[object], optional): Multimedia input. Supports `first_frame`, `last_frame`, `reference_image`, `reference_video`, and `reference_audio`; Wan supports up to 10 images, 5 videos, and 5 audio files.\n- `parameters.duration` (integer, optional): Generation duration, in seconds.\n- `parameters.resolution` (string, optional): Output resolution. The three Wan models are fixed at `720P`, `480P`, and `1080P` respectively; common values for HappyHorse are `720P` and `1080P`.\n- `parameters.ratio` (string, optional): Output aspect ratio, commonly used for text-to-video and reference-to-video.\n- `parameters.watermark` (boolean, optional): Whether to add a watermark.\n- `parameters.seed` (integer, optional): Random seed.\n\nCommon model/mode differences:\n- `HappyHorse 聚合模型`: Supports model happyhorse-1.0; the aggregated model uses mode to distinguish the final model.\n- `HappyHorse 文生视频`: Supports model happyhorse-1.0-t2v; official-format text-to-video.\n- `HappyHorse 首帧图生视频`: Supports model happyhorse-1.0-i2v; official-format first-frame image-to-video.\n- `HappyHorse 参考生视频`: Supports model happyhorse-1.0-r2v; official-format multi-reference image-to-video.\n- `HappyHorse 视频编辑`: Supports model happyhorse-1.0-video-edit; official-format video editing.\n- `Wan 3.0 720P`: Supported model wan-3.0; Wan 3.0 official-format multimodal reference video generation.\n- `Wan 3.0 480P`: Supported model wan-3.0-480p; Wan 3.0 official-format call fixed at 480P.\n- `Wan 3.0 1080P`: Supported model wan-3.0-1080p; Wan 3.0 official-format call fixed at 1080P.",
+        "operationId": "create__happyhorse_wan_task",
         "tags": [
-          "Video generation HappyHorse"
+          "Video generationHappyHorse and Wan"
         ],
         "requestBody": {
           "required": true,
@@ -2690,10 +2690,13 @@
                       "happyhorse-1.0-t2v",
                       "happyhorse-1.0-i2v",
                       "happyhorse-1.0-r2v",
-                      "happyhorse-1.0-video-edit"
+                      "happyhorse-1.0-video-edit",
+                      "wan-3.0",
+                      "wan-3.0-480p",
+                      "wan-3.0-1080p"
                     ],
                     "example": "happyhorse-1.0-t2v",
-                    "description": "HappyHorse external model name. The aggregate model `happyhorse-1.0` must be used with `mode`."
+                    "description": "HappyHorse or Wan public model name. Wan supports `wan-3.0`, `wan-3.0-480p`, and `wan-3.0-1080p`; the HappyHorse aggregated model `happyhorse-1.0` must be used with `mode`."
                   },
                   "mode": {
                     "type": "string",
@@ -2729,8 +2732,12 @@
                               "type": "string",
                               "enum": [
                                 "first_frame",
+                                "last_frame",
                                 "reference_image",
-                                "video"
+                                "reference_video",
+                                "reference_audio",
+                                "video",
+                                "audio"
                               ]
                             },
                             "url": {
@@ -2739,7 +2746,7 @@
                             }
                           }
                         },
-                        "description": "Multimedia input. Image-to-video uses `first_frame`, reference-to-video uses `reference_image`, and video editing uses `video` and optional `reference_image`."
+                        "description": "Multimedia input. Supports `first_frame`, `last_frame`, `reference_image`, `reference_video`, and `reference_audio`; Wan supports up to 10 images, 5 videos, and 5 audio files."
                       }
                     }
                   },
@@ -2749,11 +2756,12 @@
                       "resolution": {
                         "type": "string",
                         "enum": [
+                          "480P",
                           "720P",
                           "1080P"
                         ],
                         "example": "720P",
-                        "description": "Output resolution, common values `720P` and `1080P`."
+                        "description": "Output resolution. The three Wan models are fixed at `720P`, `480P`, and `1080P` respectively; the common values for HappyHorse are `720P` and `1080P`."
                       },
                       "ratio": {
                         "type": "string",
@@ -2871,6 +2879,74 @@
                       "resolution": "720P"
                     }
                   }
+                },
+                "wan_3_0_native": {
+                  "summary": "Wan 3.0 720P",
+                  "value": {
+                    "model": "wan-3.0",
+                    "input": {
+                      "prompt": "Keep the character consistent across all references",
+                      "media": [
+                        {
+                          "type": "reference_image",
+                          "url": "https://example.com/reference.jpg"
+                        },
+                        {
+                          "type": "reference_audio",
+                          "url": "https://example.com/reference.mp3"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
+                },
+                "wan_3_0_480p_native": {
+                  "summary": "Wan 3.0 480P",
+                  "value": {
+                    "model": "wan-3.0-480p",
+                    "input": {
+                      "prompt": "Create a smooth transition",
+                      "media": [
+                        {
+                          "type": "first_frame",
+                          "url": "https://example.com/first.jpg"
+                        },
+                        {
+                          "type": "last_frame",
+                          "url": "https://example.com/last.jpg"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "480P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
+                },
+                "wan_3_0_1080p_native": {
+                  "summary": "Wan 3.0 1080P",
+                  "value": {
+                    "model": "wan-3.0-1080p",
+                    "input": {
+                      "prompt": "Generate a cinematic reference video",
+                      "media": [
+                        {
+                          "type": "reference_video",
+                          "url": "https://example.com/reference.mp4"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "1080P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
                 }
               }
             }
@@ -2933,17 +3009,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generation-happyhorse/create-videohappyhorse"
+          "href": "/api-reference/en/video-generationhappyhorse-and-wan/create-video-happyhorse-and-wan"
         }
       }
     },
     "/api/v1/tasks/{task_id}": {
       "get": {
-        "summary": "Query task (HappyHorse)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nHappyHorse Alibaba video generation API, with public paths following the official DashScope protocol.\n\nSupports 5 external models: `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, and `happyhorse-1.0-video-edit`. Among them, `happyhorse-1.0` is an aggregated model and requires `mode` to distinguish `t2v`, `i2v`, `r2v`, and `video_edit`.\n\nThe public API keeps the official endpoint format; channel-specific prefixes are only concatenated internally when the gateway requests a specific upstream channel. Clients do not need to pass `X-DashScope-Async` explicitly; it is handled by the gateway or the official channel adapter layer.\n\nProvides the public request skeleton, task query structure, and recommended validation template for the HappyHorse Alibaba official video generation format; the public paths keep the official endpoint format.\n\nSupported models:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nUnified request fields:\n- `model` (string, required): HappyHorse external model name. The aggregated model `happyhorse-1.0` must be used with `mode`.\n- `mode` (string, optional): Aggregated model mode; common values are `t2v`, `i2v`, `r2v`, and `video_edit`. You can omit this for fixed submodels.\n- `input.prompt` (string, required): Prompt for video generation or editing.\n- `input.media` (array[object], optional): Multimedia input. Use `first_frame` for image-to-video, `reference_image` for reference-to-video, and `video` plus optional `reference_image` for video editing.\n- `parameters.duration` (integer, optional): Generation duration, in seconds.\n- `parameters.resolution` (string, optional): Output resolution; common values are `720P` and `1080P`.\n- `parameters.ratio` (string, optional): Output aspect ratio, commonly used for text-to-video and reference-to-video.\n- `parameters.watermark` (boolean, optional): Whether to add a watermark.\n- `parameters.seed` (integer, optional): Random seed.\n\nCommon model/mode differences:\n- `HappyHorse 聚合模型`: Supports model happyhorse-1.0; the aggregated model uses mode to distinguish the final model.\n- `HappyHorse 文生视频`: Supports model happyhorse-1.0-t2v; official-format text-to-video.\n- `HappyHorse 首帧图生视频`: Supports model happyhorse-1.0-i2v; official-format first-frame image-to-video.\n- `HappyHorse 参考生视频`: Supports model happyhorse-1.0-r2v; official-format multi-reference image-to-video.\n- `HappyHorse 视频编辑`: Supports model happyhorse-1.0-video-edit; official-format video editing.",
-        "operationId": "query__happyhorse__task",
+        "summary": "Query task(HappyHorse and Wan)",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nHappyHorse and the Wan video generation API, with public paths following the official DashScope protocol.\n\nHappyHorse supports `happyhorse-1.0`, `happyhorse-1.0-i2v`, `happyhorse-1.0-t2v`, `happyhorse-1.0-r2v`, and `happyhorse-1.0-video-edit`; Wan supports `wan-3.0`, `wan-3.0-480p`, and `wan-3.0-1080p`. Among them, `happyhorse-1.0` is an aggregated model and must be distinguished via `mode` into `t2v`, `i2v`, `r2v`, and `video_edit`. The three Wan models are fixed at 720P, 480P, and 1080P respectively, and support 2 to 30 seconds plus up to 10 image, 5 video, and 5 audio references.\n\nThe public API keeps the official endpoint format; channel-specific prefixes are only concatenated internally when the gateway requests a specific upstream channel. Clients do not need to pass `X-DashScope-Async` explicitly; it is handled by the gateway or the official channel adapter layer.\n\nProvides the public request skeleton, task query structure, and recommended validation template for HappyHorse and Wan video generation formats; public paths follow the official DashScope endpoint format.\n\nSupported models:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit, wan-3.0, wan-3.0-480p, wan-3.0-1080p\n\nUnified request fields:\n- `model` (string, required): The external model name for HappyHorse or Wan. Wan supports `wan-3.0`, `wan-3.0-480p`, and `wan-3.0-1080p`; the HappyHorse aggregated model `happyhorse-1.0` must be used together with `mode`.\n- `mode` (string, optional): Aggregated model mode; common values are `t2v`, `i2v`, `r2v`, and `video_edit`. You can omit this for fixed submodels.\n- `input.prompt` (string, required): Prompt for video generation or editing.\n- `input.media` (array[object], optional): Multimedia input. Supports `first_frame`, `last_frame`, `reference_image`, `reference_video`, and `reference_audio`; Wan supports up to 10 images, 5 videos, and 5 audio files.\n- `parameters.duration` (integer, optional): Generation duration, in seconds.\n- `parameters.resolution` (string, optional): Output resolution. The three Wan models are fixed at `720P`, `480P`, and `1080P` respectively; common values for HappyHorse are `720P` and `1080P`.\n- `parameters.ratio` (string, optional): Output aspect ratio, commonly used for text-to-video and reference-to-video.\n- `parameters.watermark` (boolean, optional): Whether to add a watermark.\n- `parameters.seed` (integer, optional): Random seed.\n\nCommon model/mode differences:\n- `HappyHorse 聚合模型`: Supports model happyhorse-1.0; the aggregated model uses mode to distinguish the final model.\n- `HappyHorse 文生视频`: Supports model happyhorse-1.0-t2v; official-format text-to-video.\n- `HappyHorse 首帧图生视频`: Supports model happyhorse-1.0-i2v; official-format first-frame image-to-video.\n- `HappyHorse 参考生视频`: Supports model happyhorse-1.0-r2v; official-format multi-reference image-to-video.\n- `HappyHorse 视频编辑`: Supports model happyhorse-1.0-video-edit; official-format video editing.\n- `Wan 3.0 720P`: Supported model wan-3.0; Wan 3.0 official-format multimodal reference video generation.\n- `Wan 3.0 480P`: Supported model wan-3.0-480p; Wan 3.0 official-format call fixed at 480P.\n- `Wan 3.0 1080P`: Supported model wan-3.0-1080p; Wan 3.0 official-format call fixed at 1080P.",
+        "operationId": "query__happyhorse_wan_task",
         "tags": [
-          "Video generation HappyHorse"
+          "Video generationHappyHorse and Wan"
         ],
         "parameters": [
           {
@@ -3035,7 +3111,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/en/video-generation-happyhorse/query-task-happyhorse"
+          "href": "/api-reference/en/video-generationhappyhorse-and-wan/query-taskhappyhorse-and-wan"
         }
       }
     },
@@ -7567,7 +7643,7 @@
       "name": "List models"
     },
     {
-      "name": "Video generation HappyHorse"
+      "name": "Video generationHappyHorse and Wan"
     },
     {
       "name": "Video generation Kling format"

@@ -2666,11 +2666,11 @@
     },
     "/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
-        "summary": "创建视频(HappyHorse)",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nHappyHorse 阿里视频生成接口，公开路径遵循 DashScope 官方协议。\n\n支持 5 个对外模型：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。其中 `happyhorse-1.0` 是聚合模型，需要通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。\n\n公开接口保持官方端点格式；渠道专用前缀仅用于网关请求特定上游渠道时内部拼接。客户端不需要显式传 `X-DashScope-Async`，由网关或官方渠道适配层处理。\n\n补充 HappyHorse 阿里官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持官方端点格式。\n\n支持模型：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n统一请求字段：\n- `model` (string, 必填): HappyHorse 对外模型名。聚合模型 `happyhorse-1.0` 需配合 `mode` 使用。\n- `mode` (string, 可选): 聚合模型模式，常见值为 `t2v`、`i2v`、`r2v`、`video_edit`。固定子模型可不传。\n- `input.prompt` (string, 必填): 视频生成或编辑提示词。\n- `input.media` (array[object], 可选): 多媒体输入。图生视频使用 `first_frame`，参考生视频使用 `reference_image`，视频编辑使用 `video` 和可选 `reference_image`。\n- `parameters.duration` (integer, 可选): 生成时长，单位秒。\n- `parameters.resolution` (string, 可选): 输出分辨率，常见值 `720P`、`1080P`。\n- `parameters.ratio` (string, 可选): 输出宽高比，文生视频和参考生视频常用。\n- `parameters.watermark` (boolean, 可选): 是否添加水印。\n- `parameters.seed` (integer, 可选): 随机种子。\n\n常见模型/模式差异：\n- `HappyHorse 聚合模型`: 支持模型 happyhorse-1.0；聚合模型通过 mode 区分最终模型。\n- `HappyHorse 文生视频`: 支持模型 happyhorse-1.0-t2v；官方格式文生视频。\n- `HappyHorse 首帧图生视频`: 支持模型 happyhorse-1.0-i2v；官方格式首帧图生视频。\n- `HappyHorse 参考生视频`: 支持模型 happyhorse-1.0-r2v；官方格式多参考图生视频。\n- `HappyHorse 视频编辑`: 支持模型 happyhorse-1.0-video-edit；官方格式视频编辑。",
-        "operationId": "create__happyhorse__task",
+        "summary": "创建视频(HappyHorse与Wan)",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nHappyHorse 与 Wan 视频生成接口，公开路径遵循 DashScope 官方协议。\n\nHappyHorse 支持 `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`；Wan 支持 `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p`。其中 `happyhorse-1.0` 是聚合模型，需要通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。Wan 三个模型分别固定 720P、480P、1080P，支持 2～30 秒及最多 10 图、5 视频、5 音频参考。\n\n公开接口保持官方端点格式；渠道专用前缀仅用于网关请求特定上游渠道时内部拼接。客户端不需要显式传 `X-DashScope-Async`，由网关或官方渠道适配层处理。\n\n补充 HappyHorse 与 Wan 视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 DashScope 官方端点格式。\n\n支持模型：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit, wan-3.0, wan-3.0-480p, wan-3.0-1080p\n\n统一请求字段：\n- `model` (string, 必填): HappyHorse 或 Wan 对外模型名。Wan 支持 `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p`；HappyHorse 聚合模型 `happyhorse-1.0` 需配合 `mode` 使用。\n- `mode` (string, 可选): 聚合模型模式，常见值为 `t2v`、`i2v`、`r2v`、`video_edit`。固定子模型可不传。\n- `input.prompt` (string, 必填): 视频生成或编辑提示词。\n- `input.media` (array[object], 可选): 多媒体输入。支持 `first_frame`、`last_frame`、`reference_image`、`reference_video`、`reference_audio`；Wan 最多支持 10 图、5 视频、5 音频。\n- `parameters.duration` (integer, 可选): 生成时长，单位秒。\n- `parameters.resolution` (string, 可选): 输出分辨率。Wan 三个模型分别固定 `720P`、`480P`、`1080P`；HappyHorse 常见值为 `720P`、`1080P`。\n- `parameters.ratio` (string, 可选): 输出宽高比，文生视频和参考生视频常用。\n- `parameters.watermark` (boolean, 可选): 是否添加水印。\n- `parameters.seed` (integer, 可选): 随机种子。\n\n常见模型/模式差异：\n- `HappyHorse 聚合模型`: 支持模型 happyhorse-1.0；聚合模型通过 mode 区分最终模型。\n- `HappyHorse 文生视频`: 支持模型 happyhorse-1.0-t2v；官方格式文生视频。\n- `HappyHorse 首帧图生视频`: 支持模型 happyhorse-1.0-i2v；官方格式首帧图生视频。\n- `HappyHorse 参考生视频`: 支持模型 happyhorse-1.0-r2v；官方格式多参考图生视频。\n- `HappyHorse 视频编辑`: 支持模型 happyhorse-1.0-video-edit；官方格式视频编辑。\n- `Wan 3.0 720P`: 支持模型 wan-3.0；Wan 3.0 官方格式多模态参考视频生成。\n- `Wan 3.0 480P`: 支持模型 wan-3.0-480p；固定 480P 的 Wan 3.0 官方格式调用。\n- `Wan 3.0 1080P`: 支持模型 wan-3.0-1080p；固定 1080P 的 Wan 3.0 官方格式调用。",
+        "operationId": "create__happyhorse_wan_task",
         "tags": [
-          "视频生成HappyHorse阿里"
+          "视频生成HappyHorse与Wan"
         ],
         "requestBody": {
           "required": true,
@@ -2690,10 +2690,13 @@
                       "happyhorse-1.0-t2v",
                       "happyhorse-1.0-i2v",
                       "happyhorse-1.0-r2v",
-                      "happyhorse-1.0-video-edit"
+                      "happyhorse-1.0-video-edit",
+                      "wan-3.0",
+                      "wan-3.0-480p",
+                      "wan-3.0-1080p"
                     ],
                     "example": "happyhorse-1.0-t2v",
-                    "description": "HappyHorse 对外模型名。聚合模型 `happyhorse-1.0` 需配合 `mode` 使用。"
+                    "description": "HappyHorse 或 Wan 对外模型名。Wan 支持 `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p`；HappyHorse 聚合模型 `happyhorse-1.0` 需配合 `mode` 使用。"
                   },
                   "mode": {
                     "type": "string",
@@ -2729,8 +2732,12 @@
                               "type": "string",
                               "enum": [
                                 "first_frame",
+                                "last_frame",
                                 "reference_image",
-                                "video"
+                                "reference_video",
+                                "reference_audio",
+                                "video",
+                                "audio"
                               ]
                             },
                             "url": {
@@ -2739,7 +2746,7 @@
                             }
                           }
                         },
-                        "description": "多媒体输入。图生视频使用 `first_frame`，参考生视频使用 `reference_image`，视频编辑使用 `video` 和可选 `reference_image`。"
+                        "description": "多媒体输入。支持 `first_frame`、`last_frame`、`reference_image`、`reference_video`、`reference_audio`；Wan 最多支持 10 图、5 视频、5 音频。"
                       }
                     }
                   },
@@ -2749,11 +2756,12 @@
                       "resolution": {
                         "type": "string",
                         "enum": [
+                          "480P",
                           "720P",
                           "1080P"
                         ],
                         "example": "720P",
-                        "description": "输出分辨率，常见值 `720P`、`1080P`。"
+                        "description": "输出分辨率。Wan 三个模型分别固定 `720P`、`480P`、`1080P`；HappyHorse 常见值为 `720P`、`1080P`。"
                       },
                       "ratio": {
                         "type": "string",
@@ -2871,6 +2879,74 @@
                       "resolution": "720P"
                     }
                   }
+                },
+                "wan_3_0_native": {
+                  "summary": "Wan 3.0 720P",
+                  "value": {
+                    "model": "wan-3.0",
+                    "input": {
+                      "prompt": "Keep the character consistent across all references",
+                      "media": [
+                        {
+                          "type": "reference_image",
+                          "url": "https://example.com/reference.jpg"
+                        },
+                        {
+                          "type": "reference_audio",
+                          "url": "https://example.com/reference.mp3"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
+                },
+                "wan_3_0_480p_native": {
+                  "summary": "Wan 3.0 480P",
+                  "value": {
+                    "model": "wan-3.0-480p",
+                    "input": {
+                      "prompt": "Create a smooth transition",
+                      "media": [
+                        {
+                          "type": "first_frame",
+                          "url": "https://example.com/first.jpg"
+                        },
+                        {
+                          "type": "last_frame",
+                          "url": "https://example.com/last.jpg"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "480P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
+                },
+                "wan_3_0_1080p_native": {
+                  "summary": "Wan 3.0 1080P",
+                  "value": {
+                    "model": "wan-3.0-1080p",
+                    "input": {
+                      "prompt": "Generate a cinematic reference video",
+                      "media": [
+                        {
+                          "type": "reference_video",
+                          "url": "https://example.com/reference.mp4"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "1080P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
                 }
               }
             }
@@ -2933,17 +3009,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/cn/视频生成happyhorse阿里/创建视频happyhorse"
+          "href": "/api-reference/cn/视频生成happyhorse与wan/创建视频happyhorse与wan"
         }
       }
     },
     "/api/v1/tasks/{task_id}": {
       "get": {
-        "summary": "查询任务(HappyHorse)",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nHappyHorse 阿里视频生成接口，公开路径遵循 DashScope 官方协议。\n\n支持 5 个对外模型：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。其中 `happyhorse-1.0` 是聚合模型，需要通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。\n\n公开接口保持官方端点格式；渠道专用前缀仅用于网关请求特定上游渠道时内部拼接。客户端不需要显式传 `X-DashScope-Async`，由网关或官方渠道适配层处理。\n\n补充 HappyHorse 阿里官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持官方端点格式。\n\n支持模型：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n统一请求字段：\n- `model` (string, 必填): HappyHorse 对外模型名。聚合模型 `happyhorse-1.0` 需配合 `mode` 使用。\n- `mode` (string, 可选): 聚合模型模式，常见值为 `t2v`、`i2v`、`r2v`、`video_edit`。固定子模型可不传。\n- `input.prompt` (string, 必填): 视频生成或编辑提示词。\n- `input.media` (array[object], 可选): 多媒体输入。图生视频使用 `first_frame`，参考生视频使用 `reference_image`，视频编辑使用 `video` 和可选 `reference_image`。\n- `parameters.duration` (integer, 可选): 生成时长，单位秒。\n- `parameters.resolution` (string, 可选): 输出分辨率，常见值 `720P`、`1080P`。\n- `parameters.ratio` (string, 可选): 输出宽高比，文生视频和参考生视频常用。\n- `parameters.watermark` (boolean, 可选): 是否添加水印。\n- `parameters.seed` (integer, 可选): 随机种子。\n\n常见模型/模式差异：\n- `HappyHorse 聚合模型`: 支持模型 happyhorse-1.0；聚合模型通过 mode 区分最终模型。\n- `HappyHorse 文生视频`: 支持模型 happyhorse-1.0-t2v；官方格式文生视频。\n- `HappyHorse 首帧图生视频`: 支持模型 happyhorse-1.0-i2v；官方格式首帧图生视频。\n- `HappyHorse 参考生视频`: 支持模型 happyhorse-1.0-r2v；官方格式多参考图生视频。\n- `HappyHorse 视频编辑`: 支持模型 happyhorse-1.0-video-edit；官方格式视频编辑。",
-        "operationId": "query__happyhorse__task",
+        "summary": "查询任务(HappyHorse与Wan)",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nHappyHorse 与 Wan 视频生成接口，公开路径遵循 DashScope 官方协议。\n\nHappyHorse 支持 `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`；Wan 支持 `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p`。其中 `happyhorse-1.0` 是聚合模型，需要通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。Wan 三个模型分别固定 720P、480P、1080P，支持 2～30 秒及最多 10 图、5 视频、5 音频参考。\n\n公开接口保持官方端点格式；渠道专用前缀仅用于网关请求特定上游渠道时内部拼接。客户端不需要显式传 `X-DashScope-Async`，由网关或官方渠道适配层处理。\n\n补充 HappyHorse 与 Wan 视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 DashScope 官方端点格式。\n\n支持模型：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit, wan-3.0, wan-3.0-480p, wan-3.0-1080p\n\n统一请求字段：\n- `model` (string, 必填): HappyHorse 或 Wan 对外模型名。Wan 支持 `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p`；HappyHorse 聚合模型 `happyhorse-1.0` 需配合 `mode` 使用。\n- `mode` (string, 可选): 聚合模型模式，常见值为 `t2v`、`i2v`、`r2v`、`video_edit`。固定子模型可不传。\n- `input.prompt` (string, 必填): 视频生成或编辑提示词。\n- `input.media` (array[object], 可选): 多媒体输入。支持 `first_frame`、`last_frame`、`reference_image`、`reference_video`、`reference_audio`；Wan 最多支持 10 图、5 视频、5 音频。\n- `parameters.duration` (integer, 可选): 生成时长，单位秒。\n- `parameters.resolution` (string, 可选): 输出分辨率。Wan 三个模型分别固定 `720P`、`480P`、`1080P`；HappyHorse 常见值为 `720P`、`1080P`。\n- `parameters.ratio` (string, 可选): 输出宽高比，文生视频和参考生视频常用。\n- `parameters.watermark` (boolean, 可选): 是否添加水印。\n- `parameters.seed` (integer, 可选): 随机种子。\n\n常见模型/模式差异：\n- `HappyHorse 聚合模型`: 支持模型 happyhorse-1.0；聚合模型通过 mode 区分最终模型。\n- `HappyHorse 文生视频`: 支持模型 happyhorse-1.0-t2v；官方格式文生视频。\n- `HappyHorse 首帧图生视频`: 支持模型 happyhorse-1.0-i2v；官方格式首帧图生视频。\n- `HappyHorse 参考生视频`: 支持模型 happyhorse-1.0-r2v；官方格式多参考图生视频。\n- `HappyHorse 视频编辑`: 支持模型 happyhorse-1.0-video-edit；官方格式视频编辑。\n- `Wan 3.0 720P`: 支持模型 wan-3.0；Wan 3.0 官方格式多模态参考视频生成。\n- `Wan 3.0 480P`: 支持模型 wan-3.0-480p；固定 480P 的 Wan 3.0 官方格式调用。\n- `Wan 3.0 1080P`: 支持模型 wan-3.0-1080p；固定 1080P 的 Wan 3.0 官方格式调用。",
+        "operationId": "query__happyhorse_wan_task",
         "tags": [
-          "视频生成HappyHorse阿里"
+          "视频生成HappyHorse与Wan"
         ],
         "parameters": [
           {
@@ -3035,7 +3111,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/cn/视频生成happyhorse阿里/查询任务happyhorse"
+          "href": "/api-reference/cn/视频生成happyhorse与wan/查询任务happyhorse与wan"
         }
       }
     },
@@ -7567,7 +7643,7 @@
       "name": "获取模型列表"
     },
     {
-      "name": "视频生成HappyHorse阿里"
+      "name": "视频生成HappyHorse与Wan"
     },
     {
       "name": "视频生成Kling格式"

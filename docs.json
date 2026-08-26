@@ -74,13 +74,6 @@
                 ]
               },
               {
-                "group": "Video generation HappyHorse",
-                "pages": [
-                  "api-reference/en/video-generation-happyhorse/create-videohappyhorse",
-                  "api-reference/en/video-generation-happyhorse/query-task-happyhorse"
-                ]
-              },
-              {
                 "group": "Video generation Kling format",
                 "pages": [
                   "api-reference/en/video-generation-kling-format/create-kling-image-to-video",
@@ -119,6 +112,13 @@
                   "api-reference/en/video-generation-vidu/create-a-start-and-end-frame-videovidu",
                   "api-reference/en/video-generation-vidu/query-tasksvidu",
                   "api-reference/en/video-generation-vidu/create-text-to-video-vidu"
+                ]
+              },
+              {
+                "group": "Video generationHappyHorse and Wan",
+                "pages": [
+                  "api-reference/en/video-generationhappyhorse-and-wan/create-video-happyhorse-and-wan",
+                  "api-reference/en/video-generationhappyhorse-and-wan/query-taskhappyhorse-and-wan"
                 ]
               }
             ]
@@ -258,10 +258,10 @@
                 ]
               },
               {
-                "group": "视频生成HappyHorse阿里",
+                "group": "视频生成HappyHorse与Wan",
                 "pages": [
-                  "api-reference/cn/视频生成happyhorse阿里/创建视频happyhorse",
-                  "api-reference/cn/视频生成happyhorse阿里/查询任务happyhorse"
+                  "api-reference/cn/视频生成happyhorse与wan/创建视频happyhorse与wan",
+                  "api-reference/cn/视频生成happyhorse与wan/查询任务happyhorse与wan"
                 ]
               },
               {
@@ -466,10 +466,10 @@
                 ]
               },
               {
-                "group": "影片生成HappyHorse阿里",
+                "group": "影片生成HappyHorse與 Wan",
                 "pages": [
-                  "api-reference/zh-tw/影片生成happyhorse阿里/建立影片happyhorse",
-                  "api-reference/zh-tw/影片生成happyhorse阿里/查詢任務happyhorse"
+                  "api-reference/zh-tw/影片生成happyhorse與-wan/建立影片happyhorse與-wan",
+                  "api-reference/zh-tw/影片生成happyhorse與-wan/查詢任務happyhorse與-wan"
                 ]
               },
               {
@@ -675,10 +675,10 @@
                 ]
               },
               {
-                "group": "Génération vidéoHappyHorseAlibaba",
+                "group": "Génération vidéoHappyHorse avec Wan",
                 "pages": [
-                  "api-reference/fr/génération-vidéohappyhorsealibaba/créer-une-vidéohappyhorse",
-                  "api-reference/fr/génération-vidéohappyhorsealibaba/interroger-la-tâchehappyhorse"
+                  "api-reference/fr/génération-vidéohappyhorse-avec-wan/créer-une-vidéo-happyhorse-et-wan",
+                  "api-reference/fr/génération-vidéohappyhorse-avec-wan/interroger-la-tâche-happyhorse-et-wan"
                 ]
               },
               {
@@ -835,10 +835,10 @@
                 ]
               },
               {
-                "group": "動画生成HappyHorseアリ",
+                "group": "動画生成HappyHorseとWan",
                 "pages": [
-                  "api-reference/ja/動画生成happyhorseアリ/動画を作成happyhorse",
-                  "api-reference/ja/動画生成happyhorseアリ/タスクを照会happyhorse"
+                  "api-reference/ja/動画生成happyhorseとwan/動画を作成するhappyhorseとwan",
+                  "api-reference/ja/動画生成happyhorseとwan/タスクを照会happyhorseとwan"
                 ]
               },
               {
@@ -1013,10 +1013,10 @@
                 ]
               },
               {
-                "group": "Генерация видеоHappyHorseАли",
+                "group": "Генерация видеоHappyHorse и Wan",
                 "pages": [
-                  "api-reference/ru/генерация-видеоhappyhorseали/создать-видеоhappyhorse",
-                  "api-reference/ru/генерация-видеоhappyhorseали/запрос-задачиhappyhorse"
+                  "api-reference/ru/генерация-видеоhappyhorse-и-wan/создать-видеоhappyhorse-и-wan",
+                  "api-reference/ru/генерация-видеоhappyhorse-и-wan/запросить-задачу-happyhorse-и-wan"
                 ]
               },
               {
@@ -1194,6 +1194,13 @@
                 ]
               },
               {
+                "group": "Tạo video HappyHorse và Wan",
+                "pages": [
+                  "api-reference/vi/tạo-video-happyhorse-và-wan/tạo-video-happyhorse-và-wan",
+                  "api-reference/vi/tạo-video-happyhorse-và-wan/truy-vấn-tác-vụ-happyhorse-và-wan"
+                ]
+              },
+              {
                 "group": "Tạo video Seedance",
                 "pages": [
                   "api-reference/vi/tạo-video-seedance/tạo-video（seedance）",
@@ -1208,13 +1215,6 @@
                   "api-reference/vi/tạo-video-vidu/tạo-video-khung-đầu-và-khung-cuối-vidu",
                   "api-reference/vi/tạo-video-vidu/truy-vấn-tác-vụvidu",
                   "api-reference/vi/tạo-video-vidu/tạo-video-từ-văn-bảnvidu"
-                ]
-              },
-              {
-                "group": "Tạo videoHappyHorseAlibaba",
-                "pages": [
-                  "api-reference/vi/tạo-videohappyhorsealibaba/tạo-videohappyhorse",
-                  "api-reference/vi/tạo-videohappyhorsealibaba/truy-vấn-tác-vụhappyhorse"
                 ]
               },
               {

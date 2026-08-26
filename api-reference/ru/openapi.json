@@ -2666,11 +2666,11 @@
     },
     "/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
-        "summary": "Создать видео(HappyHorse)",
-        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nHappyHorse интерфейс генерации видео Alibaba; публичные пути следуют официальному протоколу DashScope.\n\nПоддерживаются 5 внешних моделей: `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。Из них `happyhorse-1.0` — агрегированная модель, для которой нужно использовать `mode`, чтобы различать `t2v`、`i2v`、`r2v`、`video_edit`.\n\nПубличный интерфейс сохраняет официальный формат endpoint; каналоспецифичный префикс используется только для внутреннего формирования при запросах шлюза к конкретному upstream-каналу. Клиенту не нужно явно передавать `X-DashScope-Async` — это обрабатывается шлюзом или адаптером официального канала.\n\nДополнены схема публичного запроса, структура запроса статуса задачи и рекомендуемый шаблон проверки для официального формата генерации видео Alibaba HappyHorse; публичные пути сохраняют официальный формат endpoint.\n\nПоддерживаемые модели:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nУнифицированные поля запроса:\n- `model` (string, обязательно): внешнее имя модели HappyHorse. Агрегированную модель `happyhorse-1.0` необходимо использовать вместе с `mode`.\n- `mode` (string, необязательно): режим агрегированной модели; типичные значения: `t2v`、`i2v`、`r2v`、`video_edit`. Для фиксированной подмодели можно не передавать.\n- `input.prompt` (string, обязательно): prompt для генерации или редактирования видео.\n- `input.media` (array[object], необязательно): мультимедийный ввод. Для image-to-video используется `first_frame`, для reference-to-video — `reference_image`, для редактирования видео — `video` и, при необходимости, `reference_image`.\n- `parameters.duration` (integer, необязательно): время генерации в секундах.\n- `parameters.resolution` (string, необязательно): выходное разрешение; типичные значения `720P`、`1080P`.\n- `parameters.ratio` (string, необязательно): соотношение сторон вывода; часто используется для text-to-video и reference-to-video.\n- `parameters.watermark` (boolean, необязательно): добавлять ли водяной знак.\n- `parameters.seed` (integer, необязательно): случайное зерно.\n\nОсновные различия моделей/режимов:\n- `HappyHorse 聚合模型`: поддерживаемая модель happyhorse-1.0; в агрегированной модели конечная модель определяется через mode.\n- `HappyHorse 文生视频`: поддерживаемая модель happyhorse-1.0-t2v; официальный формат text-to-video.\n- `HappyHorse 首帧图生视频`: поддерживаемая модель happyhorse-1.0-i2v; официальный формат image-to-video по первому кадру.\n- `HappyHorse 参考生视频`: поддерживаемая модель happyhorse-1.0-r2v; официальный формат multi-reference image-to-video.\n- `HappyHorse 视频编辑`: поддерживаемая модель happyhorse-1.0-video-edit; официальный формат редактирования видео.",
-        "operationId": "create__happyhorse__task",
+        "summary": "Создать видео(HappyHorse и Wan)",
+        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nHappyHorse и интерфейс генерации видео Wan: публичные пути соответствуют официальному протоколу DashScope.\n\nHappyHorse поддерживает `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`; Wan поддерживает `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p`. Среди них `happyhorse-1.0` — агрегирующая модель, для различения `t2v`、`i2v`、`r2v`、`video_edit` требуется `mode`. Три модели Wan имеют фиксированные разрешения 720P, 480P и 1080P соответственно и поддерживают длительность 2–30 секунд, а также до 10 изображений, 5 видео и 5 аудиореференсов.\n\nПубличный интерфейс сохраняет официальный формат endpoint; каналоспецифичный префикс используется только для внутреннего формирования при запросах шлюза к конкретному upstream-каналу. Клиенту не нужно явно передавать `X-DashScope-Async` — это обрабатывается шлюзом или адаптером официального канала.\n\nДополнены публичный шаблон запроса, структура запроса статуса задачи и рекомендуемый шаблон проверки для форматов генерации видео HappyHorse и Wan; публичные пути сохраняют официальный формат конечных точек DashScope.\n\nПоддерживаемые модели:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit, wan-3.0, wan-3.0-480p, wan-3.0-1080p\n\nУнифицированные поля запроса:\n- `model` (string, обязательное): внешнее имя модели HappyHorse или Wan. Wan поддерживает `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p`; агрегирующая модель HappyHorse `happyhorse-1.0` должна использоваться вместе с `mode`.\n- `mode` (string, необязательно): режим агрегированной модели; типичные значения: `t2v`、`i2v`、`r2v`、`video_edit`. Для фиксированной подмодели можно не передавать.\n- `input.prompt` (string, обязательно): prompt для генерации или редактирования видео.\n- `input.media` (array[object], необязательное): мультимедийный ввод. Поддерживаются `first_frame`、`last_frame`、`reference_image`、`reference_video`、`reference_audio`; Wan поддерживает не более 10 изображений, 5 видео и 5 аудио.\n- `parameters.duration` (integer, необязательно): время генерации в секундах.\n- `parameters.resolution` (string, необязательное): выходное разрешение. Три модели Wan имеют фиксированные `720P`、`480P`、`1080P` соответственно; типичные значения для HappyHorse — `720P`、`1080P`.\n- `parameters.ratio` (string, необязательно): соотношение сторон вывода; часто используется для text-to-video и reference-to-video.\n- `parameters.watermark` (boolean, необязательно): добавлять ли водяной знак.\n- `parameters.seed` (integer, необязательно): случайное зерно.\n\nОсновные различия моделей/режимов:\n- `HappyHorse 聚合模型`: поддерживаемая модель happyhorse-1.0; в агрегированной модели конечная модель определяется через mode.\n- `HappyHorse 文生视频`: поддерживаемая модель happyhorse-1.0-t2v; официальный формат text-to-video.\n- `HappyHorse 首帧图生视频`: поддерживаемая модель happyhorse-1.0-i2v; официальный формат image-to-video по первому кадру.\n- `HappyHorse 参考生视频`: поддерживаемая модель happyhorse-1.0-r2v; официальный формат multi-reference image-to-video.\n- `HappyHorse 视频编辑`: поддерживаемая модель happyhorse-1.0-video-edit; официальный формат редактирования видео.\n- `Wan 3.0 720P`: поддерживаемая модель wan-3.0; официальная форматная мультимодальная генерация видео по референсу для Wan 3.0.\n- `Wan 3.0 480P`: поддерживаемая модель wan-3.0-480p; вызов в официальном формате Wan 3.0 с фиксированным 480P.\n- `Wan 3.0 1080P`: поддерживаемая модель wan-3.0-1080p; вызов в официальном формате Wan 3.0 с фиксированным 1080P.",
+        "operationId": "create__happyhorse_wan_task",
         "tags": [
-          "Генерация видеоHappyHorseАли"
+          "Генерация видеоHappyHorse и Wan"
         ],
         "requestBody": {
           "required": true,
@@ -2690,10 +2690,13 @@
                       "happyhorse-1.0-t2v",
                       "happyhorse-1.0-i2v",
                       "happyhorse-1.0-r2v",
-                      "happyhorse-1.0-video-edit"
+                      "happyhorse-1.0-video-edit",
+                      "wan-3.0",
+                      "wan-3.0-480p",
+                      "wan-3.0-1080p"
                     ],
                     "example": "happyhorse-1.0-t2v",
-                    "description": "HappyHorse — внешнее имя модели. Для агрегированной модели `happyhorse-1.0` необходимо использовать совместно с `mode`."
+                    "description": "HappyHorse или внешнее имя модели Wan. Wan поддерживает `wan-3.0`, `wan-3.0-480p`, `wan-3.0-1080p`; для агрегированной модели HappyHorse `happyhorse-1.0` требуется использовать вместе с `mode`."
                   },
                   "mode": {
                     "type": "string",
@@ -2729,8 +2732,12 @@
                               "type": "string",
                               "enum": [
                                 "first_frame",
+                                "last_frame",
                                 "reference_image",
-                                "video"
+                                "reference_video",
+                                "reference_audio",
+                                "video",
+                                "audio"
                               ]
                             },
                             "url": {
@@ -2739,7 +2746,7 @@
                             }
                           }
                         },
-                        "description": "Мультимедийный ввод. Для генерации видео по изображению используйте `first_frame`, для генерации видео по референсу — `reference_image`, для редактирования видео — `video` и при необходимости `reference_image`."
+                        "description": "Мультимедийный ввод. Поддерживаются `first_frame`, `last_frame`, `reference_image`, `reference_video`, `reference_audio`; Wan поддерживает максимум 10 изображений, 5 видео и 5 аудио."
                       }
                     }
                   },
@@ -2749,11 +2756,12 @@
                       "resolution": {
                         "type": "string",
                         "enum": [
+                          "480P",
                           "720P",
                           "1080P"
                         ],
                         "example": "720P",
-                        "description": "Разрешение вывода, распространённые значения `720P`、`1080P`."
+                        "description": "Разрешение вывода. Для трёх моделей Wan фиксированы `720P`, `480P` и `1080P` соответственно; распространённые значения HappyHorse — `720P` и `1080P`."
                       },
                       "ratio": {
                         "type": "string",
@@ -2871,6 +2879,74 @@
                       "resolution": "720P"
                     }
                   }
+                },
+                "wan_3_0_native": {
+                  "summary": "Wan 3.0 720P",
+                  "value": {
+                    "model": "wan-3.0",
+                    "input": {
+                      "prompt": "Keep the character consistent across all references",
+                      "media": [
+                        {
+                          "type": "reference_image",
+                          "url": "https://example.com/reference.jpg"
+                        },
+                        {
+                          "type": "reference_audio",
+                          "url": "https://example.com/reference.mp3"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
+                },
+                "wan_3_0_480p_native": {
+                  "summary": "Wan 3.0 480P",
+                  "value": {
+                    "model": "wan-3.0-480p",
+                    "input": {
+                      "prompt": "Create a smooth transition",
+                      "media": [
+                        {
+                          "type": "first_frame",
+                          "url": "https://example.com/first.jpg"
+                        },
+                        {
+                          "type": "last_frame",
+                          "url": "https://example.com/last.jpg"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "480P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
+                },
+                "wan_3_0_1080p_native": {
+                  "summary": "Wan 3.0 1080P",
+                  "value": {
+                    "model": "wan-3.0-1080p",
+                    "input": {
+                      "prompt": "Generate a cinematic reference video",
+                      "media": [
+                        {
+                          "type": "reference_video",
+                          "url": "https://example.com/reference.mp4"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "1080P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
                 }
               }
             }
@@ -2933,17 +3009,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ru/генерация-видеоhappyhorseали/создать-видеоhappyhorse"
+          "href": "/api-reference/ru/генерация-видеоhappyhorse-и-wan/создать-видеоhappyhorse-и-wan"
         }
       }
     },
     "/api/v1/tasks/{task_id}": {
       "get": {
-        "summary": "Запрос задачи(HappyHorse)",
-        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nHappyHorse интерфейс генерации видео Alibaba; публичные пути следуют официальному протоколу DashScope.\n\nПоддерживаются 5 внешних моделей: `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。Из них `happyhorse-1.0` — агрегированная модель, для которой нужно использовать `mode`, чтобы различать `t2v`、`i2v`、`r2v`、`video_edit`.\n\nПубличный интерфейс сохраняет официальный формат endpoint; каналоспецифичный префикс используется только для внутреннего формирования при запросах шлюза к конкретному upstream-каналу. Клиенту не нужно явно передавать `X-DashScope-Async` — это обрабатывается шлюзом или адаптером официального канала.\n\nДополнены схема публичного запроса, структура запроса статуса задачи и рекомендуемый шаблон проверки для официального формата генерации видео Alibaba HappyHorse; публичные пути сохраняют официальный формат endpoint.\n\nПоддерживаемые модели:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\nУнифицированные поля запроса:\n- `model` (string, обязательно): внешнее имя модели HappyHorse. Агрегированную модель `happyhorse-1.0` необходимо использовать вместе с `mode`.\n- `mode` (string, необязательно): режим агрегированной модели; типичные значения: `t2v`、`i2v`、`r2v`、`video_edit`. Для фиксированной подмодели можно не передавать.\n- `input.prompt` (string, обязательно): prompt для генерации или редактирования видео.\n- `input.media` (array[object], необязательно): мультимедийный ввод. Для image-to-video используется `first_frame`, для reference-to-video — `reference_image`, для редактирования видео — `video` и, при необходимости, `reference_image`.\n- `parameters.duration` (integer, необязательно): время генерации в секундах.\n- `parameters.resolution` (string, необязательно): выходное разрешение; типичные значения `720P`、`1080P`.\n- `parameters.ratio` (string, необязательно): соотношение сторон вывода; часто используется для text-to-video и reference-to-video.\n- `parameters.watermark` (boolean, необязательно): добавлять ли водяной знак.\n- `parameters.seed` (integer, необязательно): случайное зерно.\n\nОсновные различия моделей/режимов:\n- `HappyHorse 聚合模型`: поддерживаемая модель happyhorse-1.0; в агрегированной модели конечная модель определяется через mode.\n- `HappyHorse 文生视频`: поддерживаемая модель happyhorse-1.0-t2v; официальный формат text-to-video.\n- `HappyHorse 首帧图生视频`: поддерживаемая модель happyhorse-1.0-i2v; официальный формат image-to-video по первому кадру.\n- `HappyHorse 参考生视频`: поддерживаемая модель happyhorse-1.0-r2v; официальный формат multi-reference image-to-video.\n- `HappyHorse 视频编辑`: поддерживаемая модель happyhorse-1.0-video-edit; официальный формат редактирования видео.",
-        "operationId": "query__happyhorse__task",
+        "summary": "Запросить задачу (HappyHorse и Wan)",
+        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nHappyHorse и интерфейс генерации видео Wan: публичные пути соответствуют официальному протоколу DashScope.\n\nHappyHorse поддерживает `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`; Wan поддерживает `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p`. Среди них `happyhorse-1.0` — агрегирующая модель, для различения `t2v`、`i2v`、`r2v`、`video_edit` требуется `mode`. Три модели Wan имеют фиксированные разрешения 720P, 480P и 1080P соответственно и поддерживают длительность 2–30 секунд, а также до 10 изображений, 5 видео и 5 аудиореференсов.\n\nПубличный интерфейс сохраняет официальный формат endpoint; каналоспецифичный префикс используется только для внутреннего формирования при запросах шлюза к конкретному upstream-каналу. Клиенту не нужно явно передавать `X-DashScope-Async` — это обрабатывается шлюзом или адаптером официального канала.\n\nДополнены публичный шаблон запроса, структура запроса статуса задачи и рекомендуемый шаблон проверки для форматов генерации видео HappyHorse и Wan; публичные пути сохраняют официальный формат конечных точек DashScope.\n\nПоддерживаемые модели:\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit, wan-3.0, wan-3.0-480p, wan-3.0-1080p\n\nУнифицированные поля запроса:\n- `model` (string, обязательное): внешнее имя модели HappyHorse или Wan. Wan поддерживает `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p`; агрегирующая модель HappyHorse `happyhorse-1.0` должна использоваться вместе с `mode`.\n- `mode` (string, необязательно): режим агрегированной модели; типичные значения: `t2v`、`i2v`、`r2v`、`video_edit`. Для фиксированной подмодели можно не передавать.\n- `input.prompt` (string, обязательно): prompt для генерации или редактирования видео.\n- `input.media` (array[object], необязательное): мультимедийный ввод. Поддерживаются `first_frame`、`last_frame`、`reference_image`、`reference_video`、`reference_audio`; Wan поддерживает не более 10 изображений, 5 видео и 5 аудио.\n- `parameters.duration` (integer, необязательно): время генерации в секундах.\n- `parameters.resolution` (string, необязательное): выходное разрешение. Три модели Wan имеют фиксированные `720P`、`480P`、`1080P` соответственно; типичные значения для HappyHorse — `720P`、`1080P`.\n- `parameters.ratio` (string, необязательно): соотношение сторон вывода; часто используется для text-to-video и reference-to-video.\n- `parameters.watermark` (boolean, необязательно): добавлять ли водяной знак.\n- `parameters.seed` (integer, необязательно): случайное зерно.\n\nОсновные различия моделей/режимов:\n- `HappyHorse 聚合模型`: поддерживаемая модель happyhorse-1.0; в агрегированной модели конечная модель определяется через mode.\n- `HappyHorse 文生视频`: поддерживаемая модель happyhorse-1.0-t2v; официальный формат text-to-video.\n- `HappyHorse 首帧图生视频`: поддерживаемая модель happyhorse-1.0-i2v; официальный формат image-to-video по первому кадру.\n- `HappyHorse 参考生视频`: поддерживаемая модель happyhorse-1.0-r2v; официальный формат multi-reference image-to-video.\n- `HappyHorse 视频编辑`: поддерживаемая модель happyhorse-1.0-video-edit; официальный формат редактирования видео.\n- `Wan 3.0 720P`: поддерживаемая модель wan-3.0; официальная форматная мультимодальная генерация видео по референсу для Wan 3.0.\n- `Wan 3.0 480P`: поддерживаемая модель wan-3.0-480p; вызов в официальном формате Wan 3.0 с фиксированным 480P.\n- `Wan 3.0 1080P`: поддерживаемая модель wan-3.0-1080p; вызов в официальном формате Wan 3.0 с фиксированным 1080P.",
+        "operationId": "query__happyhorse_wan_task",
         "tags": [
-          "Генерация видеоHappyHorseАли"
+          "Генерация видеоHappyHorse и Wan"
         ],
         "parameters": [
           {
@@ -3035,7 +3111,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ru/генерация-видеоhappyhorseали/запрос-задачиhappyhorse"
+          "href": "/api-reference/ru/генерация-видеоhappyhorse-и-wan/запросить-задачу-happyhorse-и-wan"
         }
       }
     },
@@ -7567,7 +7643,7 @@
       "name": "Получить список моделей"
     },
     {
-      "name": "Генерация видеоHappyHorseАли"
+      "name": "Генерация видеоHappyHorse и Wan"
     },
     {
       "name": "ФорматKling генерации видео"

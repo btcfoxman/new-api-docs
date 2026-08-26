@@ -2666,11 +2666,11 @@
     },
     "/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
-        "summary": "動画を作成(HappyHorse)",
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nHappyHorse アリの動画生成API。公開パスは DashScope の公式プロトコルに従います。\n\n対外公開モデルは 5 つサポートしています：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。このうち `happyhorse-1.0` は集約モデルで、`mode` により `t2v`、`i2v`、`r2v`、`video_edit` を区別する必要があります。\n\n公開APIは公式エンドポイント形式を維持します。チャネル専用プレフィックスは、ゲートウェイが特定の上流チャネルにリクエストする際の内部連結にのみ使用します。クライアントが `X-DashScope-Async` を明示的に渡す必要はなく、ゲートウェイまたは公式チャネル適配層が処理します。\n\nHappyHorse アリ公式の動画生成フォーマットにおける公開リクエストの骨子、タスク照会構造、および推奨検証テンプレートを補足します。公開パスは公式エンドポイント形式を維持します。\n\n対応モデル：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n共通リクエストフィールド：\n- `model` (string, 必須): HappyHorse の対外モデル名。集約モデル `happyhorse-1.0` は `mode` と併用する必要があります。\n- `mode` (string, 任意): 集約モデルのモード。一般的な値は `t2v`、`i2v`、`r2v`、`video_edit` です。固定サブモデルの場合は省略できます。\n- `input.prompt` (string, 必須): 動画生成または編集のプロンプト。\n- `input.media` (array[object], 任意): マルチメディア入力。画像から動画では `first_frame` を使用し、参照動画生成では `reference_image` を使用し、動画編集では `video` と任意の `reference_image` を使用します。\n- `parameters.duration` (integer, 任意): 生成時間（秒単位）。\n- `parameters.resolution` (string, 任意): 出力解像度。一般的な値は `720P`、`1080P` です。\n- `parameters.ratio` (string, 任意): 出力アスペクト比。テキストから動画、参照から動画でよく使用されます。\n- `parameters.watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n- `parameters.seed` (integer, 任意): 乱数シード。\n\n代表的なモデル/モードの違い：\n- `HappyHorse 聚合模型`: 対応モデルは happyhorse-1.0。集約モデルは mode で最終モデルを区別します。\n- `HappyHorse 文生视频`: 対応モデルは happyhorse-1.0-t2v。公式フォーマットのテキストから動画です。\n- `HappyHorse 首帧图生视频`: 対応モデルは happyhorse-1.0-i2v。公式フォーマットの先頭フレーム画像から動画です。\n- `HappyHorse 参考生视频`: 対応モデルは happyhorse-1.0-r2v。公式フォーマットの複数参照画像から動画です。\n- `HappyHorse 视频编辑`: 対応モデルは happyhorse-1.0-video-edit。公式フォーマットの動画編集です。",
-        "operationId": "create__happyhorse__task",
+        "summary": "動画を作成する(HappyHorseとWan)",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nHappyHorse と Wan の動画生成インターフェースは、公開パスが DashScope の公式プロトコルに準拠します。\n\nHappyHorse は `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit` をサポートします。Wan は `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p` をサポートします。うち `happyhorse-1.0` は集約モデルで、`mode` によって `t2v`、`i2v`、`r2v`、`video_edit` を区別する必要があります。Wan の 3 つのモデルはそれぞれ 720P、480P、1080P に固定され、2～30 秒および最大 10 枚の画像、5 本の動画、5 つの音声参照をサポートします。\n\n公開APIは公式エンドポイント形式を維持します。チャネル専用プレフィックスは、ゲートウェイが特定の上流チャネルにリクエストする際の内部連結にのみ使用します。クライアントが `X-DashScope-Async` を明示的に渡す必要はなく、ゲートウェイまたは公式チャネル適配層が処理します。\n\nHappyHorse と Wan の動画生成形式について、公開リクエストの骨組み、タスク照会構造、推奨検証テンプレートを補足します。公開パスは DashScope の公式エンドポイント形式を維持します。\n\n対応モデル：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit, wan-3.0, wan-3.0-480p, wan-3.0-1080p\n\n共通リクエストフィールド：\n- `model` (string, 必須): HappyHorse または Wan の外部公開モデル名。Wan は `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p` をサポートします。HappyHorse の集約モデル `happyhorse-1.0` は `mode` と併用する必要があります。\n- `mode` (string, 任意): 集約モデルのモード。一般的な値は `t2v`、`i2v`、`r2v`、`video_edit` です。固定サブモデルの場合は省略できます。\n- `input.prompt` (string, 必須): 動画生成または編集のプロンプト。\n- `input.media` (array[object], 任意): マルチメディア入力。`first_frame`、`last_frame`、`reference_image`、`reference_video`、`reference_audio` をサポートします。Wan は最大 10 枚の画像、5 本の動画、5 つの音声をサポートします。\n- `parameters.duration` (integer, 任意): 生成時間（秒単位）。\n- `parameters.resolution` (string, 任意): 出力解像度。Wan の 3 つのモデルはそれぞれ `720P`、`480P`、`1080P` に固定されています。HappyHorse の一般的な値は `720P`、`1080P` です。\n- `parameters.ratio` (string, 任意): 出力アスペクト比。テキストから動画、参照から動画でよく使用されます。\n- `parameters.watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n- `parameters.seed` (integer, 任意): 乱数シード。\n\n代表的なモデル/モードの違い：\n- `HappyHorse 聚合模型`: 対応モデルは happyhorse-1.0。集約モデルは mode で最終モデルを区別します。\n- `HappyHorse 文生视频`: 対応モデルは happyhorse-1.0-t2v。公式フォーマットのテキストから動画です。\n- `HappyHorse 首帧图生视频`: 対応モデルは happyhorse-1.0-i2v。公式フォーマットの先頭フレーム画像から動画です。\n- `HappyHorse 参考生视频`: 対応モデルは happyhorse-1.0-r2v。公式フォーマットの複数参照画像から動画です。\n- `HappyHorse 视频编辑`: 対応モデルは happyhorse-1.0-video-edit。公式フォーマットの動画編集です。\n- `Wan 3.0 720P`: サポートモデル wan-3.0。Wan 3.0 公式形式のマルチモーダル参照動画生成。\n- `Wan 3.0 480P`: サポートモデル wan-3.0-480p。480P 固定の Wan 3.0 公式形式呼び出し。\n- `Wan 3.0 1080P`: サポートモデル wan-3.0-1080p。1080P 固定の Wan 3.0 公式形式呼び出し。",
+        "operationId": "create__happyhorse_wan_task",
         "tags": [
-          "動画生成HappyHorseアリ"
+          "動画生成HappyHorseとWan"
         ],
         "requestBody": {
           "required": true,
@@ -2690,10 +2690,13 @@
                       "happyhorse-1.0-t2v",
                       "happyhorse-1.0-i2v",
                       "happyhorse-1.0-r2v",
-                      "happyhorse-1.0-video-edit"
+                      "happyhorse-1.0-video-edit",
+                      "wan-3.0",
+                      "wan-3.0-480p",
+                      "wan-3.0-1080p"
                     ],
                     "example": "happyhorse-1.0-t2v",
-                    "description": "HappyHorse の外部向けモデル名。集約モデル `happyhorse-1.0` は `mode` と併用する必要があります。"
+                    "description": "HappyHorse または Wan の外部公開モデル名。Wan は `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p` をサポートします。HappyHorse の集約モデル `happyhorse-1.0` は `mode` と併用する必要があります。"
                   },
                   "mode": {
                     "type": "string",
@@ -2729,8 +2732,12 @@
                               "type": "string",
                               "enum": [
                                 "first_frame",
+                                "last_frame",
                                 "reference_image",
-                                "video"
+                                "reference_video",
+                                "reference_audio",
+                                "video",
+                                "audio"
                               ]
                             },
                             "url": {
@@ -2739,7 +2746,7 @@
                             }
                           }
                         },
-                        "description": "マルチメディア入力。画像から動画には `first_frame` を使用し、参照から動画には `reference_image` を使用し、動画編集には `video` と任意の `reference_image` を使用します。"
+                        "description": "マルチメディア入力。`first_frame`、`last_frame`、`reference_image`、`reference_video`、`reference_audio` をサポートします。Wan は最大で画像 10 枚、動画 5 本、音声 5 件をサポートします。"
                       }
                     }
                   },
@@ -2749,11 +2756,12 @@
                       "resolution": {
                         "type": "string",
                         "enum": [
+                          "480P",
                           "720P",
                           "1080P"
                         ],
                         "example": "720P",
-                        "description": "出力解像度。一般的な値は `720P`、`1080P` です。"
+                        "description": "出力解像度。Wan の3つのモデルはそれぞれ `720P`、`480P`、`1080P` に固定されています。HappyHorse の一般的な値は `720P`、`1080P` です。"
                       },
                       "ratio": {
                         "type": "string",
@@ -2871,6 +2879,74 @@
                       "resolution": "720P"
                     }
                   }
+                },
+                "wan_3_0_native": {
+                  "summary": "Wan 3.0 720P",
+                  "value": {
+                    "model": "wan-3.0",
+                    "input": {
+                      "prompt": "Keep the character consistent across all references",
+                      "media": [
+                        {
+                          "type": "reference_image",
+                          "url": "https://example.com/reference.jpg"
+                        },
+                        {
+                          "type": "reference_audio",
+                          "url": "https://example.com/reference.mp3"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
+                },
+                "wan_3_0_480p_native": {
+                  "summary": "Wan 3.0 480P",
+                  "value": {
+                    "model": "wan-3.0-480p",
+                    "input": {
+                      "prompt": "Create a smooth transition",
+                      "media": [
+                        {
+                          "type": "first_frame",
+                          "url": "https://example.com/first.jpg"
+                        },
+                        {
+                          "type": "last_frame",
+                          "url": "https://example.com/last.jpg"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "480P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
+                },
+                "wan_3_0_1080p_native": {
+                  "summary": "Wan 3.0 1080P",
+                  "value": {
+                    "model": "wan-3.0-1080p",
+                    "input": {
+                      "prompt": "Generate a cinematic reference video",
+                      "media": [
+                        {
+                          "type": "reference_video",
+                          "url": "https://example.com/reference.mp4"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "1080P",
+                      "ratio": "16:9",
+                      "duration": 10
+                    }
+                  }
                 }
               }
             }
@@ -2933,17 +3009,17 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成happyhorseアリ/動画を作成happyhorse"
+          "href": "/api-reference/ja/動画生成happyhorseとwan/動画を作成するhappyhorseとwan"
         }
       }
     },
     "/api/v1/tasks/{task_id}": {
       "get": {
-        "summary": "タスクを照会(HappyHorse)",
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nHappyHorse アリの動画生成API。公開パスは DashScope の公式プロトコルに従います。\n\n対外公開モデルは 5 つサポートしています：`happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit`。このうち `happyhorse-1.0` は集約モデルで、`mode` により `t2v`、`i2v`、`r2v`、`video_edit` を区別する必要があります。\n\n公開APIは公式エンドポイント形式を維持します。チャネル専用プレフィックスは、ゲートウェイが特定の上流チャネルにリクエストする際の内部連結にのみ使用します。クライアントが `X-DashScope-Async` を明示的に渡す必要はなく、ゲートウェイまたは公式チャネル適配層が処理します。\n\nHappyHorse アリ公式の動画生成フォーマットにおける公開リクエストの骨子、タスク照会構造、および推奨検証テンプレートを補足します。公開パスは公式エンドポイント形式を維持します。\n\n対応モデル：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit\n\n共通リクエストフィールド：\n- `model` (string, 必須): HappyHorse の対外モデル名。集約モデル `happyhorse-1.0` は `mode` と併用する必要があります。\n- `mode` (string, 任意): 集約モデルのモード。一般的な値は `t2v`、`i2v`、`r2v`、`video_edit` です。固定サブモデルの場合は省略できます。\n- `input.prompt` (string, 必須): 動画生成または編集のプロンプト。\n- `input.media` (array[object], 任意): マルチメディア入力。画像から動画では `first_frame` を使用し、参照動画生成では `reference_image` を使用し、動画編集では `video` と任意の `reference_image` を使用します。\n- `parameters.duration` (integer, 任意): 生成時間（秒単位）。\n- `parameters.resolution` (string, 任意): 出力解像度。一般的な値は `720P`、`1080P` です。\n- `parameters.ratio` (string, 任意): 出力アスペクト比。テキストから動画、参照から動画でよく使用されます。\n- `parameters.watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n- `parameters.seed` (integer, 任意): 乱数シード。\n\n代表的なモデル/モードの違い：\n- `HappyHorse 聚合模型`: 対応モデルは happyhorse-1.0。集約モデルは mode で最終モデルを区別します。\n- `HappyHorse 文生视频`: 対応モデルは happyhorse-1.0-t2v。公式フォーマットのテキストから動画です。\n- `HappyHorse 首帧图生视频`: 対応モデルは happyhorse-1.0-i2v。公式フォーマットの先頭フレーム画像から動画です。\n- `HappyHorse 参考生视频`: 対応モデルは happyhorse-1.0-r2v。公式フォーマットの複数参照画像から動画です。\n- `HappyHorse 视频编辑`: 対応モデルは happyhorse-1.0-video-edit。公式フォーマットの動画編集です。",
-        "operationId": "query__happyhorse__task",
+        "summary": "タスクを照会(HappyHorseとWan)",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nHappyHorse と Wan の動画生成インターフェースは、公開パスが DashScope の公式プロトコルに準拠します。\n\nHappyHorse は `happyhorse-1.0`、`happyhorse-1.0-i2v`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`、`happyhorse-1.0-video-edit` をサポートします。Wan は `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p` をサポートします。うち `happyhorse-1.0` は集約モデルで、`mode` によって `t2v`、`i2v`、`r2v`、`video_edit` を区別する必要があります。Wan の 3 つのモデルはそれぞれ 720P、480P、1080P に固定され、2～30 秒および最大 10 枚の画像、5 本の動画、5 つの音声参照をサポートします。\n\n公開APIは公式エンドポイント形式を維持します。チャネル専用プレフィックスは、ゲートウェイが特定の上流チャネルにリクエストする際の内部連結にのみ使用します。クライアントが `X-DashScope-Async` を明示的に渡す必要はなく、ゲートウェイまたは公式チャネル適配層が処理します。\n\nHappyHorse と Wan の動画生成形式について、公開リクエストの骨組み、タスク照会構造、推奨検証テンプレートを補足します。公開パスは DashScope の公式エンドポイント形式を維持します。\n\n対応モデル：\nhappyhorse-1.0, happyhorse-1.0-t2v, happyhorse-1.0-i2v, happyhorse-1.0-r2v, happyhorse-1.0-video-edit, wan-3.0, wan-3.0-480p, wan-3.0-1080p\n\n共通リクエストフィールド：\n- `model` (string, 必須): HappyHorse または Wan の外部公開モデル名。Wan は `wan-3.0`、`wan-3.0-480p`、`wan-3.0-1080p` をサポートします。HappyHorse の集約モデル `happyhorse-1.0` は `mode` と併用する必要があります。\n- `mode` (string, 任意): 集約モデルのモード。一般的な値は `t2v`、`i2v`、`r2v`、`video_edit` です。固定サブモデルの場合は省略できます。\n- `input.prompt` (string, 必須): 動画生成または編集のプロンプト。\n- `input.media` (array[object], 任意): マルチメディア入力。`first_frame`、`last_frame`、`reference_image`、`reference_video`、`reference_audio` をサポートします。Wan は最大 10 枚の画像、5 本の動画、5 つの音声をサポートします。\n- `parameters.duration` (integer, 任意): 生成時間（秒単位）。\n- `parameters.resolution` (string, 任意): 出力解像度。Wan の 3 つのモデルはそれぞれ `720P`、`480P`、`1080P` に固定されています。HappyHorse の一般的な値は `720P`、`1080P` です。\n- `parameters.ratio` (string, 任意): 出力アスペクト比。テキストから動画、参照から動画でよく使用されます。\n- `parameters.watermark` (boolean, 任意): ウォーターマークを追加するかどうか。\n- `parameters.seed` (integer, 任意): 乱数シード。\n\n代表的なモデル/モードの違い：\n- `HappyHorse 聚合模型`: 対応モデルは happyhorse-1.0。集約モデルは mode で最終モデルを区別します。\n- `HappyHorse 文生视频`: 対応モデルは happyhorse-1.0-t2v。公式フォーマットのテキストから動画です。\n- `HappyHorse 首帧图生视频`: 対応モデルは happyhorse-1.0-i2v。公式フォーマットの先頭フレーム画像から動画です。\n- `HappyHorse 参考生视频`: 対応モデルは happyhorse-1.0-r2v。公式フォーマットの複数参照画像から動画です。\n- `HappyHorse 视频编辑`: 対応モデルは happyhorse-1.0-video-edit。公式フォーマットの動画編集です。\n- `Wan 3.0 720P`: サポートモデル wan-3.0。Wan 3.0 公式形式のマルチモーダル参照動画生成。\n- `Wan 3.0 480P`: サポートモデル wan-3.0-480p。480P 固定の Wan 3.0 公式形式呼び出し。\n- `Wan 3.0 1080P`: サポートモデル wan-3.0-1080p。1080P 固定の Wan 3.0 公式形式呼び出し。",
+        "operationId": "query__happyhorse_wan_task",
         "tags": [
-          "動画生成HappyHorseアリ"
+          "動画生成HappyHorseとWan"
         ],
         "parameters": [
           {
@@ -3035,7 +3111,7 @@
           }
         ],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成happyhorseアリ/タスクを照会happyhorse"
+          "href": "/api-reference/ja/動画生成happyhorseとwan/タスクを照会happyhorseとwan"
         }
       }
     },
@@ -7567,7 +7643,7 @@
       "name": "モデル一覧の取得"
     },
     {
-      "name": "動画生成HappyHorseアリ"
+      "name": "動画生成HappyHorseとWan"
     },
     {
       "name": "動画生成Kling形式"
