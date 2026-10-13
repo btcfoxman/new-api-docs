@@ -1,9 +1,9 @@
 ---
-title: "NowAPI Video"
-description: "Create and query Sora-compatible and Seedance-compatible video generation tasks with NowAPI."
+title: "NewAPI Video"
+description: "Create and query Sora-compatible and Seedance-compatible video generation tasks with NewAPI."
 ---
 
-`nowapi-video` 預設呼叫 `https://api.aiid.edu.kg`，並從 `NOWAPI_API_KEY` 讀取驗證資訊。
+`newapi-video` 預設呼叫 `https://api.aiid.edu.kg`，並從 `NEWAPI_API_KEY` 讀取驗證資訊。
 
 ## 支援的命令
 
@@ -19,11 +19,11 @@ description: "Create and query Sora-compatible and Seedance-compatible video gen
 ## 呼叫範例
 
 ```bash
-node scripts/nowapi-video.mjs models
-node scripts/nowapi-video.mjs sora-create --json video-request.json
-node scripts/nowapi-video.mjs sora-status --id video_xxx
-node scripts/nowapi-video.mjs seedance-create --json seedance-request.json
-node scripts/nowapi-video.mjs seedance-status --id task_xxx
+node scripts/newapi-video.mjs models
+node scripts/newapi-video.mjs sora-create --json video-request.json
+node scripts/newapi-video.mjs sora-status --id video_xxx
+node scripts/newapi-video.mjs seedance-create --json seedance-request.json
+node scripts/newapi-video.mjs seedance-status --id task_xxx
 ```
 
 建立任務後，保存回傳的任務 ID，再使用對應的查詢命令取得狀態。長任務不要維持單次 HTTP 請求等待。

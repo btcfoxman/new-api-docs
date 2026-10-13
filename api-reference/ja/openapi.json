@@ -210,7 +210,7 @@
       "post": {
         "summary": "レスポンスを作成 (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API、モデルのレスポンスを作成するために使用します。\nマルチターン対話、ツール呼び出し、推論などの機能をサポートしています。\n\nOpenAI Responses API の画像生成非同期ユースケースを補足します。`background=true` はバックグラウンドタスクの送信用です。作成 API はすぐに `status=queued` と完全な `id` を返し、その後この `id` を使って `GET /v1/responses/{response_id}` を呼び出し、結果を照会します。\n\n## 非同期画像生成フロー\n\n1. `POST /v1/responses` を呼び出し、リクエストボディに `tools=[{ \"type\": \"image_generation\" }]` と `background=true` を指定します。\n2. 作成 API が返す完全な `id` を保存します。たとえば `resp_xxx` です。切り詰めたり、書き換えたり、`metadata.task_id` のみを保存したりしないでください。\n3. `GET /v1/responses/{response_id}` を呼び出して照会し、`status=completed` または `status=failed` になるまで続けます。\n4. 成功後、`output[].url` を読み取り、画像リンクを取得します。\n\n### 非同期画像タスクの作成例\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\n作成 API のレスポンス例：\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\n対応モデル：`gpt-image-2-2k`、`gpt-image-2-4k`、`nano-banana-pro`。",
+        "description": "OpenAI Responses API、モデルのレスポンスを作成するために使用します。\nマルチターン対話、ツール呼び出し、推論などの機能をサポートしています。\n\nOpenAI Responses API の画像生成非同期ユースケースを補足します。`background=true` はバックグラウンドタスクの送信用です。作成 API はすぐに `status=queued` と完全な `id` を返し、その後この `id` を使って `GET /v1/responses/{response_id}` を呼び出し、結果を照会します。\n\n## 非同期画像生成フロー\n\n1. `POST /v1/responses` を呼び出し、リクエストボディに `tools=[{ \"type\": \"image_generation\" }]` と `background=true` を指定します。\n2. 作成 API が返す完全な `id` を保存します。たとえば `resp_xxx` です。切り詰めたり、書き換えたり、`metadata.task_id` のみを保存したりしないでください。\n3. `GET /v1/responses/{response_id}` を呼び出して照会し、`status=completed` または `status=failed` になるまで続けます。\n4. 成功後、`output[].url` を読み取り、画像リンクを取得します。\n\n### 非同期画像タスクの作成例\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\n### 参照画像を使用して編集し、アスペクト比を指定する\n\n`input` にはメッセージ配列を渡せます。同じユーザーメッセージの `content` 内で `input_text` と `input_image` を混在させます。`tools[].ratio` で生成するアスペクト比を指定します。\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": [\n    {\n      \"role\": \"user\",\n      \"content\": [\n        {\n          \"type\": \"input_text\",\n          \"text\": \"生成新图片 4K, 16:9\"\n        },\n        {\n          \"type\": \"input_image\",\n          \"image_url\": \"https://imageproxy.zhongzhuan.chat/api/proxy/image/70a98de9c9d48160812454b4ee21edbf.jpg\",\n          \"detail\": \"auto\"\n        }\n      ]\n    }\n  ],\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\",\n      \"ratio\": \"16:9\"\n    }\n  ],\n  \"background\": true\n}\n```\n\nこの例の `model` は `gpt-image-2-2k` です。4K クラスが必要な場合は `gpt-image-2-4k` を使用し、プロンプトに「4K」と書くだけにしないでください。\n\n作成 API のレスポンス例：\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\n対応モデル：`gpt-image-2-2k`、`gpt-image-2-4k`、`nano-banana-pro`。",
         "operationId": "createResponse",
         "tags": [
           "OpenAI形式（Responses）"
@@ -233,6 +233,36 @@
                     "tools": [
                       {
                         "type": "image_generation"
+                      }
+                    ],
+                    "background": true
+                  }
+                },
+                "responses_image_edit_async": {
+                  "summary": "参照画像編集（非同期）",
+                  "value": {
+                    "model": "gpt-image-2-2k",
+                    "input": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "input_text",
+                            "text": "生成新图片 4K, 16:9"
+                          },
+                          {
+                            "type": "input_image",
+                            "image_url": "https://imageproxy.zhongzhuan.chat/api/proxy/image/70a98de9c9d48160812454b4ee21edbf.jpg",
+                            "detail": "auto"
+                          }
+                        ]
+                      }
+                    ],
+                    "stream": false,
+                    "tools": [
+                      {
+                        "type": "image_generation",
+                        "ratio": "16:9"
                       }
                     ],
                     "background": true
@@ -897,6 +927,7 @@
                       "doubao-seedance-1-5-pro-251215",
                       "doubao-seedance-2-0-260128",
                       "doubao-seedance-2-0-fast-260128",
+                      "sd-2-5",
                       "veo3",
                       "veo3-fast",
                       "veo3-fast-frames",
@@ -2197,7 +2228,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "音楽または音声生成タスクを作成する",
-        "description": "音楽および音声生成の送信 API。旧 `/suno/submit/music` パスと互換性があります。タスク ID を返し、後続は `/suno/fetch/{task_id}` で確認します。\n\n音楽および音声生成タスクの送信 API。パスは `/suno/submit/music` のままで、実際の生成エンジンは `upstream_model`、`music_model`、`engine`、`model_id`、または `modelId` で選択できます。作成 API は `task_id` を返し、その後 `/suno/fetch/{task_id}` で出力を確認します。\n\n`upstream_model` を指定しない場合（または `{\"model\":\"suno_music\"}` のみを指定した場合）、既定で Suno v5.5 を使用します。旧版 Suno を引き続き使用する場合は、`\"upstream_model\":\"suno-v5\"` を明示的に指定してください。\n\n## 新規追加モデル\n\n| タイプ | `upstream_model` / 別名 | `modelId` |\n| --- | --- | ---: |\n| 音楽 | `suno-v5.5` / `chirp-fenix` | 128 |\n| 音声 | `seed-audio-1.0` | 126 |\n| 音声 | `minimax-speech-2.8-hd` / `speech-2.8-hd` | 127 |\n| 音楽 | `lyria-3-pro` / `lyria-3-pro-preview` | 129 |\n\n## プロンプト記述モード\n\nスタイル、感情、言語、歌手タイプ、シーンのみを記述する場合に適しており、モデルが自動的に楽曲内容を生成します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v5.5\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## 音声生成\n\nMiniMax Speech は `extraParams`（またはトップレベルの同名 snake_case/camelCase フィールド）を介して音声パラメーターをオーバーライドできます。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nMiniMax Speech で音声パラメータが未指定の場合、サーバーは既定で上記の `voice`、`outputFormat=mp3`、`sampleRate=32000`、`speed=1`、`volume=1`、`pitch=0` を送信します。\n\nLyria 3 Pro は `upstream_model=lyria-3-pro`（または `lyria-3-pro-preview`）を使用します：\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## インストゥルメンタルまたは純伴奏\n\n`light_music=true` または `make_instrumental=true` を使用できます。`light_music` はインストゥルメンタル／BGM 寄りであることを示し、`make_instrumental` は歌唱ボーカルを生成しないことを示します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌詞の詳細モード\n\n業務側ですでに歌詞が用意されており、タイトルとスタイルタグを指定する必要がある場合に適しています。`custom_mode=true` を指定でき、歌詞フィールドには `lyrics`、`lyric`、`custom_lyrics`、または `customLyrics` を使用できます。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 照会\n\n作成成功後、返却された `data` のタスク ID を保存します。たとえば `task_xxx` です。`GET /suno/fetch/{task_id}` を呼び出して、状態、音声 URL、カバー、タイトル、歌詞、および上流から返された元のセグメント情報を照会します。",
+        "description": "音楽および音声生成の送信 API。旧 `/suno/submit/music` パスと互換性があります。タスク ID を返し、後続は `/suno/fetch/{task_id}` で確認します。\n\n音楽および音声生成タスクの送信インターフェースです。`upstream_model` でサブモデル名を渡します。作成インターフェースは `task_id` を返し、その後 `/suno/fetch/{task_id}` で出力を照会します。\n\n`upstream_model` を指定しない場合（または `{\"model\":\"suno_music\"}` のみを指定した場合）、既定で Suno v5.5 を使用します。旧版 Suno を引き続き使用する場合は、`\"upstream_model\":\"suno-v5\"` を明示的に指定してください。\n\n## 利用可能なサブモデル\n\n| タイプ | `upstream_model` |\n| --- | --- |\n| 音楽 | `suno-v6` |\n| 音楽 | `suno-v5.5` |\n| 音楽 | `suno-v5` |\n| 音楽 | `lyria-3-pro` |\n| 音声 | `seed-audio-1.0` |\n| 音声 | `minimax-speech-2.8-hd` |\n\n## プロンプト記述モード\n\nスタイル、感情、言語、歌手タイプ、シーンのみを記述する場合に適しており、モデルが自動的に楽曲内容を生成します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## 音声生成\n\nMiniMax Speech では `extraParams` で音声パラメータを設定できます。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nMiniMax Speech で音声パラメータが未指定の場合、サーバーは既定で上記の `voice`、`outputFormat=mp3`、`sampleRate=32000`、`speed=1`、`volume=1`、`pitch=0` を送信します。\n\nLyria 3 Pro は `upstream_model=lyria-3-pro` を使用します：\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## インストゥルメンタルまたは純伴奏\n\n`light_music=true` または `make_instrumental=true` を使用できます。`light_music` はインストゥルメンタル／BGM 寄りであることを示し、`make_instrumental` は歌唱ボーカルを生成しないことを示します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌詞の詳細モード\n\nビジネス側で歌詞がすでに用意されており、タイトルとスタイルタグを指定する必要がある場合に適しています。`custom_mode=true` を渡し、`lyrics` を使用して歌詞を送信します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 照会\n\n作成成功後、返却された `data` のタスク ID を保存します。たとえば `task_xxx` です。`GET /suno/fetch/{task_id}` を呼び出して、状態、音声 URL、カバー、タイトル、歌詞、および上流から返された元のセグメント情報を照会します。",
         "tags": [
           "音楽生成タスクの形式"
         ],
@@ -2222,50 +2253,16 @@
                   },
                   "upstream_model": {
                     "type": "string",
-                    "example": "suno-v5.5",
-                    "description": "生成エンジンの選択値。デフォルトは `suno-v5.5` で、`suno-v5` を明示的に指定すると旧版を維持できます。"
-                  },
-                  "music_model": {
-                    "type": "string",
-                    "description": "`upstream_model` の互換エイリアス。"
-                  },
-                  "engine": {
-                    "type": "string",
-                    "description": "`upstream_model` の互換エイリアス。"
-                  },
-                  "model_id": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "integer"
-                      }
-                    ],
-                    "description": "`model_id` の camelCase 互換フィールド。"
-                  },
-                  "modelId": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "integer"
-                      }
-                    ],
-                    "description": "`model_id` の camelCase 互換フィールド。"
+                    "example": "suno-v6",
+                    "description": "サブモデル名（例: `suno-v6` または `suno-v5.5`）。デフォルトは `suno-v5.5`。"
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "プロンプト記述モードでは、音楽スタイル、感情、シーンを指定します。歌詞の高度モードでは、歌詞互換フィールドとして使用できます。"
-                  },
-                  "gpt_description_prompt": {
-                    "type": "string",
-                    "description": "記述モードのプロンプト互換フィールド。"
+                    "description": "音楽や音声を説明するプロンプト。"
                   },
                   "extraParams": {
                     "type": "object",
-                    "description": "MiniMax Speech 2.8 HD の音声パラメータ。`extraParams` の snake_case 互換フィールドです。",
+                    "description": "MiniMax Speech 2.8 HD 的 `voice`、`outputFormat`、`sampleRate`、`speed`、`volume`、`pitch` 参数。",
                     "properties": {
                       "voice": {
                         "type": "string",
@@ -2293,69 +2290,6 @@
                       }
                     },
                     "additionalProperties": true
-                  },
-                  "extra_params": {
-                    "type": "object",
-                    "description": "MiniMax Speech 2.8 HD の音声パラメータ。`extraParams` の snake_case 互換フィールドです。",
-                    "properties": {
-                      "voice": {
-                        "type": "string",
-                        "default": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85"
-                      },
-                      "outputFormat": {
-                        "type": "string",
-                        "default": "mp3"
-                      },
-                      "sampleRate": {
-                        "type": "integer",
-                        "default": 32000
-                      },
-                      "speed": {
-                        "type": "number",
-                        "default": 1
-                      },
-                      "volume": {
-                        "type": "number",
-                        "default": 1
-                      },
-                      "pitch": {
-                        "type": "number",
-                        "default": 0
-                      }
-                    },
-                    "additionalProperties": true
-                  },
-                  "voice": {
-                    "type": "string",
-                    "description": "MiniMax Speech 2.8 HDの音色。`extraParams.voice` を上書きできます。"
-                  },
-                  "output_format": {
-                    "type": "string",
-                    "description": "MiniMax Speech 2.8 HD の出力形式。"
-                  },
-                  "outputFormat": {
-                    "type": "string",
-                    "description": "`output_format` の camelCase 互換フィールド。"
-                  },
-                  "sample_rate": {
-                    "type": "integer",
-                    "description": "MiniMax Speech 2.8 HD のサンプリングレート。"
-                  },
-                  "sampleRate": {
-                    "type": "integer",
-                    "description": "`sample_rate` の camelCase 互換フィールド。"
-                  },
-                  "speed": {
-                    "type": "number",
-                    "description": "話速。既定値は 1 です。"
-                  },
-                  "volume": {
-                    "type": "number",
-                    "description": "音量。デフォルトは 1。"
-                  },
-                  "pitch": {
-                    "type": "number",
-                    "description": "ピッチ。デフォルトは 0 です。"
                   },
                   "make_instrumental": {
                     "type": "boolean",
@@ -2374,10 +2308,6 @@
                     "type": "boolean",
                     "description": "カスタムモードを使用するかどうか。"
                   },
-                  "customMode": {
-                    "type": "boolean",
-                    "description": "`custom_mode` の camelCase 互換フィールド。"
-                  },
                   "title": {
                     "type": "string",
                     "description": "曲のタイトル。"
@@ -2386,37 +2316,22 @@
                     "type": "string",
                     "description": "スタイルタグ、例えば `electro pop, female vocal`。"
                   },
-                  "style": {
-                    "type": "string",
-                    "description": "スタイル互換フィールド。"
-                  },
-                  "genre": {
-                    "type": "string",
-                    "description": "ジャンル互換フィールド。"
-                  },
-                  "genres": {
-                    "type": "string",
-                    "description": "ジャンル互換フィールド。"
-                  },
                   "lyrics": {
                     "type": "string",
                     "description": "歌詞の内容。"
-                  },
-                  "lyric": {
-                    "type": "string",
-                    "description": "`lyrics` 互換エイリアス。"
-                  },
-                  "custom_lyrics": {
-                    "type": "string",
-                    "description": "`lyrics` 互換エイリアス。"
-                  },
-                  "customLyrics": {
-                    "type": "string",
-                    "description": "`lyrics` 互換エイリアス。"
                   }
                 }
               },
               "examples": {
+                "music_submit_suno_v6": {
+                  "summary": "Suno v6 音楽生成",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "suno-v6",
+                    "prompt": "Create an energetic retro-pop DJ song about the artificial intelligence revolution.",
+                    "make_instrumental": false
+                  }
+                },
                 "music_submit_prompt": {
                   "summary": "Suno v5.5 音楽生成",
                   "value": {
@@ -4489,7 +4404,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "動画を作成（Seedance）",
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意。Volcano Ark の content 配列で、テキスト、画像、動画、音声素材を混在して配置できます。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n\n以下のフィールドは主に既存クライアントおよび旧プロトコルとの互換性のために使用します。新規接続では、できるだけこのページの「リクエスト例」にある標準形式を使用してください。テキストと参考素材は `content` 配列を使用し、生成設定は最上位の `duration`、`ratio`、`resolution`、`fps` などのフィールドを使用します。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` テキスト項目の記述形式は `{ \"type\": \"text\", \"text\": \"测试文字\" }` です。\n- `content` 画像、動画、音声素材項目はそれぞれ `image_url`、`video_url`、`audio_url` のオブジェクト形式を使用します。例: `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` で素材の用途を識別でき、`name` はプロンプト内で名前指定による参照に使用できます。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\nGemini Omni の呼び出し：\n- `gemini-omni` は、本 Seedance タスク API からも呼び出せます。\n- `mode=t2v` はテキストから動画の生成に使用し、`mode=r2v` は参照画像/参照素材を用いた生成に使用し、`mode=edit` は動画編集に使用します。\n- テキストは `prompt` または `content` の `text` 項目に配置できます。画像は `image_url / image_urls / reference_images / input_reference / content` に、動画は `video_urls / content` に配置できます。\n- 再生時間フィールドは `duration` または `seconds` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。\n\nMiniMax / Hailuo の呼び出し：\n- `minimax-h3` は本タスク API で呼び出せます。テキストから動画生成、画像参照、音声参照に対応しています。テキストは `prompt` または `content` のテキスト項目に、素材は `content`、`image_urls`、`audio_urls` などのフィールドに指定できます。\n- `hailuo-2.3` は本タスク API で呼び出せます。最初のフレーム画像が必要です。`content` には `role=first_frame` の `image_url` 項目を渡すことを推奨します。\n- `minimax-h3` でよく使うのは `duration=5~15`、`resolution=1440p` です。`hailuo-2.3` でよく使うのは `duration=6` または `10`、`resolution=768p` です。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：任意。指定しない場合は、`content` に空でないテキスト項目を指定する必要があります。\n- `content`：任意。Volcano Ark の content 配列で、テキスト、画像、動画、音声素材を混在して配置できます。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n\n以下のフィールドは主に既存クライアントおよび旧プロトコルとの互換性のために使用します。新規接続では、できるだけこのページの「リクエスト例」にある標準形式を使用してください。テキストと参考素材は `content` 配列を使用し、生成設定は最上位の `duration`、`ratio`、`resolution`、`fps` などのフィールドを使用します。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` テキスト項目の記述形式は `{ \"type\": \"text\", \"text\": \"测试文字\" }` です。\n- `content` 画像、動画、音声素材項目はそれぞれ `image_url`、`video_url`、`audio_url` のオブジェクト形式を使用します。例: `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` で素材の用途を識別でき、`name` はプロンプト内で名前指定による参照に使用できます。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\nSeedance 2.5 画像・動画・音声を混在させた参照例（素材 URL はプレースホルダーです。呼び出し時には実際にアクセス可能なリンクに置き換えてください）：\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni の呼び出し：\n- `gemini-omni` は、本 Seedance タスク API からも呼び出せます。\n- `mode=t2v` はテキストから動画の生成に使用し、`mode=r2v` は参照画像/参照素材を用いた生成に使用し、`mode=edit` は動画編集に使用します。\n- テキストは `prompt` または `content` の `text` 項目に配置できます。画像は `image_url / image_urls / reference_images / input_reference / content` に、動画は `video_urls / content` に配置できます。\n- 再生時間フィールドは `duration` または `seconds` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。\n\nMiniMax / Hailuo の呼び出し：\n- `minimax-h3` は本タスク API で呼び出せます。テキストから動画生成、画像参照、音声参照に対応しています。テキストは `prompt` または `content` のテキスト項目に、素材は `content`、`image_urls`、`audio_urls` などのフィールドに指定できます。\n- `hailuo-2.3` は本タスク API で呼び出せます。最初のフレーム画像が必要です。`content` には `role=first_frame` の `image_url` 項目を渡すことを推奨します。\n- `minimax-h3` でよく使うのは `duration=5~15`、`resolution=1440p` です。`hailuo-2.3` でよく使うのは `duration=6` または `10`、`resolution=768p` です。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
           "Video generation Seedance"
@@ -4501,14 +4416,14 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "model",
-                  "prompt"
+                  "model"
                 ],
                 "properties": {
                   "model": {
                     "type": "string",
                     "example": "doubao-seedance-2-0-260128",
                     "enum": [
+                      "sd-2-5",
                       "doubao-seedance-1-0-lite-i2v-250428",
                       "doubao-seedance-1-0-lite-t2v-250428",
                       "doubao-seedance-1-0-pro-250528",
@@ -4524,8 +4439,8 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "example": "参考素材生成一段剧情短视频",
-                    "description": "必須。動画生成のメイン説明です。空にすることはできません。"
+                    "description": "任意指定。指定しない場合は、content に動画生成の説明として空でない text 項目を指定する必要があります。",
+                    "example": "参考素材生成一段剧情短视频"
                   },
                   "content": {
                     "type": "array",
@@ -4711,6 +4626,61 @@
                 }
               },
               "examples": {
+                "seedance_sd25_mixed_content": {
+                  "summary": "Seedance 2.5 画像/動画/音声の混合リファレンス",
+                  "value": {
+                    "model": "sd-2-5",
+                    "ratio": "9:16",
+                    "fps": 24,
+                    "duration": 10,
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://demo1.png"
+                        },
+                        "role": "reference_image",
+                        "name": "图片1"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://demo2.png"
+                        },
+                        "role": "reference_image",
+                        "name": "图片2"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://demo3.png"
+                        },
+                        "role": "reference_image",
+                        "name": "图片3"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://video.mp4"
+                        },
+                        "role": "reference_video",
+                        "name": "视频1"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://audio.mp3"
+                        },
+                        "role": "reference_audio",
+                        "name": "音频1"
+                      }
+                    ]
+                  }
+                },
                 "seedance_tasks_reference_material": {
                   "summary": "Seedance コンテンツのタスク",
                   "value": {
@@ -4956,7 +4926,7 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "タスクを照会する（Seedance）",
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：必須、動画生成のメイン説明文。\n- `content`：任意。Volcano Ark の content 配列で、テキスト、画像、動画、音声素材を混在して配置できます。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n\n以下のフィールドは主に既存クライアントおよび旧プロトコルとの互換性のために使用します。新規接続では、できるだけこのページの「リクエスト例」にある標準形式を使用してください。テキストと参考素材は `content` 配列を使用し、生成設定は最上位の `duration`、`ratio`、`resolution`、`fps` などのフィールドを使用します。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` テキスト項目の記述形式は `{ \"type\": \"text\", \"text\": \"测试文字\" }` です。\n- `content` 画像、動画、音声素材項目はそれぞれ `image_url`、`video_url`、`audio_url` のオブジェクト形式を使用します。例: `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` で素材の用途を識別でき、`name` はプロンプト内で名前指定による参照に使用できます。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\nGemini Omni の呼び出し：\n- `gemini-omni` は、本 Seedance タスク API からも呼び出せます。\n- `mode=t2v` はテキストから動画の生成に使用し、`mode=r2v` は参照画像/参照素材を用いた生成に使用し、`mode=edit` は動画編集に使用します。\n- テキストは `prompt` または `content` の `text` 項目に配置できます。画像は `image_url / image_urls / reference_images / input_reference / content` に、動画は `video_urls / content` に配置できます。\n- 再生時間フィールドは `duration` または `seconds` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。\n\nMiniMax / Hailuo の呼び出し：\n- `minimax-h3` は本タスク API で呼び出せます。テキストから動画生成、画像参照、音声参照に対応しています。テキストは `prompt` または `content` のテキスト項目に、素材は `content`、`image_urls`、`audio_urls` などのフィールドに指定できます。\n- `hailuo-2.3` は本タスク API で呼び出せます。最初のフレーム画像が必要です。`content` には `role=first_frame` の `image_url` 項目を渡すことを推奨します。\n- `minimax-h3` でよく使うのは `duration=5~15`、`resolution=1440p` です。`hailuo-2.3` でよく使うのは `duration=6` または `10`、`resolution=768p` です。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\n動画生成タスクを作成し、タスクIDを使用してステータスと結果を照会するために使用します。\n\nタスク作成の主要フィールド：\n- `model`：必須、モデル名。\n- `prompt`：任意。指定しない場合は、`content` に空でないテキスト項目を指定する必要があります。\n- `content`：任意。Volcano Ark の content 配列で、テキスト、画像、動画、音声素材を混在して配置できます。\n- `function_mode`：任意、通常、万能リファレンスなどのアドバンスドモードで使用されます。\n\n互換性のある入力パラメータ：\n\n以下のフィールドは主に既存クライアントおよび旧プロトコルとの互換性のために使用します。新規接続では、できるだけこのページの「リクエスト例」にある標準形式を使用してください。テキストと参考素材は `content` 配列を使用し、生成設定は最上位の `duration`、`ratio`、`resolution`、`fps` などのフィールドを使用します。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼び出しの詳細：\n- `mode=reference_material` または `function_mode=omni_reference` の場合、`content` を介してテキストとリファレンス素材を渡すことを推奨します。\n- `content` テキスト項目の記述形式は `{ \"type\": \"text\", \"text\": \"测试文字\" }` です。\n- `content` 画像、動画、音声素材項目はそれぞれ `image_url`、`video_url`、`audio_url` のオブジェクト形式を使用します。例: `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` で素材の用途を識別でき、`name` はプロンプト内で名前指定による参照に使用できます。\n- `ratio`、`duration`、`resolution`、`fps` は、最終的な生成設定に影響します。\n\nSeedance 2.5 画像・動画・音声を混在させた参照例（素材 URL はプレースホルダーです。呼び出し時には実際にアクセス可能なリンクに置き換えてください）：\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni の呼び出し：\n- `gemini-omni` は、本 Seedance タスク API からも呼び出せます。\n- `mode=t2v` はテキストから動画の生成に使用し、`mode=r2v` は参照画像/参照素材を用いた生成に使用し、`mode=edit` は動画編集に使用します。\n- テキストは `prompt` または `content` の `text` 項目に配置できます。画像は `image_url / image_urls / reference_images / input_reference / content` に、動画は `video_urls / content` に配置できます。\n- 再生時間フィールドは `duration` または `seconds` を使用でき、4 / 6 / 8 / 10 秒のいずれかに自動でマッチします。\n\nMiniMax / Hailuo の呼び出し：\n- `minimax-h3` は本タスク API で呼び出せます。テキストから動画生成、画像参照、音声参照に対応しています。テキストは `prompt` または `content` のテキスト項目に、素材は `content`、`image_urls`、`audio_urls` などのフィールドに指定できます。\n- `hailuo-2.3` は本タスク API で呼び出せます。最初のフレーム画像が必要です。`content` には `role=first_frame` の `image_url` 項目を渡すことを推奨します。\n- `minimax-h3` でよく使うのは `duration=5~15`、`resolution=1440p` です。`hailuo-2.3` でよく使うのは `duration=6` または `10`、`resolution=768p` です。\n\n照会結果の注目フィールド：\n- `items[].status`\n- `items[].content.video_url` または `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
           "Video generation Seedance"

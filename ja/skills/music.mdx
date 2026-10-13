@@ -1,9 +1,9 @@
 ---
-title: "NowAPI Music"
-description: "Create music generation tasks and query their results by task ID with NowAPI."
+title: "NewAPI Music"
+description: "Create music generation tasks and query their results by task ID with NewAPI."
 ---
 
-`nowapi-music` は既定で `https://api.aiid.edu.kg` を呼び出し、`NOWAPI_API_KEY` から認証情報を読み取ります。
+`newapi-music` は既定で `https://api.aiid.edu.kg` を呼び出し、`NEWAPI_API_KEY` から認証情報を読み取ります。
 
 ## サポートされているコマンド
 
@@ -16,9 +16,9 @@ description: "Create music generation tasks and query their results by task ID w
 ## 呼び出し例
 
 ```bash
-node scripts/nowapi-music.mjs models
-node scripts/nowapi-music.mjs create --json music-request.json
-node scripts/nowapi-music.mjs status --id task_xxx
+node scripts/newapi-music.mjs models
+node scripts/newapi-music.mjs create --json music-request.json
+node scripts/newapi-music.mjs status --id task_xxx
 ```
 
 タスクを作成したら、返されたタスク ID を保存し、対応する照会コマンドで状態を取得します。長時間かかるタスクでは、単一の HTTP リクエストを待ち続けないでください。

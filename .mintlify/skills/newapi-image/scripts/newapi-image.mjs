@@ -7,34 +7,28 @@ const COMMANDS = {
     "method": "GET",
     "path": "/v1/models"
   },
-  "sora-create": {
+  "generate": {
     "method": "POST",
-    "path": "/v1/videos",
+    "path": "/v1/images/generations",
     "body": true
   },
-  "sora-status": {
-    "method": "GET",
-    "path": "/v1/videos/{task_id}",
-    "id": "task_id"
-  },
-  "sora-content": {
-    "method": "GET",
-    "path": "/v1/videos/{task_id}/content",
-    "id": "task_id",
-    "binary": true
-  },
-  "seedance-create": {
+  "edit": {
     "method": "POST",
-    "path": "/api/v3/contents/generations/tasks",
+    "path": "/v1/images/edits",
     "body": true
   },
-  "seedance-status": {
+  "responses-create": {
+    "method": "POST",
+    "path": "/v1/responses",
+    "body": true
+  },
+  "responses-get": {
     "method": "GET",
-    "path": "/api/v3/contents/generations/tasks/{task_id}",
-    "id": "task_id"
+    "path": "/v1/responses/{response_id}",
+    "id": "response_id"
   }
 };
-const SLUG = "nowapi-video";
+const SLUG = "newapi-image";
 
 function option(name) {
   const index = process.argv.indexOf(name);
@@ -63,9 +57,9 @@ async function main() {
     usage();
     process.exit(2);
   }
-  const apiKey = process.env.NOWAPI_API_KEY;
-  if (!apiKey) throw new Error("NOWAPI_API_KEY is required");
-  const baseURL = (process.env.NOWAPI_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, "");
+  const apiKey = process.env.NEWAPI_API_KEY;
+  if (!apiKey) throw new Error("NEWAPI_API_KEY is required");
+  const baseURL = (process.env.NEWAPI_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, "");
   let path = spec.path;
   if (spec.id) {
     const id = option("--id");
@@ -79,7 +73,7 @@ async function main() {
     body = await readFile(inputPath, "utf8");
     JSON.parse(body);
   }
-  const timeout = Number(process.env.NOWAPI_TIMEOUT_MS || 120000);
+  const timeout = Number(process.env.NEWAPI_TIMEOUT_MS || 120000);
   const response = await fetch(baseURL + path, {
     method: spec.method,
     headers: { Authorization: `Bearer ${apiKey}`, Accept: "application/json", ...(body ? { "Content-Type": "application/json" } : {}) },

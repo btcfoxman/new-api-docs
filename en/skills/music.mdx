@@ -1,9 +1,9 @@
 ---
-title: "NowAPI Music"
-description: "Create music generation tasks and query their results by task ID with NowAPI."
+title: "NewAPI Music"
+description: "Create music generation tasks and query their results by task ID with NewAPI."
 ---
 
-`nowapi-music` uses `https://api.aiid.edu.kg` by default and reads authentication information from `NOWAPI_API_KEY`.
+`newapi-music` uses `https://api.aiid.edu.kg` by default and reads authentication information from `NEWAPI_API_KEY`.
 
 ## Supported Commands
 
@@ -16,9 +16,9 @@ description: "Create music generation tasks and query their results by task ID w
 ## Usage Examples
 
 ```bash
-node scripts/nowapi-music.mjs models
-node scripts/nowapi-music.mjs create --json music-request.json
-node scripts/nowapi-music.mjs status --id task_xxx
+node scripts/newapi-music.mjs models
+node scripts/newapi-music.mjs create --json music-request.json
+node scripts/newapi-music.mjs status --id task_xxx
 ```
 
 After creating a task, save the returned task ID, then use the corresponding query command to get its status. For long-running tasks, do not keep a single HTTP request waiting.

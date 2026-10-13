@@ -1,9 +1,9 @@
 ---
-title: "NowAPI Music"
-description: "Create music generation tasks and query their results by task ID with NowAPI."
+title: "NewAPI Music"
+description: "Create music generation tasks and query their results by task ID with NewAPI."
 ---
 
-`nowapi-music` по умолчанию вызывает `https://api.aiid.edu.kg` и читает данные аутентификации из `NOWAPI_API_KEY`.
+`newapi-music` по умолчанию вызывает `https://api.aiid.edu.kg` и читает данные аутентификации из `NEWAPI_API_KEY`.
 
 ## Поддерживаемые команды
 
@@ -16,9 +16,9 @@ description: "Create music generation tasks and query their results by task ID w
 ## Пример вызова
 
 ```bash
-node scripts/nowapi-music.mjs models
-node scripts/nowapi-music.mjs create --json music-request.json
-node scripts/nowapi-music.mjs status --id task_xxx
+node scripts/newapi-music.mjs models
+node scripts/newapi-music.mjs create --json music-request.json
+node scripts/newapi-music.mjs status --id task_xxx
 ```
 
 После создания задачи сохраните возвращённый ID задачи, затем используйте соответствующую команду запроса, чтобы получить статус. Для длительных задач не оставляйте один запрос HTTP в ожидании.

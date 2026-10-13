@@ -210,7 +210,7 @@
       "post": {
         "summary": "Создать ответ (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API — используется для создания ответов модели.\nПоддерживает многопотоковые диалоги, вызов инструментов, логический вывод и другие функции.\n\nДополните асинхронный сценарий генерации изображений в OpenAI Responses API. `background=true` используется для отправки фоновой задачи; интерфейс создания сразу возвращает `status=queued` и полный `id`, после чего с помощью этого `id` вызывается `GET /v1/responses/{response_id}` для запроса результата.\n\n## Процесс асинхронной генерации изображений\n\n1. Вызовите `POST /v1/responses`, передав в теле запроса `tools=[{ \"type\": \"image_generation\" }]` и `background=true`.\n2. Сохраните полный `id`, возвращаемый интерфейсом создания, например `resp_xxx`. Не обрезайте, не переписывайте и не сохраняйте только `metadata.task_id`.\n3. Вызовите `GET /v1/responses/{response_id}` для проверки, пока не будет `status=completed` или `status=failed`.\n4. После успешного выполнения прочитайте `output[].url`, чтобы получить ссылку на изображение.\n\n### Пример создания асинхронной задачи на генерацию изображения\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\nПример ответа интерфейса создания:\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\nПоддерживаемые модели: `gpt-image-2-2k`, `gpt-image-2-4k`, `nano-banana-pro`.",
+        "description": "OpenAI Responses API — используется для создания ответов модели.\nПоддерживает многопотоковые диалоги, вызов инструментов, логический вывод и другие функции.\n\nДополните асинхронный сценарий генерации изображений в OpenAI Responses API. `background=true` используется для отправки фоновой задачи; интерфейс создания сразу возвращает `status=queued` и полный `id`, после чего с помощью этого `id` вызывается `GET /v1/responses/{response_id}` для запроса результата.\n\n## Процесс асинхронной генерации изображений\n\n1. Вызовите `POST /v1/responses`, передав в теле запроса `tools=[{ \"type\": \"image_generation\" }]` и `background=true`.\n2. Сохраните полный `id`, возвращаемый интерфейсом создания, например `resp_xxx`. Не обрезайте, не переписывайте и не сохраняйте только `metadata.task_id`.\n3. Вызовите `GET /v1/responses/{response_id}` для проверки, пока не будет `status=completed` или `status=failed`.\n4. После успешного выполнения прочитайте `output[].url`, чтобы получить ссылку на изображение.\n\n### Пример создания асинхронной задачи на генерацию изображения\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\n### Редактирование с использованием референсного изображения и указанием соотношения сторон\n\n`input` может передавать массив сообщений; в `content` одного пользовательского сообщения можно смешивать `input_text` и `input_image`. `tools[].ratio` задает соотношение сторон генерируемого изображения.\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": [\n    {\n      \"role\": \"user\",\n      \"content\": [\n        {\n          \"type\": \"input_text\",\n          \"text\": \"生成新图片 4K, 16:9\"\n        },\n        {\n          \"type\": \"input_image\",\n          \"image_url\": \"https://imageproxy.zhongzhuan.chat/api/proxy/image/70a98de9c9d48160812454b4ee21edbf.jpg\",\n          \"detail\": \"auto\"\n        }\n      ]\n    }\n  ],\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\",\n      \"ratio\": \"16:9\"\n    }\n  ],\n  \"background\": true\n}\n```\n\nВ этом примере `model` — `gpt-image-2-2k`; если нужен уровень 4K, используйте `gpt-image-2-4k`, а не просто указывайте «4K» в промпте.\n\nПример ответа интерфейса создания:\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\nПоддерживаемые модели: `gpt-image-2-2k`, `gpt-image-2-4k`, `nano-banana-pro`.",
         "operationId": "createResponse",
         "tags": [
           "Формат OpenAI (Responses)"
@@ -233,6 +233,36 @@
                     "tools": [
                       {
                         "type": "image_generation"
+                      }
+                    ],
+                    "background": true
+                  }
+                },
+                "responses_image_edit_async": {
+                  "summary": "Асинхронное редактирование по референсному изображению",
+                  "value": {
+                    "model": "gpt-image-2-2k",
+                    "input": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "input_text",
+                            "text": "生成新图片 4K, 16:9"
+                          },
+                          {
+                            "type": "input_image",
+                            "image_url": "https://imageproxy.zhongzhuan.chat/api/proxy/image/70a98de9c9d48160812454b4ee21edbf.jpg",
+                            "detail": "auto"
+                          }
+                        ]
+                      }
+                    ],
+                    "stream": false,
+                    "tools": [
+                      {
+                        "type": "image_generation",
+                        "ratio": "16:9"
                       }
                     ],
                     "background": true
@@ -897,6 +927,7 @@
                       "doubao-seedance-1-5-pro-251215",
                       "doubao-seedance-2-0-260128",
                       "doubao-seedance-2-0-fast-260128",
+                      "sd-2-5",
                       "veo3",
                       "veo3-fast",
                       "veo3-fast-frames",
@@ -2197,7 +2228,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "Создать задачу генерации музыки или звука",
-        "description": "Интерфейс отправки задания на генерацию музыки и звука, совместимый со старым путем `/suno/submit/music`. Возвращает ID задачи; затем запрос можно проверить через `/suno/fetch/{task_id}`.\n\nИнтерфейс отправки задания на генерацию музыки и звука. Путь остается `/suno/submit/music`; фактически можно выбрать движок генерации через `upstream_model`, `music_model`, `engine`, `model_id` или `modelId`. Интерфейс создания возвращает `task_id`, затем результат можно получить через `/suno/fetch/{task_id}`.\n\nЕсли не передан `upstream_model` (или передан только `{\"model\":\"suno_music\"}`), по умолчанию используется Suno v5.5. Если нужно продолжать использовать старую версию Suno, явно передайте `\"upstream_model\":\"suno-v5\"`.\n\n## Новые модели\n\n| Тип | `upstream_model` / Псевдоним | `modelId` |\n| --- | --- | ---: |\n| Музыка | `suno-v5.5` / `chirp-fenix` | 128 |\n| Голос | `seed-audio-1.0` | 126 |\n| Голос | `minimax-speech-2.8-hd` / `speech-2.8-hd` | 127 |\n| Музыка | `lyria-3-pro` / `lyria-3-pro-preview` | 129 |\n\n## Режим описания промпта\n\nПодходит, если нужно описать только стиль, настроение, язык, тип исполнителя и сцену, а модель автоматически сгенерирует содержимое песни.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v5.5\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## Генерация звука\n\nMiniMax Speech может переопределять параметры голоса через `extraParams` (или одноименные поля верхней области видимости в формате snake_case/camelCase).\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nЕсли для MiniMax Speech не переданы параметры голоса, сервер по умолчанию отправляет `voice`, `outputFormat=mp3`, `sampleRate=32000`, `speed=1`, `volume=1` и `pitch=0` из примера выше.\n\nLyria 3 Pro использует `upstream_model=lyria-3-pro` (или `lyria-3-pro-preview`):\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## Легкая музыка или чистый аккомпанемент\n\nМожно использовать `light_music=true` или `make_instrumental=true`. `light_music` означает уклон в легкую/фоновую музыку, а `make_instrumental` — не генерировать вокал.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## Расширенный режим текста песни\n\nПодходит, если на стороне бизнеса уже подготовлен текст песни и нужно указать заголовок и теги стиля. Можно передать `custom_mode=true`, а для поля текста песни можно использовать `lyrics`, `lyric`, `custom_lyrics` или `customLyrics`.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Запрос\n\nПосле успешного создания сохраните возвращенный `data` ID задачи, например `task_xxx`, и вызовите `GET /suno/fetch/{task_id}`, чтобы получить статус, URL аудио, обложку, заголовок, текст песни и исходные фрагменты, возвращенные upstream.",
+        "description": "Интерфейс отправки задания на генерацию музыки и звука, совместимый со старым путем `/suno/submit/music`. Возвращает ID задачи; затем запрос можно проверить через `/suno/fetch/{task_id}`.\n\nИнтерфейс отправки задач на генерацию музыки и звука. Передавайте имя подмодели через `upstream_model`. Интерфейс создания возвращает `task_id`, затем используйте `/suno/fetch/{task_id}` для запроса результата.\n\nЕсли не передан `upstream_model` (или передан только `{\"model\":\"suno_music\"}`), по умолчанию используется Suno v5.5. Если нужно продолжать использовать старую версию Suno, явно передайте `\"upstream_model\":\"suno-v5\"`.\n\n## Доступные подмодели\n\n| Тип | `upstream_model` |\n| --- | --- |\n| Музыка | `suno-v6` |\n| Музыка | `suno-v5.5` |\n| Музыка | `suno-v5` |\n| Музыка | `lyria-3-pro` |\n| Звук | `seed-audio-1.0` |\n| Звук | `minimax-speech-2.8-hd` |\n\n## Режим описания промпта\n\nПодходит, если нужно описать только стиль, настроение, язык, тип исполнителя и сцену, а модель автоматически сгенерирует содержимое песни.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## Генерация звука\n\nВ MiniMax Speech можно настроить параметры голоса через `extraParams`.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nЕсли для MiniMax Speech не переданы параметры голоса, сервер по умолчанию отправляет `voice`, `outputFormat=mp3`, `sampleRate=32000`, `speed=1`, `volume=1` и `pitch=0` из примера выше.\n\nLyria 3 Pro использует `upstream_model=lyria-3-pro`:\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## Легкая музыка или чистый аккомпанемент\n\nМожно использовать `light_music=true` или `make_instrumental=true`. `light_music` означает уклон в легкую/фоновую музыку, а `make_instrumental` — не генерировать вокал.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## Расширенный режим текста песни\n\nПодходит для случаев, когда на стороне бизнеса уже подготовлены тексты песен и нужно указать название и теги стиля. Передайте `custom_mode=true` и используйте `lyrics` для отправки текста песни.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Запрос\n\nПосле успешного создания сохраните возвращенный `data` ID задачи, например `task_xxx`, и вызовите `GET /suno/fetch/{task_id}`, чтобы получить статус, URL аудио, обложку, заголовок, текст песни и исходные фрагменты, возвращенные upstream.",
         "tags": [
           "Формат задачи генерации музыки"
         ],
@@ -2222,50 +2253,16 @@
                   },
                   "upstream_model": {
                     "type": "string",
-                    "example": "suno-v5.5",
-                    "description": "Значение выбора движка генерации; по умолчанию `suno-v5.5`, явная передача `suno-v5` позволяет сохранить старую версию."
-                  },
-                  "music_model": {
-                    "type": "string",
-                    "description": "Совместимый псевдоним для `upstream_model`."
-                  },
-                  "engine": {
-                    "type": "string",
-                    "description": "Совместимый псевдоним для `upstream_model`."
-                  },
-                  "model_id": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "integer"
-                      }
-                    ],
-                    "description": "Совместимое поле camelCase для `model_id`."
-                  },
-                  "modelId": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "integer"
-                      }
-                    ],
-                    "description": "Совместимое поле camelCase для `model_id`."
+                    "example": "suno-v6",
+                    "description": "Имя подмодели, например `suno-v6` или `suno-v5.5`; по умолчанию `suno-v5.5`."
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "В режиме описания промпта — музыкальный стиль, настроение и сцена; в расширенном режиме текста песни может использоваться как совместимое поле для текста песни."
-                  },
-                  "gpt_description_prompt": {
-                    "type": "string",
-                    "description": "Описывает поле совместимости с подсказками режима."
+                    "description": "Описание музыки или звука в виде подсказки."
                   },
                   "extraParams": {
                     "type": "object",
-                    "description": "Параметр речи MiniMax Speech 2.8 HD; совместимое поле в формате snake_case для `extraParams`.",
+                    "description": "MiniMax Speech 2.8 HD 的 `voice`、`outputFormat`、`sampleRate`、`speed`、`volume`、`pitch` 参数。",
                     "properties": {
                       "voice": {
                         "type": "string",
@@ -2293,69 +2290,6 @@
                       }
                     },
                     "additionalProperties": true
-                  },
-                  "extra_params": {
-                    "type": "object",
-                    "description": "Параметр речи MiniMax Speech 2.8 HD; совместимое поле в формате snake_case для `extraParams`.",
-                    "properties": {
-                      "voice": {
-                        "type": "string",
-                        "default": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85"
-                      },
-                      "outputFormat": {
-                        "type": "string",
-                        "default": "mp3"
-                      },
-                      "sampleRate": {
-                        "type": "integer",
-                        "default": 32000
-                      },
-                      "speed": {
-                        "type": "number",
-                        "default": 1
-                      },
-                      "volume": {
-                        "type": "number",
-                        "default": 1
-                      },
-                      "pitch": {
-                        "type": "number",
-                        "default": 0
-                      }
-                    },
-                    "additionalProperties": true
-                  },
-                  "voice": {
-                    "type": "string",
-                    "description": "Голос MiniMax Speech 2.8 HD, может заменить `extraParams.voice`."
-                  },
-                  "output_format": {
-                    "type": "string",
-                    "description": "Формат вывода MiniMax Speech 2.8 HD."
-                  },
-                  "outputFormat": {
-                    "type": "string",
-                    "description": "Совместимое поле camelCase для `output_format`."
-                  },
-                  "sample_rate": {
-                    "type": "integer",
-                    "description": "Частота дискретизации MiniMax Speech 2.8 HD."
-                  },
-                  "sampleRate": {
-                    "type": "integer",
-                    "description": "Совместимое поле camelCase для `sample_rate`."
-                  },
-                  "speed": {
-                    "type": "number",
-                    "description": "Скорость речи, по умолчанию 1."
-                  },
-                  "volume": {
-                    "type": "number",
-                    "description": "Громкость, по умолчанию 1."
-                  },
-                  "pitch": {
-                    "type": "number",
-                    "description": "Тональность, по умолчанию 0."
                   },
                   "make_instrumental": {
                     "type": "boolean",
@@ -2374,10 +2308,6 @@
                     "type": "boolean",
                     "description": "Использовать ли пользовательский режим."
                   },
-                  "customMode": {
-                    "type": "boolean",
-                    "description": "Совместимое поле camelCase для `custom_mode`."
-                  },
                   "title": {
                     "type": "string",
                     "description": "Название песни."
@@ -2386,37 +2316,22 @@
                     "type": "string",
                     "description": "Тег стиля, например `electro pop, female vocal`."
                   },
-                  "style": {
-                    "type": "string",
-                    "description": "Поле для совместимости стилей."
-                  },
-                  "genre": {
-                    "type": "string",
-                    "description": "Поле совместимости жанров."
-                  },
-                  "genres": {
-                    "type": "string",
-                    "description": "Поле совместимости жанров."
-                  },
                   "lyrics": {
                     "type": "string",
                     "description": "Содержимое текста песни."
-                  },
-                  "lyric": {
-                    "type": "string",
-                    "description": "`lyrics` Совместимый псевдоним."
-                  },
-                  "custom_lyrics": {
-                    "type": "string",
-                    "description": "`lyrics` Совместимый псевдоним."
-                  },
-                  "customLyrics": {
-                    "type": "string",
-                    "description": "`lyrics` Совместимый псевдоним."
                   }
                 }
               },
               "examples": {
+                "music_submit_suno_v6": {
+                  "summary": "Генерация музыки Suno v6",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "suno-v6",
+                    "prompt": "Create an energetic retro-pop DJ song about the artificial intelligence revolution.",
+                    "make_instrumental": false
+                  }
+                },
                 "music_submit_prompt": {
                   "summary": "Генерация музыки Suno v5.5",
                   "value": {
@@ -4489,7 +4404,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "Создать видео（Seedance）",
-        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nИспользуется для создания задач генерации видео и получения статуса и результатов по ID задачи.\n\nОсновные поля для создания задачи:\n- `model`: Обязательно, название модели.\n- `prompt`: Обязательно, основное описание для генерации видео.\n- `content`: необязательный массив content Volcano Ark, для смешанного размещения текста, изображений, видео и аудио.\n- `function_mode`: Опционально, часто используется в расширенных режимах, таких как универсальный референс.\n\nСовместимые входные параметры:\n\nСледующие поля в основном предназначены для совместимости со старыми клиентами и устаревшими протоколами. Для новых интеграций по возможности используйте стандартный формат из «Примера запроса» на этой странице: для текста и reference materials используйте массив `content`, а для настроек генерации — верхнеуровневые поля `duration`, `ratio`, `resolution`, `fps` и т. д.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nДетали вызова:\n- При использовании `mode=reference_material` или `function_mode=omni_reference` рекомендуется передавать текст и референсные материалы через `content`.\n- `content`: текстовый элемент задаётся в формате `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content`: элементы изображений, видео и аудио оформляются соответственно с помощью объектов `image_url`, `video_url` и `audio_url`, например `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` может обозначать назначение материала, `name` можно ссылаться по имени в подсказке.\n- `ratio`, `duration`, `resolution` и `fps` влияют на итоговую конфигурацию генерации.\n\nВызов Gemini Omni:\n- `gemini-omni` также можно вызывать через этот интерфейс задачи Seedance.\n- `mode=t2v` используется для генерации видео по тексту, `mode=r2v` — для генерации по референсным изображениям/материалам, `mode=edit` — для редактирования видео.\n- Текст можно размещать в элементе `text` в `prompt` или `content`; изображения можно размещать в `image_url / image_urls / reference_images / input_reference / content`; видео — в `video_urls / content`.\n- Для поля длительности можно использовать `duration` или `seconds` — будет автоматически сопоставлено с вариантами 4 / 6 / 8 / 10 секунд.\n\nВызов MiniMax / Hailuo:\n- `minimax-h3` можно вызвать через этот интерфейс задачи; поддерживаются генерация видео по тексту, референс по изображению и референс по аудио; текст можно указать в текстовых полях `prompt` или `content`, а материалы — в полях `content`, `image_urls`, `audio_urls` и т. д.\n- `hailuo-2.3` можно вызвать через этот интерфейс задачи; требуется изображение первого кадра, рекомендуется передавать в `content` элемент `image_url` из `role=first_frame`.\n- `minimax-h3` обычно используют `duration=5~15` и `resolution=1440p`; `hailuo-2.3` обычно используют `duration=6` или `10` и `resolution=768p`.\n\nКлючевые поля в результатах запроса:\n- `items[].status`\n- `items[].content.video_url` или `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nИспользуется для создания задач генерации видео и получения статуса и результатов по ID задачи.\n\nОсновные поля для создания задачи:\n- `model`: Обязательно, название модели.\n- `prompt`: необязательно; если не передано, в `content` необходимо указать непустой текстовый элемент.\n- `content`: необязательный массив content Volcano Ark, для смешанного размещения текста, изображений, видео и аудио.\n- `function_mode`: Опционально, часто используется в расширенных режимах, таких как универсальный референс.\n\nСовместимые входные параметры:\n\nСледующие поля в основном предназначены для совместимости со старыми клиентами и устаревшими протоколами. Для новых интеграций по возможности используйте стандартный формат из «Примера запроса» на этой странице: для текста и reference materials используйте массив `content`, а для настроек генерации — верхнеуровневые поля `duration`, `ratio`, `resolution`, `fps` и т. д.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nДетали вызова:\n- При использовании `mode=reference_material` или `function_mode=omni_reference` рекомендуется передавать текст и референсные материалы через `content`.\n- `content`: текстовый элемент задаётся в формате `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content`: элементы изображений, видео и аудио оформляются соответственно с помощью объектов `image_url`, `video_url` и `audio_url`, например `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` может обозначать назначение материала, `name` можно ссылаться по имени в подсказке.\n- `ratio`, `duration`, `resolution` и `fps` влияют на итоговую конфигурацию генерации.\n\nSeedance 2.5 Пример смешанной ссылки на изображения, видео и аудио (URL материалов являются заполнителями; при вызове замените их фактически доступными ссылками):\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nВызов Gemini Omni:\n- `gemini-omni` также можно вызывать через этот интерфейс задачи Seedance.\n- `mode=t2v` используется для генерации видео по тексту, `mode=r2v` — для генерации по референсным изображениям/материалам, `mode=edit` — для редактирования видео.\n- Текст можно размещать в элементе `text` в `prompt` или `content`; изображения можно размещать в `image_url / image_urls / reference_images / input_reference / content`; видео — в `video_urls / content`.\n- Для поля длительности можно использовать `duration` или `seconds` — будет автоматически сопоставлено с вариантами 4 / 6 / 8 / 10 секунд.\n\nВызов MiniMax / Hailuo:\n- `minimax-h3` можно вызвать через этот интерфейс задачи; поддерживаются генерация видео по тексту, референс по изображению и референс по аудио; текст можно указать в текстовых полях `prompt` или `content`, а материалы — в полях `content`, `image_urls`, `audio_urls` и т. д.\n- `hailuo-2.3` можно вызвать через этот интерфейс задачи; требуется изображение первого кадра, рекомендуется передавать в `content` элемент `image_url` из `role=first_frame`.\n- `minimax-h3` обычно используют `duration=5~15` и `resolution=1440p`; `hailuo-2.3` обычно используют `duration=6` или `10` и `resolution=768p`.\n\nКлючевые поля в результатах запроса:\n- `items[].status`\n- `items[].content.video_url` или `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
           "Генерация видео Seedance"
@@ -4501,14 +4416,14 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "model",
-                  "prompt"
+                  "model"
                 ],
                 "properties": {
                   "model": {
                     "type": "string",
                     "example": "doubao-seedance-2-0-260128",
                     "enum": [
+                      "sd-2-5",
                       "doubao-seedance-1-0-lite-i2v-250428",
                       "doubao-seedance-1-0-lite-t2v-250428",
                       "doubao-seedance-1-0-pro-250528",
@@ -4524,8 +4439,8 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "example": "参考素材生成一段剧情短视频",
-                    "description": "Обязательно. Основное описание для генерации видео, не может быть пустым."
+                    "description": "Необязательно; если не передано, в content необходимо указать непустой элемент text в качестве описания для генерации видео.",
+                    "example": "参考素材生成一段剧情短视频"
                   },
                   "content": {
                     "type": "array",
@@ -4711,6 +4626,61 @@
                 }
               },
               "examples": {
+                "seedance_sd25_mixed_content": {
+                  "summary": "Seedance 2.5 Смешанная ссылка на изображения/видео/аудио",
+                  "value": {
+                    "model": "sd-2-5",
+                    "ratio": "9:16",
+                    "fps": 24,
+                    "duration": 10,
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://demo1.png"
+                        },
+                        "role": "reference_image",
+                        "name": "图片1"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://demo2.png"
+                        },
+                        "role": "reference_image",
+                        "name": "图片2"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://demo3.png"
+                        },
+                        "role": "reference_image",
+                        "name": "图片3"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://video.mp4"
+                        },
+                        "role": "reference_video",
+                        "name": "视频1"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://audio.mp3"
+                        },
+                        "role": "reference_audio",
+                        "name": "音频1"
+                      }
+                    ]
+                  }
+                },
                 "seedance_tasks_reference_material": {
                   "summary": "Seedance содержимое задачи",
                   "value": {
@@ -4956,7 +4926,7 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "Запросить задачу（Seedance）",
-        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nИспользуется для создания задач генерации видео и получения статуса и результатов по ID задачи.\n\nОсновные поля для создания задачи:\n- `model`: Обязательно, название модели.\n- `prompt`: Обязательно, основное описание для генерации видео.\n- `content`: необязательный массив content Volcano Ark, для смешанного размещения текста, изображений, видео и аудио.\n- `function_mode`: Опционально, часто используется в расширенных режимах, таких как универсальный референс.\n\nСовместимые входные параметры:\n\nСледующие поля в основном предназначены для совместимости со старыми клиентами и устаревшими протоколами. Для новых интеграций по возможности используйте стандартный формат из «Примера запроса» на этой странице: для текста и reference materials используйте массив `content`, а для настроек генерации — верхнеуровневые поля `duration`, `ratio`, `resolution`, `fps` и т. д.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nДетали вызова:\n- При использовании `mode=reference_material` или `function_mode=omni_reference` рекомендуется передавать текст и референсные материалы через `content`.\n- `content`: текстовый элемент задаётся в формате `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content`: элементы изображений, видео и аудио оформляются соответственно с помощью объектов `image_url`, `video_url` и `audio_url`, например `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` может обозначать назначение материала, `name` можно ссылаться по имени в подсказке.\n- `ratio`, `duration`, `resolution` и `fps` влияют на итоговую конфигурацию генерации.\n\nВызов Gemini Omni:\n- `gemini-omni` также можно вызывать через этот интерфейс задачи Seedance.\n- `mode=t2v` используется для генерации видео по тексту, `mode=r2v` — для генерации по референсным изображениям/материалам, `mode=edit` — для редактирования видео.\n- Текст можно размещать в элементе `text` в `prompt` или `content`; изображения можно размещать в `image_url / image_urls / reference_images / input_reference / content`; видео — в `video_urls / content`.\n- Для поля длительности можно использовать `duration` или `seconds` — будет автоматически сопоставлено с вариантами 4 / 6 / 8 / 10 секунд.\n\nВызов MiniMax / Hailuo:\n- `minimax-h3` можно вызвать через этот интерфейс задачи; поддерживаются генерация видео по тексту, референс по изображению и референс по аудио; текст можно указать в текстовых полях `prompt` или `content`, а материалы — в полях `content`, `image_urls`, `audio_urls` и т. д.\n- `hailuo-2.3` можно вызвать через этот интерфейс задачи; требуется изображение первого кадра, рекомендуется передавать в `content` элемент `image_url` из `role=first_frame`.\n- `minimax-h3` обычно используют `duration=5~15` и `resolution=1440p`; `hailuo-2.3` обычно используют `duration=6` или `10` и `resolution=768p`.\n\nКлючевые поля в результатах запроса:\n- `items[].status`\n- `items[].content.video_url` или `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nИспользуется для создания задач генерации видео и получения статуса и результатов по ID задачи.\n\nОсновные поля для создания задачи:\n- `model`: Обязательно, название модели.\n- `prompt`: необязательно; если не передано, в `content` необходимо указать непустой текстовый элемент.\n- `content`: необязательный массив content Volcano Ark, для смешанного размещения текста, изображений, видео и аудио.\n- `function_mode`: Опционально, часто используется в расширенных режимах, таких как универсальный референс.\n\nСовместимые входные параметры:\n\nСледующие поля в основном предназначены для совместимости со старыми клиентами и устаревшими протоколами. Для новых интеграций по возможности используйте стандартный формат из «Примера запроса» на этой странице: для текста и reference materials используйте массив `content`, а для настроек генерации — верхнеуровневые поля `duration`, `ratio`, `resolution`, `fps` и т. д.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nДетали вызова:\n- При использовании `mode=reference_material` или `function_mode=omni_reference` рекомендуется передавать текст и референсные материалы через `content`.\n- `content`: текстовый элемент задаётся в формате `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content`: элементы изображений, видео и аудио оформляются соответственно с помощью объектов `image_url`, `video_url` и `audio_url`, например `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` может обозначать назначение материала, `name` можно ссылаться по имени в подсказке.\n- `ratio`, `duration`, `resolution` и `fps` влияют на итоговую конфигурацию генерации.\n\nSeedance 2.5 Пример смешанной ссылки на изображения, видео и аудио (URL материалов являются заполнителями; при вызове замените их фактически доступными ссылками):\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nВызов Gemini Omni:\n- `gemini-omni` также можно вызывать через этот интерфейс задачи Seedance.\n- `mode=t2v` используется для генерации видео по тексту, `mode=r2v` — для генерации по референсным изображениям/материалам, `mode=edit` — для редактирования видео.\n- Текст можно размещать в элементе `text` в `prompt` или `content`; изображения можно размещать в `image_url / image_urls / reference_images / input_reference / content`; видео — в `video_urls / content`.\n- Для поля длительности можно использовать `duration` или `seconds` — будет автоматически сопоставлено с вариантами 4 / 6 / 8 / 10 секунд.\n\nВызов MiniMax / Hailuo:\n- `minimax-h3` можно вызвать через этот интерфейс задачи; поддерживаются генерация видео по тексту, референс по изображению и референс по аудио; текст можно указать в текстовых полях `prompt` или `content`, а материалы — в полях `content`, `image_urls`, `audio_urls` и т. д.\n- `hailuo-2.3` можно вызвать через этот интерфейс задачи; требуется изображение первого кадра, рекомендуется передавать в `content` элемент `image_url` из `role=first_frame`.\n- `minimax-h3` обычно используют `duration=5~15` и `resolution=1440p`; `hailuo-2.3` обычно используют `duration=6` или `10` и `resolution=768p`.\n\nКлючевые поля в результатах запроса:\n- `items[].status`\n- `items[].content.video_url` или `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
           "Генерация видео Seedance"

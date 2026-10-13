@@ -1,21 +1,21 @@
 ---
-name: nowapi-image
-description: Generate and edit images with NowAPI, including asynchronous Responses API image tasks.
+name: newapi-image
+description: Generate and edit images with NewAPI, including asynchronous Responses API image tasks.
 license: Proprietary
-compatibility: Requires Node.js 18+ and a NowAPI API key.
+compatibility: Requires Node.js 18+ and a NewAPI API key.
 metadata:
-  author: NowAPI
+  author: NewAPI
   version: "1.0.0"
 ---
 
-# NowAPI Image
+# NewAPI Image
 
-Use this skill when the user asks to create or inspect NowAPI image tasks.
+Use this skill when the user asks to create or inspect NewAPI image tasks.
 
 ## Configuration
 
-- Read the API key only from `NOWAPI_API_KEY`.
-- Read the base URL from `NOWAPI_BASE_URL`; default to `https://api.aiid.edu.kg`.
+- Read the API key only from `NEWAPI_API_KEY`.
+- Read the base URL from `NEWAPI_BASE_URL`; default to `https://api.aiid.edu.kg`.
 - Discover models through `/v1/models`; do not rely on a hardcoded model list.
 - Never print the API key, full base64 media, or binary payloads.
 
@@ -28,7 +28,7 @@ Use this skill when the user asks to create or inspect NowAPI image tasks.
 - `responses-get`: Query an asynchronous image task. Calls `GET /v1/responses/{response_id}`.
 
 ```bash
-node scripts/nowapi-image.mjs <command> [options]
+node scripts/newapi-image.mjs <command> [options]
 ```
 
 Use `--json request.json` for request bodies and `--id <task_id>` for status commands. Creation and status checks are separate operations. Before a billable request, confirm cost-sensitive parameters with the user. Full documentation: https://docs.aiid.edu.kg.

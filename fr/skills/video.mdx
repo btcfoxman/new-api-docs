@@ -1,9 +1,9 @@
 ---
-title: "NowAPI Video"
-description: "Create and query Sora-compatible and Seedance-compatible video generation tasks with NowAPI."
+title: "NewAPI Video"
+description: "Create and query Sora-compatible and Seedance-compatible video generation tasks with NewAPI."
 ---
 
-`nowapi-video` appelle par défaut `https://api.aiid.edu.kg` et lit les informations d’authentification depuis `NOWAPI_API_KEY`.
+`newapi-video` appelle par défaut `https://api.aiid.edu.kg` et lit les informations d’authentification depuis `NEWAPI_API_KEY`.
 
 ## Commandes prises en charge
 
@@ -19,11 +19,11 @@ description: "Create and query Sora-compatible and Seedance-compatible video gen
 ## Exemples d’appel
 
 ```bash
-node scripts/nowapi-video.mjs models
-node scripts/nowapi-video.mjs sora-create --json video-request.json
-node scripts/nowapi-video.mjs sora-status --id video_xxx
-node scripts/nowapi-video.mjs seedance-create --json seedance-request.json
-node scripts/nowapi-video.mjs seedance-status --id task_xxx
+node scripts/newapi-video.mjs models
+node scripts/newapi-video.mjs sora-create --json video-request.json
+node scripts/newapi-video.mjs sora-status --id video_xxx
+node scripts/newapi-video.mjs seedance-create --json seedance-request.json
+node scripts/newapi-video.mjs seedance-status --id task_xxx
 ```
 
 Après avoir créé la tâche, enregistrez l’ID de tâche renvoyé, puis utilisez la commande de requête correspondante pour obtenir l’état. Pour les tâches longues, n’attendez pas en gardant une seule requête HTTP.

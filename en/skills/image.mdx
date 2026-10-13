@@ -1,9 +1,9 @@
 ---
-title: "NowAPI Image"
-description: "Generate and edit images with NowAPI, including asynchronous Responses API image tasks."
+title: "NewAPI Image"
+description: "Generate and edit images with NewAPI, including asynchronous Responses API image tasks."
 ---
 
-`nowapi-image` uses `https://api.aiid.edu.kg` by default and reads authentication information from `NOWAPI_API_KEY`.
+`newapi-image` uses `https://api.aiid.edu.kg` by default and reads authentication information from `NEWAPI_API_KEY`.
 
 ## Supported Commands
 
@@ -18,11 +18,11 @@ description: "Generate and edit images with NowAPI, including asynchronous Respo
 ## Usage Examples
 
 ```bash
-node scripts/nowapi-image.mjs models
-node scripts/nowapi-image.mjs generate --json image-request.json
-node scripts/nowapi-image.mjs edit --json edit-request.json
-node scripts/nowapi-image.mjs responses-create --json responses-request.json
-node scripts/nowapi-image.mjs responses-get --id resp_xxx
+node scripts/newapi-image.mjs models
+node scripts/newapi-image.mjs generate --json image-request.json
+node scripts/newapi-image.mjs edit --json edit-request.json
+node scripts/newapi-image.mjs responses-create --json responses-request.json
+node scripts/newapi-image.mjs responses-get --id resp_xxx
 ```
 
 After creating a task, save the returned task ID, then use the corresponding query command to get its status. For long-running tasks, do not keep a single HTTP request waiting.

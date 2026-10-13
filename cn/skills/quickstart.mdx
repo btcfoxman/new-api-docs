@@ -1,12 +1,12 @@
 ---
 title: "快速安装"
-description: "安装 NowAPI Skills，配置 API Key，并验证 Agent 可以访问 NowAPI。"
+description: "安装 NewAPI Skills，配置 API Key，并验证 Agent 可以访问 NewAPI。"
 ---
 
 ## 环境要求
 
 - Node.js 18 或更高版本
-- 有效的 NowAPI API Key
+- 有效的 NewAPI API Key
 - 支持 Agent Skills 的工具
 
 ## 安装 Skills
@@ -18,15 +18,15 @@ npx skills add https://docs.aiid.edu.kg
 ## 配置环境变量
 
 ```bash
-export NOWAPI_BASE_URL="https://api.aiid.edu.kg"
-export NOWAPI_API_KEY="YOUR_API_KEY"
+export NEWAPI_BASE_URL="https://api.aiid.edu.kg"
+export NEWAPI_API_KEY="YOUR_API_KEY"
 ```
 
 PowerShell：
 
 ```powershell
-$env:NOWAPI_BASE_URL="https://api.aiid.edu.kg"
-$env:NOWAPI_API_KEY="YOUR_API_KEY"
+$env:NEWAPI_BASE_URL="https://api.aiid.edu.kg"
+$env:NEWAPI_API_KEY="YOUR_API_KEY"
 ```
 
 不要把真实 API Key 写入仓库、Skill 文件或聊天回复。配置后让 Agent 执行任意 Skill 的 `models` 命令进行验证。

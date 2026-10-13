@@ -1,9 +1,9 @@
 ---
-title: "NowAPI Music"
-description: "Create music generation tasks and query their results by task ID with NowAPI."
+title: "NewAPI Music"
+description: "Create music generation tasks and query their results by task ID with NewAPI."
 ---
 
-`nowapi-music` 預設呼叫 `https://api.aiid.edu.kg`，並從 `NOWAPI_API_KEY` 讀取驗證資訊。
+`newapi-music` 預設呼叫 `https://api.aiid.edu.kg`，並從 `NEWAPI_API_KEY` 讀取驗證資訊。
 
 ## 支援的命令
 
@@ -16,9 +16,9 @@ description: "Create music generation tasks and query their results by task ID w
 ## 呼叫範例
 
 ```bash
-node scripts/nowapi-music.mjs models
-node scripts/nowapi-music.mjs create --json music-request.json
-node scripts/nowapi-music.mjs status --id task_xxx
+node scripts/newapi-music.mjs models
+node scripts/newapi-music.mjs create --json music-request.json
+node scripts/newapi-music.mjs status --id task_xxx
 ```
 
 建立任務後，保存回傳的任務 ID，再使用對應的查詢命令取得狀態。長任務不要維持單次 HTTP 請求等待。

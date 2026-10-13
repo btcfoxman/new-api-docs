@@ -210,7 +210,7 @@
       "post": {
         "summary": "创建响应 (OpenAI Responses API)",
         "deprecated": false,
-        "description": "OpenAI Responses API，用于创建模型响应。\n支持多轮对话、工具调用、推理等功能。\n\n补充 OpenAI Responses API 的图片生成异步用例。`background=true` 用于提交后台任务，创建接口会立即返回 `status=queued` 和完整 `id`，随后使用该 `id` 调用 `GET /v1/responses/{response_id}` 查询结果。\n\n## 异步图片生成流程\n\n1. 调用 `POST /v1/responses`，请求体中传 `tools=[{ \"type\": \"image_generation\" }]` 且 `background=true`。\n2. 保存创建接口返回的完整 `id`，例如 `resp_xxx`。不要截断、重写或只保存 `metadata.task_id`。\n3. 调用 `GET /v1/responses/{response_id}` 查询，直到 `status=completed` 或 `status=failed`。\n4. 成功后读取 `output[].url` 获取图片链接。\n\n### 创建异步图片任务示例\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\n创建接口返回示例：\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\n支持模型：`gpt-image-2-2k`、`gpt-image-2-4k`、`nano-banana-pro`。",
+        "description": "OpenAI Responses API，用于创建模型响应。\n支持多轮对话、工具调用、推理等功能。\n\n补充 OpenAI Responses API 的图片生成异步用例。`background=true` 用于提交后台任务，创建接口会立即返回 `status=queued` 和完整 `id`，随后使用该 `id` 调用 `GET /v1/responses/{response_id}` 查询结果。\n\n## 异步图片生成流程\n\n1. 调用 `POST /v1/responses`，请求体中传 `tools=[{ \"type\": \"image_generation\" }]` 且 `background=true`。\n2. 保存创建接口返回的完整 `id`，例如 `resp_xxx`。不要截断、重写或只保存 `metadata.task_id`。\n3. 调用 `GET /v1/responses/{response_id}` 查询，直到 `status=completed` 或 `status=failed`。\n4. 成功后读取 `output[].url` 获取图片链接。\n\n### 创建异步图片任务示例\n\n```http\nPOST /v1/responses\nContent-Type: application/json\n```\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": \"生成一张 2K 横屏产品海报，白色运动鞋，干净棚拍光线，高级商业摄影风格。\",\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\"\n    }\n  ],\n  \"background\": true\n}\n```\n\n### 使用参考图编辑并指定画幅比例\n\n`input` 可传消息数组；在同一条用户消息的 `content` 中混排 `input_text` 和 `input_image`。`tools[].ratio` 指定生成画幅比例。\n\n```json\n{\n  \"model\": \"gpt-image-2-2k\",\n  \"input\": [\n    {\n      \"role\": \"user\",\n      \"content\": [\n        {\n          \"type\": \"input_text\",\n          \"text\": \"生成新图片 4K, 16:9\"\n        },\n        {\n          \"type\": \"input_image\",\n          \"image_url\": \"https://imageproxy.zhongzhuan.chat/api/proxy/image/70a98de9c9d48160812454b4ee21edbf.jpg\",\n          \"detail\": \"auto\"\n        }\n      ]\n    }\n  ],\n  \"stream\": false,\n  \"tools\": [\n    {\n      \"type\": \"image_generation\",\n      \"ratio\": \"16:9\"\n    }\n  ],\n  \"background\": true\n}\n```\n\n此例的 `model` 为 `gpt-image-2-2k`；若需要 4K 档，请改用 `gpt-image-2-4k`，不要只在提示词中写“4K”。\n\n创建接口返回示例：\n\n```json\n{\n  \"id\": \"resp_xxx\",\n  \"created_at\": 1780649146,\n  \"error\": null,\n  \"incomplete_details\": null,\n  \"instructions\": null,\n  \"metadata\": {\n    \"task_id\": \"010c31178d26436ca6194cde07931b33\"\n  },\n  \"model\": \"gpt-image-2-2k\",\n  \"object\": \"response\",\n  \"output\": [],\n  \"parallel_tool_calls\": true,\n  \"temperature\": null,\n  \"tool_choice\": null,\n  \"tools\": null,\n  \"top_p\": null,\n  \"max_output_tokens\": null,\n  \"previous_response_id\": null,\n  \"reasoning\": null,\n  \"status\": \"queued\",\n  \"text\": null,\n  \"truncation\": null,\n  \"usage\": null,\n  \"user\": null,\n  \"store\": null\n}\n```\n\n支持模型：`gpt-image-2-2k`、`gpt-image-2-4k`、`nano-banana-pro`。",
         "operationId": "createResponse",
         "tags": [
           "OpenAI格式(Responses)"
@@ -233,6 +233,36 @@
                     "tools": [
                       {
                         "type": "image_generation"
+                      }
+                    ],
+                    "background": true
+                  }
+                },
+                "responses_image_edit_async": {
+                  "summary": "参考图编辑异步",
+                  "value": {
+                    "model": "gpt-image-2-2k",
+                    "input": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "input_text",
+                            "text": "生成新图片 4K, 16:9"
+                          },
+                          {
+                            "type": "input_image",
+                            "image_url": "https://imageproxy.zhongzhuan.chat/api/proxy/image/70a98de9c9d48160812454b4ee21edbf.jpg",
+                            "detail": "auto"
+                          }
+                        ]
+                      }
+                    ],
+                    "stream": false,
+                    "tools": [
+                      {
+                        "type": "image_generation",
+                        "ratio": "16:9"
                       }
                     ],
                     "background": true
@@ -897,6 +927,7 @@
                       "doubao-seedance-1-5-pro-251215",
                       "doubao-seedance-2-0-260128",
                       "doubao-seedance-2-0-fast-260128",
+                      "sd-2-5",
                       "veo3",
                       "veo3-fast",
                       "veo3-fast-frames",
@@ -2197,7 +2228,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "创建音乐或声音生成任务",
-        "description": "音乐与声音生成提交接口，兼容旧 `/suno/submit/music` 路径。返回任务 ID，后续通过 `/suno/fetch/{task_id}` 查询。\n\n音乐与声音生成任务提交接口。路径保持 `/suno/submit/music`，实际可通过 `upstream_model`、`music_model`、`engine`、`model_id` 或 `modelId` 选择生成引擎。创建接口返回 `task_id`，随后用 `/suno/fetch/{task_id}` 查询输出。\n\n未传 `upstream_model`（或只传 `{\"model\":\"suno_music\"}`）时，默认使用 Suno v5.5。需要继续使用旧版 Suno 时，请显式传 `\"upstream_model\":\"suno-v5\"`。\n\n## 新增模型\n\n| 类型 | `upstream_model` / 别名 | `modelId` |\n| --- | --- | ---: |\n| 音乐 | `suno-v5.5` / `chirp-fenix` | 128 |\n| 声音 | `seed-audio-1.0` | 126 |\n| 声音 | `minimax-speech-2.8-hd` / `speech-2.8-hd` | 127 |\n| 音乐 | `lyria-3-pro` / `lyria-3-pro-preview` | 129 |\n\n## 提示词描述模式\n\n适合只描述风格、情绪、语言、歌手类型和场景，由模型自动生成歌曲内容。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v5.5\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## 声音生成\n\nMiniMax Speech 可通过 `extraParams`（或顶层同名 snake_case/camelCase 字段）覆盖语音参数。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nMiniMax Speech 未传语音参数时，服务端默认发送上例中的 `voice`、`outputFormat=mp3`、`sampleRate=32000`、`speed=1`、`volume=1` 和 `pitch=0`。\n\nLyria 3 Pro 使用 `upstream_model=lyria-3-pro`（或 `lyria-3-pro-preview`）：\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## 轻音乐或纯伴奏\n\n可使用 `light_music=true` 或 `make_instrumental=true`。`light_music` 表示偏轻音乐/背景音乐，`make_instrumental` 表示不生成演唱人声。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌词高级模式\n\n适合业务侧已经准备好歌词，需要指定标题和风格标签。可传 `custom_mode=true`，歌词字段可用 `lyrics`、`lyric`、`custom_lyrics` 或 `customLyrics`。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 查询\n\n创建成功后保存返回的 `data` 任务 ID，例如 `task_xxx`，调用 `GET /suno/fetch/{task_id}` 查询状态、音频地址、封面、标题、歌词和上游返回的原始片段信息。",
+        "description": "音乐与声音生成提交接口，兼容旧 `/suno/submit/music` 路径。返回任务 ID，后续通过 `/suno/fetch/{task_id}` 查询。\n\n音乐与声音生成任务提交接口。通过 `upstream_model` 传子模型名称。创建接口返回 `task_id`，随后用 `/suno/fetch/{task_id}` 查询输出。\n\n未传 `upstream_model`（或只传 `{\"model\":\"suno_music\"}`）时，默认使用 Suno v5.5。需要继续使用旧版 Suno 时，请显式传 `\"upstream_model\":\"suno-v5\"`。\n\n## 可用子模型\n\n| 类型 | `upstream_model` |\n| --- | --- |\n| 音乐 | `suno-v6` |\n| 音乐 | `suno-v5.5` |\n| 音乐 | `suno-v5` |\n| 音乐 | `lyria-3-pro` |\n| 声音 | `seed-audio-1.0` |\n| 声音 | `minimax-speech-2.8-hd` |\n\n## 提示词描述模式\n\n适合只描述风格、情绪、语言、歌手类型和场景，由模型自动生成歌曲内容。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## 声音生成\n\nMiniMax Speech 可通过 `extraParams` 设置语音参数。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nMiniMax Speech 未传语音参数时，服务端默认发送上例中的 `voice`、`outputFormat=mp3`、`sampleRate=32000`、`speed=1`、`volume=1` 和 `pitch=0`。\n\nLyria 3 Pro 使用 `upstream_model=lyria-3-pro`：\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## 轻音乐或纯伴奏\n\n可使用 `light_music=true` 或 `make_instrumental=true`。`light_music` 表示偏轻音乐/背景音乐，`make_instrumental` 表示不生成演唱人声。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌词高级模式\n\n适合业务侧已经准备好歌词，需要指定标题和风格标签。传 `custom_mode=true`，并使用 `lyrics` 提交歌词。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 查询\n\n创建成功后保存返回的 `data` 任务 ID，例如 `task_xxx`，调用 `GET /suno/fetch/{task_id}` 查询状态、音频地址、封面、标题、歌词和上游返回的原始片段信息。",
         "tags": [
           "音乐生成任务格式"
         ],
@@ -2222,50 +2253,16 @@
                   },
                   "upstream_model": {
                     "type": "string",
-                    "example": "suno-v5.5",
-                    "description": "生成引擎选择值；默认 `suno-v5.5`，显式传 `suno-v5` 可保留旧版。"
-                  },
-                  "music_model": {
-                    "type": "string",
-                    "description": "`upstream_model` 的兼容别名。"
-                  },
-                  "engine": {
-                    "type": "string",
-                    "description": "`upstream_model` 的兼容别名。"
-                  },
-                  "model_id": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "integer"
-                      }
-                    ],
-                    "description": "`model_id` 的 camelCase 兼容字段。"
-                  },
-                  "modelId": {
-                    "oneOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "integer"
-                      }
-                    ],
-                    "description": "`model_id` 的 camelCase 兼容字段。"
+                    "example": "suno-v6",
+                    "description": "子模型名称，如 `suno-v6` 或 `suno-v5.5`；默认 `suno-v5.5`。"
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "提示词描述模式下为音乐风格、情绪和场景；歌词高级模式下可作为歌词兼容字段。"
-                  },
-                  "gpt_description_prompt": {
-                    "type": "string",
-                    "description": "描述模式提示词兼容字段。"
+                    "description": "音乐或声音的描述提示词。"
                   },
                   "extraParams": {
                     "type": "object",
-                    "description": "MiniMax Speech 2.8 HD 的语音参数；是 `extraParams` 的 snake_case 兼容字段。",
+                    "description": "MiniMax Speech 2.8 HD 的 `voice`、`outputFormat`、`sampleRate`、`speed`、`volume`、`pitch` 参数。",
                     "properties": {
                       "voice": {
                         "type": "string",
@@ -2293,69 +2290,6 @@
                       }
                     },
                     "additionalProperties": true
-                  },
-                  "extra_params": {
-                    "type": "object",
-                    "description": "MiniMax Speech 2.8 HD 的语音参数；是 `extraParams` 的 snake_case 兼容字段。",
-                    "properties": {
-                      "voice": {
-                        "type": "string",
-                        "default": "moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85"
-                      },
-                      "outputFormat": {
-                        "type": "string",
-                        "default": "mp3"
-                      },
-                      "sampleRate": {
-                        "type": "integer",
-                        "default": 32000
-                      },
-                      "speed": {
-                        "type": "number",
-                        "default": 1
-                      },
-                      "volume": {
-                        "type": "number",
-                        "default": 1
-                      },
-                      "pitch": {
-                        "type": "number",
-                        "default": 0
-                      }
-                    },
-                    "additionalProperties": true
-                  },
-                  "voice": {
-                    "type": "string",
-                    "description": "MiniMax Speech 2.8 HD 音色，可覆盖 `extraParams.voice`。"
-                  },
-                  "output_format": {
-                    "type": "string",
-                    "description": "MiniMax Speech 2.8 HD 输出格式。"
-                  },
-                  "outputFormat": {
-                    "type": "string",
-                    "description": "`output_format` 的 camelCase 兼容字段。"
-                  },
-                  "sample_rate": {
-                    "type": "integer",
-                    "description": "MiniMax Speech 2.8 HD 采样率。"
-                  },
-                  "sampleRate": {
-                    "type": "integer",
-                    "description": "`sample_rate` 的 camelCase 兼容字段。"
-                  },
-                  "speed": {
-                    "type": "number",
-                    "description": "语速，默认 1。"
-                  },
-                  "volume": {
-                    "type": "number",
-                    "description": "音量，默认 1。"
-                  },
-                  "pitch": {
-                    "type": "number",
-                    "description": "音调，默认 0。"
                   },
                   "make_instrumental": {
                     "type": "boolean",
@@ -2374,10 +2308,6 @@
                     "type": "boolean",
                     "description": "是否使用自定义模式。"
                   },
-                  "customMode": {
-                    "type": "boolean",
-                    "description": "`custom_mode` 的 camelCase 兼容字段。"
-                  },
                   "title": {
                     "type": "string",
                     "description": "歌曲标题。"
@@ -2386,37 +2316,22 @@
                     "type": "string",
                     "description": "风格标签，例如 `electro pop, female vocal`。"
                   },
-                  "style": {
-                    "type": "string",
-                    "description": "风格兼容字段。"
-                  },
-                  "genre": {
-                    "type": "string",
-                    "description": "曲风兼容字段。"
-                  },
-                  "genres": {
-                    "type": "string",
-                    "description": "曲风兼容字段。"
-                  },
                   "lyrics": {
                     "type": "string",
                     "description": "歌词内容。"
-                  },
-                  "lyric": {
-                    "type": "string",
-                    "description": "`lyrics` 兼容别名。"
-                  },
-                  "custom_lyrics": {
-                    "type": "string",
-                    "description": "`lyrics` 兼容别名。"
-                  },
-                  "customLyrics": {
-                    "type": "string",
-                    "description": "`lyrics` 兼容别名。"
                   }
                 }
               },
               "examples": {
+                "music_submit_suno_v6": {
+                  "summary": "Suno v6 音乐生成",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "suno-v6",
+                    "prompt": "Create an energetic retro-pop DJ song about the artificial intelligence revolution.",
+                    "make_instrumental": false
+                  }
+                },
                 "music_submit_prompt": {
                   "summary": "Suno v5.5 音乐生成",
                   "value": {
@@ -4489,7 +4404,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "创建视频（Seedance）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，火山方舟 content 数组，混排文本、图片、视频、音频素材。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n\n以下字段主要用于历史客户端和旧协议适配。新接入请尽量采用本页“请求示例”中的标准格式：文本与参考素材使用 `content` 数组，生成配置使用顶层 `duration`、`ratio`、`resolution`、`fps` 等字段。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 文本项写法为 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 图片、视频、音频素材项分别使用 `image_url`、`video_url`、`audio_url` 对象写法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可标识素材用途，`name` 可供提示词中按名称引用。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\nMiniMax / Hailuo 调用：\n- `minimax-h3` 可通过本任务接口调用，支持文生视频、图片参考和音频参考；文本可放在 `prompt` 或 `content` 文本项，素材可放在 `content`、`image_urls`、`audio_urls` 等字段。\n- `hailuo-2.3` 可通过本任务接口调用，需要首帧图片，建议在 `content` 中传 `role=first_frame` 的 `image_url` 项。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：可选；不传时须在 `content` 中提供非空文本项。\n- `content`：可选，火山方舟 content 数组，混排文本、图片、视频、音频素材。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n\n以下字段主要用于历史客户端和旧协议适配。新接入请尽量采用本页“请求示例”中的标准格式：文本与参考素材使用 `content` 数组，生成配置使用顶层 `duration`、`ratio`、`resolution`、`fps` 等字段。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 文本项写法为 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 图片、视频、音频素材项分别使用 `image_url`、`video_url`、`audio_url` 对象写法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可标识素材用途，`name` 可供提示词中按名称引用。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nSeedance 2.5 图、视频、音频混合参考示例（素材 URL 为占位符，调用时请替换为实际可访问的链接）：\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\nMiniMax / Hailuo 调用：\n- `minimax-h3` 可通过本任务接口调用，支持文生视频、图片参考和音频参考；文本可放在 `prompt` 或 `content` 文本项，素材可放在 `content`、`image_urls`、`audio_urls` 等字段。\n- `hailuo-2.3` 可通过本任务接口调用，需要首帧图片，建议在 `content` 中传 `role=first_frame` 的 `image_url` 项。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
         "operationId": "create__seedance__task",
         "tags": [
           "视频生成Seedance格式"
@@ -4501,14 +4416,14 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "model",
-                  "prompt"
+                  "model"
                 ],
                 "properties": {
                   "model": {
                     "type": "string",
                     "example": "doubao-seedance-2-0-260128",
                     "enum": [
+                      "sd-2-5",
                       "doubao-seedance-1-0-lite-i2v-250428",
                       "doubao-seedance-1-0-lite-t2v-250428",
                       "doubao-seedance-1-0-pro-250528",
@@ -4524,8 +4439,8 @@
                   },
                   "prompt": {
                     "type": "string",
-                    "example": "参考素材生成一段剧情短视频",
-                    "description": "必填。视频生成主描述，不能为空。"
+                    "description": "可选；若不传，content 中须提供非空 text 项作为视频生成描述。",
+                    "example": "参考素材生成一段剧情短视频"
                   },
                   "content": {
                     "type": "array",
@@ -4711,6 +4626,61 @@
                 }
               },
               "examples": {
+                "seedance_sd25_mixed_content": {
+                  "summary": "Seedance 2.5 图/视频/音频混合参考",
+                  "value": {
+                    "model": "sd-2-5",
+                    "ratio": "9:16",
+                    "fps": 24,
+                    "duration": 10,
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://demo1.png"
+                        },
+                        "role": "reference_image",
+                        "name": "图片1"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://demo2.png"
+                        },
+                        "role": "reference_image",
+                        "name": "图片2"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://demo3.png"
+                        },
+                        "role": "reference_image",
+                        "name": "图片3"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://video.mp4"
+                        },
+                        "role": "reference_video",
+                        "name": "视频1"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://audio.mp3"
+                        },
+                        "role": "reference_audio",
+                        "name": "音频1"
+                      }
+                    ]
+                  }
+                },
                 "seedance_tasks_reference_material": {
                   "summary": "Seedance content 任务",
                   "value": {
@@ -4956,7 +4926,7 @@
     "/api/v3/contents/generations/tasks/{task_id}": {
       "get": {
         "summary": "查询任务（Seedance）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：必填，视频生成主描述。\n- `content`：可选，火山方舟 content 数组，混排文本、图片、视频、音频素材。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n\n以下字段主要用于历史客户端和旧协议适配。新接入请尽量采用本页“请求示例”中的标准格式：文本与参考素材使用 `content` 数组，生成配置使用顶层 `duration`、`ratio`、`resolution`、`fps` 等字段。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 文本项写法为 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 图片、视频、音频素材项分别使用 `image_url`、`video_url`、`audio_url` 对象写法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可标识素材用途，`name` 可供提示词中按名称引用。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\nMiniMax / Hailuo 调用：\n- `minimax-h3` 可通过本任务接口调用，支持文生视频、图片参考和音频参考；文本可放在 `prompt` 或 `content` 文本项，素材可放在 `content`、`image_urls`、`audio_urls` 等字段。\n- `hailuo-2.3` 可通过本任务接口调用，需要首帧图片，建议在 `content` 中传 `role=first_frame` 的 `image_url` 项。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：可选；不传时须在 `content` 中提供非空文本项。\n- `content`：可选，火山方舟 content 数组，混排文本、图片、视频、音频素材。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n\n以下字段主要用于历史客户端和旧协议适配。新接入请尽量采用本页“请求示例”中的标准格式：文本与参考素材使用 `content` 数组，生成配置使用顶层 `duration`、`ratio`、`resolution`、`fps` 等字段。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 文本项写法为 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 图片、视频、音频素材项分别使用 `image_url`、`video_url`、`audio_url` 对象写法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可标识素材用途，`name` 可供提示词中按名称引用。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nSeedance 2.5 图、视频、音频混合参考示例（素材 URL 为占位符，调用时请替换为实际可访问的链接）：\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\nMiniMax / Hailuo 调用：\n- `minimax-h3` 可通过本任务接口调用，支持文生视频、图片参考和音频参考；文本可放在 `prompt` 或 `content` 文本项，素材可放在 `content`、`image_urls`、`audio_urls` 等字段。\n- `hailuo-2.3` 可通过本任务接口调用，需要首帧图片，建议在 `content` 中传 `role=first_frame` 的 `image_url` 项。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
         "operationId": "query__seedance__task",
         "tags": [
           "视频生成Seedance格式"

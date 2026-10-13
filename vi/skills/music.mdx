@@ -1,9 +1,9 @@
 ---
-title: "NowAPI Music"
-description: "Create music generation tasks and query their results by task ID with NowAPI."
+title: "NewAPI Music"
+description: "Create music generation tasks and query their results by task ID with NewAPI."
 ---
 
-`nowapi-music` mặc định gọi `https://api.aiid.edu.kg` và đọc thông tin xác thực từ `NOWAPI_API_KEY`.
+`newapi-music` mặc định gọi `https://api.aiid.edu.kg` và đọc thông tin xác thực từ `NEWAPI_API_KEY`.
 
 ## Các lệnh được hỗ trợ
 
@@ -16,9 +16,9 @@ description: "Create music generation tasks and query their results by task ID w
 ## Ví dụ gọi
 
 ```bash
-node scripts/nowapi-music.mjs models
-node scripts/nowapi-music.mjs create --json music-request.json
-node scripts/nowapi-music.mjs status --id task_xxx
+node scripts/newapi-music.mjs models
+node scripts/newapi-music.mjs create --json music-request.json
+node scripts/newapi-music.mjs status --id task_xxx
 ```
 
 Sau khi tạo tác vụ, hãy lưu ID tác vụ được trả về, rồi dùng lệnh truy vấn tương ứng để lấy trạng thái. Với tác vụ dài, đừng giữ một yêu cầu HTTP duy nhất để chờ.
