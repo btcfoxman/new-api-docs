@@ -1116,7 +1116,8 @@
                       "mode": {
                         "type": "string",
                         "description": "Facultatif, mode de génération vidéo. `gemini-omni` prend en charge `t2v`, `r2v` et `edit`.\n\nKling 4.0 peut utiliser directement le format Seedance content/duration/resolution/ratio/mode, ou le format vidéo OpenAI prompt/seconds/size/input_reference ; aucun des deux ne nécessite contents/settings/options supplémentaires. L'ancienne enveloppe contents/settings/options est conservée uniquement à des fins de compatibilité. Les valeurs possibles de mode sont t2v (texte seul), i2v (une seule première image), i2v_first_last (première et dernière images), reference_images (images de référence standard) et reference_material (référence d'image ou de vidéo). Si mode est omis et qu'aucun outil n'est explicitement spécifié, la valeur par défaut est reference_material lorsqu'il existe des éléments de référence, ou t2v en l'absence de tout élément de référence. Le mode de référence utilise le rôle d'image de référence standard et ne convertit pas silencieusement des première et dernière images explicitement définies en images de référence ; pour les première et dernière images, sélectionnez explicitement i2v ou i2v_first_last et omettez le paramètre de format d'image. L'audio de référence n'est actuellement pas pris en charge. settings.audio est disponible uniquement dans le mode polyvalent pour les images de référence/éléments de référence ; omettez le commutateur audio pour t2v, i2v et i2v_first_last.",
-                        "examples": [
+                        "example": "reference_material",
+                        "x-kling-modes": [
                           "t2v",
                           "i2v",
                           "i2v_first_last",
@@ -5111,7 +5112,8 @@
                       "mode": {
                         "type": "string",
                         "description": "Facultatif. Champs du mode de compatibilité, tels que `t2v`, `i2v`, `i2v_first_last`, `reference_images` et `reference_material` ; `gemini-omni` prend en charge `t2v`, `r2v` et `edit`. Kling 4.0 peut utiliser directement le format Seedance content/duration/resolution/ratio/mode, ou le format vidéo OpenAI prompt/seconds/size/input_reference ; aucun des deux ne nécessite de contents/settings/options supplémentaires. L’ancienne enveloppe contents/settings/options est conservée uniquement pour des raisons de compatibilité. Les valeurs possibles de mode sont t2v (texte uniquement), i2v (une seule image de première frame), i2v_first_last (deux frames, première et dernière), reference_images (images de référence standard) et reference_material (référence d’image ou de vidéo). Lorsque mode est omis et qu’aucun outil n’est explicitement indiqué, reference_material est utilisé par défaut s’il existe des éléments de référence ; sinon, t2v est utilisé par défaut. Le mode de référence utilise le rôle des images de référence standard et ne convertit pas silencieusement des frames de début et de fin explicitement fournies en images de référence ; pour les frames de début et de fin, sélectionnez explicitement i2v ou i2v_first_last et omettez le paramètre de format d’image. L’audio de référence n’est pas pris en charge actuellement. settings.audio est facultatif uniquement en mode universel avec images de référence ou éléments de référence ; pour t2v, i2v et i2v_first_last, omettez le commutateur audio.",
-                        "examples": [
+                        "example": "reference_material",
+                        "x-kling-modes": [
                           "t2v",
                           "i2v",
                           "i2v_first_last",

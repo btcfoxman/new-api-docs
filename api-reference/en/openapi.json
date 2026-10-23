@@ -1116,7 +1116,8 @@
                       "mode": {
                         "type": "string",
                         "description": "Optional, video generation mode. `gemini-omni` Supports `t2v`, `r2v`, and `edit`.\n\nKling 4.0 can directly use the Seedance format with content/duration/resolution/ratio/mode, or the OpenAI video format with prompt/seconds/size/input_reference; neither requires additional contents/settings/options. The legacy contents/settings/options envelope is retained for compatibility only. Available mode values are t2v (text only), i2v (a single first frame), i2v_first_last (first and last frames), reference_images (standard reference images), and reference_material (image or video references). If mode is omitted and no tool is explicitly specified, reference_material is used by default when reference materials are provided; otherwise, t2v is used by default. Reference modes use standard reference-image roles and do not silently convert explicitly specified first and last frames into reference images. For first and last frames, explicitly select i2v or i2v_first_last and omit the aspect-ratio parameter. Reference audio is not currently supported. settings.audio is available only in all-purpose mode for reference images/reference materials; omit the audio switch for t2v, i2v, and i2v_first_last.",
-                        "examples": [
+                        "example": "reference_material",
+                        "x-kling-modes": [
                           "t2v",
                           "i2v",
                           "i2v_first_last",
@@ -5111,7 +5112,8 @@
                       "mode": {
                         "type": "string",
                         "description": "Optional. Compatibility-mode fields, such as `t2v`, `i2v`, `i2v_first_last`, `reference_images`, and `reference_material`; `gemini-omni` supports `t2v`, `r2v`, and `edit`. Kling 4.0 can directly use the Seedance format `content/duration/resolution/ratio/mode`, or the OpenAI video format `prompt/seconds/size/input_reference`; neither requires additional `contents/settings/options`. The legacy `contents/settings/options` envelope is retained only for compatibility. Available `mode` values are `t2v` (text only), `i2v` (single first frame), `i2v_first_last` (first and last frames), `reference_images` (standard reference images), and `reference_material` (image or video references). When `mode` is omitted and no explicit tool is specified, it defaults to `reference_material` when reference material is present, or to `t2v` when no reference material is present. Reference modes use the standard reference-image role and do not silently convert explicitly specified first and last frames into reference images. For first and last frames, explicitly select `i2v` or `i2v_first_last` and omit aspect-ratio parameters. Reference audio is not currently supported. `settings.audio` is available only in the all-in-one mode for reference images/reference material; omit the audio switch for `t2v`, `i2v`, and `i2v_first_last`.",
-                        "examples": [
+                        "example": "reference_material",
+                        "x-kling-modes": [
                           "t2v",
                           "i2v",
                           "i2v_first_last",

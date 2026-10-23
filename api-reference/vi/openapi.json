@@ -1116,7 +1116,8 @@
                       "mode": {
                         "type": "string",
                         "description": "Tùy chọn, chế độ tạo video. `gemini-omni` Hỗ trợ `t2v`, `r2v`, `edit`.\n\nKling 4.0 có thể trực tiếp sử dụng định dạng Seedance content/duration/resolution/ratio/mode hoặc định dạng video OpenAI prompt/seconds/size/input_reference; cả hai đều không cần thêm contents/settings/options. Cấu trúc bao contents/settings/options cũ chỉ được duy trì để tương thích. mode có thể là t2v (chỉ văn bản), i2v (một khung hình đầu), i2v_first_last (hai khung hình đầu-cuối), reference_images (ảnh tham chiếu thông thường), reference_material (tham chiếu ảnh hoặc video). Nếu bỏ qua mode và không có công cụ được chỉ định rõ ràng, khi có tài liệu tham chiếu thì mặc định là reference_material; khi không có bất kỳ tài liệu tham chiếu nào thì mặc định là t2v. Chế độ tham chiếu sử dụng vai trò ảnh tham chiếu thông thường và không tự động chuyển các khung hình đầu-cuối được chỉ định rõ ràng thành ảnh tham chiếu; đối với khung hình đầu-cuối, hãy chọn rõ ràng i2v hoặc i2v_first_last và bỏ qua tham số tỷ lệ khung hình. Hiện không hỗ trợ âm thanh tham chiếu. settings.audio chỉ có thể chọn trong chế độ đa năng cho ảnh tham chiếu/tài liệu tham chiếu; với t2v, i2v, i2v_first_last, hãy bỏ qua công tắc âm thanh.",
-                        "examples": [
+                        "example": "reference_material",
+                        "x-kling-modes": [
                           "t2v",
                           "i2v",
                           "i2v_first_last",
@@ -5111,7 +5112,8 @@
                       "mode": {
                         "type": "string",
                         "description": "Tùy chọn. Các trường ở chế độ tương thích, chẳng hạn như `t2v`, `i2v`, `i2v_first_last`, `reference_images`, `reference_material`; `gemini-omni` hỗ trợ `t2v`, `r2v`, `edit`. Kling 4.0 có thể dùng trực tiếp định dạng Seedance content/duration/resolution/ratio/mode, hoặc định dạng video OpenAI prompt/seconds/size/input_reference; cả hai đều không cần contents/settings/options bổ sung. Vỏ bọc contents/settings/options cũ chỉ được giữ lại để tương thích. mode có thể là t2v (chỉ văn bản), i2v (một khung hình đầu), i2v_first_last (hai khung hình đầu và cuối), reference_images (ảnh tham chiếu thông thường), hoặc reference_material (tham chiếu ảnh hoặc video). Khi bỏ qua mode và không có công cụ được chỉ định rõ ràng, nếu có tư liệu tham chiếu thì mặc định là reference_material; nếu không có bất kỳ tư liệu tham chiếu nào thì mặc định là t2v. Chế độ tham chiếu sử dụng vai trò ảnh tham chiếu thông thường, không âm thầm chuyển các khung hình đầu và cuối được chỉ định rõ ràng thành ảnh tham chiếu; đối với khung hình đầu và cuối, hãy chọn rõ ràng i2v hoặc i2v_first_last, đồng thời bỏ qua tham số tỷ lệ khung hình. Hiện không hỗ trợ âm thanh tham chiếu. settings.audio chỉ là tùy chọn trong chế độ toàn năng cho ảnh tham chiếu/tư liệu tham chiếu; với t2v, i2v và i2v_first_last, hãy bỏ qua công tắc âm thanh.",
-                        "examples": [
+                        "example": "reference_material",
+                        "x-kling-modes": [
                           "t2v",
                           "i2v",
                           "i2v_first_last",

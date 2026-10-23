@@ -1116,7 +1116,8 @@
                       "mode": {
                         "type": "string",
                         "description": "任意、動画生成モード。 `gemini-omni` は `t2v`、`r2v`、`edit` をサポートします。\n\nKling 4.0 では、Seedance 形式の content/duration/resolution/ratio/mode、または OpenAI 動画形式の prompt/seconds/size/input_reference を直接使用できます。いずれも追加の contents/settings/options は不要です。旧 contents/settings/options エンベロープは互換性のためにのみ提供されています。mode には t2v（テキストのみ）、i2v（1枚の開始フレーム）、i2v_first_last（開始/終了の2フレーム）、reference_images（通常の参照画像）、reference_material（画像または動画の参照）を指定できます。mode を省略し、明示的なツールがない場合、参照素材があればデフォルトで reference_material、参照素材がなければデフォルトで t2v になります。参照モードでは通常の参照画像ロールを使用し、明示された開始/終了フレームを参照画像に暗黙的に変更しません。開始/終了フレームには i2v または i2v_first_last を明示的に選択し、アスペクト比パラメータを省略してください。現在、参照音声はサポートしていません。settings.audio は、参照画像/参照素材のオールインワンモードでのみ選択できます。t2v、i2v、i2v_first_last では音声スイッチを省略してください。",
-                        "examples": [
+                        "example": "reference_material",
+                        "x-kling-modes": [
                           "t2v",
                           "i2v",
                           "i2v_first_last",
@@ -5111,7 +5112,8 @@
                       "mode": {
                         "type": "string",
                         "description": "任意です。互換モードのフィールド。例: `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`。`gemini-omni` は `t2v`、`r2v`、`edit` をサポートします。Kling 4.0 では、Seedance 形式の content/duration/resolution/ratio/mode、または OpenAI 動画形式の prompt/seconds/size/input_reference を直接使用できます。どちらも追加の contents/settings/options は不要です。旧来の contents/settings/options エンベロープは互換性のためにのみ提供されています。mode には t2v（テキストのみ）、i2v（単一の開始フレーム）、i2v_first_last（開始・終了の2フレーム）、reference_images（通常の参照画像）、reference_material（画像または動画の参照）を指定できます。mode を省略し、明示的なツールがない場合、参照素材があればデフォルトは reference_material、参照素材がなければデフォルトは t2v です。参照モードでは通常の参照画像ロールを使用し、明示的に指定された開始・終了フレームを暗黙的に参照画像へ変更しません。開始・終了フレームには i2v または i2v_first_last を明示的に選択し、アスペクト比パラメータは省略してください。現在、参照音声はサポートされていません。settings.audio は、参照画像／参照素材のオムニモードでのみ任意です。t2v、i2v、i2v_first_last では音声スイッチを省略してください。",
-                        "examples": [
+                        "example": "reference_material",
+                        "x-kling-modes": [
                           "t2v",
                           "i2v",
                           "i2v_first_last",

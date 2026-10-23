@@ -1116,7 +1116,8 @@
                       "mode": {
                         "type": "string",
                         "description": "選填，影片生成模式。 `gemini-omni` 支援 `t2v`、`r2v`、`edit`。\n\nKling 4.0 可直接使用 Seedance 格式 content/duration/resolution/ratio/mode，或 OpenAI 影片格式 prompt/seconds/size/input_reference；兩者都無需額外的 contents/settings/options。舊 contents/settings/options 信封格式僅為相容用途。mode 可選 t2v（純文字）、i2v（單張首影格）、i2v_first_last（首尾兩影格）、reference_images（一般參考圖片）、reference_material（圖片或影片參考）。省略 mode 且沒有明確指定工具時，若有參考素材則預設為 reference_material，沒有任何參考素材則預設為 t2v。參考模式使用一般參考圖片角色，不會將明確指定的首尾影格靜默轉換為參考圖片；首尾影格請明確選擇 i2v 或 i2v_first_last，並省略畫幅參數。目前不支援參考音訊。settings.audio 僅可在參考圖片／參考素材的全能模式中選用；t2v、i2v、i2v_first_last 請省略音訊開關。",
-                        "examples": [
+                        "example": "reference_material",
+                        "x-kling-modes": [
                           "t2v",
                           "i2v",
                           "i2v_first_last",
@@ -5111,7 +5112,8 @@
                       "mode": {
                         "type": "string",
                         "description": "選填。相容模式欄位，例如 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`；`gemini-omni` 支援 `t2v`、`r2v`、`edit`。Kling 4.0 可直接使用 Seedance 格式 content/duration/resolution/ratio/mode，或 OpenAI 影片格式 prompt/seconds/size/input_reference；兩者皆不需要額外的 contents/settings/options。舊版 contents/settings/options 信封僅為相容性保留。mode 可選 t2v（純文字）、i2v（單張首幀）、i2v_first_last（首尾兩幀）、reference_images（一般參考圖）、reference_material（圖片或影片參考）。省略 mode 且未指定工具時，有參考素材預設為 reference_material，沒有任何參考素材時預設為 t2v。參考模式使用一般參考圖角色，不會將明確指定的首尾幀靜默轉為參考圖；首尾幀請明確選擇 i2v 或 i2v_first_last，並省略畫幅參數。目前不支援參考音訊。settings.audio 僅可用於參考圖片／參考素材的全能模式；t2v、i2v、i2v_first_last 請省略音訊開關。",
-                        "examples": [
+                        "example": "reference_material",
+                        "x-kling-modes": [
                           "t2v",
                           "i2v",
                           "i2v_first_last",
