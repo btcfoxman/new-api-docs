@@ -1059,7 +1059,7 @@
                       },
                       "prompt": {
                         "type": "string",
-                        "description": "動画の説明。Kling 4.0 で contents の prompt 項目を使用する場合は重複して指定する必要はありません。その他のモデルについては、それぞれのフォーマット要件に従ってテキストを指定してください。"
+                        "description": "動画の説明。Kling 4.0 の標準 OpenAI/Sora リクエストでは prompt を直接使用します。標準 Seedance 形式を使用する場合は、content の text 項目でテキストを指定でき、contents/settings/options は不要です。その他のモデルでは、それぞれの形式要件に従ってテキストを指定してください。"
                       },
                       "image": {
                         "type": "string",
@@ -4938,7 +4938,7 @@
                       },
                       "prompt": {
                         "type": "string",
-                        "description": "任意。指定しない場合は、content の text 項目または Kling 4.0 contents の prompt 項目でテキスト説明を指定する必要があります。",
+                        "description": "任意。標準の Seedance リクエストでは、content 内の空でない text 項目にテキストを直接指定するか、トップレベルの prompt を使用できます。Kling 4.0 にも同様に適用され、contents/settings/options は不要です。",
                         "example": "参考素材生成一段剧情短视频"
                       },
                       "content": {

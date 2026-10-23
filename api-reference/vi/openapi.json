@@ -1059,7 +1059,7 @@
                       },
                       "prompt": {
                         "type": "string",
-                        "description": "Mô tả video. Không cần cung cấp lại khi Kling 4.0 sử dụng mục prompt của contents. các mô hình khác cung cấp văn bản theo yêu cầu định dạng tương ứng."
+                        "description": "Mô tả video. Các yêu cầu OpenAI/Sora tiêu chuẩn cho Kling 4.0 sử dụng trực tiếp prompt; khi sử dụng định dạng Seedance tiêu chuẩn, có thể cung cấp văn bản trong mục text của content mà không cần contents/settings/options. Các mô hình khác cung cấp văn bản theo yêu cầu định dạng tương ứng."
                       },
                       "image": {
                         "type": "string",
@@ -4938,7 +4938,7 @@
                       },
                       "prompt": {
                         "type": "string",
-                        "description": "Tùy chọn; nếu không truyền, bạn phải cung cấp mô tả văn bản trong mục text của content hoặc mục prompt của contents thuộc Kling 4.0.",
+                        "description": "Không bắt buộc; các yêu cầu Seedance tiêu chuẩn có thể cung cấp văn bản trực tiếp trong mục text không rỗng của content hoặc sử dụng prompt cấp cao nhất. Kling 4.0 cũng áp dụng, không cần contents/settings/options.",
                         "example": "参考素材生成一段剧情短视频"
                       },
                       "content": {

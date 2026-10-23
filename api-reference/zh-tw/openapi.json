@@ -1059,7 +1059,7 @@
                       },
                       "prompt": {
                         "type": "string",
-                        "description": "影片描述。Kling 4.0 使用 contents 的 prompt 項目時無需重複提供。其他模型按各自格式要求提供文字。"
+                        "description": "影片描述。Kling 4.0 的標準 OpenAI/Sora 請求直接使用 prompt；使用標準 Seedance 格式時，可在 content 的 text 項目中提供文字，無需 contents/settings/options。其他模型請依各自格式要求提供文字。"
                       },
                       "image": {
                         "type": "string",
@@ -4938,7 +4938,7 @@
                       },
                       "prompt": {
                         "type": "string",
-                        "description": "可選；不帶入時須在 content 的 text 項或 Kling 4.0 contents 的 prompt 項中提供文字描述。",
+                        "description": "可選；標準 Seedance 請求可直接在 content 的非空 text 項目中提供文字，或使用頂層 prompt。Kling 4.0 同樣適用，無需 contents/settings/options。",
                         "example": "参考素材生成一段剧情短视频"
                       },
                       "content": {

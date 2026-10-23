@@ -1059,7 +1059,7 @@
                       },
                       "prompt": {
                         "type": "string",
-                        "description": "Description de la vidéo. Kling 4.0 n'a pas besoin d'être fourni à nouveau lorsque le champ prompt de contents est utilisé. Les autres modèles doivent fournir du texte conformément à leurs formats respectifs."
+                        "description": "Description de la vidéo. Les requêtes OpenAI/Sora standard de Kling 4.0 utilisent directement `prompt` ; lors de l’utilisation du format Seedance standard, le texte peut être fourni dans l’élément `text` de `content`, sans nécessiter `contents`/`settings`/`options`. Pour les autres modèles, fournissez le texte conformément à leurs exigences de format respectives."
                       },
                       "image": {
                         "type": "string",
@@ -4938,7 +4938,7 @@
                       },
                       "prompt": {
                         "type": "string",
-                        "description": "Optionnel. S'il n'est pas transmis, vous devez fournir une description textuelle dans l'élément `text` de `content` ou dans l'élément `prompt` de `contents` pour Kling 4.0.",
+                        "description": "Facultatif ; les requêtes Seedance standard peuvent fournir le texte directement dans un élément text non vide de content, ou utiliser prompt au niveau supérieur. Cela s’applique également à Kling 4.0, sans nécessiter contents/settings/options.",
                         "example": "参考素材生成一段剧情短视频"
                       },
                       "content": {
