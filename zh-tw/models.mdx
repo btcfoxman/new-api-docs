@@ -203,7 +203,7 @@ Veo 主模型優先走 `/v1/videos` 相容格式；`/v1beta/...` 為 Veo 原生�
 
 ### Kling Videos
 
-Kling 4.0 使用新版 contents/settings/options 格式，透過火山任務入口或 OpenAI 影片入口提交。
+Kling 4.0 直接支援標準 OpenAI/Sora prompt/seconds/size/input_reference，以及 Seedance content/duration/resolution/ratio/mode，無需額外的 contents/settings/options。舊信封仍持續相容。mode=t2v/i2v/i2v_first_last/reference_images/reference_material 用於區分情境；有參考素材時預設為 reference_material，無素材時預設為 t2v。
 
 
 

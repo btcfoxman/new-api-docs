@@ -43,7 +43,8 @@ description: "現在のプロジェクトは単一のプロトコルのみに対
 
 現在、以下のような少数のモデル専用インターフェースも公開されています：
 
-- Kling 4.0：`POST /api/v3/contents/generations/tasks` または `POST /v1/videos`、リクエストボディには `contents/settings/options` を使用
+- Kling 4.0：`POST /api/v3/contents/generations/tasks` または `POST /v1/videos`。標準の Seedance `content/duration/resolution/ratio/mode` または OpenAI/Sora `prompt/seconds/size/input_reference` をそのまま使用でき、追加の `contents/settings/options` は不要です。旧エンベロープとの互換性も維持されます。
+- Kling の `mode` には、`t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material` を指定できます。省略した場合、参照素材があるときは `reference_material`、ないときは `t2v` がデフォルトです。開始フレームと終了フレームが必要な場合は、対応するモードを明示的に指定してください。
 以下の場合に適しています：
 - すでに対応するモデル専用プロトコルに基づいて統合されている
 - そのモデル専用のパラメータモードを使用する必要がある

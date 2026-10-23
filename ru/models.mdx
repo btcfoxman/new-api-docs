@@ -203,7 +203,7 @@ description: "На этой странице представлены модел
 
 ### Kling Videos
 
-Kling 4.0 использует новый формат contents/settings/options и отправляется через вход задач Huoshan или вход видео OpenAI.
+Kling 4.0 напрямую поддерживает стандартные OpenAI/Sora prompt/seconds/size/input_reference, а также Seedance content/duration/resolution/ratio/mode; дополнительные contents/settings/options не требуются. Старый формат обёртки остаётся совместимым. mode=t2v/i2v/i2v_first_last/reference_images/reference_material различает сценарии; при наличии референсных материалов по умолчанию используется reference_material, без материалов — t2v.
 
 
 

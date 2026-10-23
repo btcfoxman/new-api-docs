@@ -895,7 +895,7 @@
       "post": {
         "summary": "Создать видео",
         "deprecated": false,
-        "description": "Интерфейс генерации видео в совместимом формате OpenAI Sora. Поддерживает режимы генерации видео по тексту и по референсу изображения/видео.\n\n- `POST /v1/videos`: Создание задачи генерации видео\n- `GET /v1/videos/{video_id}`: Запрос статуса задачи\n- `GET /v1/videos/{video_id}/content`: получить двоичное содержимое видео\n\nВ настоящее время недоступно внешним пользователям:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nСтандартные заголовки аутентификации:\n- `Content-Type: application/json`\n\n1. Создайте задачу через `POST /v1/videos` и получите `id`\n2. Выполняйте опрос `GET /v1/videos/{id}`, пока не получите `completed` или `failed`\n3. После завершения в первую очередь используйте `video_url` из ответа\n4. Если требуется унифицированная загрузка, вызовите `GET /v1/videos/{id}/content`\n\nОсновные параметры:\n- `model: string`: обязательно, внешнее имя модели\n- `prompt: string`: рекомендуется, описание для генерации видео\n- `seconds: number|string`: необязательно, целевая длительность\n- `duration: number|string`: необязательно, псевдоним длительности\n- `size: string`: необязательно, размер выходного видео\n- `mode: string`: необязательно, распространённые значения: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nЧасто используемые совместимые параметры:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nРаспространённые расширенные параметры Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Серия Veo\n\nПримечание: `stable`, `official` и т. п. обозначают разные группы, а не внешний суффикс `model`; при вызове сохраняйте `model` как базовое имя модели, а то, через какую группу пойдёт запрос, определяется группой аккаунта или токена.\n\n#### Основная модель Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nРекомендации:\n- Для генерации видео только по тексту в первую очередь используйте основные модели `veo3*` / `veo3.1*`\n- Для сценариев генерации видео по изображению или по референсу рекомендуется явно передавать `mode + image_url/reference_images`\n\n### 4.2 Серия Sora\n\nБазовые модели:\n- `sora-2`\n- `sora-2-pro`\n\nРекомендации:\n- `sora-2*` подходит для общего использования\n- Если нужно использовать группы `stable` / `official` и т. п., сохраняйте `model` как базовое имя модели и не добавляйте суффикс к имени модели.\n\nПример запроса:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 Серия HappyHorse\n\nПубличная модель:\n- `happyhorse-1.0`\n\nРекомендации:\n- `happyhorse-1.0` различаются с помощью `mode`: `t2v`, `i2v`, `r2v`, `video_edit`.\n- В совместимом формате Sora для изображений-референсов рекомендуется передавать медиаэлементы массивом `content`.\n- Для текстовых элементов используйте `type=text`, для медиаэлементов — `type=image_url`; также можно использовать `role` и `name` для обозначения назначения материала.\n\nПример запроса:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Серия Seedance\n\nПубличная модель:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nРекомендации:\n- Для генерации видео по тексту в приоритете `*-t2v-*` или `pro / fast`\n- Для генерации видео по изображению в приоритете `*-i2v-*`\n- Для сценариев со сложными референсными материалами предпочтительно использовать `content`\n\nПример запроса:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Видеосерия Grok\n\nПубличная модель:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nЧасто используемые параметры:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nПример:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Основная видеомодель Kling\n\nОсновная публичная модель:\n- `kling-video`\n\nОбязательно:\n- `model`\n- `model_name`\n\nПоддерживаемые `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nРаспространённые `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nМинимальные входные параметры:\n- Генерация видео по тексту: `model + model_name + prompt + mode=t2v`\n- Генерация видео по изображению: `model + model_name + prompt + mode=i2v + image`\n- Референс по нескольким изображениям: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Продление видео: `model + model_name + mode=extend + video_id`\n\nПример:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 Серия видео MiniMax / Hailuo\n\nПубличная модель:\n- `minimax-h3`\n- `hailuo-2.3`\n\nРекомендации:\n- `minimax-h3` поддерживает генерацию видео по тексту, а также использование референсных изображений и аудио; рекомендуется смешивать текст и материалы через `content`; также можно использовать совместимые поля, такие как `image_urls` и `audio_urls`.\n- `hailuo-2.3` требует изображение первого кадра; рекомендуется передавать элемент `image_url` из `role=first_frame` в `content`, либо использовать `image_urls` для передачи изображения первого кадра.\n- `minimax-h3` обычно используют `duration=5~15` и `resolution=1440p`; `hailuo-2.3` обычно используют `duration=6` или `10` и `resolution=768p`.\n\nПример `minimax-h3`:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\nПример `hailuo-2.3`:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Минимальное количество входных параметров: `model + prompt`\n\n- `mode=i2v`\n- Минимальное количество входных параметров: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Минимальное количество входных параметров: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Минимальное количество входных параметров: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Минимальное количество входных параметров: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Инструкция по вызову Gemini Omni\n\n- `gemini-omni` — публичное имя видеомодели в new-api, можно напрямую вызывать через `POST /v1/videos`.\n- `mode=t2v`: генерация видео по тексту, минимальный входной параметр — `model + prompt`.\n- `mode=r2v`: генерация по референсному изображению/материалу, изображение можно указать в `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference` или `content`.\n- `mode=edit`: редактирование видео, видео можно указать в `video`, `video_url`, `videos` или `content`, также можно одновременно передать референсное изображение.\n- Для поля длительности можно использовать `seconds` или `duration` — будет автоматически сопоставлено с вариантами 4 / 6 / 8 / 10 секунд.\n\n## Kling 4.0\n\nВнешние модели: `kling-4.0` (720p), `kling-4.0-1080p`. В нативном формате можно использовать `POST /text-to-video/kling-4.0`, `POST /image-to-video/kling-4.0`, `POST /omni-video/kling-4.0` и выполнять запросы через `GET /tasks?task_ids=任务ID`. Для нативных запросов `model` не требуется; разрешение выбирается с помощью `settings.resolution`, по умолчанию — 1080p. Типы нативных эталонных изображений/видео: `refer_image`, `feature_video`; создание возвращает объект `data`, а запрос — массив `data`. Отправка возможна через `POST /api/v3/contents/generations/tasks` или `POST /v1/videos`, а запрос — через `GET /{task_id}` по соответствующему пути. Обе точки входа поддерживают тело запроса `contents/settings/options`. `/v1/videos` также совместим с `prompt`, `seconds`, `size` и `input_reference` в видеоформате OpenAI. В `contents` `type=prompt` — это текст, `type=reference_image` и `reference_video` — эталонные материалы, а `first_frame` и `last_frame` — первый и последний кадры. `kling-4.0` соответствует 720p, `kling-4.0-1080p` — 1080p; укажите в `settings.resolution` имя, совпадающее с именем модели. В `settings` используются `duration` (4–30 секунд), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1), `audio`. Текущий API поддерживает не более 10 эталонных изображений и 5 эталонных видео, эталонный аудиофайл не поддерживается. Устаревшие режимы `kling-video` и `model_name` по-прежнему являются интерфейсами для обратной совместимости.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
+        "description": "Интерфейс генерации видео в совместимом формате OpenAI Sora. Поддерживает режимы генерации видео по тексту и по референсу изображения/видео.\n\n- `POST /v1/videos`: Создание задачи генерации видео\n- `GET /v1/videos/{video_id}`: Запрос статуса задачи\n- `GET /v1/videos/{video_id}/content`: получить двоичное содержимое видео\n\nВ настоящее время недоступно внешним пользователям:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nСтандартные заголовки аутентификации:\n- `Content-Type: application/json`\n\n1. Создайте задачу через `POST /v1/videos` и получите `id`\n2. Выполняйте опрос `GET /v1/videos/{id}`, пока не получите `completed` или `failed`\n3. После завершения в первую очередь используйте `video_url` из ответа\n4. Если требуется унифицированная загрузка, вызовите `GET /v1/videos/{id}/content`\n\nОсновные параметры:\n- `model: string`: обязательно, внешнее имя модели\n- `prompt: string`: рекомендуется, описание для генерации видео\n- `seconds: number|string`: необязательно, целевая длительность\n- `duration: number|string`: необязательно, псевдоним длительности\n- `size: string`: необязательно, размер выходного видео\n- `mode: string`: необязательно, распространённые значения: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nЧасто используемые совместимые параметры:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nРаспространённые расширенные параметры Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Серия Veo\n\nПримечание: `stable`, `official` и т. п. обозначают разные группы, а не внешний суффикс `model`; при вызове сохраняйте `model` как базовое имя модели, а то, через какую группу пойдёт запрос, определяется группой аккаунта или токена.\n\n#### Основная модель Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nРекомендации:\n- Для генерации видео только по тексту в первую очередь используйте основные модели `veo3*` / `veo3.1*`\n- Для сценариев генерации видео по изображению или по референсу рекомендуется явно передавать `mode + image_url/reference_images`\n\n### 4.2 Серия Sora\n\nБазовые модели:\n- `sora-2`\n- `sora-2-pro`\n\nРекомендации:\n- `sora-2*` подходит для общего использования\n- Если нужно использовать группы `stable` / `official` и т. п., сохраняйте `model` как базовое имя модели и не добавляйте суффикс к имени модели.\n\nПример запроса:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 Серия HappyHorse\n\nПубличная модель:\n- `happyhorse-1.0`\n\nРекомендации:\n- `happyhorse-1.0` различаются с помощью `mode`: `t2v`, `i2v`, `r2v`, `video_edit`.\n- В совместимом формате Sora для изображений-референсов рекомендуется передавать медиаэлементы массивом `content`.\n- Для текстовых элементов используйте `type=text`, для медиаэлементов — `type=image_url`; также можно использовать `role` и `name` для обозначения назначения материала.\n\nПример запроса:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Серия Seedance\n\nПубличная модель:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nРекомендации:\n- Для генерации видео по тексту в приоритете `*-t2v-*` или `pro / fast`\n- Для генерации видео по изображению в приоритете `*-i2v-*`\n- Для сценариев со сложными референсными материалами предпочтительно использовать `content`\n\nПример запроса:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Видеосерия Grok\n\nПубличная модель:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nЧасто используемые параметры:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nПример:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Основная видеомодель Kling\n\nОсновная публичная модель:\n- `kling-video`\n\nОбязательно:\n- `model`\n- `model_name`\n\nПоддерживаемые `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nРаспространённые `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nМинимальные входные параметры:\n- Генерация видео по тексту: `model + model_name + prompt + mode=t2v`\n- Генерация видео по изображению: `model + model_name + prompt + mode=i2v + image`\n- Референс по нескольким изображениям: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Продление видео: `model + model_name + mode=extend + video_id`\n\nПример:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 Серия видео MiniMax / Hailuo\n\nПубличная модель:\n- `minimax-h3`\n- `hailuo-2.3`\n\nРекомендации:\n- `minimax-h3` поддерживает генерацию видео по тексту, а также использование референсных изображений и аудио; рекомендуется смешивать текст и материалы через `content`; также можно использовать совместимые поля, такие как `image_urls` и `audio_urls`.\n- `hailuo-2.3` требует изображение первого кадра; рекомендуется передавать элемент `image_url` из `role=first_frame` в `content`, либо использовать `image_urls` для передачи изображения первого кадра.\n- `minimax-h3` обычно используют `duration=5~15` и `resolution=1440p`; `hailuo-2.3` обычно используют `duration=6` или `10` и `resolution=768p`.\n\nПример `minimax-h3`:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\nПример `hailuo-2.3`:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Минимальное количество входных параметров: `model + prompt`\n\n- `mode=i2v`\n- Минимальное количество входных параметров: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Минимальное количество входных параметров: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Минимальное количество входных параметров: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Минимальное количество входных параметров: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Инструкция по вызову Gemini Omni\n\n- `gemini-omni` — публичное имя видеомодели в new-api, можно напрямую вызывать через `POST /v1/videos`.\n- `mode=t2v`: генерация видео по тексту, минимальный входной параметр — `model + prompt`.\n- `mode=r2v`: генерация по референсному изображению/материалу, изображение можно указать в `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference` или `content`.\n- `mode=edit`: редактирование видео, видео можно указать в `video`, `video_url`, `videos` или `content`, также можно одновременно передать референсное изображение.\n- Для поля длительности можно использовать `seconds` или `duration` — будет автоматически сопоставлено с вариантами 4 / 6 / 8 / 10 секунд.\n\n## Kling 4.0\n\nВнешние модели: `kling-4.0` (720p), `kling-4.0-1080p`. В нативном формате можно использовать `POST /text-to-video/kling-4.0`, `POST /image-to-video/kling-4.0`, `POST /omni-video/kling-4.0` и выполнять запрос через `GET /tasks?task_ids=任务ID`. Для нативных запросов не требуется `model`; разрешение выбирается через `settings.resolution`, по умолчанию — 1080p. Нативные типы эталонных изображений/видео: `refer_image`, `feature_video`; создание возвращает объект `data`, а запрос — массив `data`. Отправка возможна через `POST /api/v3/contents/generations/tasks` или `POST /v1/videos`, а запрос выполняется через `GET /{task_id}` по соответствующему пути. OpenAI/Sora напрямую используют `prompt`, `seconds`, `size` и `input_reference`; Seedance напрямую использует `content` и `duration/resolution/ratio/mode` верхнего уровня. В обоих случаях дополнительный `contents/settings/options` не требуется. Старый конверт по-прежнему поддерживается: в `contents` поле `type=prompt` содержит текст, `type=reference_image` и `reference_video` — эталонные материалы, а `first_frame` и `last_frame` — первый и последний кадры. `kling-4.0` соответствует 720p, `kling-4.0-1080p` — 1080p; `settings.resolution` должен совпадать с именем модели. В `settings` используйте `duration` (4–30 секунд), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1). `audio` доступен только в универсальном режиме с обычными эталонными материалами; для режимов «текст в видео» и «первый/последний кадр» не указывайте переключатель аудио. Текущий интерфейс поддерживает до 10 эталонных изображений и 5 эталонных видео, эталонное аудио не поддерживается. Старые режимы `kling-video` и `model_name` по-прежнему являются устаревшими интерфейсами совместимости.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"prompt\": \"A cinematic product shot\",\n  \"seconds\": \"4\",\n  \"size\": \"1280x720\",\n  \"input_reference\": \"https://example.com/product.jpg\"\n}\n```\n\nKling 4.0 может напрямую использовать формат Seedance content/duration/resolution/ratio/mode или видеоформат OpenAI prompt/seconds/size/input_reference; в обоих случаях дополнительные contents/settings/options не требуются. Старый конверт contents/settings/options предназначен только для совместимости. Для mode доступны: t2v (только текст), i2v (один первый кадр), i2v_first_last (первый и последний кадры), reference_images (обычные эталонные изображения), reference_material (эталонное изображение или видео). Если mode не указан и отсутствует явный инструмент, при наличии эталонных материалов по умолчанию используется reference_material, а при их отсутствии — t2v. В эталонных режимах используются роли обычных эталонных изображений; явно указанные первый и последний кадры не преобразуются молча в эталонные изображения. Для первого и последнего кадров явно выберите i2v или i2v_first_last и не указывайте параметр соотношения сторон. Эталонное аудио в настоящее время не поддерживается. settings.audio доступен только в универсальном режиме для эталонных изображений/материалов; для t2v, i2v и i2v_first_last не указывайте переключатель аудио.",
         "operationId": "createVideo",
         "tags": [
           "Совместимый формат для Sora генерации видео"
@@ -1110,9 +1110,19 @@
                         "additionalProperties": true,
                         "description": "Контейнер динамически расширяемых полей. Здесь десериализуется большое количество специфичных для модели полей."
                       },
+                      "tool": {
+                        "type": "string"
+                      },
                       "mode": {
                         "type": "string",
-                        "description": "Необязательно, режим генерации видео. `gemini-omni` Поддерживает `t2v`、`r2v`、`edit`。"
+                        "description": "Необязательно, режим генерации видео. `gemini-omni` Поддерживает `t2v`、`r2v`、`edit`。\n\nKling 4.0 может напрямую использовать формат Seedance content/duration/resolution/ratio/mode или видеоформат OpenAI prompt/seconds/size/input_reference; в обоих случаях дополнительные contents/settings/options не требуются. Старый конверт contents/settings/options предназначен только для совместимости. Для mode доступны: t2v (только текст), i2v (один первый кадр), i2v_first_last (первый и последний кадры), reference_images (обычные эталонные изображения), reference_material (эталонное изображение или видео). Если mode не указан и отсутствует явный инструмент, при наличии эталонных материалов по умолчанию используется reference_material, а при их отсутствии — t2v. В эталонных режимах используются роли обычных эталонных изображений; явно указанные первый и последний кадры не преобразуются молча в эталонные изображения. Для первого и последнего кадров явно выберите i2v или i2v_first_last и не указывайте параметр соотношения сторон. Эталонное аудио в настоящее время не поддерживается. settings.audio доступен только в универсальном режиме для эталонных изображений/материалов; для t2v, i2v и i2v_first_last не указывайте переключатель аудио.",
+                        "examples": [
+                          "t2v",
+                          "i2v",
+                          "i2v_first_last",
+                          "reference_images",
+                          "reference_material"
+                        ]
                       },
                       "images": {
                         "type": "array",
@@ -1126,12 +1136,13 @@
                         "items": {
                           "type": "object",
                           "additionalProperties": true
-                        }
+                        },
+                        "description": "Формат Seedance также может вызывать Kling 4.0; для текста используется text, а для изображений/видео — объекты image_url/video_url. Для изображений role имеет значение first_frame, last_frame или reference_image, для видео — reference_video. Используйте mode для различения сценариев генерации."
                       },
                       "contents": {
                         "type": "array",
                         "minItems": 1,
-                        "description": "Элемент содержимого новой версии Kling 4.0 с поддержкой prompt, reference_image, reference_video, first_frame и last_frame.",
+                        "description": "Поле совместимости с устаревшим конвертом Kling 4.0; для стандартных запросов OpenAI/Sora и Seedance указывать не требуется.",
                         "items": {
                           "type": "object",
                           "required": [
@@ -1162,7 +1173,7 @@
                       },
                       "settings": {
                         "type": "object",
-                        "description": "Настройки длительности, разрешения, соотношения сторон и аудио для новой версии Kling 4.0.",
+                        "description": "Настройки совместимости со старым форматом конверта; в стандартном формате напрямую используются seconds/size или duration/resolution/ratio.",
                         "properties": {
                           "duration": {
                             "type": "integer",
@@ -1192,17 +1203,23 @@
                                 "type": "boolean"
                               },
                               {
-                                "type": "string"
+                                "type": "string",
+                                "enum": [
+                                  "native",
+                                  "on",
+                                  "off",
+                                  "none"
+                                ]
                               }
                             ],
-                            "example": "native"
+                            "description": "Доступно только в универсальном режиме `reference_images`/`reference_material`. Для `t2v`, `i2v` и `i2v_first_last` не указывайте; это не означает поддержку эталонного аудио."
                           }
                         }
                       },
                       "options": {
                         "type": "object",
-                        "additionalProperties": true,
-                        "description": "Новые расширенные параметры версии Kling 4.0."
+                        "maxProperties": 0,
+                        "description": "Поле совместимости со старым форматом конверта; для стандартного формата не требуется."
                       },
                       "size": {
                         "type": "string",
@@ -1730,52 +1747,6 @@
                     "aspect_ratio": "16:9"
                   }
                 },
-                "kling_4_text": {
-                  "summary": "Генерация видео по тексту Kling 4.0 720p",
-                  "value": {
-                    "model": "kling-4.0",
-                    "contents": [
-                      {
-                        "type": "prompt",
-                        "text": "A cinematic product shot with natural motion"
-                      }
-                    ],
-                    "settings": {
-                      "duration": 4,
-                      "resolution": "720p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
-                    },
-                    "options": {}
-                  }
-                },
-                "kling_4_reference": {
-                  "summary": "Генерация по референсу Kling 4.0 720p",
-                  "value": {
-                    "model": "kling-4.0",
-                    "contents": [
-                      {
-                        "type": "prompt",
-                        "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "reference_image",
-                        "url": "https://example.com/product.jpg"
-                      },
-                      {
-                        "type": "reference_video",
-                        "url": "https://example.com/motion.mp4"
-                      }
-                    ],
-                    "settings": {
-                      "duration": 4,
-                      "resolution": "720p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
-                    },
-                    "options": {}
-                  }
-                },
                 "kling_4_sora": {
                   "summary": "Формат видео Kling 4.0 720p OpenAI",
                   "value": {
@@ -1786,10 +1757,293 @@
                     "input_reference": "https://example.com/product.jpg"
                   }
                 },
-                "kling_4_text_1080p": {
-                  "summary": "Kling 4.0 1080p Генерация видео по тексту",
+                "kling_4_sora_1080p": {
+                  "summary": "Формат видео Kling 4.0 1080p OpenAI",
                   "value": {
                     "model": "kling-4.0-1080p",
+                    "prompt": "A cinematic product shot with natural motion",
+                    "seconds": "4",
+                    "size": "1920x1080",
+                    "input_reference": "https://example.com/product.jpg"
+                  }
+                },
+                "kling_4_seedance_reference_material": {
+                  "summary": "Kling 4.0 720p Seedance · Справочник по материалам по умолчанию",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "reference_material",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_t2v": {
+                  "summary": "Kling 4.0 720p Seedance · Только текст",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "t2v",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_i2v": {
+                  "summary": "Kling 4.0 720p Seedance · Генерация по изображению первого кадра",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "i2v",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_i2v_first_last": {
+                  "summary": "Kling 4.0 720p Seedance · Первый и последний кадры",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "i2v_first_last",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/last-frame.jpg"
+                        },
+                        "role": "last_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_reference_images": {
+                  "summary": "Kling 4.0 720p Seedance · Референсное изображение",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "reference_images",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_reference_material_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · Справочные материалы по умолчанию",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "reference_material",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_t2v_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · Простой текст",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "t2v",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_i2v_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · Генерация по изображению первого кадра",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "i2v",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_i2v_first_last_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · Начальный и конечный кадры",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "i2v_first_last",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/last-frame.jpg"
+                        },
+                        "role": "last_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_reference_images_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · Референсное изображение",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "reference_images",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_text": {
+                  "summary": "Kling 4.0 720p: генерация видео из текста (совместимо со старым форматом конверта)",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "t2v",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_reference": {
+                  "summary": "Kling 4.0: генерация по референсу в 720p (совместимо со старым форматом запроса)",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "reference_material",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_text_1080p": {
+                  "summary": "Kling 4.0 1080p: генерация видео из текста (совместимо со старым форматом конверта)",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "t2v",
                     "contents": [
                       {
                         "type": "prompt",
@@ -1799,16 +2053,16 @@
                     "settings": {
                       "duration": 4,
                       "resolution": "1080p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
+                      "aspect_ratio": "16:9"
                     },
                     "options": {}
                   }
                 },
                 "kling_4_reference_1080p": {
-                  "summary": "Генерация по образцу Kling 4.0 1080p",
+                  "summary": "Kling 4.0 1080p генерация по референсу (совместимо со старым форматом конверта)",
                   "value": {
                     "model": "kling-4.0-1080p",
+                    "mode": "reference_material",
                     "contents": [
                       {
                         "type": "prompt",
@@ -1826,20 +2080,9 @@
                     "settings": {
                       "duration": 4,
                       "resolution": "1080p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
+                      "aspect_ratio": "16:9"
                     },
                     "options": {}
-                  }
-                },
-                "kling_4_sora_1080p": {
-                  "summary": "Формат видео Kling 4.0 1080p OpenAI",
-                  "value": {
-                    "model": "kling-4.0-1080p",
-                    "prompt": "A cinematic product shot with natural motion",
-                    "seconds": "4",
-                    "size": "1920x1080",
-                    "input_reference": "https://example.com/product.jpg"
                   }
                 }
               }
@@ -4454,7 +4697,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "Создать видео（Seedance）",
-        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nИспользуется для создания задач генерации видео и получения статуса и результатов по ID задачи.\n\nОсновные поля для создания задачи:\n- `model`: Обязательно, название модели.\n- `prompt`: необязательно; если не передано, в `content` необходимо указать непустой текстовый элемент.\n- `content`: необязательный массив content Volcano Ark, для смешанного размещения текста, изображений, видео и аудио.\n- `function_mode`: Опционально, часто используется в расширенных режимах, таких как универсальный референс.\n\nСовместимые входные параметры:\n\nСледующие поля в основном предназначены для совместимости со старыми клиентами и устаревшими протоколами. Для новых интеграций по возможности используйте стандартный формат из «Примера запроса» на этой странице: для текста и reference materials используйте массив `content`, а для настроек генерации — верхнеуровневые поля `duration`, `ratio`, `resolution`, `fps` и т. д.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nДетали вызова:\n- При использовании `mode=reference_material` или `function_mode=omni_reference` рекомендуется передавать текст и референсные материалы через `content`.\n- `content`: текстовый элемент задаётся в формате `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content`: элементы изображений, видео и аудио оформляются соответственно с помощью объектов `image_url`, `video_url` и `audio_url`, например `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` может обозначать назначение материала, `name` можно ссылаться по имени в подсказке.\n- `ratio`, `duration`, `resolution` и `fps` влияют на итоговую конфигурацию генерации.\n\nSeedance 2.5 Пример смешанной ссылки на изображения, видео и аудио (URL материалов являются заполнителями; при вызове замените их фактически доступными ссылками):\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nВызов Gemini Omni:\n- `gemini-omni` также можно вызывать через этот интерфейс задачи Seedance.\n- `mode=t2v` используется для генерации видео по тексту, `mode=r2v` — для генерации по референсным изображениям/материалам, `mode=edit` — для редактирования видео.\n- Текст можно размещать в элементе `text` в `prompt` или `content`; изображения можно размещать в `image_url / image_urls / reference_images / input_reference / content`; видео — в `video_urls / content`.\n- Для поля длительности можно использовать `duration` или `seconds` — будет автоматически сопоставлено с вариантами 4 / 6 / 8 / 10 секунд.\n\nВызов MiniMax / Hailuo:\n- `minimax-h3` можно вызвать через этот интерфейс задачи; поддерживаются генерация видео по тексту, референс по изображению и референс по аудио; текст можно указать в текстовых полях `prompt` или `content`, а материалы — в полях `content`, `image_urls`, `audio_urls` и т. д.\n- `hailuo-2.3` можно вызвать через этот интерфейс задачи; требуется изображение первого кадра, рекомендуется передавать в `content` элемент `image_url` из `role=first_frame`.\n- `minimax-h3` обычно используют `duration=5~15` и `resolution=1440p`; `hailuo-2.3` обычно используют `duration=6` или `10` и `resolution=768p`.\n\nКлючевые поля в результатах запроса:\n- `items[].status`\n- `items[].content.video_url` или `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```\n\n## Kling 4.0\n\nВызов Kling 4.0: `kling-4.0` (720p) и `kling-4.0-1080p` используют `contents/settings/options`, их можно объединить в один тело запроса с `/v1/videos`; текст передается в поле `type=prompt` объекта `contents`, передавать верхнеуровневый `prompt` не требуется. `settings.resolution` должно совпадать с именем модели.",
+        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nИспользуется для создания задач генерации видео и получения статуса и результатов по ID задачи.\n\nОсновные поля для создания задачи:\n- `model`: Обязательно, название модели.\n- `prompt`: необязательно; если не передано, в `content` необходимо указать непустой текстовый элемент.\n- `content`: необязательный массив content Volcano Ark, для смешанного размещения текста, изображений, видео и аудио.\n- `function_mode`: Опционально, часто используется в расширенных режимах, таких как универсальный референс.\n\nСовместимые входные параметры:\n\nСледующие поля в основном предназначены для совместимости со старыми клиентами и устаревшими протоколами. Для новых интеграций по возможности используйте стандартный формат из «Примера запроса» на этой странице: для текста и reference materials используйте массив `content`, а для настроек генерации — верхнеуровневые поля `duration`, `ratio`, `resolution`, `fps` и т. д.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nДетали вызова:\n- При использовании `mode=reference_material` или `function_mode=omni_reference` рекомендуется передавать текст и референсные материалы через `content`.\n- `content`: текстовый элемент задаётся в формате `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content`: элементы изображений, видео и аудио оформляются соответственно с помощью объектов `image_url`, `video_url` и `audio_url`, например `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` может обозначать назначение материала, `name` можно ссылаться по имени в подсказке.\n- `ratio`, `duration`, `resolution` и `fps` влияют на итоговую конфигурацию генерации.\n\nSeedance 2.5 Пример смешанной ссылки на изображения, видео и аудио (URL материалов являются заполнителями; при вызове замените их фактически доступными ссылками):\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nВызов Gemini Omni:\n- `gemini-omni` также можно вызывать через этот интерфейс задачи Seedance.\n- `mode=t2v` используется для генерации видео по тексту, `mode=r2v` — для генерации по референсным изображениям/материалам, `mode=edit` — для редактирования видео.\n- Текст можно размещать в элементе `text` в `prompt` или `content`; изображения можно размещать в `image_url / image_urls / reference_images / input_reference / content`; видео — в `video_urls / content`.\n- Для поля длительности можно использовать `duration` или `seconds` — будет автоматически сопоставлено с вариантами 4 / 6 / 8 / 10 секунд.\n\nВызов MiniMax / Hailuo:\n- `minimax-h3` можно вызвать через этот интерфейс задачи; поддерживаются генерация видео по тексту, референс по изображению и референс по аудио; текст можно указать в текстовых полях `prompt` или `content`, а материалы — в полях `content`, `image_urls`, `audio_urls` и т. д.\n- `hailuo-2.3` можно вызвать через этот интерфейс задачи; требуется изображение первого кадра, рекомендуется передавать в `content` элемент `image_url` из `role=first_frame`.\n- `minimax-h3` обычно используют `duration=5~15` и `resolution=1440p`; `hailuo-2.3` обычно используют `duration=6` или `10` и `resolution=768p`.\n\nКлючевые поля в результатах запроса:\n- `items[].status`\n- `items[].content.video_url` или `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```\n\n## Kling 4.0\n\nВызовы Kling 4.0: `kling-4.0` (720p) и `kling-4.0-1080p` одновременно поддерживают формат Seedance `content/duration/resolution/ratio/mode`, `contents/settings/options` и видеоформат OpenAI; тело запроса можно повторно использовать для обоих унифицированных видеовходов. Разрешение должно соответствовать имени модели. В Kling 4.0 можно напрямую использовать поля content/duration/resolution/ratio/mode формата Seedance или prompt/seconds/size/input_reference видеоформата OpenAI; для обоих вариантов не требуются дополнительные contents/settings/options. Устаревшая обёртка contents/settings/options поддерживается только для совместимости. Для mode доступны значения: t2v (только текст), i2v (один начальный кадр), i2v_first_last (два кадра: начальный и конечный), reference_images (обычные эталонные изображения), reference_material (изображение или видео в качестве эталона). Если mode не указан и нет явно заданного инструмента, при наличии эталонных материалов по умолчанию используется reference_material, а при их отсутствии — t2v. В режиме reference используются роли обычных эталонных изображений; явно заданные начальный и конечный кадры не преобразуются неявно в эталонные изображения. Для начального и конечного кадров явно выберите i2v или i2v_first_last и не указывайте параметр соотношения сторон. Эталонный звук сейчас не поддерживается. settings.audio доступен только в универсальном режиме для эталонных изображений/материалов; для t2v, i2v и i2v_first_last не указывайте переключатель звука.",
         "operationId": "create__seedance__task",
         "tags": [
           "Генерация видео Seedance"
@@ -4782,7 +5025,7 @@
                       "contents": {
                         "type": "array",
                         "minItems": 1,
-                        "description": "Массив содержимого Kling 4.0, использующий элементы prompt, reference_image, reference_video, first_frame или last_frame.",
+                        "description": "Массив совместимости со старым конвертом Kling 4.0; для стандартных запросов Seedance указывать не требуется — используйте content напрямую.",
                         "items": {
                           "type": "object",
                           "required": [
@@ -4813,7 +5056,7 @@
                       },
                       "settings": {
                         "type": "object",
-                        "description": "Новые параметры Kling 4.0: duration, resolution, aspect_ratio, audio.",
+                        "description": "Настройки совместимости со старым форматом envelope; стандартный Seedance использует duration/resolution/ratio верхнего уровня напрямую, указывать их не требуется.",
                         "properties": {
                           "duration": {
                             "type": "integer",
@@ -4843,17 +5086,23 @@
                                 "type": "boolean"
                               },
                               {
-                                "type": "string"
+                                "type": "string",
+                                "enum": [
+                                  "native",
+                                  "on",
+                                  "off",
+                                  "none"
+                                ]
                               }
                             ],
-                            "example": "native"
+                            "description": "Доступно только в универсальном режиме `reference_images`/`reference_material`. Для `t2v`, `i2v` и `i2v_first_last` не указывайте; это не означает поддержку эталонного аудио."
                           }
                         }
                       },
                       "options": {
                         "type": "object",
-                        "additionalProperties": true,
-                        "description": "Параметры расширения Kling 4.0."
+                        "maxProperties": 0,
+                        "description": "Поле совместимости со старым конвертом; для стандартных запросов Seedance указывать не требуется."
                       },
                       "function_mode": {
                         "type": "string",
@@ -4861,7 +5110,14 @@
                       },
                       "mode": {
                         "type": "string",
-                        "description": "Необязательно. Поля режима совместимости, например `t2v`, `i2v`, `i2v_first_last`, `reference_images`, `reference_material`; `gemini-omni` поддерживает `t2v`, `r2v`, `edit`."
+                        "description": "Необязательно. Поля режима совместимости, например `t2v`, `i2v`, `i2v_first_last`, `reference_images`, `reference_material`; `gemini-omni` поддерживает `t2v`, `r2v`, `edit`. В Kling 4.0 можно напрямую использовать формат Seedance: content/duration/resolution/ratio/mode, или видеоформат OpenAI: prompt/seconds/size/input_reference; для обоих не требуются дополнительные contents/settings/options. Устаревшая обёртка contents/settings/options поддерживается только для совместимости. Для mode доступны значения t2v (только текст), i2v (один первый кадр), i2v_first_last (два кадра: первый и последний), reference_images (обычные референсные изображения), reference_material (референсные изображения или видео). Если mode не указан и инструмент не задан явно, при наличии референсных материалов по умолчанию используется reference_material, а при их отсутствии — t2v. В режиме референсов используются роли обычных референсных изображений; явно указанные первый и последний кадры не преобразуются неявно в референсные изображения. Для первого и последнего кадров явно выберите i2v или i2v_first_last и не указывайте параметры соотношения сторон. Референсное аудио пока не поддерживается. settings.audio доступен только в универсальном режиме для референсных изображений/референсных материалов; для t2v, i2v и i2v_first_last не указывайте переключатель аудио.",
+                        "examples": [
+                          "t2v",
+                          "i2v",
+                          "i2v_first_last",
+                          "reference_images",
+                          "reference_material"
+                        ]
                       },
                       "image_url": {
                         "type": "string",
@@ -5171,10 +5427,237 @@
                     "size": "1280x720"
                   }
                 },
-                "kling_4_ark_contents": {
-                  "summary": "Генерация по референсу Kling 4.0 720p",
+                "kling_4_seedance_reference_material": {
+                  "summary": "Kling 4.0 720p Seedance · Справочник по материалам по умолчанию",
                   "value": {
                     "model": "kling-4.0",
+                    "mode": "reference_material",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_t2v": {
+                  "summary": "Kling 4.0 720p Seedance · Только текст",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "t2v",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_i2v": {
+                  "summary": "Kling 4.0 720p Seedance · Генерация по изображению первого кадра",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "i2v",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_i2v_first_last": {
+                  "summary": "Kling 4.0 720p Seedance · Первый и последний кадры",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "i2v_first_last",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/last-frame.jpg"
+                        },
+                        "role": "last_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_reference_images": {
+                  "summary": "Kling 4.0 720p Seedance · Референсное изображение",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "reference_images",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_reference_material_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · Справочные материалы по умолчанию",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "reference_material",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_t2v_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · Простой текст",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "t2v",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_i2v_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · Генерация по изображению первого кадра",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "i2v",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_i2v_first_last_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · Начальный и конечный кадры",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "i2v_first_last",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/last-frame.jpg"
+                        },
+                        "role": "last_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_reference_images_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · Референсное изображение",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "reference_images",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_ark_contents": {
+                  "summary": "Kling 4.0: генерация по референсу в 720p (совместимо со старым форматом запроса)",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "reference_material",
                     "contents": [
                       {
                         "type": "prompt",
@@ -5192,16 +5675,16 @@
                     "settings": {
                       "duration": 4,
                       "resolution": "720p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
+                      "aspect_ratio": "16:9"
                     },
                     "options": {}
                   }
                 },
                 "kling_4_ark_contents_1080p": {
-                  "summary": "Генерация по образцу Kling 4.0 1080p",
+                  "summary": "Kling 4.0 1080p генерация по референсу (совместимо со старым форматом конверта)",
                   "value": {
                     "model": "kling-4.0-1080p",
+                    "mode": "reference_material",
                     "contents": [
                       {
                         "type": "prompt",
@@ -5219,8 +5702,7 @@
                     "settings": {
                       "duration": 4,
                       "resolution": "1080p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
+                      "aspect_ratio": "16:9"
                     },
                     "options": {}
                   }
@@ -6184,7 +6666,7 @@
         "tags": [
           "ФорматKling генерации видео"
         ],
-        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nНативный интерфейс задач Kling 4.0. Для аутентификации используйте Bearer API Key этого сайта. В теле запроса не требуется model; при settings.resolution=720p используется kling-4.0, при 1080p — kling-4.0-1080p; по умолчанию — 1080p. После успешного создания используйте возвращённый data.id для вызова GET /tasks?task_ids=ID_задачи; несколько ID разделяйте запятыми. data в ответе на запрос представляет собой массив, URL результирующего видео находится в data[].outputs[].url.\n\nВ настоящее время поддерживаются соответствующие сценарии генерации для промпта, first_frame, last_frame, refer_image и feature_video. Не поддерживаются middle_frame, base_video, element, voice, аудиореференсы, callback или пользовательский внешний ID задачи; непустые options.callback_url, options.external_task_id, contents.id и другие неподдерживаемые поля приведут к ошибке 400. Параметр options можно не указывать или передать пустой объект; также можно передать watermark_info.enabled=false. Включение водяного знака пока не поддерживается. В настоящее время поддерживается длительность от 4 до 30 секунд, по умолчанию — 10 секунд; 3 секунды не поддерживаются. Для сценариев генерации по тексту и с референсом соотношение сторон по умолчанию — 16:9; явное указание adaptive приведёт к ошибке 400. Сценарии с первым и последним кадрами не принимают явный settings.aspect_ratio; соотношение сторон определяется размером первого изображения frame.\n\nДля универсального референса `contents` должен содержать непустой `prompt` и хотя бы один поддерживаемый медиафайл. Для сценария с начальным и конечным кадрами можно передать `first_frame`, `last_frame` или оба параметра. Начальный и конечный кадры нельзя использовать вместе с референсным изображением `refer_image` или референсным видео `feature_video`; при смешанном использовании будет возвращён код 400. В сценарии с референсами можно комбинировать референсные изображения `refer_image` и референсные видео `feature_video`. Для каждого из `first_frame`, `last_frame` и `refer_image` допускается не более 1 элемента, для `feature_video` — не более 5. Сценарии с несколькими референсными изображениями, на которые ссылаются по `id`, пока не поддерживаются.",
+        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nНативный интерфейс задач Kling 4.0. Для аутентификации используйте Bearer API Key этого сайта. В теле запроса не требуется model; при settings.resolution=720p используется kling-4.0, при 1080p — kling-4.0-1080p; по умолчанию — 1080p. После успешного создания используйте возвращённый data.id для вызова GET /tasks?task_ids=ID_задачи; несколько ID разделяйте запятыми. data в ответе на запрос представляет собой массив, URL результирующего видео находится в data[].outputs[].url.\n\nВ настоящее время поддерживаются соответствующие сценарии генерации для промпта, first_frame, last_frame, refer_image и feature_video. Не поддерживаются middle_frame, base_video, element, voice, аудиореференсы, callback или пользовательский внешний ID задачи; непустые options.callback_url, options.external_task_id, contents.id и другие неподдерживаемые поля приведут к ошибке 400. Параметр options можно не указывать или передать пустой объект; также можно передать watermark_info.enabled=false. Включение водяного знака пока не поддерживается. В настоящее время поддерживается длительность от 4 до 30 секунд, по умолчанию — 10 секунд; 3 секунды не поддерживаются. Для сценариев генерации по тексту и с референсом соотношение сторон по умолчанию — 16:9; явное указание adaptive приведёт к ошибке 400. Сценарии с первым и последним кадрами не принимают явный settings.aspect_ratio; соотношение сторон определяется размером первого изображения frame.\n\nПоле contents для универсального референса должно содержать непустой prompt и хотя бы один поддерживаемый медиафайл. В устаревшем сценарии с начальным и конечным кадрами можно передать first_frame, last_frame или оба параметра, однако возможность обработки зависит от возможностей доступной в данный момент модели; при несовместимости возможностей запрос будет отклонён, а изображения кадров не будут автоматически преобразованы в обычные референсные изображения. Для новой интеграции сценария с начальным и конечным кадрами рекомендуется использовать вход image-to-video. Начальный и конечный кадры нельзя использовать вместе с референсным изображением refer_image или референсным видео feature_video; при смешанном использовании будет возвращён код 400. В сценарии референса можно комбинировать референсное изображение refer_image и референсное видео feature_video. Для каждого из first_frame, last_frame и refer_image допускается не более 1 элемента, для feature_video — не более 5 элементов. Сценарии с несколькими референсными изображениями, на которые ссылаются по id, пока не поддерживаются.",
         "requestBody": {
           "required": true,
           "content": {
@@ -6250,7 +6732,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "Необходимо одновременно указать непустой `prompt` и поддерживаемые медиафайлы; для генерации видео из изображения обязательно требуется `first_frame`. `first_frame`/`last_frame` нельзя использовать вместе с `refer_image`/`feature_video`, иначе будет возвращён код 400. Ограничения на количество медиафайлов см. в описании API. Для универсальной ссылки допускается использовать только `last_frame` вместе с `prompt`.",
+                    "description": "Необходимо одновременно указать непустой `prompt` и поддерживаемый медиаресурс; для генерации видео из изображения обязательно требуется `first_frame`. `first_frame`/`last_frame` нельзя использовать вместе с `refer_image`/`feature_video`, иначе будет возвращён код 400. Ограничения на количество каждого типа медиаресурсов см. в описании API. Устаревшие запросы с начальным и конечным кадрами проверяются в соответствии с возможностями доступных в данный момент моделей; для новой интеграции с начальным и конечным кадрами рекомендуется использовать эндпоинт генерации видео из изображения.",
                     "items": {
                       "oneOf": [
                         {
@@ -6314,7 +6796,7 @@
                 },
                 "oneOf": [
                   {
-                    "description": "Сценарий с начальным и конечным кадрами: `first_frame`, `last_frame` или оба; не используйте одновременно с референсными материалами. Если `aspect_ratio` не указан, соотношение сторон берётся из первого кадра.",
+                    "description": "Сценарии совместимости исторических первого и последнего кадров: first_frame, last_frame или оба — с учетом ограничений возможностей доступных в настоящее время моделей. Не смешивайте референсные материалы; опустите aspect_ratio, соотношение сторон будет взято из первого frame.",
                     "properties": {
                       "contents": {
                         "items": {

@@ -43,7 +43,8 @@ Phù hợp cho:
 
 Hiện tại vẫn công khai một số ít giao diện chuyên dụng của mô hình, ví dụ:
 
-- Kling 4.0: `POST /api/v3/contents/generations/tasks` hoặc `POST /v1/videos`, body yêu cầu sử dụng `contents/settings/options`
+- Kling 4.0: `POST /api/v3/contents/generations/tasks` hoặc `POST /v1/videos`, sử dụng trực tiếp Seedance `content/duration/resolution/ratio/mode` tiêu chuẩn hoặc OpenAI/Sora `prompt/seconds/size/input_reference`, không cần thêm `contents/settings/options`; các phong bì cũ vẫn tiếp tục tương thích.
+- `mode` của Kling có thể là `t2v`, `i2v`, `i2v_first_last`, `reference_images` hoặc `reference_material`. Nếu bỏ qua, mặc định là `reference_material` khi có tư liệu tham chiếu và `t2v` khi không có tư liệu tham chiếu; khi cần khung hình đầu và cuối, hãy chỉ định rõ chế độ tương ứng.
 Phù hợp cho:
 - Đã tích hợp dựa trên giao thức chuyên dụng của mô hình tương ứng
 - Cần sử dụng chế độ tham số chuyên dụng của mô hình đó

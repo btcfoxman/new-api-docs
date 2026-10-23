@@ -43,7 +43,8 @@ description: "Данный проект поддерживает несколь�
 
 В настоящее время также доступно небольшое количество специфических интерфейсов моделей, например:
 
-- Kling 4.0: `POST /api/v3/contents/generations/tasks` или `POST /v1/videos`, в теле запроса используется `contents/settings/options`
+- Kling 4.0: `POST /api/v3/contents/generations/tasks` или `POST /v1/videos` — используйте напрямую стандартные Seedance `content/duration/resolution/ratio/mode` или OpenAI/Sora `prompt/seconds/size/input_reference` без дополнительного `contents/settings/options`; старые конверты по-прежнему поддерживаются.
+- Параметр `mode` в Kling может принимать значения `t2v`, `i2v`, `i2v_first_last`, `reference_images`, `reference_material`. Если он не указан, при наличии референс-материалов по умолчанию используется `reference_material`, а без референс-материалов — `t2v`; если требуются первый и последний кадры, явно укажите соответствующий режим.
 Подходит для:
 - Интеграций, уже выполненных на основе специфического протокола соответствующей модели
 - Необходимости использования специфического режима параметров данной модели

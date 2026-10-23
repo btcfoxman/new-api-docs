@@ -43,7 +43,8 @@ description: "当前项目不是只有一种协议。为降低接入成本，公
 
 当前还公开少量模型专用接口，例如：
 
-- Kling 4.0：`POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos`，请求体使用 `contents/settings/options`
+- Kling 4.0：`POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos`，直接使用标准 Seedance `content/duration/resolution/ratio/mode` 或 OpenAI/Sora `prompt/seconds/size/input_reference`，无需额外 `contents/settings/options`；旧信封继续兼容。
+- Kling 的 `mode` 可选 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`。省略时有参考素材默认 `reference_material`，无参考素材默认 `t2v`；需要首尾帧时显式指定对应模式。
 适合：
 - 已经基于对应模型专用协议集成
 - 需要使用该模型专用参数模式

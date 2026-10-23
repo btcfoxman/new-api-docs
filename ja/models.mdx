@@ -203,7 +203,7 @@ Veo のメインモデルは `/v1/videos` 互換フォーマットを優先し�
 
 ### Kling Videos
 
-Kling 4.0 は新しい contents/settings/options フォーマットを使用し、火山タスクの入口または OpenAI 動画の入口から送信します。
+Kling 4.0 は、標準の OpenAI/Sora prompt/seconds/size/input_reference、および Seedance content/duration/resolution/ratio/mode を直接サポートし、追加の contents/settings/options は不要です。旧エンベロープとの互換性も維持されます。mode=t2v/i2v/i2v_first_last/reference_images/reference_material はシナリオを区別します。参照素材がある場合のデフォルトは reference_material、ない場合のデフォルトは t2v です。
 
 
 

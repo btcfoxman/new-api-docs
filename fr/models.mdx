@@ -203,7 +203,7 @@ Expose au public les capacités de génération d’images Kling, d’images Omn
 
 ### Kling Videos
 
-Kling 4.0 utilise le nouveau format contents/settings/options et s'envoie via l'entrée des tâches Volcano ou l'entrée vidéo OpenAI.
+Kling 4.0 prend directement en charge les paramètres standard OpenAI/Sora prompt/seconds/size/input_reference, ainsi que Seedance content/duration/resolution/ratio/mode, sans nécessiter de contents/settings/options supplémentaires. L'ancien format d'enveloppe reste compatible. mode=t2v/i2v/i2v_first_last/reference_images/reference_material distingue les scénarios ; en présence de ressources de référence, la valeur par défaut est reference_material, et sans ressource, elle est t2v.
 
 
 

@@ -43,7 +43,8 @@ description: "當前專案並非僅支援單一協定。為降低整合成本，
 
 目前仍公開少量模型專用介面，例如：
 
-- Kling 4.0：`POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos`，請求體使用 `contents/settings/options`
+- Kling 4.0：`POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos`，直接使用標準 Seedance `content/duration/resolution/ratio/mode` 或 OpenAI/Sora `prompt/seconds/size/input_reference`，無需額外 `contents/settings/options`；舊信封繼續相容。
+- Kling 的 `mode` 可選 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`。省略時，有參考素材預設為 `reference_material`，無參考素材預設為 `t2v`；需要首尾影格時，請明確指定對應模式。
 適合：
 - 已經基於對應模型專用協定整合
 - 需要使用該模型專用參數模式

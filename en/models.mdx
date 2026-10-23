@@ -203,7 +203,7 @@ Provides Kling image generation, Omni images, and virtual try-on capabilities ex
 
 ### Kling Videos
 
-Kling 4.0 uses the new `contents/settings/options` format and is submitted via the Volcengine task entry point or the OpenAI video entry point.
+Kling 4.0 directly supports the standard OpenAI/Sora parameters prompt/seconds/size/input_reference, as well as Seedance parameters content/duration/resolution/ratio/mode, with no additional contents/settings/options required. The legacy envelope remains compatible. mode=t2v/i2v/i2v_first_last/reference_images/reference_material distinguishes scenarios; when reference materials are provided, the default is reference_material, and when none are provided, the default is t2v.
 
 
 

@@ -895,7 +895,7 @@
       "post": {
         "summary": "建立影片",
         "deprecated": false,
-        "description": "OpenAI Sora 相容格式的影片生成介面。支援文生影片與圖/影片參考生成模式。\n\n- `POST /v1/videos`：建立影片任務\n- `GET /v1/videos/{video_id}`：查詢任務狀態\n- `GET /v1/videos/{video_id}/content`：取得影片二進位內容\n\n目前不對外提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n標準鑑權標頭：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 建立任務，取得 `id`\n2. 輪詢 `GET /v1/videos/{id}`，直到 `completed` 或 `failed`\n3. 完成後優先使用回傳中的 `video_url`\n4. 如需統一下載，呼叫 `GET /v1/videos/{id}/content`\n\n核心參數：\n- `model: string`：必填，對外模型名稱\n- `prompt: string`：建議，影片生成描述\n- `seconds: number|string`：可選，目標時長\n- `duration: number|string`：可選，時長別名\n- `size: string`：可選，輸出尺寸\n- `mode: string`：可選，常見值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用相容參數：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用擴充參數：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n說明：`stable`、`official` 等表示不同分組，並非對外的 `model` 後綴；呼叫時請保持 `model` 為基礎模型名稱，由帳戶或權杖分組決定實際使用哪個分組。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建議：\n- 純文字生成影片優先使用 `veo3*` / `veo3.1*` 主模型\n- 圖生影片或參考生成影片的場景，建議明確傳入 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基礎模型：\n- `sora-2`\n- `sora-2-pro`\n\n建議：\n- `sora-2*` 適合通用調用\n- 如需使用 `stable` / `official` 等分組，請保持 `model` 為基礎模型名稱，不要在模型名稱後追加後綴。\n\n請求範例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse 系列\n\n對外模型：\n- `happyhorse-1.0`\n\n建議：\n- `happyhorse-1.0` 透過 `mode` 區分 `t2v`、`i2v`、`r2v`、`video_edit`。\n- Sora 相容格式中參考圖建議使用 `content` 陣列傳遞媒體項。\n- 文字項使用 `type=text`，媒體項使用 `type=image_url`，並可搭配 `role`、`name` 標示素材用途。\n\n請求範例：\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance 系列\n\n對外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建議：\n- 文生影片優先 `*-t2v-*` 或 `pro / fast`\n- 圖生影片優先 `*-i2v-*`\n- 複雜參考素材場景優先使用 `content`\n\n請求範例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok 影片系列\n\n對外模型：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\n常用參數：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n範例：\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling 影片主模型\n\n對外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支援的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常見 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小輸入參數：\n- 文生影片：`model + model_name + prompt + mode=t2v`\n- 圖生影片：`model + model_name + prompt + mode=i2v + image`\n- 多圖參考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 影片延長：`model + model_name + mode=extend + video_id`\n\n範例：\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo 視訊系列\n\n對外模型：\n- `minimax-h3`\n- `hailuo-2.3`\n\n建議：\n- `minimax-h3` 支援文生影片、圖片參考和音訊參考，建議透過 `content` 混排文字與素材；也可使用 `image_urls`、`audio_urls` 等相容欄位。\n- `hailuo-2.3` 需要首幀圖片，建議在 `content` 中傳入 `role=first_frame` 的 `image_url` 項，或使用 `image_urls` 傳首幀圖片。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n`minimax-h3` 範例：\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` 範例：\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小輸入參數：`model + prompt`\n\n- `mode=i2v`\n- 最小輸入參數：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小輸入參數：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小輸入參數：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小輸入參數：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 呼叫說明\n\n- `gemini-omni` 是 new-api 對外公開的影片模型名稱，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生影片，最小入參為 `model + prompt`。\n- `mode=r2v`：參考圖/參考素材生成，圖片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：影片編輯，影片可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同時傳參考圖。\n- 時長欄位可用 `seconds` 或 `duration`，會自動匹配到 4 / 6 / 8 / 10 秒檔。\n\n## Kling 4.0\n\n對外模型：`kling-4.0`（720p）、`kling-4.0-1080p`。原生格式可使用 `POST /text-to-video/kling-4.0`、`POST /image-to-video/kling-4.0`、`POST /omni-video/kling-4.0`，並透過 `GET /tasks?task_ids=任务ID` 查詢。原生請求無需 `model`，由 `settings.resolution` 選擇清晰度，預設為 1080p；原生參考圖片/影片類型為 `refer_image`、`feature_video`，建立時返回 `data` 物件，查詢時返回 `data` 陣列。可透過 `POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos` 提交，分別透過對應路徑的 `GET /{task_id}` 查詢。兩種入口均支援 `contents/settings/options` 請求主體。`/v1/videos` 也相容於 OpenAI 影片格式的 `prompt`、`seconds`、`size` 和 `input_reference`。在 `contents` 中，`type=prompt` 為文字，`type=reference_image`、`reference_video` 為參考素材，`first_frame`、`last_frame` 為首尾影格。`kling-4.0` 對應 720p，`kling-4.0-1080p` 對應 1080p；請使 `settings.resolution` 與模型名稱一致。`settings` 中使用 `duration`（4–30 秒）、`resolution`（720p/1080p）、`aspect_ratio`（21:9、16:9、9:16、1:1）、`audio`。目前介面最多支援 10 張參考圖片、5 段參考影片，不支援參考音訊。舊版 `kling-video` 與 `model_name` 模式仍為歷史相容介面。\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
+        "description": "OpenAI Sora 相容格式的影片生成介面。支援文生影片與圖/影片參考生成模式。\n\n- `POST /v1/videos`：建立影片任務\n- `GET /v1/videos/{video_id}`：查詢任務狀態\n- `GET /v1/videos/{video_id}/content`：取得影片二進位內容\n\n目前不對外提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n標準鑑權標頭：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 建立任務，取得 `id`\n2. 輪詢 `GET /v1/videos/{id}`，直到 `completed` 或 `failed`\n3. 完成後優先使用回傳中的 `video_url`\n4. 如需統一下載，呼叫 `GET /v1/videos/{id}/content`\n\n核心參數：\n- `model: string`：必填，對外模型名稱\n- `prompt: string`：建議，影片生成描述\n- `seconds: number|string`：可選，目標時長\n- `duration: number|string`：可選，時長別名\n- `size: string`：可選，輸出尺寸\n- `mode: string`：可選，常見值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用相容參數：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用擴充參數：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n說明：`stable`、`official` 等表示不同分組，並非對外的 `model` 後綴；呼叫時請保持 `model` 為基礎模型名稱，由帳戶或權杖分組決定實際使用哪個分組。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建議：\n- 純文字生成影片優先使用 `veo3*` / `veo3.1*` 主模型\n- 圖生影片或參考生成影片的場景，建議明確傳入 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基礎模型：\n- `sora-2`\n- `sora-2-pro`\n\n建議：\n- `sora-2*` 適合通用調用\n- 如需使用 `stable` / `official` 等分組，請保持 `model` 為基礎模型名稱，不要在模型名稱後追加後綴。\n\n請求範例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse 系列\n\n對外模型：\n- `happyhorse-1.0`\n\n建議：\n- `happyhorse-1.0` 透過 `mode` 區分 `t2v`、`i2v`、`r2v`、`video_edit`。\n- Sora 相容格式中參考圖建議使用 `content` 陣列傳遞媒體項。\n- 文字項使用 `type=text`，媒體項使用 `type=image_url`，並可搭配 `role`、`name` 標示素材用途。\n\n請求範例：\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance 系列\n\n對外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建議：\n- 文生影片優先 `*-t2v-*` 或 `pro / fast`\n- 圖生影片優先 `*-i2v-*`\n- 複雜參考素材場景優先使用 `content`\n\n請求範例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok 影片系列\n\n對外模型：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\n常用參數：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n範例：\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling 影片主模型\n\n對外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支援的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常見 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小輸入參數：\n- 文生影片：`model + model_name + prompt + mode=t2v`\n- 圖生影片：`model + model_name + prompt + mode=i2v + image`\n- 多圖參考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 影片延長：`model + model_name + mode=extend + video_id`\n\n範例：\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo 視訊系列\n\n對外模型：\n- `minimax-h3`\n- `hailuo-2.3`\n\n建議：\n- `minimax-h3` 支援文生影片、圖片參考和音訊參考，建議透過 `content` 混排文字與素材；也可使用 `image_urls`、`audio_urls` 等相容欄位。\n- `hailuo-2.3` 需要首幀圖片，建議在 `content` 中傳入 `role=first_frame` 的 `image_url` 項，或使用 `image_urls` 傳首幀圖片。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n`minimax-h3` 範例：\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` 範例：\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小輸入參數：`model + prompt`\n\n- `mode=i2v`\n- 最小輸入參數：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小輸入參數：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小輸入參數：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小輸入參數：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 呼叫說明\n\n- `gemini-omni` 是 new-api 對外公開的影片模型名稱，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生影片，最小入參為 `model + prompt`。\n- `mode=r2v`：參考圖/參考素材生成，圖片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：影片編輯，影片可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同時傳參考圖。\n- 時長欄位可用 `seconds` 或 `duration`，會自動匹配到 4 / 6 / 8 / 10 秒檔。\n\n## Kling 4.0\n\n對外模型：`kling-4.0`（720p）、`kling-4.0-1080p`。原生格式可使用 `POST /text-to-video/kling-4.0`、`POST /image-to-video/kling-4.0`、`POST /omni-video/kling-4.0`，並透過 `GET /tasks?task_ids=任务ID` 查詢。原生請求無需 `model`，由 `settings.resolution` 選擇清晰度，預設為 1080p；原生參考圖片/影片類型為 `refer_image`、`feature_video`，建立時返回 `data` 物件，查詢時返回 `data` 陣列。可透過 `POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos` 提交，並分別透過對應路徑的 `GET /{task_id}` 查詢。OpenAI/Sora 直接使用 `prompt`、`seconds`、`size` 和 `input_reference`；Seedance 直接使用 `content` 與頂層 `duration/resolution/ratio/mode`，兩者都無需額外 `contents/settings/options`。舊信封格式仍相容：`contents` 中的 `type=prompt` 為文字，`type=reference_image`、`reference_video` 為參考素材，`first_frame`、`last_frame` 為首尾影格。`kling-4.0` 對應 720p，`kling-4.0-1080p` 對應 1080p；請讓 `settings.resolution` 與模型名稱一致。`settings` 中使用 `duration`（4–30 秒）、`resolution`（720p/1080p）、`aspect_ratio`（21:9、16:9、9:16、1:1）。`audio` 僅可在一般參考素材的全能模式中選用；文生與首尾影格模式請省略音訊開關。目前介面最多支援 10 張參考圖片、5 段參考影片，不支援參考音訊。舊 `kling-video` 與 `model_name` 模式仍為歷史相容介面。\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"prompt\": \"A cinematic product shot\",\n  \"seconds\": \"4\",\n  \"size\": \"1280x720\",\n  \"input_reference\": \"https://example.com/product.jpg\"\n}\n```\n\nKling 4.0 可直接使用 Seedance 格式 content/duration/resolution/ratio/mode，或 OpenAI 影片格式 prompt/seconds/size/input_reference；兩者都無需額外的 contents/settings/options。舊 contents/settings/options 信封格式僅為相容用途。mode 可選 t2v（純文字）、i2v（單張首影格）、i2v_first_last（首尾兩影格）、reference_images（一般參考圖片）、reference_material（圖片或影片參考）。省略 mode 且沒有明確指定工具時，若有參考素材則預設為 reference_material，沒有任何參考素材則預設為 t2v。參考模式使用一般參考圖片角色，不會將明確指定的首尾影格靜默轉換為參考圖片；首尾影格請明確選擇 i2v 或 i2v_first_last，並省略畫幅參數。目前不支援參考音訊。settings.audio 僅可在參考圖片／參考素材的全能模式中選用；t2v、i2v、i2v_first_last 請省略音訊開關。",
         "operationId": "createVideo",
         "tags": [
           "影片生成Sora相容格式"
@@ -1110,9 +1110,19 @@
                         "additionalProperties": true,
                         "description": "動態擴充欄位容器。大量模型特定欄位由此進行還原序列化。"
                       },
+                      "tool": {
+                        "type": "string"
+                      },
                       "mode": {
                         "type": "string",
-                        "description": "選填，影片生成模式。 `gemini-omni` 支援 `t2v`、`r2v`、`edit`。"
+                        "description": "選填，影片生成模式。 `gemini-omni` 支援 `t2v`、`r2v`、`edit`。\n\nKling 4.0 可直接使用 Seedance 格式 content/duration/resolution/ratio/mode，或 OpenAI 影片格式 prompt/seconds/size/input_reference；兩者都無需額外的 contents/settings/options。舊 contents/settings/options 信封格式僅為相容用途。mode 可選 t2v（純文字）、i2v（單張首影格）、i2v_first_last（首尾兩影格）、reference_images（一般參考圖片）、reference_material（圖片或影片參考）。省略 mode 且沒有明確指定工具時，若有參考素材則預設為 reference_material，沒有任何參考素材則預設為 t2v。參考模式使用一般參考圖片角色，不會將明確指定的首尾影格靜默轉換為參考圖片；首尾影格請明確選擇 i2v 或 i2v_first_last，並省略畫幅參數。目前不支援參考音訊。settings.audio 僅可在參考圖片／參考素材的全能模式中選用；t2v、i2v、i2v_first_last 請省略音訊開關。",
+                        "examples": [
+                          "t2v",
+                          "i2v",
+                          "i2v_first_last",
+                          "reference_images",
+                          "reference_material"
+                        ]
                       },
                       "images": {
                         "type": "array",
@@ -1126,12 +1136,13 @@
                         "items": {
                           "type": "object",
                           "additionalProperties": true
-                        }
+                        },
+                        "description": "Seedance 格式也可呼叫 Kling 4.0；文字使用 text，圖片／影片使用 image_url/video_url 物件。圖片的 role 為 first_frame、last_frame 或 reference_image，影片則為 reference_video。使用 mode 區分生成情境。"
                       },
                       "contents": {
                         "type": "array",
                         "minItems": 1,
-                        "description": "Kling 4.0 新版內容項，支援 prompt、reference_image、reference_video、first_frame、last_frame。",
+                        "description": "Kling 4.0 舊信封相容欄位；標準 OpenAI/Sora、Seedance 請求無需提供。",
                         "items": {
                           "type": "object",
                           "required": [
@@ -1162,7 +1173,7 @@
                       },
                       "settings": {
                         "type": "object",
-                        "description": "Kling 4.0 新版時長、解析度、畫幅比例和音訊設定。",
+                        "description": "舊信封相容設定；標準格式直接使用 seconds/size 或 duration/resolution/ratio。",
                         "properties": {
                           "duration": {
                             "type": "integer",
@@ -1192,17 +1203,23 @@
                                 "type": "boolean"
                               },
                               {
-                                "type": "string"
+                                "type": "string",
+                                "enum": [
+                                  "native",
+                                  "on",
+                                  "off",
+                                  "none"
+                                ]
                               }
                             ],
-                            "example": "native"
+                            "description": "僅 reference_images/reference_material 全能模式可選。t2v、i2v、i2v_first_last 請省略；不表示支援參考音訊。"
                           }
                         }
                       },
                       "options": {
                         "type": "object",
-                        "additionalProperties": true,
-                        "description": "Kling 4.0 新版擴充選項。"
+                        "maxProperties": 0,
+                        "description": "舊信封相容欄位；標準格式無需提供。"
                       },
                       "size": {
                         "type": "string",
@@ -1730,52 +1747,6 @@
                     "aspect_ratio": "16:9"
                   }
                 },
-                "kling_4_text": {
-                  "summary": "Kling 4.0 720p 文生影片",
-                  "value": {
-                    "model": "kling-4.0",
-                    "contents": [
-                      {
-                        "type": "prompt",
-                        "text": "A cinematic product shot with natural motion"
-                      }
-                    ],
-                    "settings": {
-                      "duration": 4,
-                      "resolution": "720p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
-                    },
-                    "options": {}
-                  }
-                },
-                "kling_4_reference": {
-                  "summary": "Kling 4.0 720p 參考生成",
-                  "value": {
-                    "model": "kling-4.0",
-                    "contents": [
-                      {
-                        "type": "prompt",
-                        "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "reference_image",
-                        "url": "https://example.com/product.jpg"
-                      },
-                      {
-                        "type": "reference_video",
-                        "url": "https://example.com/motion.mp4"
-                      }
-                    ],
-                    "settings": {
-                      "duration": 4,
-                      "resolution": "720p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
-                    },
-                    "options": {}
-                  }
-                },
                 "kling_4_sora": {
                   "summary": "Kling 4.0 720p OpenAI 視訊格式",
                   "value": {
@@ -1786,10 +1757,293 @@
                     "input_reference": "https://example.com/product.jpg"
                   }
                 },
-                "kling_4_text_1080p": {
-                  "summary": "Kling 4.0 1080p 文生影片",
+                "kling_4_sora_1080p": {
+                  "summary": "Kling 4.0 1080p OpenAI 影片格式",
                   "value": {
                     "model": "kling-4.0-1080p",
+                    "prompt": "A cinematic product shot with natural motion",
+                    "seconds": "4",
+                    "size": "1920x1080",
+                    "input_reference": "https://example.com/product.jpg"
+                  }
+                },
+                "kling_4_seedance_reference_material": {
+                  "summary": "Kling 4.0 720p Seedance · 預設素材參考",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "reference_material",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_t2v": {
+                  "summary": "Kling 4.0 720p Seedance · 純文字",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "t2v",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_i2v": {
+                  "summary": "Kling 4.0 720p Seedance · 首幀圖生",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "i2v",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_i2v_first_last": {
+                  "summary": "Kling 4.0 720p Seedance · 首尾幀",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "i2v_first_last",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/last-frame.jpg"
+                        },
+                        "role": "last_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_reference_images": {
+                  "summary": "Kling 4.0 720p Seedance · 參考圖片",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "reference_images",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_reference_material_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · 預設素材參考",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "reference_material",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_t2v_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · 純文字",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "t2v",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_i2v_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · 首幀圖生",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "i2v",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_i2v_first_last_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · 首尾影格",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "i2v_first_last",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/last-frame.jpg"
+                        },
+                        "role": "last_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_reference_images_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · 參考圖片",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "reference_images",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_text": {
+                  "summary": "Kling 4.0 720p 文生影片（舊信封相容）",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "t2v",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_reference": {
+                  "summary": "Kling 4.0 720p 參考生成（相容於舊版封套）",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "reference_material",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_text_1080p": {
+                  "summary": "Kling 4.0 1080p 文字生成影片（相容於舊信封）",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "t2v",
                     "contents": [
                       {
                         "type": "prompt",
@@ -1799,16 +2053,16 @@
                     "settings": {
                       "duration": 4,
                       "resolution": "1080p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
+                      "aspect_ratio": "16:9"
                     },
                     "options": {}
                   }
                 },
                 "kling_4_reference_1080p": {
-                  "summary": "Kling 4.0 1080p 參考生成",
+                  "summary": "Kling 4.0 1080p 參考生成（舊信封相容）",
                   "value": {
                     "model": "kling-4.0-1080p",
+                    "mode": "reference_material",
                     "contents": [
                       {
                         "type": "prompt",
@@ -1826,20 +2080,9 @@
                     "settings": {
                       "duration": 4,
                       "resolution": "1080p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
+                      "aspect_ratio": "16:9"
                     },
                     "options": {}
-                  }
-                },
-                "kling_4_sora_1080p": {
-                  "summary": "Kling 4.0 1080p OpenAI 影片格式",
-                  "value": {
-                    "model": "kling-4.0-1080p",
-                    "prompt": "A cinematic product shot with natural motion",
-                    "seconds": "4",
-                    "size": "1920x1080",
-                    "input_reference": "https://example.com/product.jpg"
                   }
                 }
               }
@@ -4454,7 +4697,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "建立影片（Seedance）",
-        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n用於建立影片生成任務，並透過任務 ID 查詢狀態與結果。\n\n建立任務核心欄位：\n- `model`：必填，模型名稱。\n- `prompt`：選填；未傳入時，須在 `content` 中提供非空文字項。\n- `content`：選填，火山方舟 content 陣列，可混排文字、圖片、影片、音訊素材。\n- `function_mode`：選填，常用於全能參考等進階模式。\n\n相容入參：\n\n以下欄位主要用於舊版客戶端和舊協議適配。新接入請盡量採用本頁「請求範例」中的標準格式：文本與參考素材使用 `content` 陣列，生成配置使用頂層 `duration`、`ratio`、`resolution`、`fps` 等欄位。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼叫細節：\n- 當 `mode=reference_material` 或 `function_mode=omni_reference` 時，建議透過 `content` 傳遞文字與參考素材。\n- `content` 文字項寫法為 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 圖片、影片、音訊素材項分別使用 `image_url`、`video_url`、`audio_url` 物件寫法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可標示素材用途，`name` 可供提示詞中依名稱引用。\n- `ratio`、`duration`、`resolution`、`fps` 會影響最終生成配置。\n\nSeedance 2.5 圖片、影片、音訊混合參考範例（素材 URL 為佔位符，呼叫時請替換為實際可存取的連結）：\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni 呼叫：\n- `gemini-omni` 也可透過本 Seedance 任務介面呼叫。\n- `mode=t2v` 用於文生影片，`mode=r2v` 用於參考圖/參考素材生成，`mode=edit` 用於影片編輯。\n- 文字可放在 `prompt` 或 `content` 的 `text` 項；圖片可放在 `image_url / image_urls / reference_images / input_reference / content`；影片可放在 `video_urls / content`。\n- 時長欄位可用 `duration` 或 `seconds`，會自動匹配到 4 / 6 / 8 / 10 秒檔。\n\nMiniMax / Hailuo 調用：\n- `minimax-h3` 可透過本任務介面呼叫，支援文生影片、圖片參考和音訊參考；文字可放在 `prompt` 或 `content` 文字項，素材可放在 `content`、`image_urls`、`audio_urls` 等欄位。\n- `hailuo-2.3` 可透過本任務介面呼叫，需要首幀圖片，建議在 `content` 中傳 `role=first_frame` 的 `image_url` 項。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n查詢結果關注欄位：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```\n\n## Kling 4.0\n\nKling 4.0 呼叫：`kling-4.0`（720p）與 `kling-4.0-1080p` 使用 `contents/settings/options`，可與 `/v1/videos` 共用同一請求體；文字放在 `contents` 的 `type=prompt` 項中，無須再傳頂層 `prompt`。`settings.resolution` 須與模型名一致。",
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n用於建立影片生成任務，並透過任務 ID 查詢狀態與結果。\n\n建立任務核心欄位：\n- `model`：必填，模型名稱。\n- `prompt`：選填；未傳入時，須在 `content` 中提供非空文字項。\n- `content`：選填，火山方舟 content 陣列，可混排文字、圖片、影片、音訊素材。\n- `function_mode`：選填，常用於全能參考等進階模式。\n\n相容入參：\n\n以下欄位主要用於舊版客戶端和舊協議適配。新接入請盡量採用本頁「請求範例」中的標準格式：文本與參考素材使用 `content` 陣列，生成配置使用頂層 `duration`、`ratio`、`resolution`、`fps` 等欄位。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n呼叫細節：\n- 當 `mode=reference_material` 或 `function_mode=omni_reference` 時，建議透過 `content` 傳遞文字與參考素材。\n- `content` 文字項寫法為 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 圖片、影片、音訊素材項分別使用 `image_url`、`video_url`、`audio_url` 物件寫法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可標示素材用途，`name` 可供提示詞中依名稱引用。\n- `ratio`、`duration`、`resolution`、`fps` 會影響最終生成配置。\n\nSeedance 2.5 圖片、影片、音訊混合參考範例（素材 URL 為佔位符，呼叫時請替換為實際可存取的連結）：\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni 呼叫：\n- `gemini-omni` 也可透過本 Seedance 任務介面呼叫。\n- `mode=t2v` 用於文生影片，`mode=r2v` 用於參考圖/參考素材生成，`mode=edit` 用於影片編輯。\n- 文字可放在 `prompt` 或 `content` 的 `text` 項；圖片可放在 `image_url / image_urls / reference_images / input_reference / content`；影片可放在 `video_urls / content`。\n- 時長欄位可用 `duration` 或 `seconds`，會自動匹配到 4 / 6 / 8 / 10 秒檔。\n\nMiniMax / Hailuo 調用：\n- `minimax-h3` 可透過本任務介面呼叫，支援文生影片、圖片參考和音訊參考；文字可放在 `prompt` 或 `content` 文字項，素材可放在 `content`、`image_urls`、`audio_urls` 等欄位。\n- `hailuo-2.3` 可透過本任務介面呼叫，需要首幀圖片，建議在 `content` 中傳 `role=first_frame` 的 `image_url` 項。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n查詢結果關注欄位：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```\n\n## Kling 4.0\n\nKling 4.0 呼叫：`kling-4.0`（720p）與 `kling-4.0-1080p` 同時支援 Seedance `content/duration/resolution/ratio/mode` 格式、`contents/settings/options` 與 OpenAI 視訊格式；兩種統一視訊入口可重複使用請求主體。解析度須與模型名稱一致。Kling 4.0 可直接使用 Seedance 格式 content/duration/resolution/ratio/mode，或 OpenAI 視訊格式 prompt/seconds/size/input_reference；兩者皆無需額外的 contents/settings/options。舊版 contents/settings/options 信封僅供相容。mode 可選 t2v（純文字）、i2v（單張首幀）、i2v_first_last（首尾兩幀）、reference_images（一般參考圖）、reference_material（圖片或視訊參考）。省略 mode 且沒有明確工具時，有參考素材時預設為 reference_material，沒有任何參考素材時預設為 t2v。參考模式使用一般參考圖角色，不會將明確的首尾幀靜默改為參考圖；首尾幀請明確選擇 i2v 或 i2v_first_last，並省略畫幅參數。目前不支援參考音訊。settings.audio 僅圖片參考／參考素材的全能模式可選；t2v、i2v、i2v_first_last 請省略音訊開關。",
         "operationId": "create__seedance__task",
         "tags": [
           "影片生成 Seedance 格式"
@@ -4782,7 +5025,7 @@
                       "contents": {
                         "type": "array",
                         "minItems": 1,
-                        "description": "Kling 4.0 新版內容陣列，使用 prompt、reference_image、reference_video、first_frame 或 last_frame 項。",
+                        "description": "Kling 4.0 舊信封相容陣列，標準 Seedance 請求無需提供；直接使用 content。",
                         "items": {
                           "type": "object",
                           "required": [
@@ -4813,7 +5056,7 @@
                       },
                       "settings": {
                         "type": "object",
-                        "description": "Kling 4.0 新版參數：duration、resolution、aspect_ratio、audio。",
+                        "description": "舊信封相容性設定；標準 Seedance 直接使用頂層 duration/resolution/ratio，無需提供。",
                         "properties": {
                           "duration": {
                             "type": "integer",
@@ -4843,17 +5086,23 @@
                                 "type": "boolean"
                               },
                               {
-                                "type": "string"
+                                "type": "string",
+                                "enum": [
+                                  "native",
+                                  "on",
+                                  "off",
+                                  "none"
+                                ]
                               }
                             ],
-                            "example": "native"
+                            "description": "僅 reference_images/reference_material 全能模式可選。t2v、i2v、i2v_first_last 請省略；不表示支援參考音訊。"
                           }
                         }
                       },
                       "options": {
                         "type": "object",
-                        "additionalProperties": true,
-                        "description": "Kling 4.0 擴充選項。"
+                        "maxProperties": 0,
+                        "description": "舊信封相容欄位；標準 Seedance 請求無需提供。"
                       },
                       "function_mode": {
                         "type": "string",
@@ -4861,7 +5110,14 @@
                       },
                       "mode": {
                         "type": "string",
-                        "description": "選填。相容模式欄位，例如 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`；`gemini-omni` 支援 `t2v`、`r2v`、`edit`。"
+                        "description": "選填。相容模式欄位，例如 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`；`gemini-omni` 支援 `t2v`、`r2v`、`edit`。Kling 4.0 可直接使用 Seedance 格式 content/duration/resolution/ratio/mode，或 OpenAI 影片格式 prompt/seconds/size/input_reference；兩者皆不需要額外的 contents/settings/options。舊版 contents/settings/options 信封僅為相容性保留。mode 可選 t2v（純文字）、i2v（單張首幀）、i2v_first_last（首尾兩幀）、reference_images（一般參考圖）、reference_material（圖片或影片參考）。省略 mode 且未指定工具時，有參考素材預設為 reference_material，沒有任何參考素材時預設為 t2v。參考模式使用一般參考圖角色，不會將明確指定的首尾幀靜默轉為參考圖；首尾幀請明確選擇 i2v 或 i2v_first_last，並省略畫幅參數。目前不支援參考音訊。settings.audio 僅可用於參考圖片／參考素材的全能模式；t2v、i2v、i2v_first_last 請省略音訊開關。",
+                        "examples": [
+                          "t2v",
+                          "i2v",
+                          "i2v_first_last",
+                          "reference_images",
+                          "reference_material"
+                        ]
                       },
                       "image_url": {
                         "type": "string",
@@ -5171,10 +5427,237 @@
                     "size": "1280x720"
                   }
                 },
-                "kling_4_ark_contents": {
-                  "summary": "Kling 4.0 720p 參考生成",
+                "kling_4_seedance_reference_material": {
+                  "summary": "Kling 4.0 720p Seedance · 預設素材參考",
                   "value": {
                     "model": "kling-4.0",
+                    "mode": "reference_material",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_t2v": {
+                  "summary": "Kling 4.0 720p Seedance · 純文字",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "t2v",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_i2v": {
+                  "summary": "Kling 4.0 720p Seedance · 首幀圖生",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "i2v",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_i2v_first_last": {
+                  "summary": "Kling 4.0 720p Seedance · 首尾幀",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "i2v_first_last",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/last-frame.jpg"
+                        },
+                        "role": "last_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_reference_images": {
+                  "summary": "Kling 4.0 720p Seedance · 參考圖片",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "reference_images",
+                    "duration": 4,
+                    "resolution": "720p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_reference_material_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · 預設素材參考",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "reference_material",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_t2v_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · 純文字",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "t2v",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_seedance_i2v_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · 首幀圖生",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "i2v",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_i2v_first_last_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · 首尾影格",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "i2v_first_last",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/last-frame.jpg"
+                        },
+                        "role": "last_frame"
+                      }
+                    ]
+                  }
+                },
+                "kling_4_seedance_reference_images_1080p": {
+                  "summary": "Kling 4.0 1080p Seedance · 參考圖片",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "mode": "reference_images",
+                    "duration": 4,
+                    "resolution": "1080p",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        },
+                        "role": "reference_image"
+                      }
+                    ],
+                    "ratio": "16:9"
+                  }
+                },
+                "kling_4_ark_contents": {
+                  "summary": "Kling 4.0 720p 參考生成（相容於舊版封套）",
+                  "value": {
+                    "model": "kling-4.0",
+                    "mode": "reference_material",
                     "contents": [
                       {
                         "type": "prompt",
@@ -5192,16 +5675,16 @@
                     "settings": {
                       "duration": 4,
                       "resolution": "720p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
+                      "aspect_ratio": "16:9"
                     },
                     "options": {}
                   }
                 },
                 "kling_4_ark_contents_1080p": {
-                  "summary": "Kling 4.0 1080p 參考生成",
+                  "summary": "Kling 4.0 1080p 參考生成（舊信封相容）",
                   "value": {
                     "model": "kling-4.0-1080p",
+                    "mode": "reference_material",
                     "contents": [
                       {
                         "type": "prompt",
@@ -5219,8 +5702,7 @@
                     "settings": {
                       "duration": 4,
                       "resolution": "1080p",
-                      "aspect_ratio": "16:9",
-                      "audio": "native"
+                      "aspect_ratio": "16:9"
                     },
                     "options": {}
                   }
@@ -6184,7 +6666,7 @@
         "tags": [
           "影片生成Kling格式"
         ],
-        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成場景。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id 及其他未支援欄位會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。文生與參考場景的畫幅預設為 16:9，明確指定 adaptive 會返回 400。首尾幀場景不接受明確指定 settings.aspect_ratio，畫幅依首張 frame 圖片尺寸而定。\n\n全能參考的 contents 必須包含非空的 prompt 與至少一個支援的媒體。首尾幀情境可傳入 first_frame、last_frame 或兩者；首尾幀不可與 refer_image 參考圖或 feature_video 參考影片混用，混用時會傳回 400。參考情境可組合 refer_image 參考圖與 feature_video 參考影片。first_frame、last_frame、refer_image 各最多 1 項，feature_video 最多 5 項。暫不支援依賴 id 引用的多參考圖情境。",
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成場景。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id 及其他未支援欄位會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。文生與參考場景的畫幅預設為 16:9，明確指定 adaptive 會返回 400。首尾幀場景不接受明確指定 settings.aspect_ratio，畫幅依首張 frame 圖片尺寸而定。\n\n全能參考的 contents 必須包含非空的 prompt 與至少一個支援的媒體。歷史首尾幀場景可傳入 first_frame、last_frame 或兩者，但處理能力以目前可用的模型能力為準；能力不匹配時會拒絕處理，不會將幀圖靜默改為一般參考圖。首尾幀新接入建議使用圖生影片入口。首尾幀不能與 refer_image 參考圖或 feature_video 參考影片混用，混用會返回 400。參考場景可組合 refer_image 參考圖與 feature_video 參考影片。first_frame、last_frame、refer_image 各最多 1 項，feature_video 最多 5 項。暫不支援依賴 id 引用的多參考圖場景。",
         "requestBody": {
           "required": true,
           "content": {
@@ -6250,7 +6732,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "必須同時包含非空的 prompt 和支援的媒體；圖生影片必須包含 first_frame。first_frame/last_frame 不可與 refer_image/feature_video 混用，否則會傳回 400。各媒體的數量限制請參閱介面說明。全能參考允許僅使用 last_frame 搭配 prompt。",
+                    "description": "必須同時包含非空的 prompt 和支援的媒體；圖生影片必須包含 first_frame。first_frame/last_frame 不可與 refer_image/feature_video 混用，否則會傳回 400。各媒體的數量限制請參閱介面說明。歷史首尾幀請求會依目前可用的模型能力進行驗證；新的首尾幀接入建議使用圖生影片入口。",
                     "items": {
                       "oneOf": [
                         {
@@ -6314,7 +6796,7 @@
                 },
                 "oneOf": [
                   {
-                    "description": "首尾幀情境：first_frame、last_frame 或兩者，不混用參考素材；省略 aspect_ratio 時，畫幅沿用首張 frame。",
+                    "description": "歷史首尾影格相容場景：first_frame、last_frame 或兩者，受目前可用模型能力限制。不混用參考素材；省略 aspect_ratio，畫幅沿用首張 frame。",
                     "properties": {
                       "contents": {
                         "items": {

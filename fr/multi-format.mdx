@@ -43,7 +43,8 @@ Adapté pour :
 
 Actuellement, quelques interfaces spécifiques aux modèles sont encore exposées, par exemple :
 
-- Kling 4.0 : `POST /api/v3/contents/generations/tasks` ou `POST /v1/videos`, corps de requête au format `contents/settings/options`
+- Kling 4.0 : `POST /api/v3/contents/generations/tasks` ou `POST /v1/videos` utilisent directement le Seedance `content/duration/resolution/ratio/mode` standard ou OpenAI/Sora `prompt/seconds/size/input_reference`, sans `contents/settings/options` supplémentaire ; les anciennes enveloppes restent compatibles.
+- Pour Kling, `mode` peut être `t2v`, `i2v`, `i2v_first_last`, `reference_images` ou `reference_material`. S'il est omis, la valeur par défaut est `reference_material` avec des ressources de référence, et `t2v` sans ressources de référence ; pour utiliser des images de début et de fin, spécifiez explicitement le mode correspondant.
 Adapté pour :
 - Intégrations déjà basées sur le protocole spécifique du modèle correspondant
 - Besoin d'utiliser le mode de paramètres spécifique à ce modèle
