@@ -895,7 +895,7 @@
       "post": {
         "summary": "建立影片",
         "deprecated": false,
-        "description": "OpenAI Sora 相容格式的影片生成介面。支援文生影片與圖/影片參考生成模式。\n\n- `POST /v1/videos`：建立影片任務\n- `GET /v1/videos/{video_id}`：查詢任務狀態\n- `GET /v1/videos/{video_id}/content`：取得影片二進位內容\n\n目前不對外提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n標準鑑權標頭：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 建立任務，取得 `id`\n2. 輪詢 `GET /v1/videos/{id}`，直到 `completed` 或 `failed`\n3. 完成後優先使用回傳中的 `video_url`\n4. 如需統一下載，呼叫 `GET /v1/videos/{id}/content`\n\n核心參數：\n- `model: string`：必填，對外模型名稱\n- `prompt: string`：建議，影片生成描述\n- `seconds: number|string`：可選，目標時長\n- `duration: number|string`：可選，時長別名\n- `size: string`：可選，輸出尺寸\n- `mode: string`：可選，常見值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用相容參數：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用擴充參數：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n說明：`stable`、`official` 等表示不同分組，並非對外的 `model` 後綴；呼叫時請保持 `model` 為基礎模型名稱，由帳戶或權杖分組決定實際使用哪個分組。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建議：\n- 純文字生成影片優先使用 `veo3*` / `veo3.1*` 主模型\n- 圖生影片或參考生成影片的場景，建議明確傳入 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基礎模型：\n- `sora-2`\n- `sora-2-pro`\n\n建議：\n- `sora-2*` 適合通用調用\n- 如需使用 `stable` / `official` 等分組，請保持 `model` 為基礎模型名稱，不要在模型名稱後追加後綴。\n\n請求範例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse 系列\n\n對外模型：\n- `happyhorse-1.0`\n\n建議：\n- `happyhorse-1.0` 透過 `mode` 區分 `t2v`、`i2v`、`r2v`、`video_edit`。\n- Sora 相容格式中參考圖建議使用 `content` 陣列傳遞媒體項。\n- 文字項使用 `type=text`，媒體項使用 `type=image_url`，並可搭配 `role`、`name` 標示素材用途。\n\n請求範例：\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance 系列\n\n對外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建議：\n- 文生影片優先 `*-t2v-*` 或 `pro / fast`\n- 圖生影片優先 `*-i2v-*`\n- 複雜參考素材場景優先使用 `content`\n\n請求範例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok 影片系列\n\n對外模型：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\n常用參數：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n範例：\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling 影片主模型\n\n對外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支援的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常見 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小輸入參數：\n- 文生影片：`model + model_name + prompt + mode=t2v`\n- 圖生影片：`model + model_name + prompt + mode=i2v + image`\n- 多圖參考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 影片延長：`model + model_name + mode=extend + video_id`\n\n範例：\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo 視訊系列\n\n對外模型：\n- `minimax-h3`\n- `hailuo-2.3`\n\n建議：\n- `minimax-h3` 支援文生影片、圖片參考和音訊參考，建議透過 `content` 混排文字與素材；也可使用 `image_urls`、`audio_urls` 等相容欄位。\n- `hailuo-2.3` 需要首幀圖片，建議在 `content` 中傳入 `role=first_frame` 的 `image_url` 項，或使用 `image_urls` 傳首幀圖片。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n`minimax-h3` 範例：\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` 範例：\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小輸入參數：`model + prompt`\n\n- `mode=i2v`\n- 最小輸入參數：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小輸入參數：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小輸入參數：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小輸入參數：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 呼叫說明\n\n- `gemini-omni` 是 new-api 對外公開的影片模型名稱，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生影片，最小入參為 `model + prompt`。\n- `mode=r2v`：參考圖/參考素材生成，圖片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：影片編輯，影片可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同時傳參考圖。\n- 時長欄位可用 `seconds` 或 `duration`，會自動匹配到 4 / 6 / 8 / 10 秒檔。\n\n## Kling 4.0\n\n對外模型：`kling-4.0`（720p）、`kling-4.0-1080p`。可透過 `POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos` 提交，分別透過對應路徑的 `GET /{task_id}` 查詢。兩種進入點均支援 `contents/settings/options` 請求主體。`/v1/videos` 也相容 OpenAI 影片格式的 `prompt`、`seconds`、`size` 和 `input_reference`。`contents` 中 `type=prompt` 為文字，`type=reference_image`、`reference_video` 為參考素材，`first_frame`、`last_frame` 為首尾影格。`kling-4.0` 對應 720p，`kling-4.0-1080p` 對應 1080p；請讓 `settings.resolution` 與模型名稱一致。`settings` 中使用 `duration`（4–30 秒）、`resolution`（720p/1080p）、`aspect_ratio`（21:9、16:9、9:16、1:1）、`audio`。目前 API 最多支援 10 張參考圖、5 段參考影片，不支援參考音訊。舊 `kling-video` 與 `model_name` 模式仍為歷史相容 API。\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
+        "description": "OpenAI Sora 相容格式的影片生成介面。支援文生影片與圖/影片參考生成模式。\n\n- `POST /v1/videos`：建立影片任務\n- `GET /v1/videos/{video_id}`：查詢任務狀態\n- `GET /v1/videos/{video_id}/content`：取得影片二進位內容\n\n目前不對外提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n標準鑑權標頭：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 建立任務，取得 `id`\n2. 輪詢 `GET /v1/videos/{id}`，直到 `completed` 或 `failed`\n3. 完成後優先使用回傳中的 `video_url`\n4. 如需統一下載，呼叫 `GET /v1/videos/{id}/content`\n\n核心參數：\n- `model: string`：必填，對外模型名稱\n- `prompt: string`：建議，影片生成描述\n- `seconds: number|string`：可選，目標時長\n- `duration: number|string`：可選，時長別名\n- `size: string`：可選，輸出尺寸\n- `mode: string`：可選，常見值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用相容參數：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用擴充參數：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n說明：`stable`、`official` 等表示不同分組，並非對外的 `model` 後綴；呼叫時請保持 `model` 為基礎模型名稱，由帳戶或權杖分組決定實際使用哪個分組。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建議：\n- 純文字生成影片優先使用 `veo3*` / `veo3.1*` 主模型\n- 圖生影片或參考生成影片的場景，建議明確傳入 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基礎模型：\n- `sora-2`\n- `sora-2-pro`\n\n建議：\n- `sora-2*` 適合通用調用\n- 如需使用 `stable` / `official` 等分組，請保持 `model` 為基礎模型名稱，不要在模型名稱後追加後綴。\n\n請求範例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse 系列\n\n對外模型：\n- `happyhorse-1.0`\n\n建議：\n- `happyhorse-1.0` 透過 `mode` 區分 `t2v`、`i2v`、`r2v`、`video_edit`。\n- Sora 相容格式中參考圖建議使用 `content` 陣列傳遞媒體項。\n- 文字項使用 `type=text`，媒體項使用 `type=image_url`，並可搭配 `role`、`name` 標示素材用途。\n\n請求範例：\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance 系列\n\n對外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建議：\n- 文生影片優先 `*-t2v-*` 或 `pro / fast`\n- 圖生影片優先 `*-i2v-*`\n- 複雜參考素材場景優先使用 `content`\n\n請求範例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok 影片系列\n\n對外模型：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\n常用參數：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n範例：\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling 影片主模型\n\n對外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支援的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常見 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小輸入參數：\n- 文生影片：`model + model_name + prompt + mode=t2v`\n- 圖生影片：`model + model_name + prompt + mode=i2v + image`\n- 多圖參考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 影片延長：`model + model_name + mode=extend + video_id`\n\n範例：\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo 視訊系列\n\n對外模型：\n- `minimax-h3`\n- `hailuo-2.3`\n\n建議：\n- `minimax-h3` 支援文生影片、圖片參考和音訊參考，建議透過 `content` 混排文字與素材；也可使用 `image_urls`、`audio_urls` 等相容欄位。\n- `hailuo-2.3` 需要首幀圖片，建議在 `content` 中傳入 `role=first_frame` 的 `image_url` 項，或使用 `image_urls` 傳首幀圖片。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n`minimax-h3` 範例：\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` 範例：\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小輸入參數：`model + prompt`\n\n- `mode=i2v`\n- 最小輸入參數：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小輸入參數：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小輸入參數：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小輸入參數：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 呼叫說明\n\n- `gemini-omni` 是 new-api 對外公開的影片模型名稱，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生影片，最小入參為 `model + prompt`。\n- `mode=r2v`：參考圖/參考素材生成，圖片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：影片編輯，影片可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同時傳參考圖。\n- 時長欄位可用 `seconds` 或 `duration`，會自動匹配到 4 / 6 / 8 / 10 秒檔。\n\n## Kling 4.0\n\n對外模型：`kling-4.0`（720p）、`kling-4.0-1080p`。原生格式可使用 `POST /text-to-video/kling-4.0`、`POST /image-to-video/kling-4.0`、`POST /omni-video/kling-4.0`，並透過 `GET /tasks?task_ids=任务ID` 查詢。原生請求無需 `model`，由 `settings.resolution` 選擇清晰度，預設為 1080p；原生參考圖片/影片類型為 `refer_image`、`feature_video`，建立時返回 `data` 物件，查詢時返回 `data` 陣列。可透過 `POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos` 提交，分別透過對應路徑的 `GET /{task_id}` 查詢。兩種入口均支援 `contents/settings/options` 請求主體。`/v1/videos` 也相容於 OpenAI 影片格式的 `prompt`、`seconds`、`size` 和 `input_reference`。在 `contents` 中，`type=prompt` 為文字，`type=reference_image`、`reference_video` 為參考素材，`first_frame`、`last_frame` 為首尾影格。`kling-4.0` 對應 720p，`kling-4.0-1080p` 對應 1080p；請使 `settings.resolution` 與模型名稱一致。`settings` 中使用 `duration`（4–30 秒）、`resolution`（720p/1080p）、`aspect_ratio`（21:9、16:9、9:16、1:1）、`audio`。目前介面最多支援 10 張參考圖片、5 段參考影片，不支援參考音訊。舊版 `kling-video` 與 `model_name` 模式仍為歷史相容介面。\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
         "operationId": "createVideo",
         "tags": [
           "影片生成Sora相容格式"
@@ -5975,6 +5975,887 @@
         ],
         "x-mint": {
           "href": "/api-reference/zh-tw/影片生成-omni-與-veo-格式/查詢任務（omni-與veo格式）"
+        }
+      }
+    },
+    "/text-to-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 原生文字生成影片",
+        "operationId": "create_kling4_native_text_to_video",
+        "tags": [
+          "影片生成Kling格式"
+        ],
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成情境。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id，以及其他未支援欄位皆會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。畫面比例預設為 16:9，明確指定 adaptive 會返回 400。\n\n文字生成影片時傳入頂層 prompt，不需要 contents。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "prompt"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "enum": [
+                          "21:9",
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
+                        "default": "16:9"
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "可省略、傳入空物件或明確關閉浮水印。",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {},
+                    "prompt": "A cinematic landscape with natural motion"
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {},
+                    "prompt": "A cinematic landscape with natural motion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "本站任務 ID，查詢時原樣傳入。"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "建立時間，Unix 毫秒。"
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "更新時間，Unix 毫秒。"
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "請求參數無效或包含不支援的欄位。"
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成kling格式/kling-4.0-原生文字生成影片"
+        }
+      }
+    },
+    "/image-to-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 原生圖生影片",
+        "operationId": "create_kling4_native_image_to_video",
+        "tags": [
+          "影片生成Kling格式"
+        ],
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成情境。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id，以及其他未支援欄位皆會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。畫面比例預設為 16:9，明確指定 adaptive 會返回 400。\n\n圖生影片的 contents 必須包含非空的 prompt 與 first_frame，可同時傳入 last_frame；首尾影格各最多 1 張。不接受 settings.aspect_ratio。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contents"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "可省略、傳入空物件或明確關閉浮水印。",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "contents": {
+                    "type": "array",
+                    "minItems": 2,
+                    "description": "必須同時包含非空的 prompt 和支援的媒體；圖生影片必須包含 first_frame。各媒體數量限制請見介面說明。",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "pattern": "^https?://"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      }
+                    ]
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "本站任務 ID，查詢時原樣傳入。"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "建立時間，Unix 毫秒。"
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "更新時間，Unix 毫秒。"
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "請求參數無效或包含不支援的欄位。"
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成kling格式/kling-4.0-原生圖生影片"
+        }
+      }
+    },
+    "/omni-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 原生全能參考",
+        "operationId": "create_kling4_native_omni_video",
+        "tags": [
+          "影片生成Kling格式"
+        ],
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成情境。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id，以及其他未支援欄位皆會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。畫面比例預設為 16:9，明確指定 adaptive 會返回 400。\n\n全能參考的 contents 必須包含非空的 prompt 與至少一個支援的媒體。支援首尾影格、refer_image 參考圖片和 feature_video 參考影片；first_frame、last_frame、refer_image 各最多 1 項，feature_video 最多 5 項。暫不支援依賴 id 引用的多參考圖片情境。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contents"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "enum": [
+                          "21:9",
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
+                        "default": "16:9"
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "可省略、傳入空物件或明確關閉浮水印。",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "contents": {
+                    "type": "array",
+                    "minItems": 2,
+                    "description": "必須同時包含非空的 prompt 和支援的媒體；圖生影片必須包含 first_frame。各媒體數量限制請見介面說明。",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "first_frame",
+                                "last_frame",
+                                "refer_image",
+                                "feature_video"
+                              ]
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "pattern": "^https?://"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://example.com/reference.jpg"
+                      },
+                      {
+                        "type": "feature_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ]
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://example.com/reference.jpg"
+                      },
+                      {
+                        "type": "feature_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "本站任務 ID，查詢時原樣傳入。"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "建立時間，Unix 毫秒。"
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "更新時間，Unix 毫秒。"
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "請求參數無效或包含不支援的欄位。"
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成kling格式/kling-4.0-原生全能參考"
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "summary": "批次查詢 Kling 4.0 原生任務",
+        "operationId": "query_kling4_native_tasks",
+        "tags": [
+          "影片生成Kling格式"
+        ],
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n使用建立介面回傳的本平台任務 ID。task_ids 為以逗號分隔的 1 至 100 個唯一 ID；僅查詢目前權杖所屬使用者的 Kling 4.0 任務。任一 ID 不存在、不屬於目前使用者，或不是 Kling 4.0 任務時，整體回傳 404。data 一律為陣列，完成後的 outputs 包含影片 URL。不支援 external_task_ids 或 POST /tasks 清單查詢。",
+        "parameters": [
+          {
+            "name": "task_ids",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_example_1,task_example_2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "本站任務 ID，查詢時原樣傳入。"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "submitted",
+                              "processing",
+                              "succeeded",
+                              "failed"
+                            ]
+                          },
+                          "create_time": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "建立時間，Unix 毫秒。"
+                          },
+                          "update_time": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "更新時間，Unix 毫秒。"
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "maxLength": 0
+                          },
+                          "message": {
+                            "type": "string",
+                            "description": "任務狀態說明，失敗時為錯誤原因。"
+                          },
+                          "outputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "video"
+                                  ]
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "duration": {
+                                  "type": "string",
+                                  "description": "影片時長，秒。"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": [
+                        {
+                          "id": "task_example",
+                          "status": "succeeded",
+                          "create_time": 1792710000000,
+                          "update_time": 1792710000000,
+                          "external_id": "",
+                          "message": "",
+                          "outputs": [
+                            {
+                              "type": "video",
+                              "id": "video_example",
+                              "url": "https://example.com/result.mp4",
+                              "duration": "10"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "task_ids缺失或參數無效。"
+          },
+          "404": {
+            "description": "任務不存在或無法存取。"
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/zh-tw/影片生成kling格式/批次查詢-kling-4.0-原生任務"
         }
       }
     }

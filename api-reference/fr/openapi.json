@@ -895,7 +895,7 @@
       "post": {
         "summary": "Créer une vidéo",
         "deprecated": false,
-        "description": "OpenAI Sora interface de génération vidéo compatible avec les formats. Prend en charge la génération texte-vers-vidéo ainsi que les modes de génération à partir d’une image/vidéo de référence.\n\n- `POST /v1/videos` : Créer une tâche vidéo\n- `GET /v1/videos/{video_id}` : Consulter l'état de la tâche\n- `GET /v1/videos/{video_id}/content` : obtenir le contenu binaire de la vidéo\n\nActuellement non disponible pour les utilisateurs externes :\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n1. Créez une tâche via `POST /v1/videos` et obtenez `id`\n2. Interrogez `GET /v1/videos/{id}` jusqu’à `completed` ou `failed`\n3. Une fois terminé, utilisez en priorité `video_url` renvoyé dans la réponse\n4. Si un téléchargement unifié est nécessaire, appelez `GET /v1/videos/{id}/content`\n\nParamètres principaux :\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération de la vidéo\n- `seconds: number|string` : facultatif, durée cible\n- `duration: number|string` : facultatif, alias de durée\n- `size: string` : facultatif, taille de sortie\n- `mode: string` : facultatif, valeurs courantes `t2v` `i2v` `i2v_first_last` `reference_material`\n\nParamètres de compatibilité courants :\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nParamètres d’extension courants de Kling :\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 série Veo\n\nRemarque : `stable`, `official`, etc. indiquent différents groupes et ne sont pas des suffixes `model` exposés à l’extérieur ; lors de l’appel, veuillez conserver `model` comme nom de modèle de base, et le groupe réellement utilisé sera déterminé par le groupe du compte ou du jeton.\n\n#### modèle principal Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte seul, utilisez en priorité les modèles principaux `veo3*` / `veo3.1*`\n- Pour les scénarios de génération de vidéo à partir d’image ou avec image de référence, il est recommandé de transmettre explicitement `mode + image_url/reference_images`\n\n### 4.2 série Sora\n\nModèles de base :\n- `sora-2`\n- `sora-2-pro`\n\nRecommandations :\n- `sora-2*` convient aux appels généraux\n- Si vous devez utiliser des groupes tels que `stable` / `official`, veuillez conserver `model` comme nom de modèle de base et ne pas ajouter de suffixe au nom du modèle.\n\nExemple de requête :\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 Série HappyHorse\n\nModèle exposé :\n- `happyhorse-1.0`\n\nRecommandations :\n- `happyhorse-1.0` différenciés par `mode` : `t2v`, `i2v`, `r2v` et `video_edit`.\n- Dans le format compatible Sora, il est recommandé d’utiliser un tableau `content` pour transmettre les éléments multimédias.\n- Les éléments texte utilisent `type=text`, les éléments multimédias utilisent `type=image_url` et peuvent être associés à `role` et `name` pour indiquer l’usage du contenu.\n\nExemple de requête :\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Série Seedance\n\nModèle exposé :\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte, privilégiez `*-t2v-*` ou `pro / fast`\n- Pour la génération de vidéo à partir d'image, privilégiez `*-i2v-*`\n- Pour les scénarios avec des éléments de référence complexes, utilisez en priorité `content`\n\nExemple de requête :\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Série vidéo Grok\n\nModèle exposé :\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nParamètres courants :\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExemple :\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Modèle principal vidéo Kling\n\nModèle principal exposé :\n- `kling-video`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n`mode` courants :\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nParamètres d’entrée minimaux :\n- Génération de vidéo à partir de texte : `model + model_name + prompt + mode=t2v`\n- Génération de vidéo à partir d'image : `model + model_name + prompt + mode=i2v + image`\n- Référence multi-image : `model + model_name + prompt + mode=multi_i2v + image_list`\n- Extension de vidéo : `model + model_name + mode=extend + video_id`\n\nExemple :\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 Série vidéo MiniMax / Hailuo\n\nModèle exposé :\n- `minimax-h3`\n- `hailuo-2.3`\n\nRecommandations :\n- `minimax-h3` prend en charge la génération de vidéo à partir de texte, les références d’image et les références audio ; il est recommandé d’utiliser `content` pour mélanger texte et ressources ; vous pouvez aussi utiliser des champs compatibles tels que `image_urls` et `audio_urls`.\n- `hailuo-2.3` nécessite une image de première image ; il est recommandé de transmettre l’élément `image_url` de `role=first_frame` dans `content`, ou d’utiliser `image_urls` pour transmettre l’image de première image.\n- `minimax-h3` utilise généralement `duration=5~15` et `resolution=1440p` ; `hailuo-2.3` utilise généralement `duration=6` ou `10` et `resolution=768p`.\n\nExemple `minimax-h3` :\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\nExemple `hailuo-2.3` :\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Entrée minimale : `model + prompt`\n\n- `mode=i2v`\n- Entrée minimale : `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Entrée minimale : `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Entrée minimale : `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Entrée minimale : `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Instructions d’appel Gemini Omni\n\n- `gemini-omni` est le nom public du modèle vidéo de new-api, utilisable directement via `POST /v1/videos`.\n- `mode=t2v` : génération texte-vers-vidéo, le paramètre d’entrée minimal est `model + prompt`.\n- `mode=r2v` : génération à partir d’une image/ressource de référence ; l’image peut être placée dans `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference` ou `content`.\n- `mode=edit` : édition vidéo ; la vidéo peut être placée dans `video`, `video_url`, `videos` ou `content`, et une image de référence peut également être fournie.\n- Le champ de durée peut utiliser `seconds` ou `duration` ; il sera automatiquement aligné sur les paliers de 4 / 6 / 8 / 10 secondes.\n\n## Kling 4.0\n\nModèles externes : `kling-4.0` (720p), `kling-4.0-1080p`. La soumission est possible via `POST /api/v3/contents/generations/tasks` ou `POST /v1/videos`, et la consultation s'effectue via le `GET /{task_id}` du chemin correspondant. Les deux points d'entrée prennent en charge le corps de requête `contents/settings/options`. `/v1/videos` est également compatible avec `prompt`, `seconds`, `size` et `input_reference` du format vidéo OpenAI. Dans `contents`, `type=prompt` correspond au texte, `type=reference_image` et `reference_video` aux ressources de référence, et `first_frame` et `last_frame` aux premières et dernières images. `kling-4.0` correspond au 720p, `kling-4.0-1080p` au 1080p ; veuillez vous assurer que `settings.resolution` correspond au nom du modèle. Dans `settings`, utilisez `duration` (4–30 secondes), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1), `audio`. L'API actuelle prend en charge jusqu'à 10 images de référence et 5 vidéos de référence, mais ne prend pas en charge l'audio de référence. Les anciens modes `kling-video` et `model_name` restent des interfaces de compatibilité historique.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
+        "description": "OpenAI Sora interface de génération vidéo compatible avec les formats. Prend en charge la génération texte-vers-vidéo ainsi que les modes de génération à partir d’une image/vidéo de référence.\n\n- `POST /v1/videos` : Créer une tâche vidéo\n- `GET /v1/videos/{video_id}` : Consulter l'état de la tâche\n- `GET /v1/videos/{video_id}/content` : obtenir le contenu binaire de la vidéo\n\nActuellement non disponible pour les utilisateurs externes :\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nEn-têtes d'authentification standard :\n- `Content-Type: application/json`\n\n1. Créez une tâche via `POST /v1/videos` et obtenez `id`\n2. Interrogez `GET /v1/videos/{id}` jusqu’à `completed` ou `failed`\n3. Une fois terminé, utilisez en priorité `video_url` renvoyé dans la réponse\n4. Si un téléchargement unifié est nécessaire, appelez `GET /v1/videos/{id}/content`\n\nParamètres principaux :\n- `model: string` : requis, nom du modèle exposé\n- `prompt: string` : recommandé, description de génération de la vidéo\n- `seconds: number|string` : facultatif, durée cible\n- `duration: number|string` : facultatif, alias de durée\n- `size: string` : facultatif, taille de sortie\n- `mode: string` : facultatif, valeurs courantes `t2v` `i2v` `i2v_first_last` `reference_material`\n\nParamètres de compatibilité courants :\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nParamètres d’extension courants de Kling :\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 série Veo\n\nRemarque : `stable`, `official`, etc. indiquent différents groupes et ne sont pas des suffixes `model` exposés à l’extérieur ; lors de l’appel, veuillez conserver `model` comme nom de modèle de base, et le groupe réellement utilisé sera déterminé par le groupe du compte ou du jeton.\n\n#### modèle principal Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte seul, utilisez en priorité les modèles principaux `veo3*` / `veo3.1*`\n- Pour les scénarios de génération de vidéo à partir d’image ou avec image de référence, il est recommandé de transmettre explicitement `mode + image_url/reference_images`\n\n### 4.2 série Sora\n\nModèles de base :\n- `sora-2`\n- `sora-2-pro`\n\nRecommandations :\n- `sora-2*` convient aux appels généraux\n- Si vous devez utiliser des groupes tels que `stable` / `official`, veuillez conserver `model` comme nom de modèle de base et ne pas ajouter de suffixe au nom du modèle.\n\nExemple de requête :\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 Série HappyHorse\n\nModèle exposé :\n- `happyhorse-1.0`\n\nRecommandations :\n- `happyhorse-1.0` différenciés par `mode` : `t2v`, `i2v`, `r2v` et `video_edit`.\n- Dans le format compatible Sora, il est recommandé d’utiliser un tableau `content` pour transmettre les éléments multimédias.\n- Les éléments texte utilisent `type=text`, les éléments multimédias utilisent `type=image_url` et peuvent être associés à `role` et `name` pour indiquer l’usage du contenu.\n\nExemple de requête :\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Série Seedance\n\nModèle exposé :\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommandations :\n- Pour la génération de vidéo à partir de texte, privilégiez `*-t2v-*` ou `pro / fast`\n- Pour la génération de vidéo à partir d'image, privilégiez `*-i2v-*`\n- Pour les scénarios avec des éléments de référence complexes, utilisez en priorité `content`\n\nExemple de requête :\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Série vidéo Grok\n\nModèle exposé :\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nParamètres courants :\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExemple :\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Modèle principal vidéo Kling\n\nModèle principal exposé :\n- `kling-video`\n\nObligatoire :\n- `model`\n- `model_name`\n\n`model_name` pris en charge :\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n`mode` courants :\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nParamètres d’entrée minimaux :\n- Génération de vidéo à partir de texte : `model + model_name + prompt + mode=t2v`\n- Génération de vidéo à partir d'image : `model + model_name + prompt + mode=i2v + image`\n- Référence multi-image : `model + model_name + prompt + mode=multi_i2v + image_list`\n- Extension de vidéo : `model + model_name + mode=extend + video_id`\n\nExemple :\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 Série vidéo MiniMax / Hailuo\n\nModèle exposé :\n- `minimax-h3`\n- `hailuo-2.3`\n\nRecommandations :\n- `minimax-h3` prend en charge la génération de vidéo à partir de texte, les références d’image et les références audio ; il est recommandé d’utiliser `content` pour mélanger texte et ressources ; vous pouvez aussi utiliser des champs compatibles tels que `image_urls` et `audio_urls`.\n- `hailuo-2.3` nécessite une image de première image ; il est recommandé de transmettre l’élément `image_url` de `role=first_frame` dans `content`, ou d’utiliser `image_urls` pour transmettre l’image de première image.\n- `minimax-h3` utilise généralement `duration=5~15` et `resolution=1440p` ; `hailuo-2.3` utilise généralement `duration=6` ou `10` et `resolution=768p`.\n\nExemple `minimax-h3` :\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\nExemple `hailuo-2.3` :\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Entrée minimale : `model + prompt`\n\n- `mode=i2v`\n- Entrée minimale : `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Entrée minimale : `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Entrée minimale : `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Entrée minimale : `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Instructions d’appel Gemini Omni\n\n- `gemini-omni` est le nom public du modèle vidéo de new-api, utilisable directement via `POST /v1/videos`.\n- `mode=t2v` : génération texte-vers-vidéo, le paramètre d’entrée minimal est `model + prompt`.\n- `mode=r2v` : génération à partir d’une image/ressource de référence ; l’image peut être placée dans `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference` ou `content`.\n- `mode=edit` : édition vidéo ; la vidéo peut être placée dans `video`, `video_url`, `videos` ou `content`, et une image de référence peut également être fournie.\n- Le champ de durée peut utiliser `seconds` ou `duration` ; il sera automatiquement aligné sur les paliers de 4 / 6 / 8 / 10 secondes.\n\n## Kling 4.0\n\nModèles exposés : `kling-4.0` (720p), `kling-4.0-1080p`. Le format natif permet d’utiliser `POST /text-to-video/kling-4.0`, `POST /image-to-video/kling-4.0` et `POST /omni-video/kling-4.0`, avec des requêtes via `GET /tasks?task_ids=任务ID`. Les requêtes natives ne nécessitent pas `model` ; la résolution est sélectionnée par `settings.resolution`, avec 1080p par défaut. Les types natifs d’images/vidéos de référence sont `refer_image` et `feature_video` ; la création renvoie un objet `data` et la requête renvoie un tableau `data`. Vous pouvez soumettre via `POST /api/v3/contents/generations/tasks` ou `POST /v1/videos`, puis effectuer une requête via `GET /{task_id}` sur le chemin correspondant. Les deux points d’entrée prennent en charge le corps de requête `contents/settings/options`. `/v1/videos` est également compatible avec `prompt`, `seconds`, `size` et `input_reference` au format vidéo OpenAI. Dans `contents`, `type=prompt` correspond au texte, `type=reference_image` et `reference_video` aux ressources de référence, et `first_frame` et `last_frame` aux images de début et de fin. `kling-4.0` correspond à 720p et `kling-4.0-1080p` à 1080p ; veillez à ce que `settings.resolution` corresponde au nom du modèle. Dans `settings`, utilisez `duration` (4–30 secondes), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1) et `audio`. L’interface actuelle prend en charge jusqu’à 10 images de référence et 5 vidéos de référence, mais ne prend pas en charge l’audio de référence. Les anciens modes `kling-video` et `model_name` restent des interfaces de compatibilité historique.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
         "operationId": "createVideo",
         "tags": [
           "Formats compatibles avec la génération de vidéosSora"
@@ -5975,6 +5975,887 @@
         ],
         "x-mint": {
           "href": "/api-reference/fr/format-omni-de-génération-vidéo-et-veo/interroger-les-tâches-formats-omni-et-veo"
+        }
+      }
+    },
+    "/text-to-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 : génération native de vidéos à partir de texte",
+        "operationId": "create_kling4_native_text_to_video",
+        "tags": [
+          "Format de génération vidéo Kling"
+        ],
+        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nInterface de tâches native Kling 4.0. Utilise l'authentification Bearer API Key de ce site. Le corps de la requête ne nécessite pas `model` ; `settings.resolution=720p` utilise `kling-4.0`, `1080p` utilise `kling-4.0-1080p`, avec `1080p` par défaut. Après une création réussie, utilisez le `data.id` renvoyé pour appeler `GET /tasks?task_ids=ID_DE_TÂCHE` ; séparez plusieurs ID par des virgules. Le `data` de la requête est un tableau ; la vidéo générée se trouve dans `data[].outputs[].url`.\n\nLes scénarios de génération correspondant à prompt, first_frame, last_frame, refer_image et feature_video sont actuellement pris en charge. middle_frame, base_video, element, voice, la référence audio, les rappels et les ID de tâche externe personnalisés ne sont pas pris en charge ; une valeur non vide pour options.callback_url, options.external_task_id ou contents.id, ainsi que tout autre champ non pris en charge, renverra une erreur 400. options peut être omis ou transmis sous la forme d’un objet vide ; watermark_info.enabled=false peut également être transmis. L’activation du filigrane n’est pas encore prise en charge. Les durées prises en charge vont actuellement de 4 à 30 secondes, avec une valeur par défaut de 10 secondes ; 3 secondes ne sont pas prises en charge. Le format par défaut est 16:9 ; spécifier explicitement adaptive renverra une erreur 400.\n\nPour la génération de vidéo à partir de texte, transmettez `prompt` au niveau supérieur ; `contents` n'est pas requis.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "prompt"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "enum": [
+                          "21:9",
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
+                        "default": "16:9"
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Peut être omis, recevoir un objet vide ou désactiver explicitement le filigrane.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {},
+                    "prompt": "A cinematic landscape with natural motion"
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {},
+                    "prompt": "A cinematic landscape with natural motion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID de tâche de ce site, à transmettre tel quel lors de la requête."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Heure de création, en millisecondes Unix."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Heure de mise à jour, en millisecondes Unix."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Succès",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Les paramètres de la requête sont invalides ou contiennent des champs non pris en charge."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-4.0-génération-native-de-vidéos-à-partir-de-texte"
+        }
+      }
+    },
+    "/image-to-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 génération vidéo à partir d'images native",
+        "operationId": "create_kling4_native_image_to_video",
+        "tags": [
+          "Format de génération vidéo Kling"
+        ],
+        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nInterface de tâches native Kling 4.0. Utilise l'authentification Bearer API Key de ce site. Le corps de la requête ne nécessite pas `model` ; `settings.resolution=720p` utilise `kling-4.0`, `1080p` utilise `kling-4.0-1080p`, avec `1080p` par défaut. Après une création réussie, utilisez le `data.id` renvoyé pour appeler `GET /tasks?task_ids=ID_DE_TÂCHE` ; séparez plusieurs ID par des virgules. Le `data` de la requête est un tableau ; la vidéo générée se trouve dans `data[].outputs[].url`.\n\nLes scénarios de génération correspondant à prompt, first_frame, last_frame, refer_image et feature_video sont actuellement pris en charge. middle_frame, base_video, element, voice, la référence audio, les rappels et les ID de tâche externe personnalisés ne sont pas pris en charge ; une valeur non vide pour options.callback_url, options.external_task_id ou contents.id, ainsi que tout autre champ non pris en charge, renverra une erreur 400. options peut être omis ou transmis sous la forme d’un objet vide ; watermark_info.enabled=false peut également être transmis. L’activation du filigrane n’est pas encore prise en charge. Les durées prises en charge vont actuellement de 4 à 30 secondes, avec une valeur par défaut de 10 secondes ; 3 secondes ne sont pas prises en charge. Le format par défaut est 16:9 ; spécifier explicitement adaptive renverra une erreur 400.\n\nPour la génération de vidéo à partir d’images, `contents` doit inclure un `prompt` non vide et `first_frame`. Vous pouvez également fournir `last_frame` ; les première et dernière images sont limitées à une image chacune. `settings.aspect_ratio` n’est pas accepté.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contents"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Peut être omis, recevoir un objet vide ou désactiver explicitement le filigrane.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "contents": {
+                    "type": "array",
+                    "minItems": 2,
+                    "description": "Doit inclure à la fois un `prompt` non vide et un média pris en charge ; la génération de vidéo à partir d’image doit inclure `first_frame`. Consultez la documentation de l’API pour les limites de quantité de chaque type de média.",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "pattern": "^https?://"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      }
+                    ]
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID de tâche de ce site, à transmettre tel quel lors de la requête."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Heure de création, en millisecondes Unix."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Heure de mise à jour, en millisecondes Unix."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Succès",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Les paramètres de la requête sont invalides ou contiennent des champs non pris en charge."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-4.0-génération-vidéo-à-partir-d'images-native"
+        }
+      }
+    },
+    "/omni-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 Référence native tout-en-un",
+        "operationId": "create_kling4_native_omni_video",
+        "tags": [
+          "Format de génération vidéo Kling"
+        ],
+        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nInterface de tâches native Kling 4.0. Utilise l'authentification Bearer API Key de ce site. Le corps de la requête ne nécessite pas `model` ; `settings.resolution=720p` utilise `kling-4.0`, `1080p` utilise `kling-4.0-1080p`, avec `1080p` par défaut. Après une création réussie, utilisez le `data.id` renvoyé pour appeler `GET /tasks?task_ids=ID_DE_TÂCHE` ; séparez plusieurs ID par des virgules. Le `data` de la requête est un tableau ; la vidéo générée se trouve dans `data[].outputs[].url`.\n\nLes scénarios de génération correspondant à prompt, first_frame, last_frame, refer_image et feature_video sont actuellement pris en charge. middle_frame, base_video, element, voice, la référence audio, les rappels et les ID de tâche externe personnalisés ne sont pas pris en charge ; une valeur non vide pour options.callback_url, options.external_task_id ou contents.id, ainsi que tout autre champ non pris en charge, renverra une erreur 400. options peut être omis ou transmis sous la forme d’un objet vide ; watermark_info.enabled=false peut également être transmis. L’activation du filigrane n’est pas encore prise en charge. Les durées prises en charge vont actuellement de 4 à 30 secondes, avec une valeur par défaut de 10 secondes ; 3 secondes ne sont pas prises en charge. Le format par défaut est 16:9 ; spécifier explicitement adaptive renverra une erreur 400.\n\nLe champ `contents` de la référence universelle doit contenir un `prompt` non vide et au moins un média pris en charge. Les images de première et dernière image, les images de référence `refer_image` et les vidéos de référence `feature_video` sont prises en charge ; `first_frame`, `last_frame` et `refer_image` peuvent contenir au maximum un élément chacun, tandis que `feature_video` peut en contenir jusqu’à cinq. Les scénarios de plusieurs images de référence reposant sur des références par `id` ne sont pas encore pris en charge.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contents"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "enum": [
+                          "21:9",
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
+                        "default": "16:9"
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Peut être omis, recevoir un objet vide ou désactiver explicitement le filigrane.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "contents": {
+                    "type": "array",
+                    "minItems": 2,
+                    "description": "Doit inclure à la fois un `prompt` non vide et un média pris en charge ; la génération de vidéo à partir d’image doit inclure `first_frame`. Consultez la documentation de l’API pour les limites de quantité de chaque type de média.",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "first_frame",
+                                "last_frame",
+                                "refer_image",
+                                "feature_video"
+                              ]
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "pattern": "^https?://"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://example.com/reference.jpg"
+                      },
+                      {
+                        "type": "feature_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ]
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://example.com/reference.jpg"
+                      },
+                      {
+                        "type": "feature_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID de tâche de ce site, à transmettre tel quel lors de la requête."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Heure de création, en millisecondes Unix."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Heure de mise à jour, en millisecondes Unix."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Succès",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Les paramètres de la requête sont invalides ou contiennent des champs non pris en charge."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-4.0-référence-native-tout-en-un"
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "summary": "Interroger par lots les tâches natives de Kling 4.0",
+        "operationId": "query_kling4_native_tasks",
+        "tags": [
+          "Format de génération vidéo Kling"
+        ],
+        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nUtilisez l’ID de tâche de ce site renvoyé par l’API de création. Les task_ids sont de 1 à 100 ID uniques séparés par des virgules ; seules les tâches Kling 4.0 appartenant à l’utilisateur associé au jeton actuel sont interrogées. Si un ID n’existe pas, n’appartient pas à l’utilisateur actuel ou n’est pas une tâche Kling 4.0, l’ensemble renvoie 404. data est toujours un tableau et, une fois terminée, outputs contient l’URL de la vidéo. external_task_ids et les requêtes de liste POST /tasks ne sont pas pris en charge.",
+        "parameters": [
+          {
+            "name": "task_ids",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_example_1,task_example_2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "ID de tâche de ce site, à transmettre tel quel lors de la requête."
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "submitted",
+                              "processing",
+                              "succeeded",
+                              "failed"
+                            ]
+                          },
+                          "create_time": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Heure de création, en millisecondes Unix."
+                          },
+                          "update_time": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Heure de mise à jour, en millisecondes Unix."
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "maxLength": 0
+                          },
+                          "message": {
+                            "type": "string",
+                            "description": "Description de l’état de la tâche ; en cas d’échec, indique la cause de l’erreur."
+                          },
+                          "outputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "video"
+                                  ]
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "duration": {
+                                  "type": "string",
+                                  "description": "Durée de la vidéo, en secondes."
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Succès",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": [
+                        {
+                          "id": "task_example",
+                          "status": "succeeded",
+                          "create_time": 1792710000000,
+                          "update_time": 1792710000000,
+                          "external_id": "",
+                          "message": "",
+                          "outputs": [
+                            {
+                              "type": "video",
+                              "id": "video_example",
+                              "url": "https://example.com/result.mp4",
+                              "duration": "10"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "task_ids manquants ou paramètres non valides."
+          },
+          "404": {
+            "description": "La tâche n’existe pas ou n’est pas accessible."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/interroger-par-lots-les-tâches-natives-de-kling-4.0"
         }
       }
     }

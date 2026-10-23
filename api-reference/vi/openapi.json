@@ -895,7 +895,7 @@
       "post": {
         "summary": "Tạo video",
         "deprecated": false,
-        "description": "Giao diện tạo video định dạng tương thích OpenAI Sora. Hỗ trợ chế độ tạo từ văn bản thành video và tạo bằng ảnh/video tham chiếu.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` tạo tác vụ, lấy `id`\n2. Thăm dò `GET /v1/videos/{id}` cho đến khi `completed` hoặc `failed`\n3. Sau khi hoàn tất, ưu tiên sử dụng `video_url` trong kết quả trả về\n4. Nếu cần tải xuống thống nhất, gọi `GET /v1/videos/{id}/content`\n\nTham số cốt lõi:\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo video\n- `seconds: number|string`: Tùy chọn, thời lượng mục tiêu\n- `duration: number|string`: Tùy chọn, bí danh thời lượng\n- `size: string`: Tùy chọn, kích thước đầu ra\n- `mode: string`: Tùy chọn, các giá trị phổ biến `t2v` `i2v` `i2v_first_last` `reference_material`\n\nTham số tương thích thường dùng:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nCác tham số mở rộng thường dùng của Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Dòng Veo\n\nLưu ý: `stable`, `official` v.v. biểu thị các nhóm khác nhau, không phải hậu tố `model` dùng đối ngoại; khi gọi, vui lòng giữ `model` là tên mô hình cơ sở, nhóm tài khoản hoặc mã thông báo sẽ quyết định thực tế đi qua nhóm nào.\n\n#### Mô hình chính Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nKhuyến nghị:\n- Với video tạo từ văn bản thuần túy, ưu tiên dùng mô hình chính `veo3*` / `veo3.1*`\n- Với các tình huống tạo video từ ảnh hoặc từ tham chiếu, nên truyền rõ ràng `mode + image_url/reference_images`\n\n### 4.2 Dòng Sora\n\nMô hình cơ sở:\n- `sora-2`\n- `sora-2-pro`\n\nKhuyến nghị:\n- `sora-2*` phù hợp cho các lệnh gọi thông dụng\n- Nếu cần sử dụng các nhóm như `stable` / `official`, vui lòng giữ `model` là tên mô hình cơ sở, không thêm hậu tố vào sau tên mô hình.\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 Dòng HappyHorse\n\nMô hình công khai:\n- `happyhorse-1.0`\n\nKhuyến nghị:\n- `happyhorse-1.0` được phân biệt thông qua `mode`, `t2v`, `i2v`, `r2v`, `video_edit`.\n- Trong định dạng tương thích của Sora, nên dùng mảng `content` để truyền các mục phương tiện.\n- Mục văn bản dùng `type=text`, mục phương tiện dùng `type=image_url` và có thể kết hợp `role`, `name` để đánh dấu mục đích sử dụng của tài nguyên.\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Dòng Seedance\n\nMô hình công khai:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nKhuyến nghị:\n- Với tạo video từ văn bản, ưu tiên `*-t2v-*` hoặc `pro / fast`\n- Với tạo video từ hình ảnh, ưu tiên `*-i2v-*`\n- Với các tình huống có tư liệu tham chiếu phức tạp, ưu tiên dùng `content`\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Dòng video Grok\n\nMô hình công khai:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nTham số thường dùng:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nVí dụ:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Mô hình chính video Kling\n\nMô hình chính công khai:\n- `kling-video`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCác `mode` phổ biến:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nTham số đầu vào tối thiểu:\n- Tạo video từ văn bản: `model + model_name + prompt + mode=t2v`\n- Tạo video từ hình ảnh: `model + model_name + prompt + mode=i2v + image`\n- Tham chiếu nhiều ảnh: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Kéo dài video: `model + model_name + mode=extend + video_id`\n\nVí dụ:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 Series video MiniMax / Hailuo\n\nMô hình công khai:\n- `minimax-h3`\n- `hailuo-2.3`\n\nKhuyến nghị:\n- `minimax-h3` hỗ trợ tạo video từ văn bản, tham chiếu hình ảnh và tham chiếu âm thanh; khuyến nghị trộn văn bản và tài nguyên qua `content`; cũng có thể dùng các trường tương thích như `image_urls`, `audio_urls`.\n- `hailuo-2.3` cần ảnh khung hình đầu tiên, khuyến nghị truyền mục `image_url` của `role=first_frame` trong `content`, hoặc dùng `image_urls` để truyền ảnh khung hình đầu tiên.\n- `minimax-h3` thường dùng `duration=5~15`, `resolution=1440p`; `hailuo-2.3` thường dùng `duration=6` hoặc `10`, `resolution=768p`.\n\n`minimax-h3` Ví dụ:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` Ví dụ:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Hướng dẫn gọi Gemini Omni\n\n- `gemini-omni` là tên mô hình video công khai của new-api, có thể trực tiếp gọi qua `POST /v1/videos`.\n- `mode=t2v`: tạo video từ văn bản, tham số đầu vào tối thiểu là `model + prompt`.\n- `mode=r2v`: tạo bằng ảnh/tư liệu tham chiếu, ảnh có thể đặt trong `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` hoặc `content`.\n- `mode=edit`: chỉnh sửa video, video có thể đặt trong `video`、`video_url`、`videos` hoặc `content`, đồng thời cũng có thể truyền ảnh tham chiếu.\n- Trường thời lượng có thể dùng `seconds` hoặc `duration`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.\n\n## Kling 4.0\n\nMô hình công khai: `kling-4.0` (720p), `kling-4.0-1080p`. Có thể gửi qua `POST /api/v3/contents/generations/tasks` hoặc `POST /v1/videos`, và truy vấn tương ứng qua `GET /{task_id}` theo đường dẫn tương ứng. Cả hai cổng vào đều hỗ trợ body yêu cầu `contents/settings/options`. `/v1/videos` cũng tương thích với `prompt`, `seconds`, `size` và `input_reference` thuộc định dạng video OpenAI. Trong `contents`, `type=prompt` là văn bản, `type=reference_image`, `reference_video` là tư liệu tham khảo, `first_frame`, `last_frame` là khung hình đầu và cuối. `kling-4.0` tương ứng với 720p, `kling-4.0-1080p` tương ứng với 1080p; vui lòng giữ `settings.resolution` nhất quán với tên mô hình. Trong `settings` sử dụng `duration` (4–30 giây), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1), `audio`. API hiện tại hỗ trợ tối đa 10 ảnh tham khảo, 5 đoạn video tham khảo, không hỗ trợ âm thanh tham khảo. Các chế độ `kling-video` và `model_name` cũ vẫn là các API tương thích lịch sử.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
+        "description": "Giao diện tạo video định dạng tương thích OpenAI Sora. Hỗ trợ chế độ tạo từ văn bản thành video và tạo bằng ảnh/video tham chiếu.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` tạo tác vụ, lấy `id`\n2. Thăm dò `GET /v1/videos/{id}` cho đến khi `completed` hoặc `failed`\n3. Sau khi hoàn tất, ưu tiên sử dụng `video_url` trong kết quả trả về\n4. Nếu cần tải xuống thống nhất, gọi `GET /v1/videos/{id}/content`\n\nTham số cốt lõi:\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo video\n- `seconds: number|string`: Tùy chọn, thời lượng mục tiêu\n- `duration: number|string`: Tùy chọn, bí danh thời lượng\n- `size: string`: Tùy chọn, kích thước đầu ra\n- `mode: string`: Tùy chọn, các giá trị phổ biến `t2v` `i2v` `i2v_first_last` `reference_material`\n\nTham số tương thích thường dùng:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nCác tham số mở rộng thường dùng của Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Dòng Veo\n\nLưu ý: `stable`, `official` v.v. biểu thị các nhóm khác nhau, không phải hậu tố `model` dùng đối ngoại; khi gọi, vui lòng giữ `model` là tên mô hình cơ sở, nhóm tài khoản hoặc mã thông báo sẽ quyết định thực tế đi qua nhóm nào.\n\n#### Mô hình chính Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nKhuyến nghị:\n- Với video tạo từ văn bản thuần túy, ưu tiên dùng mô hình chính `veo3*` / `veo3.1*`\n- Với các tình huống tạo video từ ảnh hoặc từ tham chiếu, nên truyền rõ ràng `mode + image_url/reference_images`\n\n### 4.2 Dòng Sora\n\nMô hình cơ sở:\n- `sora-2`\n- `sora-2-pro`\n\nKhuyến nghị:\n- `sora-2*` phù hợp cho các lệnh gọi thông dụng\n- Nếu cần sử dụng các nhóm như `stable` / `official`, vui lòng giữ `model` là tên mô hình cơ sở, không thêm hậu tố vào sau tên mô hình.\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 Dòng HappyHorse\n\nMô hình công khai:\n- `happyhorse-1.0`\n\nKhuyến nghị:\n- `happyhorse-1.0` được phân biệt thông qua `mode`, `t2v`, `i2v`, `r2v`, `video_edit`.\n- Trong định dạng tương thích của Sora, nên dùng mảng `content` để truyền các mục phương tiện.\n- Mục văn bản dùng `type=text`, mục phương tiện dùng `type=image_url` và có thể kết hợp `role`, `name` để đánh dấu mục đích sử dụng của tài nguyên.\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Dòng Seedance\n\nMô hình công khai:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nKhuyến nghị:\n- Với tạo video từ văn bản, ưu tiên `*-t2v-*` hoặc `pro / fast`\n- Với tạo video từ hình ảnh, ưu tiên `*-i2v-*`\n- Với các tình huống có tư liệu tham chiếu phức tạp, ưu tiên dùng `content`\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Dòng video Grok\n\nMô hình công khai:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nTham số thường dùng:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nVí dụ:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Mô hình chính video Kling\n\nMô hình chính công khai:\n- `kling-video`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCác `mode` phổ biến:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nTham số đầu vào tối thiểu:\n- Tạo video từ văn bản: `model + model_name + prompt + mode=t2v`\n- Tạo video từ hình ảnh: `model + model_name + prompt + mode=i2v + image`\n- Tham chiếu nhiều ảnh: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Kéo dài video: `model + model_name + mode=extend + video_id`\n\nVí dụ:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 Series video MiniMax / Hailuo\n\nMô hình công khai:\n- `minimax-h3`\n- `hailuo-2.3`\n\nKhuyến nghị:\n- `minimax-h3` hỗ trợ tạo video từ văn bản, tham chiếu hình ảnh và tham chiếu âm thanh; khuyến nghị trộn văn bản và tài nguyên qua `content`; cũng có thể dùng các trường tương thích như `image_urls`, `audio_urls`.\n- `hailuo-2.3` cần ảnh khung hình đầu tiên, khuyến nghị truyền mục `image_url` của `role=first_frame` trong `content`, hoặc dùng `image_urls` để truyền ảnh khung hình đầu tiên.\n- `minimax-h3` thường dùng `duration=5~15`, `resolution=1440p`; `hailuo-2.3` thường dùng `duration=6` hoặc `10`, `resolution=768p`.\n\n`minimax-h3` Ví dụ:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` Ví dụ:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Hướng dẫn gọi Gemini Omni\n\n- `gemini-omni` là tên mô hình video công khai của new-api, có thể trực tiếp gọi qua `POST /v1/videos`.\n- `mode=t2v`: tạo video từ văn bản, tham số đầu vào tối thiểu là `model + prompt`.\n- `mode=r2v`: tạo bằng ảnh/tư liệu tham chiếu, ảnh có thể đặt trong `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` hoặc `content`.\n- `mode=edit`: chỉnh sửa video, video có thể đặt trong `video`、`video_url`、`videos` hoặc `content`, đồng thời cũng có thể truyền ảnh tham chiếu.\n- Trường thời lượng có thể dùng `seconds` hoặc `duration`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.\n\n## Kling 4.0\n\nCác mô hình công khai: `kling-4.0` (720p), `kling-4.0-1080p`. Với định dạng gốc, có thể sử dụng `POST /text-to-video/kling-4.0`, `POST /image-to-video/kling-4.0`, `POST /omni-video/kling-4.0` và truy vấn qua `GET /tasks?task_ids=任务ID`. Yêu cầu gốc không cần `model`; độ phân giải được chọn bằng `settings.resolution`, mặc định là 1080p. Loại ảnh/video tham chiếu gốc là `refer_image`, `feature_video`; thao tác tạo trả về đối tượng `data`, còn thao tác truy vấn trả về mảng `data`. Có thể gửi qua `POST /api/v3/contents/generations/tasks` hoặc `POST /v1/videos`, và truy vấn tương ứng qua `GET /{task_id}` của đường dẫn tương ứng. Cả hai điểm vào đều hỗ trợ phần thân yêu cầu `contents/settings/options`. `/v1/videos` cũng tương thích với `prompt`, `seconds`, `size` và `input_reference` ở định dạng video OpenAI. Trong `contents`, `type=prompt` là văn bản; `type=reference_image` và `reference_video` là tài nguyên tham chiếu; `first_frame` và `last_frame` là khung hình đầu và cuối. `kling-4.0` tương ứng với 720p, `kling-4.0-1080p` tương ứng với 1080p; hãy đảm bảo `settings.resolution` khớp với tên mô hình. Trong `settings`, sử dụng `duration` (4–30 giây), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1), `audio`. Giao diện hiện tại hỗ trợ tối đa 10 ảnh tham chiếu và 5 video tham chiếu, không hỗ trợ âm thanh tham chiếu. Các chế độ `kling-video` và `model_name` cũ vẫn là giao diện tương thích cũ.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
         "operationId": "createVideo",
         "tags": [
           "Định dạng tương thích Sora cho tạo video"
@@ -5975,6 +5975,887 @@
         ],
         "x-mint": {
           "href": "/api-reference/vi/định-dạng-video-generation-omni-và-veo/truy-vấn-tác-vụ-định-dạng-omni-và-veo"
+        }
+      }
+    },
+    "/text-to-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 tạo video từ văn bản gốc",
+        "operationId": "create_kling4_native_text_to_video",
+        "tags": [
+          "Định dạngKling tạo video"
+        ],
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nGiao diện tác vụ gốc Kling 4.0. Sử dụng Bearer API Key của trang này để xác thực. Nội dung yêu cầu không cần `model`; `settings.resolution=720p` sử dụng `kling-4.0`, `1080p` sử dụng `kling-4.0-1080p`, mặc định là `1080p`. Sau khi tạo thành công, dùng `data.id` trả về để gọi `GET /tasks?task_ids=ID tác vụ`; nhiều ID được phân tách bằng dấu phẩy. `data` của kết quả truy vấn là một mảng, URL video kết quả nằm tại `data[].outputs[].url`.\n\nHiện hỗ trợ các trường hợp tạo tương ứng với prompt, `first_frame`, `last_frame`, `refer_image` và `feature_video`. Không hỗ trợ `middle_frame`, `base_video`, `element`, `voice`, tham chiếu âm thanh, callback hoặc ID tác vụ bên ngoài tùy chỉnh; `options.callback_url` không rỗng, `options.external_task_id` không rỗng, `contents.id` không rỗng và các trường không được hỗ trợ khác sẽ trả về 400. Có thể bỏ qua `options` hoặc truyền một đối tượng rỗng, cũng có thể truyền `watermark_info.enabled=false`; hiện chưa hỗ trợ bật hình mờ. Thời lượng hiện hỗ trợ từ 4 đến 30 giây, mặc định là 10 giây; chưa hỗ trợ 3 giây. Tỷ lệ khung hình mặc định là 16:9, việc chỉ định rõ `adaptive` sẽ trả về 400.\n\nĐối với tạo video từ văn bản, truyền `prompt` ở cấp cao nhất, không cần `contents`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "prompt"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "enum": [
+                          "21:9",
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
+                        "default": "16:9"
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Có thể bỏ qua, truyền đối tượng rỗng hoặc tắt hình mờ một cách rõ ràng.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {},
+                    "prompt": "A cinematic landscape with natural motion"
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {},
+                    "prompt": "A cinematic landscape with natural motion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID tác vụ của trang này, khi truy vấn hãy truyền nguyên văn."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Thời gian tạo, tính bằng mili giây Unix."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Thời gian cập nhật, tính bằng mili giây Unix."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Thành công",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Tham số yêu cầu không hợp lệ hoặc chứa trường không được hỗ trợ."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-4.0-tạo-video-từ-văn-bản-gốc"
+        }
+      }
+    },
+    "/image-to-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 tạo video từ hình ảnh nguyên bản",
+        "operationId": "create_kling4_native_image_to_video",
+        "tags": [
+          "Định dạngKling tạo video"
+        ],
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nGiao diện tác vụ gốc Kling 4.0. Sử dụng Bearer API Key của trang này để xác thực. Nội dung yêu cầu không cần `model`; `settings.resolution=720p` sử dụng `kling-4.0`, `1080p` sử dụng `kling-4.0-1080p`, mặc định là `1080p`. Sau khi tạo thành công, dùng `data.id` trả về để gọi `GET /tasks?task_ids=ID tác vụ`; nhiều ID được phân tách bằng dấu phẩy. `data` của kết quả truy vấn là một mảng, URL video kết quả nằm tại `data[].outputs[].url`.\n\nHiện hỗ trợ các trường hợp tạo tương ứng với prompt, `first_frame`, `last_frame`, `refer_image` và `feature_video`. Không hỗ trợ `middle_frame`, `base_video`, `element`, `voice`, tham chiếu âm thanh, callback hoặc ID tác vụ bên ngoài tùy chỉnh; `options.callback_url` không rỗng, `options.external_task_id` không rỗng, `contents.id` không rỗng và các trường không được hỗ trợ khác sẽ trả về 400. Có thể bỏ qua `options` hoặc truyền một đối tượng rỗng, cũng có thể truyền `watermark_info.enabled=false`; hiện chưa hỗ trợ bật hình mờ. Thời lượng hiện hỗ trợ từ 4 đến 30 giây, mặc định là 10 giây; chưa hỗ trợ 3 giây. Tỷ lệ khung hình mặc định là 16:9, việc chỉ định rõ `adaptive` sẽ trả về 400.\n\n`contents` của tính năng tạo video từ ảnh phải bao gồm `prompt` và `first_frame` không rỗng, đồng thời có thể truyền `last_frame`; khung hình đầu và cuối mỗi loại tối đa 1 ảnh. Không chấp nhận `settings.aspect_ratio`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contents"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Có thể bỏ qua, truyền đối tượng rỗng hoặc tắt hình mờ một cách rõ ràng.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "contents": {
+                    "type": "array",
+                    "minItems": 2,
+                    "description": "Phải đồng thời bao gồm prompt không rỗng và phương tiện được hỗ trợ; tạo video từ ảnh phải bao gồm first_frame. Xem tài liệu API để biết giới hạn số lượng của từng loại phương tiện.",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "pattern": "^https?://"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      }
+                    ]
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID tác vụ của trang này, khi truy vấn hãy truyền nguyên văn."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Thời gian tạo, tính bằng mili giây Unix."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Thời gian cập nhật, tính bằng mili giây Unix."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Thành công",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Tham số yêu cầu không hợp lệ hoặc chứa trường không được hỗ trợ."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-4.0-tạo-video-từ-hình-ảnh-nguyên-bản"
+        }
+      }
+    },
+    "/omni-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 Tham chiếu đa năng nguyên bản",
+        "operationId": "create_kling4_native_omni_video",
+        "tags": [
+          "Định dạngKling tạo video"
+        ],
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nGiao diện tác vụ gốc Kling 4.0. Sử dụng Bearer API Key của trang này để xác thực. Nội dung yêu cầu không cần `model`; `settings.resolution=720p` sử dụng `kling-4.0`, `1080p` sử dụng `kling-4.0-1080p`, mặc định là `1080p`. Sau khi tạo thành công, dùng `data.id` trả về để gọi `GET /tasks?task_ids=ID tác vụ`; nhiều ID được phân tách bằng dấu phẩy. `data` của kết quả truy vấn là một mảng, URL video kết quả nằm tại `data[].outputs[].url`.\n\nHiện hỗ trợ các trường hợp tạo tương ứng với prompt, `first_frame`, `last_frame`, `refer_image` và `feature_video`. Không hỗ trợ `middle_frame`, `base_video`, `element`, `voice`, tham chiếu âm thanh, callback hoặc ID tác vụ bên ngoài tùy chỉnh; `options.callback_url` không rỗng, `options.external_task_id` không rỗng, `contents.id` không rỗng và các trường không được hỗ trợ khác sẽ trả về 400. Có thể bỏ qua `options` hoặc truyền một đối tượng rỗng, cũng có thể truyền `watermark_info.enabled=false`; hiện chưa hỗ trợ bật hình mờ. Thời lượng hiện hỗ trợ từ 4 đến 30 giây, mặc định là 10 giây; chưa hỗ trợ 3 giây. Tỷ lệ khung hình mặc định là 16:9, việc chỉ định rõ `adaptive` sẽ trả về 400.\n\ncontents của tham chiếu đa năng phải bao gồm prompt không rỗng và ít nhất một tệp phương tiện được hỗ trợ. Hỗ trợ khung hình đầu/cuối, ảnh tham chiếu refer_image và video tham chiếu feature_video; first_frame, last_frame và refer_image mỗi loại tối đa 1 mục, feature_video tối đa 5 mục. Hiện chưa hỗ trợ trường hợp nhiều ảnh tham chiếu dựa trên tham chiếu id.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contents"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "enum": [
+                          "21:9",
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
+                        "default": "16:9"
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Có thể bỏ qua, truyền đối tượng rỗng hoặc tắt hình mờ một cách rõ ràng.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "contents": {
+                    "type": "array",
+                    "minItems": 2,
+                    "description": "Phải đồng thời bao gồm prompt không rỗng và phương tiện được hỗ trợ; tạo video từ ảnh phải bao gồm first_frame. Xem tài liệu API để biết giới hạn số lượng của từng loại phương tiện.",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "first_frame",
+                                "last_frame",
+                                "refer_image",
+                                "feature_video"
+                              ]
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "pattern": "^https?://"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://example.com/reference.jpg"
+                      },
+                      {
+                        "type": "feature_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ]
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://example.com/reference.jpg"
+                      },
+                      {
+                        "type": "feature_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID tác vụ của trang này, khi truy vấn hãy truyền nguyên văn."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Thời gian tạo, tính bằng mili giây Unix."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Thời gian cập nhật, tính bằng mili giây Unix."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Thành công",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Tham số yêu cầu không hợp lệ hoặc chứa trường không được hỗ trợ."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-4.0-tham-chiếu-đa-năng-nguyên-bản"
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "summary": "Truy vấn hàng loạt tác vụ gốc Kling 4.0",
+        "operationId": "query_kling4_native_tasks",
+        "tags": [
+          "Định dạngKling tạo video"
+        ],
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nSử dụng ID tác vụ của hệ thống này được trả về bởi API tạo. task_ids là từ 1 đến 100 ID duy nhất, được phân tách bằng dấu phẩy; chỉ truy vấn các tác vụ Kling 4.0 thuộc về người dùng sở hữu mã thông báo hiện tại. Nếu bất kỳ ID nào không tồn tại, không thuộc về người dùng hiện tại hoặc không phải là tác vụ Kling 4.0, toàn bộ yêu cầu sẽ trả về 404. data luôn là một mảng; outputs sau khi hoàn tất chứa URL video. Không hỗ trợ external_task_ids hoặc truy vấn danh sách POST /tasks.",
+        "parameters": [
+          {
+            "name": "task_ids",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_example_1,task_example_2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "ID tác vụ của trang này, khi truy vấn hãy truyền nguyên văn."
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "submitted",
+                              "processing",
+                              "succeeded",
+                              "failed"
+                            ]
+                          },
+                          "create_time": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Thời gian tạo, tính bằng mili giây Unix."
+                          },
+                          "update_time": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Thời gian cập nhật, tính bằng mili giây Unix."
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "maxLength": 0
+                          },
+                          "message": {
+                            "type": "string",
+                            "description": "Mô tả trạng thái tác vụ; khi thất bại, đây là nguyên nhân lỗi."
+                          },
+                          "outputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "video"
+                                  ]
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "duration": {
+                                  "type": "string",
+                                  "description": "Thời lượng video, tính bằng giây."
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Thành công",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": [
+                        {
+                          "id": "task_example",
+                          "status": "succeeded",
+                          "create_time": 1792710000000,
+                          "update_time": 1792710000000,
+                          "external_id": "",
+                          "message": "",
+                          "outputs": [
+                            {
+                              "type": "video",
+                              "id": "video_example",
+                              "url": "https://example.com/result.mp4",
+                              "duration": "10"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Thiếu task_ids hoặc tham số không hợp lệ。"
+          },
+          "404": {
+            "description": "Tác vụ không tồn tại hoặc không thể truy cập."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/vi/định-dạngkling-tạo-video/truy-vấn-hàng-loạt-tác-vụ-gốc-kling-4.0"
         }
       }
     }

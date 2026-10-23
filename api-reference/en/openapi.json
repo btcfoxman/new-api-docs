@@ -895,7 +895,7 @@
       "post": {
         "summary": "Create video",
         "deprecated": false,
-        "description": "OpenAI Sora video generation API in a compatible format. Supports text-to-video and image/video reference generation modes.\n\n- `POST /v1/videos`: Create video task\n- `GET /v1/videos/{video_id}`: Query task status\n- `GET /v1/videos/{video_id}/content`: Retrieve the video binary content\n\nCurrently not available externally:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nStandard authentication headers:\n- `Content-Type: application/json`\n\n1. Use `POST /v1/videos` to create a task and obtain `id`\n2. Poll `GET /v1/videos/{id}` until `completed` or `failed`\n3. After completion, prefer using `video_url` returned in the response\n4. For unified download, call `GET /v1/videos/{id}/content`\n\nCore parameters:\n- `model: string`: Required, public model name\n- `prompt: string`: Recommended, video generation description\n- `seconds: number|string`: Optional, target duration\n- `duration: number|string`: Optional, duration alias\n- `size: string`: Optional, output resolution\n- `mode: string`: Optional, common values: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nCommon compatibility parameters:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling common extended parameters:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo series\n\nNote: `stable`, `official`, and similar labels indicate different groups, not external `model` suffixes; when calling, keep `model` as the base model name, and let the account or token group determine which group is actually used.\n\n#### Veo 3.x main model\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommendations:\n- For text-to-video only, prefer the `veo3*` / `veo3.1*` base models\n- For image-to-video or reference-to-video scenarios, it is recommended to explicitly pass `mode + image_url/reference_images`\n\n### 4.2 Sora series\n\nBase models:\n- `sora-2`\n- `sora-2-pro`\n\nRecommendations:\n- `sora-2*` is suitable for general-purpose use\n- To use groups such as `stable` / `official`, keep `model` as the base model name and do not append any suffix to the model name.\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse series\n\nPublic model:\n- `happyhorse-1.0`\n\nRecommendations:\n- `happyhorse-1.0` are distinguished by `mode` into `t2v`, `i2v`, `r2v`, and `video_edit`.\n- In Sora-compatible format, it is recommended to pass media items in the `content` array for reference images.\n- Use `type=text` for text items and `type=image_url` for media items, and optionally use `role` and `name` to indicate the asset's purpose.\n\nRequest example:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance Series\n\nPublic model:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommendations:\n- For text-to-video, prefer `*-t2v-*` or `pro / fast`\n- For image-to-video, prefer `*-i2v-*`\n- For scenarios with complex reference materials, prefer `content`\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok Video Series\n\nPublic model:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nCommon parameters:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExample:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling Video Main Model\n\nPublic base model:\n- `kling-video`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCommon `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nMinimum input parameters:\n- Text-to-video: `model + model_name + prompt + mode=t2v`\n- Image-to-video: `model + model_name + prompt + mode=i2v + image`\n- Multi-image reference: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Video extension: `model + model_name + mode=extend + video_id`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo Video Series\n\nPublic model:\n- `minimax-h3`\n- `hailuo-2.3`\n\nRecommendations:\n- `minimax-h3` supports text-to-video, image references, and audio references. We recommend mixing text and assets via `content`; you can also use compatible fields such as `image_urls` and `audio_urls`.\n- `hailuo-2.3` requires a first-frame image. We recommend passing the `image_url` field of `role=first_frame` in `content`, or using `image_urls` to pass the first-frame image.\n- `minimax-h3` commonly uses `duration=5~15` and `resolution=1440p`; `hailuo-2.3` commonly uses `duration=6` or `10` and `resolution=768p`.\n\n`minimax-h3` Example:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` Example:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Minimum input: `model + prompt`\n\n- `mode=i2v`\n- Minimum input: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Minimum input: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Minimum input: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Minimum input: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni usage instructions\n\n- `gemini-omni` is the publicly exposed video model name of new-api, and can be called directly via `POST /v1/videos`.\n- `mode=t2v`: text-to-video, with the minimum input parameter being `model + prompt`.\n- `mode=r2v`: reference image/reference material generation; images can be placed in `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference`, or `content`.\n- `mode=edit`: video editing; videos can be placed in `video`, `video_url`, `videos`, or `content`, and reference images can also be provided at the same time.\n- The duration field can use `seconds` or `duration`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\n## Kling 4.0\n\nExternal models: `kling-4.0` (720p), `kling-4.0-1080p`. Submissions can be made via `POST /api/v3/contents/generations/tasks` or `POST /v1/videos`, and queried through `GET /{task_id}` on their respective paths. Both entry points support the `contents/settings/options` request body. `/v1/videos` is also compatible with `prompt`, `seconds`, `size`, and `input_reference` of the OpenAI video format. In `contents`, `type=prompt` is text, `type=reference_image` and `reference_video` are reference assets, and `first_frame` and `last_frame` are first and last frames. `kling-4.0` corresponds to 720p, and `kling-4.0-1080p` corresponds to 1080p; please ensure `settings.resolution` matches the model name. In `settings`, use `duration` (4–30 seconds), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1), and `audio`. The current API supports up to 10 reference images and 5 reference videos, but does not support reference audio. The legacy `kling-video` and `model_name` modes remain as backwards-compatible endpoints.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
+        "description": "OpenAI Sora video generation API in a compatible format. Supports text-to-video and image/video reference generation modes.\n\n- `POST /v1/videos`: Create video task\n- `GET /v1/videos/{video_id}`: Query task status\n- `GET /v1/videos/{video_id}/content`: Retrieve the video binary content\n\nCurrently not available externally:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nStandard authentication headers:\n- `Content-Type: application/json`\n\n1. Use `POST /v1/videos` to create a task and obtain `id`\n2. Poll `GET /v1/videos/{id}` until `completed` or `failed`\n3. After completion, prefer using `video_url` returned in the response\n4. For unified download, call `GET /v1/videos/{id}/content`\n\nCore parameters:\n- `model: string`: Required, public model name\n- `prompt: string`: Recommended, video generation description\n- `seconds: number|string`: Optional, target duration\n- `duration: number|string`: Optional, duration alias\n- `size: string`: Optional, output resolution\n- `mode: string`: Optional, common values: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nCommon compatibility parameters:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling common extended parameters:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo series\n\nNote: `stable`, `official`, and similar labels indicate different groups, not external `model` suffixes; when calling, keep `model` as the base model name, and let the account or token group determine which group is actually used.\n\n#### Veo 3.x main model\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommendations:\n- For text-to-video only, prefer the `veo3*` / `veo3.1*` base models\n- For image-to-video or reference-to-video scenarios, it is recommended to explicitly pass `mode + image_url/reference_images`\n\n### 4.2 Sora series\n\nBase models:\n- `sora-2`\n- `sora-2-pro`\n\nRecommendations:\n- `sora-2*` is suitable for general-purpose use\n- To use groups such as `stable` / `official`, keep `model` as the base model name and do not append any suffix to the model name.\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse series\n\nPublic model:\n- `happyhorse-1.0`\n\nRecommendations:\n- `happyhorse-1.0` are distinguished by `mode` into `t2v`, `i2v`, `r2v`, and `video_edit`.\n- In Sora-compatible format, it is recommended to pass media items in the `content` array for reference images.\n- Use `type=text` for text items and `type=image_url` for media items, and optionally use `role` and `name` to indicate the asset's purpose.\n\nRequest example:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance Series\n\nPublic model:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommendations:\n- For text-to-video, prefer `*-t2v-*` or `pro / fast`\n- For image-to-video, prefer `*-i2v-*`\n- For scenarios with complex reference materials, prefer `content`\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok Video Series\n\nPublic model:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nCommon parameters:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExample:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling Video Main Model\n\nPublic base model:\n- `kling-video`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCommon `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nMinimum input parameters:\n- Text-to-video: `model + model_name + prompt + mode=t2v`\n- Image-to-video: `model + model_name + prompt + mode=i2v + image`\n- Multi-image reference: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Video extension: `model + model_name + mode=extend + video_id`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo Video Series\n\nPublic model:\n- `minimax-h3`\n- `hailuo-2.3`\n\nRecommendations:\n- `minimax-h3` supports text-to-video, image references, and audio references. We recommend mixing text and assets via `content`; you can also use compatible fields such as `image_urls` and `audio_urls`.\n- `hailuo-2.3` requires a first-frame image. We recommend passing the `image_url` field of `role=first_frame` in `content`, or using `image_urls` to pass the first-frame image.\n- `minimax-h3` commonly uses `duration=5~15` and `resolution=1440p`; `hailuo-2.3` commonly uses `duration=6` or `10` and `resolution=768p`.\n\n`minimax-h3` Example:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` Example:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Minimum input: `model + prompt`\n\n- `mode=i2v`\n- Minimum input: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Minimum input: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Minimum input: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Minimum input: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni usage instructions\n\n- `gemini-omni` is the publicly exposed video model name of new-api, and can be called directly via `POST /v1/videos`.\n- `mode=t2v`: text-to-video, with the minimum input parameter being `model + prompt`.\n- `mode=r2v`: reference image/reference material generation; images can be placed in `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference`, or `content`.\n- `mode=edit`: video editing; videos can be placed in `video`, `video_url`, `videos`, or `content`, and reference images can also be provided at the same time.\n- The duration field can use `seconds` or `duration`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\n## Kling 4.0\n\nPublic models: `kling-4.0` (720p) and `kling-4.0-1080p`. In the native format, use `POST /text-to-video/kling-4.0`, `POST /image-to-video/kling-4.0`, and `POST /omni-video/kling-4.0`, and query through `GET /tasks?task_ids=任务ID`. Native requests do not require `model`; resolution is selected by `settings.resolution`, with 1080p as the default. Native reference image/video types are `refer_image` and `feature_video`; creation returns a `data` object, and queries return a `data` array. Submit through `POST /api/v3/contents/generations/tasks` or `POST /v1/videos`, and query through `GET /{task_id}` at the corresponding path. Both entry points support the `contents/settings/options` request body. `/v1/videos` is also compatible with `prompt`, `seconds`, `size`, and `input_reference` in the OpenAI video format. In `contents`, `type=prompt` is text; `type=reference_image` and `reference_video` are reference assets; and `first_frame` and `last_frame` are the first and last frames. `kling-4.0` corresponds to 720p, and `kling-4.0-1080p` corresponds to 1080p; ensure that `settings.resolution` matches the model name. In `settings`, use `duration` (4–30 seconds), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1), and `audio`. The current API supports up to 10 reference images and 5 reference videos, but does not support reference audio. The legacy `kling-video` and `model_name` modes remain available as backward-compatible historical APIs.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
         "operationId": "createVideo",
         "tags": [
           "Video generation Sora compatible formats"
@@ -5975,6 +5975,887 @@
         ],
         "x-mint": {
           "href": "/api-reference/en/video-generation-omni-and-veo-formats/query-tasks-omni-and-veo-formats"
+        }
+      }
+    },
+    "/text-to-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 Native Text-to-Video",
+        "operationId": "create_kling4_native_text_to_video",
+        "tags": [
+          "Video generation Kling format"
+        ],
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nKling 4.0 native task API. Authenticate using this site's Bearer API Key. The request body does not require model; settings.resolution=720p uses kling-4.0, while 1080p uses kling-4.0-1080p, with 1080p as the default. After successful creation, use the returned data.id to call GET /tasks?task_ids=task ID; separate multiple IDs with commas. The returned data is an array, and the result video is available at data[].outputs[].url.\n\nThe currently supported generation scenarios correspond to prompts, first_frame, last_frame, refer_image, and feature_video. middle_frame, base_video, element, voice, audio references, callbacks, and custom external task IDs are not supported. A non-empty options.callback_url, non-empty options.external_task_id, non-empty contents.id, or any other unsupported field will return 400. options may be omitted or passed as an empty object; watermark_info.enabled=false may also be passed. Enabling watermarks is not currently supported. Supported durations are 4 to 30 seconds, with a default of 10 seconds; 3 seconds is not supported. The default aspect ratio is 16:9; explicitly specifying adaptive will return 400.\n\nFor text-to-video, pass prompt at the top level; contents is not required.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "prompt"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "enum": [
+                          "21:9",
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
+                        "default": "16:9"
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "You can omit it, pass an empty object, or explicitly disable the watermark.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {},
+                    "prompt": "A cinematic landscape with natural motion"
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {},
+                    "prompt": "A cinematic landscape with natural motion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Task ID on this site. Pass it as-is when querying."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Creation time, in Unix milliseconds."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Update time, in Unix milliseconds."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Success",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request parameters are invalid or contain unsupported fields."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-kling-format/kling-4.0-native-text-to-video"
+        }
+      }
+    },
+    "/image-to-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 Native Image-to-Video",
+        "operationId": "create_kling4_native_image_to_video",
+        "tags": [
+          "Video generation Kling format"
+        ],
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nKling 4.0 native task API. Authenticate using this site's Bearer API Key. The request body does not require model; settings.resolution=720p uses kling-4.0, while 1080p uses kling-4.0-1080p, with 1080p as the default. After successful creation, use the returned data.id to call GET /tasks?task_ids=task ID; separate multiple IDs with commas. The returned data is an array, and the result video is available at data[].outputs[].url.\n\nThe currently supported generation scenarios correspond to prompts, first_frame, last_frame, refer_image, and feature_video. middle_frame, base_video, element, voice, audio references, callbacks, and custom external task IDs are not supported. A non-empty options.callback_url, non-empty options.external_task_id, non-empty contents.id, or any other unsupported field will return 400. options may be omitted or passed as an empty object; watermark_info.enabled=false may also be passed. Enabling watermarks is not currently supported. Supported durations are 4 to 30 seconds, with a default of 10 seconds; 3 seconds is not supported. The default aspect ratio is 16:9; explicitly specifying adaptive will return 400.\n\nFor image-to-video generation, `contents` must include non-empty `prompt` and `first_frame`. You may also provide `last_frame`; each of the first and last frames can contain at most one image. `settings.aspect_ratio` is not accepted.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contents"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "You can omit it, pass an empty object, or explicitly disable the watermark.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "contents": {
+                    "type": "array",
+                    "minItems": 2,
+                    "description": "A non-empty prompt and supported media must both be included. Image-to-video requests must include first_frame. See the API documentation for media quantity limits.",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "pattern": "^https?://"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      }
+                    ]
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Task ID on this site. Pass it as-is when querying."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Creation time, in Unix milliseconds."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Update time, in Unix milliseconds."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Success",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request parameters are invalid or contain unsupported fields."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-kling-format/kling-4.0-native-image-to-video"
+        }
+      }
+    },
+    "/omni-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 Native All-in-One Reference",
+        "operationId": "create_kling4_native_omni_video",
+        "tags": [
+          "Video generation Kling format"
+        ],
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nKling 4.0 native task API. Authenticate using this site's Bearer API Key. The request body does not require model; settings.resolution=720p uses kling-4.0, while 1080p uses kling-4.0-1080p, with 1080p as the default. After successful creation, use the returned data.id to call GET /tasks?task_ids=task ID; separate multiple IDs with commas. The returned data is an array, and the result video is available at data[].outputs[].url.\n\nThe currently supported generation scenarios correspond to prompts, first_frame, last_frame, refer_image, and feature_video. middle_frame, base_video, element, voice, audio references, callbacks, and custom external task IDs are not supported. A non-empty options.callback_url, non-empty options.external_task_id, non-empty contents.id, or any other unsupported field will return 400. options may be omitted or passed as an empty object; watermark_info.enabled=false may also be passed. Enabling watermarks is not currently supported. Supported durations are 4 to 30 seconds, with a default of 10 seconds; 3 seconds is not supported. The default aspect ratio is 16:9; explicitly specifying adaptive will return 400.\n\nFor universal reference, `contents` must include a non-empty `prompt` and at least one supported media item. Supported media include first and last frames, `refer_image` reference images, and `feature_video` reference videos. `first_frame`, `last_frame`, and `refer_image` each support up to 1 item, while `feature_video` supports up to 5 items. Multiple reference images referenced by ID are not currently supported.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contents"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "enum": [
+                          "21:9",
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
+                        "default": "16:9"
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "You can omit it, pass an empty object, or explicitly disable the watermark.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "contents": {
+                    "type": "array",
+                    "minItems": 2,
+                    "description": "A non-empty prompt and supported media must both be included. Image-to-video requests must include first_frame. See the API documentation for media quantity limits.",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "first_frame",
+                                "last_frame",
+                                "refer_image",
+                                "feature_video"
+                              ]
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "pattern": "^https?://"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://example.com/reference.jpg"
+                      },
+                      {
+                        "type": "feature_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ]
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://example.com/reference.jpg"
+                      },
+                      {
+                        "type": "feature_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Task ID on this site. Pass it as-is when querying."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Creation time, in Unix milliseconds."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Update time, in Unix milliseconds."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Success",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request parameters are invalid or contain unsupported fields."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-kling-format/kling-4.0-native-all-in-one-reference"
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "summary": "Batch Query Kling 4.0 Native Tasks",
+        "operationId": "query_kling4_native_tasks",
+        "tags": [
+          "Video generation Kling format"
+        ],
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUse the platform task IDs returned by the create endpoint. task_ids must be 1 to 100 unique comma-separated IDs; only Kling 4.0 tasks belonging to the user associated with the current token can be queried. A 404 is returned for the entire request if any ID does not exist, does not belong to the current user, or is not a Kling 4.0 task. data is always an array, and outputs contains the video URL after completion. external_task_ids and list queries via POST /tasks are not supported.",
+        "parameters": [
+          {
+            "name": "task_ids",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_example_1,task_example_2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Task ID on this site. Pass it as-is when querying."
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "submitted",
+                              "processing",
+                              "succeeded",
+                              "failed"
+                            ]
+                          },
+                          "create_time": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Creation time, in Unix milliseconds."
+                          },
+                          "update_time": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Update time, in Unix milliseconds."
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "maxLength": 0
+                          },
+                          "message": {
+                            "type": "string",
+                            "description": "Task status description; if the task fails, this contains the error reason."
+                          },
+                          "outputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "video"
+                                  ]
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "duration": {
+                                  "type": "string",
+                                  "description": "Video duration, in seconds."
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Success",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": [
+                        {
+                          "id": "task_example",
+                          "status": "succeeded",
+                          "create_time": 1792710000000,
+                          "update_time": 1792710000000,
+                          "external_id": "",
+                          "message": "",
+                          "outputs": [
+                            {
+                              "type": "video",
+                              "id": "video_example",
+                              "url": "https://example.com/result.mp4",
+                              "duration": "10"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "task_ids are missing or the parameters are invalid."
+          },
+          "404": {
+            "description": "The task does not exist or is inaccessible."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/en/video-generation-kling-format/batch-query-kling-4.0-native-tasks"
         }
       }
     }

@@ -895,7 +895,7 @@
       "post": {
         "summary": "Создать видео",
         "deprecated": false,
-        "description": "Интерфейс генерации видео в совместимом формате OpenAI Sora. Поддерживает режимы генерации видео по тексту и по референсу изображения/видео.\n\n- `POST /v1/videos`: Создание задачи генерации видео\n- `GET /v1/videos/{video_id}`: Запрос статуса задачи\n- `GET /v1/videos/{video_id}/content`: получить двоичное содержимое видео\n\nВ настоящее время недоступно внешним пользователям:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nСтандартные заголовки аутентификации:\n- `Content-Type: application/json`\n\n1. Создайте задачу через `POST /v1/videos` и получите `id`\n2. Выполняйте опрос `GET /v1/videos/{id}`, пока не получите `completed` или `failed`\n3. После завершения в первую очередь используйте `video_url` из ответа\n4. Если требуется унифицированная загрузка, вызовите `GET /v1/videos/{id}/content`\n\nОсновные параметры:\n- `model: string`: обязательно, внешнее имя модели\n- `prompt: string`: рекомендуется, описание для генерации видео\n- `seconds: number|string`: необязательно, целевая длительность\n- `duration: number|string`: необязательно, псевдоним длительности\n- `size: string`: необязательно, размер выходного видео\n- `mode: string`: необязательно, распространённые значения: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nЧасто используемые совместимые параметры:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nРаспространённые расширенные параметры Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Серия Veo\n\nПримечание: `stable`, `official` и т. п. обозначают разные группы, а не внешний суффикс `model`; при вызове сохраняйте `model` как базовое имя модели, а то, через какую группу пойдёт запрос, определяется группой аккаунта или токена.\n\n#### Основная модель Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nРекомендации:\n- Для генерации видео только по тексту в первую очередь используйте основные модели `veo3*` / `veo3.1*`\n- Для сценариев генерации видео по изображению или по референсу рекомендуется явно передавать `mode + image_url/reference_images`\n\n### 4.2 Серия Sora\n\nБазовые модели:\n- `sora-2`\n- `sora-2-pro`\n\nРекомендации:\n- `sora-2*` подходит для общего использования\n- Если нужно использовать группы `stable` / `official` и т. п., сохраняйте `model` как базовое имя модели и не добавляйте суффикс к имени модели.\n\nПример запроса:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 Серия HappyHorse\n\nПубличная модель:\n- `happyhorse-1.0`\n\nРекомендации:\n- `happyhorse-1.0` различаются с помощью `mode`: `t2v`, `i2v`, `r2v`, `video_edit`.\n- В совместимом формате Sora для изображений-референсов рекомендуется передавать медиаэлементы массивом `content`.\n- Для текстовых элементов используйте `type=text`, для медиаэлементов — `type=image_url`; также можно использовать `role` и `name` для обозначения назначения материала.\n\nПример запроса:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Серия Seedance\n\nПубличная модель:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nРекомендации:\n- Для генерации видео по тексту в приоритете `*-t2v-*` или `pro / fast`\n- Для генерации видео по изображению в приоритете `*-i2v-*`\n- Для сценариев со сложными референсными материалами предпочтительно использовать `content`\n\nПример запроса:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Видеосерия Grok\n\nПубличная модель:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nЧасто используемые параметры:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nПример:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Основная видеомодель Kling\n\nОсновная публичная модель:\n- `kling-video`\n\nОбязательно:\n- `model`\n- `model_name`\n\nПоддерживаемые `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nРаспространённые `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nМинимальные входные параметры:\n- Генерация видео по тексту: `model + model_name + prompt + mode=t2v`\n- Генерация видео по изображению: `model + model_name + prompt + mode=i2v + image`\n- Референс по нескольким изображениям: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Продление видео: `model + model_name + mode=extend + video_id`\n\nПример:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 Серия видео MiniMax / Hailuo\n\nПубличная модель:\n- `minimax-h3`\n- `hailuo-2.3`\n\nРекомендации:\n- `minimax-h3` поддерживает генерацию видео по тексту, а также использование референсных изображений и аудио; рекомендуется смешивать текст и материалы через `content`; также можно использовать совместимые поля, такие как `image_urls` и `audio_urls`.\n- `hailuo-2.3` требует изображение первого кадра; рекомендуется передавать элемент `image_url` из `role=first_frame` в `content`, либо использовать `image_urls` для передачи изображения первого кадра.\n- `minimax-h3` обычно используют `duration=5~15` и `resolution=1440p`; `hailuo-2.3` обычно используют `duration=6` или `10` и `resolution=768p`.\n\nПример `minimax-h3`:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\nПример `hailuo-2.3`:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Минимальное количество входных параметров: `model + prompt`\n\n- `mode=i2v`\n- Минимальное количество входных параметров: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Минимальное количество входных параметров: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Минимальное количество входных параметров: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Минимальное количество входных параметров: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Инструкция по вызову Gemini Omni\n\n- `gemini-omni` — публичное имя видеомодели в new-api, можно напрямую вызывать через `POST /v1/videos`.\n- `mode=t2v`: генерация видео по тексту, минимальный входной параметр — `model + prompt`.\n- `mode=r2v`: генерация по референсному изображению/материалу, изображение можно указать в `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference` или `content`.\n- `mode=edit`: редактирование видео, видео можно указать в `video`, `video_url`, `videos` или `content`, также можно одновременно передать референсное изображение.\n- Для поля длительности можно использовать `seconds` или `duration` — будет автоматически сопоставлено с вариантами 4 / 6 / 8 / 10 секунд.\n\n## Kling 4.0\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
+        "description": "Интерфейс генерации видео в совместимом формате OpenAI Sora. Поддерживает режимы генерации видео по тексту и по референсу изображения/видео.\n\n- `POST /v1/videos`: Создание задачи генерации видео\n- `GET /v1/videos/{video_id}`: Запрос статуса задачи\n- `GET /v1/videos/{video_id}/content`: получить двоичное содержимое видео\n\nВ настоящее время недоступно внешним пользователям:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nСтандартные заголовки аутентификации:\n- `Content-Type: application/json`\n\n1. Создайте задачу через `POST /v1/videos` и получите `id`\n2. Выполняйте опрос `GET /v1/videos/{id}`, пока не получите `completed` или `failed`\n3. После завершения в первую очередь используйте `video_url` из ответа\n4. Если требуется унифицированная загрузка, вызовите `GET /v1/videos/{id}/content`\n\nОсновные параметры:\n- `model: string`: обязательно, внешнее имя модели\n- `prompt: string`: рекомендуется, описание для генерации видео\n- `seconds: number|string`: необязательно, целевая длительность\n- `duration: number|string`: необязательно, псевдоним длительности\n- `size: string`: необязательно, размер выходного видео\n- `mode: string`: необязательно, распространённые значения: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nЧасто используемые совместимые параметры:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nРаспространённые расширенные параметры Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Серия Veo\n\nПримечание: `stable`, `official` и т. п. обозначают разные группы, а не внешний суффикс `model`; при вызове сохраняйте `model` как базовое имя модели, а то, через какую группу пойдёт запрос, определяется группой аккаунта или токена.\n\n#### Основная модель Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nРекомендации:\n- Для генерации видео только по тексту в первую очередь используйте основные модели `veo3*` / `veo3.1*`\n- Для сценариев генерации видео по изображению или по референсу рекомендуется явно передавать `mode + image_url/reference_images`\n\n### 4.2 Серия Sora\n\nБазовые модели:\n- `sora-2`\n- `sora-2-pro`\n\nРекомендации:\n- `sora-2*` подходит для общего использования\n- Если нужно использовать группы `stable` / `official` и т. п., сохраняйте `model` как базовое имя модели и не добавляйте суффикс к имени модели.\n\nПример запроса:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 Серия HappyHorse\n\nПубличная модель:\n- `happyhorse-1.0`\n\nРекомендации:\n- `happyhorse-1.0` различаются с помощью `mode`: `t2v`, `i2v`, `r2v`, `video_edit`.\n- В совместимом формате Sora для изображений-референсов рекомендуется передавать медиаэлементы массивом `content`.\n- Для текстовых элементов используйте `type=text`, для медиаэлементов — `type=image_url`; также можно использовать `role` и `name` для обозначения назначения материала.\n\nПример запроса:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Серия Seedance\n\nПубличная модель:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nРекомендации:\n- Для генерации видео по тексту в приоритете `*-t2v-*` или `pro / fast`\n- Для генерации видео по изображению в приоритете `*-i2v-*`\n- Для сценариев со сложными референсными материалами предпочтительно использовать `content`\n\nПример запроса:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Видеосерия Grok\n\nПубличная модель:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nЧасто используемые параметры:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nПример:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Основная видеомодель Kling\n\nОсновная публичная модель:\n- `kling-video`\n\nОбязательно:\n- `model`\n- `model_name`\n\nПоддерживаемые `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nРаспространённые `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nМинимальные входные параметры:\n- Генерация видео по тексту: `model + model_name + prompt + mode=t2v`\n- Генерация видео по изображению: `model + model_name + prompt + mode=i2v + image`\n- Референс по нескольким изображениям: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Продление видео: `model + model_name + mode=extend + video_id`\n\nПример:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 Серия видео MiniMax / Hailuo\n\nПубличная модель:\n- `minimax-h3`\n- `hailuo-2.3`\n\nРекомендации:\n- `minimax-h3` поддерживает генерацию видео по тексту, а также использование референсных изображений и аудио; рекомендуется смешивать текст и материалы через `content`; также можно использовать совместимые поля, такие как `image_urls` и `audio_urls`.\n- `hailuo-2.3` требует изображение первого кадра; рекомендуется передавать элемент `image_url` из `role=first_frame` в `content`, либо использовать `image_urls` для передачи изображения первого кадра.\n- `minimax-h3` обычно используют `duration=5~15` и `resolution=1440p`; `hailuo-2.3` обычно используют `duration=6` или `10` и `resolution=768p`.\n\nПример `minimax-h3`:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\nПример `hailuo-2.3`:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Минимальное количество входных параметров: `model + prompt`\n\n- `mode=i2v`\n- Минимальное количество входных параметров: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Минимальное количество входных параметров: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Минимальное количество входных параметров: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Минимальное количество входных параметров: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Инструкция по вызову Gemini Omni\n\n- `gemini-omni` — публичное имя видеомодели в new-api, можно напрямую вызывать через `POST /v1/videos`.\n- `mode=t2v`: генерация видео по тексту, минимальный входной параметр — `model + prompt`.\n- `mode=r2v`: генерация по референсному изображению/материалу, изображение можно указать в `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference` или `content`.\n- `mode=edit`: редактирование видео, видео можно указать в `video`, `video_url`, `videos` или `content`, также можно одновременно передать референсное изображение.\n- Для поля длительности можно использовать `seconds` или `duration` — будет автоматически сопоставлено с вариантами 4 / 6 / 8 / 10 секунд.\n\n## Kling 4.0\n\nВнешние модели: `kling-4.0` (720p), `kling-4.0-1080p`. В нативном формате можно использовать `POST /text-to-video/kling-4.0`, `POST /image-to-video/kling-4.0`, `POST /omni-video/kling-4.0` и выполнять запросы через `GET /tasks?task_ids=任务ID`. Для нативных запросов `model` не требуется; разрешение выбирается с помощью `settings.resolution`, по умолчанию — 1080p. Типы нативных эталонных изображений/видео: `refer_image`, `feature_video`; создание возвращает объект `data`, а запрос — массив `data`. Отправка возможна через `POST /api/v3/contents/generations/tasks` или `POST /v1/videos`, а запрос — через `GET /{task_id}` по соответствующему пути. Обе точки входа поддерживают тело запроса `contents/settings/options`. `/v1/videos` также совместим с `prompt`, `seconds`, `size` и `input_reference` в видеоформате OpenAI. В `contents` `type=prompt` — это текст, `type=reference_image` и `reference_video` — эталонные материалы, а `first_frame` и `last_frame` — первый и последний кадры. `kling-4.0` соответствует 720p, `kling-4.0-1080p` — 1080p; укажите в `settings.resolution` имя, совпадающее с именем модели. В `settings` используются `duration` (4–30 секунд), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1), `audio`. Текущий API поддерживает не более 10 эталонных изображений и 5 эталонных видео, эталонный аудиофайл не поддерживается. Устаревшие режимы `kling-video` и `model_name` по-прежнему являются интерфейсами для обратной совместимости.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
         "operationId": "createVideo",
         "tags": [
           "Совместимый формат для Sora генерации видео"
@@ -5975,6 +5975,887 @@
         ],
         "x-mint": {
           "href": "/api-reference/ru/видео-генерация-omni-и-формат-veo/запрос-задачи-формат-omni-и-veo"
+        }
+      }
+    },
+    "/text-to-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 нативная генерация видео из текста",
+        "operationId": "create_kling4_native_text_to_video",
+        "tags": [
+          "ФорматKling генерации видео"
+        ],
+        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nНативный интерфейс задач Kling 4.0. Для аутентификации используйте Bearer API Key этого сайта. В теле запроса не требуется model; при settings.resolution=720p используется kling-4.0, при 1080p — kling-4.0-1080p; по умолчанию — 1080p. После успешного создания используйте возвращённый data.id для вызова GET /tasks?task_ids=ID_задачи; несколько ID разделяйте запятыми. data в ответе на запрос представляет собой массив, URL результирующего видео находится в data[].outputs[].url.\n\nВ настоящее время поддерживаются соответствующие сценарии генерации для промпта, first_frame, last_frame, refer_image и feature_video. Не поддерживаются middle_frame, base_video, element, voice, аудиореференсы, обратные вызовы и пользовательские внешние ID задач; непустые options.callback_url, options.external_task_id, contents.id и другие неподдерживаемые поля приведут к ошибке 400. Параметр options можно не указывать или передать пустой объект; также можно передать watermark_info.enabled=false. Включение водяного знака пока не поддерживается. В настоящее время поддерживается длительность от 4 до 30 секунд, по умолчанию — 10 секунд; длительность 3 секунды не поддерживается. Соотношение сторон по умолчанию — 16:9; при явном указании adaptive будет возвращена ошибка 400.\n\nДля генерации видео из текста передавайте prompt на верхнем уровне; contents не требуется.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "prompt"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "enum": [
+                          "21:9",
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
+                        "default": "16:9"
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Можно не указывать, передать пустой объект или явно отключить водяной знак.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {},
+                    "prompt": "A cinematic landscape with natural motion"
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {},
+                    "prompt": "A cinematic landscape with natural motion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID задачи на этом сайте; при запросе передавайте без изменений."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Время создания в миллисекундах Unix."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Время обновления в миллисекундах Unix."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Успешно",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Параметры запроса недействительны или содержат неподдерживаемые поля."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/форматkling-генерации-видео/kling-4.0-нативная-генерация-видео-из-текста"
+        }
+      }
+    },
+    "/image-to-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 нативная генерация видео из изображений",
+        "operationId": "create_kling4_native_image_to_video",
+        "tags": [
+          "ФорматKling генерации видео"
+        ],
+        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nНативный интерфейс задач Kling 4.0. Для аутентификации используйте Bearer API Key этого сайта. В теле запроса не требуется model; при settings.resolution=720p используется kling-4.0, при 1080p — kling-4.0-1080p; по умолчанию — 1080p. После успешного создания используйте возвращённый data.id для вызова GET /tasks?task_ids=ID_задачи; несколько ID разделяйте запятыми. data в ответе на запрос представляет собой массив, URL результирующего видео находится в data[].outputs[].url.\n\nВ настоящее время поддерживаются соответствующие сценарии генерации для промпта, first_frame, last_frame, refer_image и feature_video. Не поддерживаются middle_frame, base_video, element, voice, аудиореференсы, обратные вызовы и пользовательские внешние ID задач; непустые options.callback_url, options.external_task_id, contents.id и другие неподдерживаемые поля приведут к ошибке 400. Параметр options можно не указывать или передать пустой объект; также можно передать watermark_info.enabled=false. Включение водяного знака пока не поддерживается. В настоящее время поддерживается длительность от 4 до 30 секунд, по умолчанию — 10 секунд; длительность 3 секунды не поддерживается. Соотношение сторон по умолчанию — 16:9; при явном указании adaptive будет возвращена ошибка 400.\n\nДля генерации видео из изображения `contents` должен содержать непустые `prompt` и `first_frame`; также можно передать `last_frame`. Для первого и последнего кадров допускается не более одного изображения для каждого. `settings.aspect_ratio` не поддерживается.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contents"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Можно не указывать, передать пустой объект или явно отключить водяной знак.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "contents": {
+                    "type": "array",
+                    "minItems": 2,
+                    "description": "Необходимо одновременно указать непустой prompt и поддерживаемый медиаресурс; для генерации видео из изображения обязательно поле first_frame. Ограничения на количество каждого типа медиаресурсов см. в описании API.",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "pattern": "^https?://"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      }
+                    ]
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID задачи на этом сайте; при запросе передавайте без изменений."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Время создания в миллисекундах Unix."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Время обновления в миллисекундах Unix."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Успешно",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Параметры запроса недействительны или содержат неподдерживаемые поля."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/форматkling-генерации-видео/kling-4.0-нативная-генерация-видео-из-изображений"
+        }
+      }
+    },
+    "/omni-video/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 Универсальная нативная справка",
+        "operationId": "create_kling4_native_omni_video",
+        "tags": [
+          "ФорматKling генерации видео"
+        ],
+        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nНативный интерфейс задач Kling 4.0. Для аутентификации используйте Bearer API Key этого сайта. В теле запроса не требуется model; при settings.resolution=720p используется kling-4.0, при 1080p — kling-4.0-1080p; по умолчанию — 1080p. После успешного создания используйте возвращённый data.id для вызова GET /tasks?task_ids=ID_задачи; несколько ID разделяйте запятыми. data в ответе на запрос представляет собой массив, URL результирующего видео находится в data[].outputs[].url.\n\nВ настоящее время поддерживаются соответствующие сценарии генерации для промпта, first_frame, last_frame, refer_image и feature_video. Не поддерживаются middle_frame, base_video, element, voice, аудиореференсы, обратные вызовы и пользовательские внешние ID задач; непустые options.callback_url, options.external_task_id, contents.id и другие неподдерживаемые поля приведут к ошибке 400. Параметр options можно не указывать или передать пустой объект; также можно передать watermark_info.enabled=false. Включение водяного знака пока не поддерживается. В настоящее время поддерживается длительность от 4 до 30 секунд, по умолчанию — 10 секунд; длительность 3 секунды не поддерживается. Соотношение сторон по умолчанию — 16:9; при явном указании adaptive будет возвращена ошибка 400.\n\nДля универсального референса поле contents должно содержать непустой prompt и как минимум один поддерживаемый медиафайл. Поддерживаются начальный и конечный кадры, эталонные изображения refer_image и эталонные видео feature_video; для first_frame, last_frame и refer_image допускается не более одного элемента каждого типа, для feature_video — не более 5 элементов. Сценарии с несколькими эталонными изображениями, на которые ссылаются по id, пока не поддерживаются.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contents"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "resolution": {
+                        "type": "string",
+                        "enum": [
+                          "720p",
+                          "1080p"
+                        ],
+                        "default": "1080p"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "minimum": 4,
+                        "maximum": 30,
+                        "default": 10
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "enum": [
+                          "21:9",
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
+                        "default": "16:9"
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Можно не указывать, передать пустой объект или явно отключить водяной знак.",
+                    "properties": {
+                      "watermark_info": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "enabled"
+                        ],
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean",
+                            "enum": [
+                              false
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "contents": {
+                    "type": "array",
+                    "minItems": 2,
+                    "description": "Необходимо одновременно указать непустой prompt и поддерживаемый медиаресурс; для генерации видео из изображения обязательно поле first_frame. Ограничения на количество каждого типа медиаресурсов см. в описании API.",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "first_frame",
+                                "last_frame",
+                                "refer_image",
+                                "feature_video"
+                              ]
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "pattern": "^https?://"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "kling4_native_720p": {
+                  "summary": "Kling 4.0 720p",
+                  "value": {
+                    "settings": {
+                      "resolution": "720p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://example.com/reference.jpg"
+                      },
+                      {
+                        "type": "feature_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ]
+                  }
+                },
+                "kling4_native_1080p": {
+                  "summary": "Kling 4.0 1080p",
+                  "value": {
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {},
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/first-frame.jpg"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://example.com/reference.jpg"
+                      },
+                      {
+                        "type": "feature_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID задачи на этом сайте; при запросе передавайте без изменений."
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "submitted",
+                            "processing",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "create_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Время создания в миллисекундах Unix."
+                        },
+                        "update_time": {
+                          "type": "integer",
+                          "format": "int64",
+                          "description": "Время обновления в миллисекундах Unix."
+                        },
+                        "external_id": {
+                          "type": "string",
+                          "maxLength": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Успешно",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": {
+                        "id": "task_example",
+                        "status": "submitted",
+                        "create_time": 1792710000000,
+                        "update_time": 1792710000000,
+                        "external_id": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Параметры запроса недействительны или содержат неподдерживаемые поля."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/форматkling-генерации-видео/kling-4.0-универсальная-нативная-справка"
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "summary": "Пакетный запрос нативных задач Kling 4.0",
+        "operationId": "query_kling4_native_tasks",
+        "tags": [
+          "ФорматKling генерации видео"
+        ],
+        "description": "Эта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nИспользуйте ID задач на этом сайте, возвращённые интерфейсом создания. task_ids — это от 1 до 100 уникальных ID, разделённых запятыми; запрашиваются только задачи Kling 4.0 пользователя, которому принадлежит текущий токен. Если какой-либо ID не существует, не принадлежит текущему пользователю или не является задачей Kling 4.0, для всего запроса возвращается 404. data всегда является массивом; после завершения outputs содержит URL видео. external_task_ids и запросы списка через POST /tasks не поддерживаются。",
+        "parameters": [
+          {
+            "name": "task_ids",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "task_example_1,task_example_2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "ID задачи на этом сайте; при запросе передавайте без изменений."
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "submitted",
+                              "processing",
+                              "succeeded",
+                              "failed"
+                            ]
+                          },
+                          "create_time": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Время создания в миллисекундах Unix."
+                          },
+                          "update_time": {
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Время обновления в миллисекундах Unix."
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "maxLength": 0
+                          },
+                          "message": {
+                            "type": "string",
+                            "description": "Описание статуса задачи; при сбое содержит причину ошибки."
+                          },
+                          "outputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "video"
+                                  ]
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "duration": {
+                                  "type": "string",
+                                  "description": "Длительность видео в секундах."
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Успешно",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "request_example",
+                      "data": [
+                        {
+                          "id": "task_example",
+                          "status": "succeeded",
+                          "create_time": 1792710000000,
+                          "update_time": 1792710000000,
+                          "external_id": "",
+                          "message": "",
+                          "outputs": [
+                            {
+                              "type": "video",
+                              "id": "video_example",
+                              "url": "https://example.com/result.mp4",
+                              "duration": "10"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Отсутствует task_ids или недопустимый параметр."
+          },
+          "404": {
+            "description": "Задача не существует или недоступна."
+          }
+        },
+        "x-doc-source": "relay-openapi+contract-transform",
+        "x-drift-status": "ok",
+        "x-drift-count": 0,
+        "x-drift-types": [],
+        "x-mint": {
+          "href": "/api-reference/ru/форматkling-генерации-видео/пакетный-запрос-нативных-задач-kling-4.0"
         }
       }
     }
