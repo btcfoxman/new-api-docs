@@ -43,8 +43,8 @@ description: "当前项目不是只有一种协议。为降低接入成本，公
 
 当前还公开少量模型专用接口，例如：
 
-- `POST /kling/v1/videos/text2video`
-- `POST /kling/v1/videos/image2video`
+- Kling 4.0：`POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos`，请求体使用 `contents/settings/options`
+- 旧版兼容：`POST /kling/v1/videos/text2video`、`POST /kling/v1/videos/image2video`
 适合：
 - 已经基于对应模型专用协议集成
 - 需要使用该模型专用参数模式

@@ -895,7 +895,7 @@
       "post": {
         "summary": "创建视频",
         "deprecated": false,
-        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容\n\n当前对外不提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 创建任务，获取 `id`\n2. 轮询 `GET /v1/videos/{id}` 直到 `completed` 或 `failed`\n3. 完成后优先使用返回中的 `video_url`\n4. 如需统一下载，调用 `GET /v1/videos/{id}/content`\n\n核心参数：\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，视频生成描述\n- `seconds: number|string`：可选，目标时长\n- `duration: number|string`：可选，时长别名\n- `size: string`：可选，输出尺寸\n- `mode: string`：可选，常见值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用兼容参数：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用扩展参数：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n说明：`stable`、`official` 等表示不同分组，不是对外 `model` 后缀；调用时请保持 `model` 为基础模型名，由账户或令牌分组决定实际走哪个分组。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建议：\n- 纯文生视频优先使用 `veo3*` / `veo3.1*` 主模型\n- 图生或参考生视频场景，建议显式传 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基础模型：\n- `sora-2`\n- `sora-2-pro`\n\n建议：\n- `sora-2*` 适合通用调用\n- 如需使用 `stable` / `official` 等分组，请保持 `model` 为基础模型名，不要在模型名后追加后缀。\n\n请求示例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse 系列\n\n对外模型：\n- `happyhorse-1.0`\n\n建议：\n- `happyhorse-1.0` 通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。\n- Sora 兼容格式中参考图建议使用 `content` 数组传递媒体项。\n- 文本项使用 `type=text`，媒体项使用 `type=image_url` 并可配合 `role`、`name` 标识素材用途。\n\n请求示例：\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance 系列\n\n对外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建议：\n- 文生视频优先 `*-t2v-*` 或 `pro / fast`\n- 图生视频优先 `*-i2v-*`\n- 复杂参考素材场景优先使用 `content`\n\n请求示例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok 视频系列\n\n对外模型：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\n常用参数：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n示例：\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling 视频主模型\n\n对外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常见 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入参：\n- 文生视频：`model + model_name + prompt + mode=t2v`\n- 图生视频：`model + model_name + prompt + mode=i2v + image`\n- 多图参考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 视频延长：`model + model_name + mode=extend + video_id`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo 视频系列\n\n对外模型：\n- `minimax-h3`\n- `hailuo-2.3`\n\n建议：\n- `minimax-h3` 支持文生视频、图片参考和音频参考，推荐通过 `content` 混排文本与素材；也可使用 `image_urls`、`audio_urls` 等兼容字段。\n- `hailuo-2.3` 需要首帧图片，推荐在 `content` 中传 `role=first_frame` 的 `image_url` 项，或使用 `image_urls` 传首帧图片。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n`minimax-h3` 示例：\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` 示例：\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`\n- 最小入参：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 调用说明\n\n- `gemini-omni` 是 new-api 对外公开的视频模型名，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生视频，最小入参为 `model + prompt`。\n- `mode=r2v`：参考图/参考素材生成，图片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：视频编辑，视频可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同时传参考图。\n- 时长字段可用 `seconds` 或 `duration`，会自动匹配到 4 / 6 / 8 / 10 秒档。",
+        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容\n\n当前对外不提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 创建任务，获取 `id`\n2. 轮询 `GET /v1/videos/{id}` 直到 `completed` 或 `failed`\n3. 完成后优先使用返回中的 `video_url`\n4. 如需统一下载，调用 `GET /v1/videos/{id}/content`\n\n核心参数：\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，视频生成描述\n- `seconds: number|string`：可选，目标时长\n- `duration: number|string`：可选，时长别名\n- `size: string`：可选，输出尺寸\n- `mode: string`：可选，常见值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用兼容参数：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用扩展参数：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n说明：`stable`、`official` 等表示不同分组，不是对外 `model` 后缀；调用时请保持 `model` 为基础模型名，由账户或令牌分组决定实际走哪个分组。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建议：\n- 纯文生视频优先使用 `veo3*` / `veo3.1*` 主模型\n- 图生或参考生视频场景，建议显式传 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基础模型：\n- `sora-2`\n- `sora-2-pro`\n\n建议：\n- `sora-2*` 适合通用调用\n- 如需使用 `stable` / `official` 等分组，请保持 `model` 为基础模型名，不要在模型名后追加后缀。\n\n请求示例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse 系列\n\n对外模型：\n- `happyhorse-1.0`\n\n建议：\n- `happyhorse-1.0` 通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。\n- Sora 兼容格式中参考图建议使用 `content` 数组传递媒体项。\n- 文本项使用 `type=text`，媒体项使用 `type=image_url` 并可配合 `role`、`name` 标识素材用途。\n\n请求示例：\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance 系列\n\n对外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建议：\n- 文生视频优先 `*-t2v-*` 或 `pro / fast`\n- 图生视频优先 `*-i2v-*`\n- 复杂参考素材场景优先使用 `content`\n\n请求示例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok 视频系列\n\n对外模型：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\n常用参数：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n示例：\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling 视频主模型\n\n对外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常见 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入参：\n- 文生视频：`model + model_name + prompt + mode=t2v`\n- 图生视频：`model + model_name + prompt + mode=i2v + image`\n- 多图参考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 视频延长：`model + model_name + mode=extend + video_id`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo 视频系列\n\n对外模型：\n- `minimax-h3`\n- `hailuo-2.3`\n\n建议：\n- `minimax-h3` 支持文生视频、图片参考和音频参考，推荐通过 `content` 混排文本与素材；也可使用 `image_urls`、`audio_urls` 等兼容字段。\n- `hailuo-2.3` 需要首帧图片，推荐在 `content` 中传 `role=first_frame` 的 `image_url` 项，或使用 `image_urls` 传首帧图片。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n`minimax-h3` 示例：\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` 示例：\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`\n- 最小入参：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 调用说明\n\n- `gemini-omni` 是 new-api 对外公开的视频模型名，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生视频，最小入参为 `model + prompt`。\n- `mode=r2v`：参考图/参考素材生成，图片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：视频编辑，视频可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同时传参考图。\n- 时长字段可用 `seconds` 或 `duration`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\n## Kling 4.0\n\n对外模型：`kling-4.0`（720p）、`kling-4.0-1080p`。可通过 `POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos` 提交，分别通过对应路径的 `GET /{task_id}` 查询。两种入口均支持 `contents/settings/options` 请求体。`/v1/videos` 也兼容 OpenAI 视频格式的 `prompt`、`seconds`、`size` 和 `input_reference`。`contents` 中 `type=prompt` 为文本，`type=reference_image`、`reference_video` 为参考素材，`first_frame`、`last_frame` 为首尾帧。`kling-4.0` 对应 720p，`kling-4.0-1080p` 对应 1080p；请让 `settings.resolution` 与模型名一致。`settings` 中使用 `duration`（4–30 秒）、`resolution`（720p/1080p）、`aspect_ratio`（21:9、16:9、9:16、1:1）、`audio`。当前接口最多支持 10 张参考图、5 段参考视频，不支持参考音频。旧 `kling-video` 与 `model_name` 模式仍是历史兼容接口。\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
         "operationId": "createVideo",
         "tags": [
           "视频生成Sora兼容格式"
@@ -906,141 +906,327 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "type": "string",
-                    "description": "必填，对外模型名。 `gemini-omni` 可通过 `/v1/videos` 调用。",
-                    "enum": [
-                      "sora-2",
-                      "sora-2-pro",
-                      "gemini-omni",
-                      "happyhorse-1.0",
-                      "happyhorse-1.0-i2v",
-                      "happyhorse-1.0-t2v",
-                      "happyhorse-1.0-r2v",
-                      "happyhorse-1.0-video-edit",
-                      "doubao-seedance-1-0-lite-i2v-250428",
-                      "doubao-seedance-1-0-lite-t2v-250428",
-                      "doubao-seedance-1-0-pro-250528",
-                      "doubao-seedance-1-0-pro-fast-251015",
-                      "doubao-seedance-1-5-pro-251215",
-                      "doubao-seedance-2-0-260128",
-                      "doubao-seedance-2-0-fast-260128",
-                      "sd-2-5",
-                      "veo3",
-                      "veo3-fast",
-                      "veo3-fast-frames",
-                      "veo3-frames",
-                      "veo3-pro",
-                      "veo3-pro-frames",
-                      "veo3.1",
-                      "veo3.1-4k",
-                      "veo3.1-components",
-                      "veo3.1-fast",
-                      "veo3.1-pro",
-                      "veo3.1-pro-4k",
-                      "kling-video",
-                      "grok-imagine-1.0-video",
-                      "grok-imagine-video-1.5-preview",
-                      "grok-video-3",
-                      "minimax-h3",
-                      "hailuo-2.3",
-                      "viduq3-turbo"
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "description": "必填，对外模型名。 `gemini-omni` 可通过 `/v1/videos` 调用。",
+                        "enum": [
+                          "sora-2",
+                          "sora-2-pro",
+                          "gemini-omni",
+                          "happyhorse-1.0",
+                          "happyhorse-1.0-i2v",
+                          "happyhorse-1.0-t2v",
+                          "happyhorse-1.0-r2v",
+                          "happyhorse-1.0-video-edit",
+                          "doubao-seedance-1-0-lite-i2v-250428",
+                          "doubao-seedance-1-0-lite-t2v-250428",
+                          "doubao-seedance-1-0-pro-250528",
+                          "doubao-seedance-1-0-pro-fast-251015",
+                          "doubao-seedance-1-5-pro-251215",
+                          "doubao-seedance-2-0-260128",
+                          "doubao-seedance-2-0-fast-260128",
+                          "sd-2-5",
+                          "veo3",
+                          "veo3-fast",
+                          "veo3-fast-frames",
+                          "veo3-frames",
+                          "veo3-pro",
+                          "veo3-pro-frames",
+                          "veo3.1",
+                          "veo3.1-4k",
+                          "veo3.1-components",
+                          "veo3.1-fast",
+                          "veo3.1-pro",
+                          "veo3.1-pro-4k",
+                          "kling-video",
+                          "grok-imagine-1.0-video",
+                          "grok-imagine-video-1.5-preview",
+                          "grok-video-3",
+                          "minimax-h3",
+                          "hailuo-2.3",
+                          "viduq3-turbo"
+                        ],
+                        "example": "sora-2"
+                      },
+                      "prompt": {
+                        "type": "string",
+                        "description": "统一提示词入口。大多数模型必填。"
+                      },
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "单图入口，部分兼容模式会映射到 images。"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "description": "统一时长入口，部分模型也接受 seconds。"
+                      },
+                      "width": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video width"
+                      },
+                      "height": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video height"
+                      },
+                      "fps": {
+                        "type": "integer",
+                        "example": 30,
+                        "description": "Video frame rate"
+                      },
+                      "seed": {
+                        "type": "integer",
+                        "example": 20231234,
+                        "description": "Random seed"
+                      },
+                      "n": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Number of videos to generate"
+                      },
+                      "response_format": {
+                        "type": "string",
+                        "example": "url",
+                        "description": "Response format"
+                      },
+                      "user": {
+                        "type": "string",
+                        "example": "user-1234",
+                        "description": "User identifier"
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "动态扩展字段容器。大量模型特有字段从这里反序列化。"
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "可选，视频生成模式。 `gemini-omni` 支持 `t2v`、`r2v`、`edit`。"
+                      },
+                      "images": {
+                        "type": "array",
+                        "description": "统一多图入口。Vidu、Seedance、Veo 等会使用。",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "统一尺寸入口，会映射为 resolution/aspect_ratio 等。"
+                      },
+                      "seconds": {
+                        "type": "string",
+                        "description": "Sora 兼容入口，运行时会回退到 duration。"
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "Sora/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
+                      },
+                      "parameters": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "model",
+                      "prompt"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "description": "必填，对外模型名。 `gemini-omni` 可通过 `/v1/videos` 调用。",
+                        "enum": [
+                          "kling-4.0",
+                          "kling-4.0-1080p"
+                        ],
+                        "example": "kling-4.0"
+                      },
+                      "prompt": {
+                        "type": "string",
+                        "description": "视频描述。Kling 4.0 使用 contents 的 prompt 项时无需重复提供。其他模型按各自格式要求提供文本。"
+                      },
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "单图入口，部分兼容模式会映射到 images。"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "description": "统一时长入口，部分模型也接受 seconds。"
+                      },
+                      "width": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video width"
+                      },
+                      "height": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video height"
+                      },
+                      "fps": {
+                        "type": "integer",
+                        "example": 30,
+                        "description": "Video frame rate"
+                      },
+                      "seed": {
+                        "type": "integer",
+                        "example": 20231234,
+                        "description": "Random seed"
+                      },
+                      "n": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Number of videos to generate"
+                      },
+                      "response_format": {
+                        "type": "string",
+                        "example": "url",
+                        "description": "Response format"
+                      },
+                      "user": {
+                        "type": "string",
+                        "example": "user-1234",
+                        "description": "User identifier"
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "动态扩展字段容器。大量模型特有字段从这里反序列化。"
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "可选，视频生成模式。 `gemini-omni` 支持 `t2v`、`r2v`、`edit`。"
+                      },
+                      "images": {
+                        "type": "array",
+                        "description": "统一多图入口。Vidu、Seedance、Veo 等会使用。",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      },
+                      "contents": {
+                        "type": "array",
+                        "minItems": 1,
+                        "description": "Kling 4.0 新版内容项，支持 prompt、reference_image、reference_video、first_frame、last_frame。",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt",
+                                "reference_image",
+                                "reference_video",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "type=prompt 时的文本描述。"
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "description": "参考素材或首尾帧的可访问 URL。"
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "type": "object",
+                        "description": "Kling 4.0 新版时长、分辨率、画幅比例和音频设置。",
+                        "properties": {
+                          "duration": {
+                            "type": "integer",
+                            "minimum": 4,
+                            "maximum": 30,
+                            "example": 4
+                          },
+                          "resolution": {
+                            "type": "string",
+                            "enum": [
+                              "720p",
+                              "1080p"
+                            ]
+                          },
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ]
+                          },
+                          "audio": {
+                            "oneOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ],
+                            "example": "native"
+                          }
+                        }
+                      },
+                      "options": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "Kling 4.0 新版扩展选项。"
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "统一尺寸入口，会映射为 resolution/aspect_ratio 等。"
+                      },
+                      "seconds": {
+                        "type": "string",
+                        "description": "Sora 兼容入口，运行时会回退到 duration。"
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "Sora/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
+                      },
+                      "parameters": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "model"
                     ],
-                    "example": "sora-2"
-                  },
-                  "prompt": {
-                    "type": "string",
-                    "description": "统一提示词入口。大多数模型必填。"
-                  },
-                  "image": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "单图入口，部分兼容模式会映射到 images。"
-                  },
-                  "duration": {
-                    "type": "integer",
-                    "description": "统一时长入口，部分模型也接受 seconds。"
-                  },
-                  "width": {
-                    "type": "integer",
-                    "example": 512,
-                    "description": "Video width"
-                  },
-                  "height": {
-                    "type": "integer",
-                    "example": 512,
-                    "description": "Video height"
-                  },
-                  "fps": {
-                    "type": "integer",
-                    "example": 30,
-                    "description": "Video frame rate"
-                  },
-                  "seed": {
-                    "type": "integer",
-                    "example": 20231234,
-                    "description": "Random seed"
-                  },
-                  "n": {
-                    "type": "integer",
-                    "example": 1,
-                    "description": "Number of videos to generate"
-                  },
-                  "response_format": {
-                    "type": "string",
-                    "example": "url",
-                    "description": "Response format"
-                  },
-                  "user": {
-                    "type": "string",
-                    "example": "user-1234",
-                    "description": "User identifier"
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "additionalProperties": true,
-                    "description": "动态扩展字段容器。大量模型特有字段从这里反序列化。"
-                  },
-                  "mode": {
-                    "type": "string",
-                    "description": "可选，视频生成模式。 `gemini-omni` 支持 `t2v`、`r2v`、`edit`。"
-                  },
-                  "images": {
-                    "type": "array",
-                    "description": "统一多图入口。Vidu、Seedance、Veo 等会使用。",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "content": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "additionalProperties": true
-                    }
-                  },
-                  "size": {
-                    "type": "string",
-                    "description": "统一尺寸入口，会映射为 resolution/aspect_ratio 等。"
-                  },
-                  "seconds": {
-                    "type": "string",
-                    "description": "Sora 兼容入口，运行时会回退到 duration。"
-                  },
-                  "input_reference": {
-                    "type": "string",
-                    "description": "Sora/Veo 兼容参考图入口，可为 multipart 文件或兼容对象。"
-                  },
-                  "parameters": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "title": "Kling 4.0",
+                    "x-kling-4-request": true
                   }
-                },
-                "required": [
-                  "model",
-                  "prompt"
                 ]
               },
               "examples": {
@@ -1543,6 +1729,118 @@
                     "resolution": "768p",
                     "aspect_ratio": "16:9"
                   }
+                },
+                "kling_4_text": {
+                  "summary": "Kling 4.0 720p 文生视频",
+                  "value": {
+                    "model": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_reference": {
+                  "summary": "Kling 4.0 720p 参考生成",
+                  "value": {
+                    "model": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_sora": {
+                  "summary": "Kling 4.0 720p OpenAI 视频格式",
+                  "value": {
+                    "model": "kling-4.0",
+                    "prompt": "A cinematic product shot with natural motion",
+                    "seconds": "4",
+                    "size": "1280x720",
+                    "input_reference": "https://example.com/product.jpg"
+                  }
+                },
+                "kling_4_text_1080p": {
+                  "summary": "Kling 4.0 1080p 文生视频",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "1080p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_reference_1080p": {
+                  "summary": "Kling 4.0 1080p 参考生成",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "1080p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_sora_1080p": {
+                  "summary": "Kling 4.0 1080p OpenAI 视频格式",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "prompt": "A cinematic product shot with natural motion",
+                    "seconds": "4",
+                    "size": "1920x1080",
+                    "input_reference": "https://example.com/product.jpg"
+                  }
                 }
               }
             }
@@ -1855,7 +2153,7 @@
       "post": {
         "summary": "Kling 文生视频",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n使用 Kling 模型从文本描述生成视频。\n\n支持的模型：kling-v1, kling-v1-5 等",
+        "description": "Kling 4.0 的 contents/settings/options 请求体请通过 POST /api/v3/contents/generations/tasks（火山任务格式）或 POST /v1/videos（OpenAI 视频格式），再按相同路径查询任务。当前路径保留旧版 Kling 请求兼容。\n\n该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n使用 Kling 模型从文本描述生成视频。\n\n支持的模型：kling-v1, kling-v1-5 等",
         "operationId": "createKlingText2Video",
         "tags": [
           "视频生成Kling格式"
@@ -1920,7 +2218,7 @@
       "get": {
         "summary": "获取 Kling 文生视频任务状态",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n查询 Kling 文生视频任务的状态和结果。",
+        "description": "Kling 4.0 通过火山任务入口提交时，使用 GET /api/v3/contents/generations/tasks/{task_id} 查询；通过 OpenAI 视频入口提交时，使用 GET /v1/videos/{task_id} 查询。本路径保留旧版 Kling 任务查询兼容。\n\n该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n查询 Kling 文生视频任务的状态和结果。",
         "operationId": "getKlingText2Video",
         "tags": [
           "视频生成Kling格式"
@@ -1979,7 +2277,7 @@
       "post": {
         "summary": "Kling 图生视频",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。",
+        "description": "Kling 4.0 的 contents/settings/options 请求体请通过 POST /api/v3/contents/generations/tasks（火山任务格式）或 POST /v1/videos（OpenAI 视频格式），再按相同路径查询任务。当前路径保留旧版 Kling 请求兼容。\n\n该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。",
         "operationId": "createKlingImage2Video",
         "tags": [
           "视频生成Kling格式"
@@ -2044,7 +2342,7 @@
       "get": {
         "summary": "获取 Kling 图生视频任务状态",
         "deprecated": false,
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n查询 Kling 图生视频任务的状态和结果。",
+        "description": "Kling 4.0 通过火山任务入口提交时，使用 GET /api/v3/contents/generations/tasks/{task_id} 查询；通过 OpenAI 视频入口提交时，使用 GET /v1/videos/{task_id} 查询。本路径保留旧版 Kling 任务查询兼容。\n\n该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n查询 Kling 图生视频任务的状态和结果。",
         "operationId": "getKlingImage2Video",
         "tags": [
           "视频生成Kling格式"
@@ -4404,7 +4702,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "创建视频（Seedance）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：可选；不传时须在 `content` 中提供非空文本项。\n- `content`：可选，火山方舟 content 数组，混排文本、图片、视频、音频素材。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n\n以下字段主要用于历史客户端和旧协议适配。新接入请尽量采用本页“请求示例”中的标准格式：文本与参考素材使用 `content` 数组，生成配置使用顶层 `duration`、`ratio`、`resolution`、`fps` 等字段。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 文本项写法为 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 图片、视频、音频素材项分别使用 `image_url`、`video_url`、`audio_url` 对象写法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可标识素材用途，`name` 可供提示词中按名称引用。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nSeedance 2.5 图、视频、音频混合参考示例（素材 URL 为占位符，调用时请替换为实际可访问的链接）：\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\nMiniMax / Hailuo 调用：\n- `minimax-h3` 可通过本任务接口调用，支持文生视频、图片参考和音频参考；文本可放在 `prompt` 或 `content` 文本项，素材可放在 `content`、`image_urls`、`audio_urls` 等字段。\n- `hailuo-2.3` 可通过本任务接口调用，需要首帧图片，建议在 `content` 中传 `role=first_frame` 的 `image_url` 项。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：可选；不传时须在 `content` 中提供非空文本项。\n- `content`：可选，火山方舟 content 数组，混排文本、图片、视频、音频素材。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n\n以下字段主要用于历史客户端和旧协议适配。新接入请尽量采用本页“请求示例”中的标准格式：文本与参考素材使用 `content` 数组，生成配置使用顶层 `duration`、`ratio`、`resolution`、`fps` 等字段。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 文本项写法为 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 图片、视频、音频素材项分别使用 `image_url`、`video_url`、`audio_url` 对象写法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可标识素材用途，`name` 可供提示词中按名称引用。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nSeedance 2.5 图、视频、音频混合参考示例（素材 URL 为占位符，调用时请替换为实际可访问的链接）：\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\nMiniMax / Hailuo 调用：\n- `minimax-h3` 可通过本任务接口调用，支持文生视频、图片参考和音频参考；文本可放在 `prompt` 或 `content` 文本项，素材可放在 `content`、`image_urls`、`audio_urls` 等字段。\n- `hailuo-2.3` 可通过本任务接口调用，需要首帧图片，建议在 `content` 中传 `role=first_frame` 的 `image_url` 项。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```\n\n## Kling 4.0\n\nKling 4.0 调用：`kling-4.0`（720p）与 `kling-4.0-1080p` 使用 `contents/settings/options`，可与 `/v1/videos` 共用同一请求体；文本放在 `contents` 的 `type=prompt` 项中，无须再传顶层 `prompt`。`settings.resolution` 须与模型名一致。",
         "operationId": "create__seedance__task",
         "tags": [
           "视频生成Seedance格式"
@@ -4414,216 +4712,501 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": [
-                  "model"
-                ],
-                "properties": {
-                  "model": {
-                    "type": "string",
-                    "example": "doubao-seedance-2-0-260128",
-                    "enum": [
-                      "sd-2-5",
-                      "doubao-seedance-1-0-lite-i2v-250428",
-                      "doubao-seedance-1-0-lite-t2v-250428",
-                      "doubao-seedance-1-0-pro-250528",
-                      "doubao-seedance-1-0-pro-fast-251015",
-                      "doubao-seedance-1-5-pro-251215",
-                      "doubao-seedance-2-0-260128",
-                      "doubao-seedance-2-0-fast-260128",
-                      "minimax-h3",
-                      "hailuo-2.3",
-                      "gemini-omni"
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "model"
                     ],
-                    "description": "必填。模型名称。可传 Seedance 对外模型、`gemini-omni`、`minimax-h3` 或 `hailuo-2.3`。"
-                  },
-                  "prompt": {
-                    "type": "string",
-                    "description": "可选；若不传，content 中须提供非空 text 项作为视频生成描述。",
-                    "example": "参考素材生成一段剧情短视频"
-                  },
-                  "content": {
-                    "type": "array",
-                    "description": "可选。火山方舟 content 数组，按顺序混排文本与素材项。文本项使用 `{ \"type\": \"text\", \"text\": \"...\" }`；图片、视频、音频项分别使用 `image_url`、`video_url`、`audio_url` 对象并在其中放 `url`，可配合 `role`（如 `reference_image`、`reference_video`、`reference_audio`）和 `name` 供文本引用。",
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "type"
-                      ],
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "text",
-                            "image_url",
-                            "video_url",
-                            "audio_url"
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "example": "doubao-seedance-2-0-260128",
+                        "enum": [
+                          "sd-2-5",
+                          "doubao-seedance-1-0-lite-i2v-250428",
+                          "doubao-seedance-1-0-lite-t2v-250428",
+                          "doubao-seedance-1-0-pro-250528",
+                          "doubao-seedance-1-0-pro-fast-251015",
+                          "doubao-seedance-1-5-pro-251215",
+                          "doubao-seedance-2-0-260128",
+                          "doubao-seedance-2-0-fast-260128",
+                          "minimax-h3",
+                          "hailuo-2.3",
+                          "gemini-omni"
+                        ],
+                        "description": "必填。模型名称。可传 Seedance 对外模型、`gemini-omni`、`minimax-h3` 或 `hailuo-2.3`。"
+                      },
+                      "prompt": {
+                        "type": "string",
+                        "description": "可选；若不传，content 中须提供非空 text 项作为视频生成描述。",
+                        "example": "参考素材生成一段剧情短视频"
+                      },
+                      "content": {
+                        "type": "array",
+                        "description": "可选。火山方舟 content 数组，按顺序混排文本与素材项。文本项使用 `{ \"type\": \"text\", \"text\": \"...\" }`；图片、视频、音频项分别使用 `image_url`、`video_url`、`audio_url` 对象并在其中放 `url`，可配合 `role`（如 `reference_image`、`reference_video`、`reference_audio`）和 `name` 供文本引用。",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
                           ],
-                          "description": "内容项类型。"
-                        },
-                        "text": {
-                          "type": "string",
-                          "description": "文本内容，仅 type=text 时使用。"
-                        },
-                        "image_url": {
-                          "oneOf": [
-                            {
-                              "type": "string"
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "text",
+                                "image_url",
+                                "video_url",
+                                "audio_url"
+                              ],
+                              "description": "内容项类型。"
                             },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "url": {
-                                  "type": "string"
-                                }
-                              }
-                            }
-                          ],
-                          "description": "图片 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
-                        },
-                        "video_url": {
-                          "oneOf": [
-                            {
-                              "type": "string"
+                            "text": {
+                              "type": "string",
+                              "description": "文本内容，仅 type=text 时使用。"
                             },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "url": {
+                            "image_url": {
+                              "oneOf": [
+                                {
                                   "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
                                 }
-                              }
-                            }
-                          ],
-                          "description": "视频 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
-                        },
-                        "audio_url": {
-                          "oneOf": [
-                            {
-                              "type": "string"
+                              ],
+                              "description": "图片 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
                             },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "url": {
+                            "video_url": {
+                              "oneOf": [
+                                {
                                   "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
                                 }
-                              }
+                              ],
+                              "description": "视频 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
+                            },
+                            "audio_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "音频 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
+                            },
+                            "role": {
+                              "type": "string",
+                              "description": "素材用途标识，常见值如 reference_image、reference_video、reference_audio。"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "素材名称，可供文本提示词引用或区分多个素材。"
                             }
-                          ],
-                          "description": "音频 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
-                        },
-                        "role": {
-                          "type": "string",
-                          "description": "素材用途标识，常见值如 reference_image、reference_video、reference_audio。"
-                        },
-                        "name": {
-                          "type": "string",
-                          "description": "素材名称，可供文本提示词引用或区分多个素材。"
+                          }
                         }
+                      },
+                      "function_mode": {
+                        "type": "string",
+                        "description": "可选。高级功能模式，如 `omni_reference` 用于全能参考。"
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "可选。兼容模式字段，如 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`；`gemini-omni` 支持 `t2v`、`r2v`、`edit`。"
+                      },
+                      "image_url": {
+                        "type": "string",
+                        "description": "可选。单张参考图 URL。"
+                      },
+                      "image_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "可选。多张参考图 URL 列表。"
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "可选。兼容参考输入字段。"
+                      },
+                      "end_image_url": {
+                        "type": "string",
+                        "description": "可选。末帧参考图 URL。"
+                      },
+                      "last_image_url": {
+                        "type": "string",
+                        "description": "可选。末帧参考图 URL 别名。"
+                      },
+                      "video_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "可选。参考视频 URL 列表。"
+                      },
+                      "audio_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "可选。参考音频 URL 列表。"
+                      },
+                      "seconds": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "可选。视频时长，秒；与 `duration` 兼容。"
+                      },
+                      "duration": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "可选。视频时长，秒；与 `seconds` 兼容。"
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "description": "可选。画幅比例，如 `16:9`。"
+                      },
+                      "ratio": {
+                        "type": "string",
+                        "description": "可选。画幅比例别名，如 `16:9`。"
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "可选。分辨率或尺寸兼容字段。"
+                      },
+                      "quality": {
+                        "type": "string",
+                        "description": "可选。生成质量配置。"
+                      },
+                      "resolution": {
+                        "type": "string",
+                        "description": "可选。输出分辨率。"
+                      },
+                      "fps": {
+                        "type": "number",
+                        "description": "可选。帧率。"
+                      },
+                      "generate_audio": {
+                        "type": "boolean",
+                        "description": "可选。是否生成音频。"
+                      },
+                      "watermark": {
+                        "type": "boolean",
+                        "description": "可选。是否添加水印。"
                       }
                     }
                   },
-                  "function_mode": {
-                    "type": "string",
-                    "description": "可选。高级功能模式，如 `omni_reference` 用于全能参考。"
-                  },
-                  "mode": {
-                    "type": "string",
-                    "description": "可选。兼容模式字段，如 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`；`gemini-omni` 支持 `t2v`、`r2v`、`edit`。"
-                  },
-                  "image_url": {
-                    "type": "string",
-                    "description": "可选。单张参考图 URL。"
-                  },
-                  "image_urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "可选。多张参考图 URL 列表。"
-                  },
-                  "input_reference": {
-                    "type": "string",
-                    "description": "可选。兼容参考输入字段。"
-                  },
-                  "end_image_url": {
-                    "type": "string",
-                    "description": "可选。末帧参考图 URL。"
-                  },
-                  "last_image_url": {
-                    "type": "string",
-                    "description": "可选。末帧参考图 URL 别名。"
-                  },
-                  "video_urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "可选。参考视频 URL 列表。"
-                  },
-                  "audio_urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "可选。参考音频 URL 列表。"
-                  },
-                  "seconds": {
-                    "oneOf": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "string"
-                      }
+                  {
+                    "type": "object",
+                    "required": [
+                      "model"
                     ],
-                    "description": "可选。视频时长，秒；与 `duration` 兼容。"
-                  },
-                  "duration": {
-                    "oneOf": [
-                      {
-                        "type": "number"
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "example": "kling-4.0",
+                        "enum": [
+                          "kling-4.0",
+                          "kling-4.0-1080p"
+                        ],
+                        "description": "必填。模型名称。可传 Seedance、Kling 4.0、`gemini-omni`、`minimax-h3` 或 `hailuo-2.3` 对外模型。"
                       },
-                      {
-                        "type": "string"
+                      "prompt": {
+                        "type": "string",
+                        "description": "可选；不传时须在 content 的 text 项或 Kling 4.0 contents 的 prompt 项中提供文本描述。",
+                        "example": "参考素材生成一段剧情短视频"
+                      },
+                      "content": {
+                        "type": "array",
+                        "description": "可选。火山方舟 content 数组，按顺序混排文本与素材项。文本项使用 `{ \"type\": \"text\", \"text\": \"...\" }`；图片、视频、音频项分别使用 `image_url`、`video_url`、`audio_url` 对象并在其中放 `url`，可配合 `role`（如 `reference_image`、`reference_video`、`reference_audio`）和 `name` 供文本引用。",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "text",
+                                "image_url",
+                                "video_url",
+                                "audio_url"
+                              ],
+                              "description": "内容项类型。"
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "文本内容，仅 type=text 时使用。"
+                            },
+                            "image_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "图片 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
+                            },
+                            "video_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "视频 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
+                            },
+                            "audio_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "音频 URL，推荐对象写法：`{\"url\":\"https://...\"}`。"
+                            },
+                            "role": {
+                              "type": "string",
+                              "description": "素材用途标识，常见值如 reference_image、reference_video、reference_audio。"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "素材名称，可供文本提示词引用或区分多个素材。"
+                            }
+                          }
+                        }
+                      },
+                      "contents": {
+                        "type": "array",
+                        "minItems": 1,
+                        "description": "Kling 4.0 新版内容数组，使用 prompt、reference_image、reference_video、first_frame 或 last_frame 项。",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt",
+                                "reference_image",
+                                "reference_video",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "type=prompt 时的文本描述。"
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "description": "参考素材或首尾帧的可访问 URL。"
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "type": "object",
+                        "description": "Kling 4.0 新版参数：duration、resolution、aspect_ratio、audio。",
+                        "properties": {
+                          "duration": {
+                            "type": "integer",
+                            "minimum": 4,
+                            "maximum": 30,
+                            "example": 4
+                          },
+                          "resolution": {
+                            "type": "string",
+                            "enum": [
+                              "720p",
+                              "1080p"
+                            ]
+                          },
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ]
+                          },
+                          "audio": {
+                            "oneOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ],
+                            "example": "native"
+                          }
+                        }
+                      },
+                      "options": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "Kling 4.0 扩展选项。"
+                      },
+                      "function_mode": {
+                        "type": "string",
+                        "description": "可选。高级功能模式，如 `omni_reference` 用于全能参考。"
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "可选。兼容模式字段，如 `t2v`、`i2v`、`i2v_first_last`、`reference_images`、`reference_material`；`gemini-omni` 支持 `t2v`、`r2v`、`edit`。"
+                      },
+                      "image_url": {
+                        "type": "string",
+                        "description": "可选。单张参考图 URL。"
+                      },
+                      "image_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "可选。多张参考图 URL 列表。"
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "可选。兼容参考输入字段。"
+                      },
+                      "end_image_url": {
+                        "type": "string",
+                        "description": "可选。末帧参考图 URL。"
+                      },
+                      "last_image_url": {
+                        "type": "string",
+                        "description": "可选。末帧参考图 URL 别名。"
+                      },
+                      "video_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "可选。参考视频 URL 列表。"
+                      },
+                      "audio_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "可选。参考音频 URL 列表。"
+                      },
+                      "seconds": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "可选。视频时长，秒；与 `duration` 兼容。"
+                      },
+                      "duration": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "可选。视频时长，秒；与 `seconds` 兼容。"
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "description": "可选。画幅比例，如 `16:9`。"
+                      },
+                      "ratio": {
+                        "type": "string",
+                        "description": "可选。画幅比例别名，如 `16:9`。"
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "可选。分辨率或尺寸兼容字段。"
+                      },
+                      "quality": {
+                        "type": "string",
+                        "description": "可选。生成质量配置。"
+                      },
+                      "resolution": {
+                        "type": "string",
+                        "description": "可选。输出分辨率。"
+                      },
+                      "fps": {
+                        "type": "number",
+                        "description": "可选。帧率。"
+                      },
+                      "generate_audio": {
+                        "type": "boolean",
+                        "description": "可选。是否生成音频。"
+                      },
+                      "watermark": {
+                        "type": "boolean",
+                        "description": "可选。是否添加水印。"
                       }
-                    ],
-                    "description": "可选。视频时长，秒；与 `seconds` 兼容。"
-                  },
-                  "aspect_ratio": {
-                    "type": "string",
-                    "description": "可选。画幅比例，如 `16:9`。"
-                  },
-                  "ratio": {
-                    "type": "string",
-                    "description": "可选。画幅比例别名，如 `16:9`。"
-                  },
-                  "size": {
-                    "type": "string",
-                    "description": "可选。分辨率或尺寸兼容字段。"
-                  },
-                  "quality": {
-                    "type": "string",
-                    "description": "可选。生成质量配置。"
-                  },
-                  "resolution": {
-                    "type": "string",
-                    "description": "可选。输出分辨率。"
-                  },
-                  "fps": {
-                    "type": "number",
-                    "description": "可选。帧率。"
-                  },
-                  "generate_audio": {
-                    "type": "boolean",
-                    "description": "可选。是否生成音频。"
-                  },
-                  "watermark": {
-                    "type": "boolean",
-                    "description": "可选。是否添加水印。"
+                    },
+                    "title": "Kling 4.0",
+                    "x-kling-4-request": true
                   }
-                }
+                ]
               },
               "examples": {
                 "seedance_sd25_mixed_content": {
@@ -4834,6 +5417,60 @@
                     ],
                     "duration": 8,
                     "size": "1280x720"
+                  }
+                },
+                "kling_4_ark_contents": {
+                  "summary": "Kling 4.0 720p 参考生成",
+                  "value": {
+                    "model": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_ark_contents_1080p": {
+                  "summary": "Kling 4.0 1080p 参考生成",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "1080p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
                   }
                 }
               }

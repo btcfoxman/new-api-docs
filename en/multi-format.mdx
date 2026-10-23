@@ -43,8 +43,8 @@ Best for:
 
 A few model-specific interfaces are currently available, such as:
 
-- `POST /kling/v1/videos/text2video`
-- `POST /kling/v1/videos/image2video`
+- Kling 4.0: `POST /api/v3/contents/generations/tasks` or `POST /v1/videos`, with the request body using `contents/settings/options`
+- Legacy compatibility: `POST /kling/v1/videos/text2video`, `POST /kling/v1/videos/image2video`
 Best for:
 - Existing integrations based on the specific model protocol
 - Requires specific parameter modes for that model

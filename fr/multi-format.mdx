@@ -43,8 +43,8 @@ Adapté pour :
 
 Actuellement, quelques interfaces spécifiques aux modèles sont encore exposées, par exemple :
 
-- `POST /kling/v1/videos/text2video`
-- `POST /kling/v1/videos/image2video`
+- Kling 4.0 : `POST /api/v3/contents/generations/tasks` ou `POST /v1/videos`, corps de requête au format `contents/settings/options`
+- Compatibilité avec l'ancienne version : `POST /kling/v1/videos/text2video`, `POST /kling/v1/videos/image2video`
 Adapté pour :
 - Intégrations déjà basées sur le protocole spécifique du modèle correspondant
 - Besoin d'utiliser le mode de paramètres spécifique à ce modèle

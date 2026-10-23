@@ -203,7 +203,7 @@ Cung cấp ra ngoài năng lực tạo ảnh Kling, ảnh Omni và thử đồ �
 
 ### Kling Videos
 
-Công khai đồng thời giao diện chuyên dụng cho mô hình và cổng video thống nhất.
+Kling 4.0 sử dụng định dạng contents/settings/options phiên bản mới, được gửi qua cổng nhiệm vụ Volcengine hoặc cổng video OpenAI.
 
 
 
@@ -211,9 +211,13 @@ Công khai đồng thời giao diện chuyên dụng cho mô hình và cổng vi
 
 |---|---|
 
-| `kling-video` | `/kling/v1/...` / `/v1/videos` |
+| `kling-4.0` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
-| `kling-*` | `/kling/v1/...` / `/v1/videos` |
+| `kling-4.0-1080p` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `kling-video` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `kling-*` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
 
 

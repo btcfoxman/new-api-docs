@@ -203,7 +203,7 @@ Veo のメインモデルは `/v1/videos` 互換フォーマットを優先し�
 
 ### Kling Videos
 
-モデル専用インターフェースと統合ビデオエントリの両方が公開されています。
+Kling 4.0 は新しい contents/settings/options フォーマットを使用し、火山タスクの入口または OpenAI 動画の入口から送信します。
 
 
 
@@ -211,9 +211,13 @@ Veo のメインモデルは `/v1/videos` 互換フォーマットを優先し�
 
 |---|---|
 
-| `kling-video` | `/kling/v1/...` / `/v1/videos` |
+| `kling-4.0` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
-| `kling-*` | `/kling/v1/...` / `/v1/videos` |
+| `kling-4.0-1080p` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `kling-video` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `kling-*` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
 
 

@@ -203,7 +203,7 @@ Provides Kling image generation, Omni images, and virtual try-on capabilities ex
 
 ### Kling Videos
 
-Both the model-specific interface and the unified video entry point are available.
+Kling 4.0 uses the new `contents/settings/options` format and is submitted via the Volcengine task entry point or the OpenAI video entry point.
 
 
 
@@ -211,9 +211,13 @@ Both the model-specific interface and the unified video entry point are availabl
 
 |---|---|
 
-| `kling-video` | `/kling/v1/...` / `/v1/videos` |
+| `kling-4.0` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
-| `kling-*` | `/kling/v1/...` / `/v1/videos` |
+| `kling-4.0-1080p` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `kling-video` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `kling-*` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
 
 

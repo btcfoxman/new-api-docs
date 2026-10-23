@@ -895,7 +895,7 @@
       "post": {
         "summary": "Tạo video",
         "deprecated": false,
-        "description": "Giao diện tạo video định dạng tương thích OpenAI Sora. Hỗ trợ chế độ tạo từ văn bản thành video và tạo bằng ảnh/video tham chiếu.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` tạo tác vụ, lấy `id`\n2. Thăm dò `GET /v1/videos/{id}` cho đến khi `completed` hoặc `failed`\n3. Sau khi hoàn tất, ưu tiên sử dụng `video_url` trong kết quả trả về\n4. Nếu cần tải xuống thống nhất, gọi `GET /v1/videos/{id}/content`\n\nTham số cốt lõi:\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo video\n- `seconds: number|string`: Tùy chọn, thời lượng mục tiêu\n- `duration: number|string`: Tùy chọn, bí danh thời lượng\n- `size: string`: Tùy chọn, kích thước đầu ra\n- `mode: string`: Tùy chọn, các giá trị phổ biến `t2v` `i2v` `i2v_first_last` `reference_material`\n\nTham số tương thích thường dùng:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nCác tham số mở rộng thường dùng của Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Dòng Veo\n\nLưu ý: `stable`, `official` v.v. biểu thị các nhóm khác nhau, không phải hậu tố `model` dùng đối ngoại; khi gọi, vui lòng giữ `model` là tên mô hình cơ sở, nhóm tài khoản hoặc mã thông báo sẽ quyết định thực tế đi qua nhóm nào.\n\n#### Mô hình chính Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nKhuyến nghị:\n- Với video tạo từ văn bản thuần túy, ưu tiên dùng mô hình chính `veo3*` / `veo3.1*`\n- Với các tình huống tạo video từ ảnh hoặc từ tham chiếu, nên truyền rõ ràng `mode + image_url/reference_images`\n\n### 4.2 Dòng Sora\n\nMô hình cơ sở:\n- `sora-2`\n- `sora-2-pro`\n\nKhuyến nghị:\n- `sora-2*` phù hợp cho các lệnh gọi thông dụng\n- Nếu cần sử dụng các nhóm như `stable` / `official`, vui lòng giữ `model` là tên mô hình cơ sở, không thêm hậu tố vào sau tên mô hình.\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 Dòng HappyHorse\n\nMô hình công khai:\n- `happyhorse-1.0`\n\nKhuyến nghị:\n- `happyhorse-1.0` được phân biệt thông qua `mode`, `t2v`, `i2v`, `r2v`, `video_edit`.\n- Trong định dạng tương thích của Sora, nên dùng mảng `content` để truyền các mục phương tiện.\n- Mục văn bản dùng `type=text`, mục phương tiện dùng `type=image_url` và có thể kết hợp `role`, `name` để đánh dấu mục đích sử dụng của tài nguyên.\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Dòng Seedance\n\nMô hình công khai:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nKhuyến nghị:\n- Với tạo video từ văn bản, ưu tiên `*-t2v-*` hoặc `pro / fast`\n- Với tạo video từ hình ảnh, ưu tiên `*-i2v-*`\n- Với các tình huống có tư liệu tham chiếu phức tạp, ưu tiên dùng `content`\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Dòng video Grok\n\nMô hình công khai:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nTham số thường dùng:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nVí dụ:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Mô hình chính video Kling\n\nMô hình chính công khai:\n- `kling-video`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCác `mode` phổ biến:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nTham số đầu vào tối thiểu:\n- Tạo video từ văn bản: `model + model_name + prompt + mode=t2v`\n- Tạo video từ hình ảnh: `model + model_name + prompt + mode=i2v + image`\n- Tham chiếu nhiều ảnh: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Kéo dài video: `model + model_name + mode=extend + video_id`\n\nVí dụ:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 Series video MiniMax / Hailuo\n\nMô hình công khai:\n- `minimax-h3`\n- `hailuo-2.3`\n\nKhuyến nghị:\n- `minimax-h3` hỗ trợ tạo video từ văn bản, tham chiếu hình ảnh và tham chiếu âm thanh; khuyến nghị trộn văn bản và tài nguyên qua `content`; cũng có thể dùng các trường tương thích như `image_urls`, `audio_urls`.\n- `hailuo-2.3` cần ảnh khung hình đầu tiên, khuyến nghị truyền mục `image_url` của `role=first_frame` trong `content`, hoặc dùng `image_urls` để truyền ảnh khung hình đầu tiên.\n- `minimax-h3` thường dùng `duration=5~15`, `resolution=1440p`; `hailuo-2.3` thường dùng `duration=6` hoặc `10`, `resolution=768p`.\n\n`minimax-h3` Ví dụ:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` Ví dụ:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Hướng dẫn gọi Gemini Omni\n\n- `gemini-omni` là tên mô hình video công khai của new-api, có thể trực tiếp gọi qua `POST /v1/videos`.\n- `mode=t2v`: tạo video từ văn bản, tham số đầu vào tối thiểu là `model + prompt`.\n- `mode=r2v`: tạo bằng ảnh/tư liệu tham chiếu, ảnh có thể đặt trong `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` hoặc `content`.\n- `mode=edit`: chỉnh sửa video, video có thể đặt trong `video`、`video_url`、`videos` hoặc `content`, đồng thời cũng có thể truyền ảnh tham chiếu.\n- Trường thời lượng có thể dùng `seconds` hoặc `duration`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.",
+        "description": "Giao diện tạo video định dạng tương thích OpenAI Sora. Hỗ trợ chế độ tạo từ văn bản thành video và tạo bằng ảnh/video tham chiếu.\n\n- `POST /v1/videos`: Tạo tác vụ video\n- `GET /v1/videos/{video_id}`: Truy vấn trạng thái tác vụ\n- `GET /v1/videos/{video_id}/content`: Lấy nội dung nhị phân của video\n\nHiện chưa cung cấp ra bên ngoài:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nHeader xác thực tiêu chuẩn:\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` tạo tác vụ, lấy `id`\n2. Thăm dò `GET /v1/videos/{id}` cho đến khi `completed` hoặc `failed`\n3. Sau khi hoàn tất, ưu tiên sử dụng `video_url` trong kết quả trả về\n4. Nếu cần tải xuống thống nhất, gọi `GET /v1/videos/{id}/content`\n\nTham số cốt lõi:\n- `model: string`: Bắt buộc, tên mô hình công khai\n- `prompt: string`: Khuyến nghị, mô tả tạo video\n- `seconds: number|string`: Tùy chọn, thời lượng mục tiêu\n- `duration: number|string`: Tùy chọn, bí danh thời lượng\n- `size: string`: Tùy chọn, kích thước đầu ra\n- `mode: string`: Tùy chọn, các giá trị phổ biến `t2v` `i2v` `i2v_first_last` `reference_material`\n\nTham số tương thích thường dùng:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nCác tham số mở rộng thường dùng của Kling:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Dòng Veo\n\nLưu ý: `stable`, `official` v.v. biểu thị các nhóm khác nhau, không phải hậu tố `model` dùng đối ngoại; khi gọi, vui lòng giữ `model` là tên mô hình cơ sở, nhóm tài khoản hoặc mã thông báo sẽ quyết định thực tế đi qua nhóm nào.\n\n#### Mô hình chính Veo 3.x\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nKhuyến nghị:\n- Với video tạo từ văn bản thuần túy, ưu tiên dùng mô hình chính `veo3*` / `veo3.1*`\n- Với các tình huống tạo video từ ảnh hoặc từ tham chiếu, nên truyền rõ ràng `mode + image_url/reference_images`\n\n### 4.2 Dòng Sora\n\nMô hình cơ sở:\n- `sora-2`\n- `sora-2-pro`\n\nKhuyến nghị:\n- `sora-2*` phù hợp cho các lệnh gọi thông dụng\n- Nếu cần sử dụng các nhóm như `stable` / `official`, vui lòng giữ `model` là tên mô hình cơ sở, không thêm hậu tố vào sau tên mô hình.\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 Dòng HappyHorse\n\nMô hình công khai:\n- `happyhorse-1.0`\n\nKhuyến nghị:\n- `happyhorse-1.0` được phân biệt thông qua `mode`, `t2v`, `i2v`, `r2v`, `video_edit`.\n- Trong định dạng tương thích của Sora, nên dùng mảng `content` để truyền các mục phương tiện.\n- Mục văn bản dùng `type=text`, mục phương tiện dùng `type=image_url` và có thể kết hợp `role`, `name` để đánh dấu mục đích sử dụng của tài nguyên.\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Dòng Seedance\n\nMô hình công khai:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nKhuyến nghị:\n- Với tạo video từ văn bản, ưu tiên `*-t2v-*` hoặc `pro / fast`\n- Với tạo video từ hình ảnh, ưu tiên `*-i2v-*`\n- Với các tình huống có tư liệu tham chiếu phức tạp, ưu tiên dùng `content`\n\nVí dụ yêu cầu:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Dòng video Grok\n\nMô hình công khai:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nTham số thường dùng:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nVí dụ:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Mô hình chính video Kling\n\nMô hình chính công khai:\n- `kling-video`\n\nBắt buộc:\n- `model`\n- `model_name`\n\nCác `model_name` được hỗ trợ:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCác `mode` phổ biến:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nTham số đầu vào tối thiểu:\n- Tạo video từ văn bản: `model + model_name + prompt + mode=t2v`\n- Tạo video từ hình ảnh: `model + model_name + prompt + mode=i2v + image`\n- Tham chiếu nhiều ảnh: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Kéo dài video: `model + model_name + mode=extend + video_id`\n\nVí dụ:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 Series video MiniMax / Hailuo\n\nMô hình công khai:\n- `minimax-h3`\n- `hailuo-2.3`\n\nKhuyến nghị:\n- `minimax-h3` hỗ trợ tạo video từ văn bản, tham chiếu hình ảnh và tham chiếu âm thanh; khuyến nghị trộn văn bản và tài nguyên qua `content`; cũng có thể dùng các trường tương thích như `image_urls`, `audio_urls`.\n- `hailuo-2.3` cần ảnh khung hình đầu tiên, khuyến nghị truyền mục `image_url` của `role=first_frame` trong `content`, hoặc dùng `image_urls` để truyền ảnh khung hình đầu tiên.\n- `minimax-h3` thường dùng `duration=5~15`, `resolution=1440p`; `hailuo-2.3` thường dùng `duration=6` hoặc `10`, `resolution=768p`.\n\n`minimax-h3` Ví dụ:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` Ví dụ:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Tham số đầu vào tối thiểu: `model + prompt`\n\n- `mode=i2v`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Tham số đầu vào tối thiểu: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Tham số đầu vào tối thiểu: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Tham số đầu vào tối thiểu: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Hướng dẫn gọi Gemini Omni\n\n- `gemini-omni` là tên mô hình video công khai của new-api, có thể trực tiếp gọi qua `POST /v1/videos`.\n- `mode=t2v`: tạo video từ văn bản, tham số đầu vào tối thiểu là `model + prompt`.\n- `mode=r2v`: tạo bằng ảnh/tư liệu tham chiếu, ảnh có thể đặt trong `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` hoặc `content`.\n- `mode=edit`: chỉnh sửa video, video có thể đặt trong `video`、`video_url`、`videos` hoặc `content`, đồng thời cũng có thể truyền ảnh tham chiếu.\n- Trường thời lượng có thể dùng `seconds` hoặc `duration`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.\n\n## Kling 4.0\n\nMô hình công khai: `kling-4.0` (720p), `kling-4.0-1080p`. Có thể gửi qua `POST /api/v3/contents/generations/tasks` hoặc `POST /v1/videos`, và truy vấn tương ứng qua `GET /{task_id}` theo đường dẫn tương ứng. Cả hai cổng vào đều hỗ trợ body yêu cầu `contents/settings/options`. `/v1/videos` cũng tương thích với `prompt`, `seconds`, `size` và `input_reference` thuộc định dạng video OpenAI. Trong `contents`, `type=prompt` là văn bản, `type=reference_image`, `reference_video` là tư liệu tham khảo, `first_frame`, `last_frame` là khung hình đầu và cuối. `kling-4.0` tương ứng với 720p, `kling-4.0-1080p` tương ứng với 1080p; vui lòng giữ `settings.resolution` nhất quán với tên mô hình. Trong `settings` sử dụng `duration` (4–30 giây), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1), `audio`. API hiện tại hỗ trợ tối đa 10 ảnh tham khảo, 5 đoạn video tham khảo, không hỗ trợ âm thanh tham khảo. Các chế độ `kling-video` và `model_name` cũ vẫn là các API tương thích lịch sử.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
         "operationId": "createVideo",
         "tags": [
           "Định dạng tương thích Sora cho tạo video"
@@ -906,141 +906,327 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "type": "string",
-                    "description": "Bắt buộc, tên mô hình công khai. `gemini-omni` Có thể được gọi thông qua `/v1/videos`.",
-                    "enum": [
-                      "sora-2",
-                      "sora-2-pro",
-                      "gemini-omni",
-                      "happyhorse-1.0",
-                      "happyhorse-1.0-i2v",
-                      "happyhorse-1.0-t2v",
-                      "happyhorse-1.0-r2v",
-                      "happyhorse-1.0-video-edit",
-                      "doubao-seedance-1-0-lite-i2v-250428",
-                      "doubao-seedance-1-0-lite-t2v-250428",
-                      "doubao-seedance-1-0-pro-250528",
-                      "doubao-seedance-1-0-pro-fast-251015",
-                      "doubao-seedance-1-5-pro-251215",
-                      "doubao-seedance-2-0-260128",
-                      "doubao-seedance-2-0-fast-260128",
-                      "sd-2-5",
-                      "veo3",
-                      "veo3-fast",
-                      "veo3-fast-frames",
-                      "veo3-frames",
-                      "veo3-pro",
-                      "veo3-pro-frames",
-                      "veo3.1",
-                      "veo3.1-4k",
-                      "veo3.1-components",
-                      "veo3.1-fast",
-                      "veo3.1-pro",
-                      "veo3.1-pro-4k",
-                      "kling-video",
-                      "grok-imagine-1.0-video",
-                      "grok-imagine-video-1.5-preview",
-                      "grok-video-3",
-                      "minimax-h3",
-                      "hailuo-2.3",
-                      "viduq3-turbo"
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "description": "Bắt buộc, tên mô hình công khai. `gemini-omni` Có thể được gọi thông qua `/v1/videos`.",
+                        "enum": [
+                          "sora-2",
+                          "sora-2-pro",
+                          "gemini-omni",
+                          "happyhorse-1.0",
+                          "happyhorse-1.0-i2v",
+                          "happyhorse-1.0-t2v",
+                          "happyhorse-1.0-r2v",
+                          "happyhorse-1.0-video-edit",
+                          "doubao-seedance-1-0-lite-i2v-250428",
+                          "doubao-seedance-1-0-lite-t2v-250428",
+                          "doubao-seedance-1-0-pro-250528",
+                          "doubao-seedance-1-0-pro-fast-251015",
+                          "doubao-seedance-1-5-pro-251215",
+                          "doubao-seedance-2-0-260128",
+                          "doubao-seedance-2-0-fast-260128",
+                          "sd-2-5",
+                          "veo3",
+                          "veo3-fast",
+                          "veo3-fast-frames",
+                          "veo3-frames",
+                          "veo3-pro",
+                          "veo3-pro-frames",
+                          "veo3.1",
+                          "veo3.1-4k",
+                          "veo3.1-components",
+                          "veo3.1-fast",
+                          "veo3.1-pro",
+                          "veo3.1-pro-4k",
+                          "kling-video",
+                          "grok-imagine-1.0-video",
+                          "grok-imagine-video-1.5-preview",
+                          "grok-video-3",
+                          "minimax-h3",
+                          "hailuo-2.3",
+                          "viduq3-turbo"
+                        ],
+                        "example": "sora-2"
+                      },
+                      "prompt": {
+                        "type": "string",
+                        "description": "Điểm nhập prompt thống nhất. Bắt buộc với hầu hết các mô hình."
+                      },
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Cổng vào cho một ảnh đơn, một số chế độ tương thích sẽ được ánh xạ tới `images`."
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "description": "Đầu vào thời lượng được thống nhất; một số mô hình cũng chấp nhận seconds."
+                      },
+                      "width": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video width"
+                      },
+                      "height": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video height"
+                      },
+                      "fps": {
+                        "type": "integer",
+                        "example": 30,
+                        "description": "Video frame rate"
+                      },
+                      "seed": {
+                        "type": "integer",
+                        "example": 20231234,
+                        "description": "Random seed"
+                      },
+                      "n": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Number of videos to generate"
+                      },
+                      "response_format": {
+                        "type": "string",
+                        "example": "url",
+                        "description": "Response format"
+                      },
+                      "user": {
+                        "type": "string",
+                        "example": "user-1234",
+                        "description": "User identifier"
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "Container trường mở rộng động. Một số lượng lớn các trường đặc thù của mô hình được giải tuần tự hóa từ đây."
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "Tùy chọn, chế độ tạo video. `gemini-omni` Hỗ trợ `t2v`, `r2v`, `edit`."
+                      },
+                      "images": {
+                        "type": "array",
+                        "description": "Điểm vào thống nhất cho nhiều ảnh. Vidu, Seedance, Veo sẽ sử dụng, v.v.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "Điểm vào kích thước hợp nhất, sẽ được ánh xạ thành resolution/aspect_ratio, v.v."
+                      },
+                      "seconds": {
+                        "type": "string",
+                        "description": "Sora điểm vào tương thích, trong thời gian chạy sẽ quay về duration."
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "Sora/Veo điểm vào ảnh tham chiếu tương thích, có thể là tệp multipart hoặc đối tượng tương thích."
+                      },
+                      "parameters": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "model",
+                      "prompt"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "description": "Bắt buộc, tên mô hình công khai. `gemini-omni` Có thể được gọi thông qua `/v1/videos`.",
+                        "enum": [
+                          "kling-4.0",
+                          "kling-4.0-1080p"
+                        ],
+                        "example": "kling-4.0"
+                      },
+                      "prompt": {
+                        "type": "string",
+                        "description": "Mô tả video. Không cần cung cấp lại khi Kling 4.0 sử dụng mục prompt của contents. các mô hình khác cung cấp văn bản theo yêu cầu định dạng tương ứng."
+                      },
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Cổng vào cho một ảnh đơn, một số chế độ tương thích sẽ được ánh xạ tới `images`."
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "description": "Đầu vào thời lượng được thống nhất; một số mô hình cũng chấp nhận seconds."
+                      },
+                      "width": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video width"
+                      },
+                      "height": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video height"
+                      },
+                      "fps": {
+                        "type": "integer",
+                        "example": 30,
+                        "description": "Video frame rate"
+                      },
+                      "seed": {
+                        "type": "integer",
+                        "example": 20231234,
+                        "description": "Random seed"
+                      },
+                      "n": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Number of videos to generate"
+                      },
+                      "response_format": {
+                        "type": "string",
+                        "example": "url",
+                        "description": "Response format"
+                      },
+                      "user": {
+                        "type": "string",
+                        "example": "user-1234",
+                        "description": "User identifier"
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "Container trường mở rộng động. Một số lượng lớn các trường đặc thù của mô hình được giải tuần tự hóa từ đây."
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "Tùy chọn, chế độ tạo video. `gemini-omni` Hỗ trợ `t2v`, `r2v`, `edit`."
+                      },
+                      "images": {
+                        "type": "array",
+                        "description": "Điểm vào thống nhất cho nhiều ảnh. Vidu, Seedance, Veo sẽ sử dụng, v.v.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      },
+                      "contents": {
+                        "type": "array",
+                        "minItems": 1,
+                        "description": "Các mục nội dung của Kling phiên bản 4.0 mới, hỗ trợ prompt, reference_image, reference_video, first_frame, last_frame.",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt",
+                                "reference_image",
+                                "reference_video",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "Mô tả văn bản khi type=prompt."
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "description": "URL có thể truy cập của tài liệu tham khảo hoặc khung hình đầu/cuối."
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "type": "object",
+                        "description": "Cài đặt thời lượng, độ phân giải, tỷ lệ khung hình và âm thanh cho phiên bản mới Kling 4.0.",
+                        "properties": {
+                          "duration": {
+                            "type": "integer",
+                            "minimum": 4,
+                            "maximum": 30,
+                            "example": 4
+                          },
+                          "resolution": {
+                            "type": "string",
+                            "enum": [
+                              "720p",
+                              "1080p"
+                            ]
+                          },
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ]
+                          },
+                          "audio": {
+                            "oneOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ],
+                            "example": "native"
+                          }
+                        }
+                      },
+                      "options": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "Tùy chọn mở rộng phiên bản mới Kling 4.0."
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "Điểm vào kích thước hợp nhất, sẽ được ánh xạ thành resolution/aspect_ratio, v.v."
+                      },
+                      "seconds": {
+                        "type": "string",
+                        "description": "Sora điểm vào tương thích, trong thời gian chạy sẽ quay về duration."
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "Sora/Veo điểm vào ảnh tham chiếu tương thích, có thể là tệp multipart hoặc đối tượng tương thích."
+                      },
+                      "parameters": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "model"
                     ],
-                    "example": "sora-2"
-                  },
-                  "prompt": {
-                    "type": "string",
-                    "description": "Điểm nhập prompt thống nhất. Bắt buộc với hầu hết các mô hình."
-                  },
-                  "image": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Cổng vào cho một ảnh đơn, một số chế độ tương thích sẽ được ánh xạ tới `images`."
-                  },
-                  "duration": {
-                    "type": "integer",
-                    "description": "Đầu vào thời lượng được thống nhất; một số mô hình cũng chấp nhận seconds."
-                  },
-                  "width": {
-                    "type": "integer",
-                    "example": 512,
-                    "description": "Video width"
-                  },
-                  "height": {
-                    "type": "integer",
-                    "example": 512,
-                    "description": "Video height"
-                  },
-                  "fps": {
-                    "type": "integer",
-                    "example": 30,
-                    "description": "Video frame rate"
-                  },
-                  "seed": {
-                    "type": "integer",
-                    "example": 20231234,
-                    "description": "Random seed"
-                  },
-                  "n": {
-                    "type": "integer",
-                    "example": 1,
-                    "description": "Number of videos to generate"
-                  },
-                  "response_format": {
-                    "type": "string",
-                    "example": "url",
-                    "description": "Response format"
-                  },
-                  "user": {
-                    "type": "string",
-                    "example": "user-1234",
-                    "description": "User identifier"
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "additionalProperties": true,
-                    "description": "Container trường mở rộng động. Một số lượng lớn các trường đặc thù của mô hình được giải tuần tự hóa từ đây."
-                  },
-                  "mode": {
-                    "type": "string",
-                    "description": "Tùy chọn, chế độ tạo video. `gemini-omni` Hỗ trợ `t2v`, `r2v`, `edit`."
-                  },
-                  "images": {
-                    "type": "array",
-                    "description": "Điểm vào thống nhất cho nhiều ảnh. Vidu, Seedance, Veo sẽ sử dụng, v.v.",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "content": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "additionalProperties": true
-                    }
-                  },
-                  "size": {
-                    "type": "string",
-                    "description": "Điểm vào kích thước hợp nhất, sẽ được ánh xạ thành resolution/aspect_ratio, v.v."
-                  },
-                  "seconds": {
-                    "type": "string",
-                    "description": "Sora điểm vào tương thích, trong thời gian chạy sẽ quay về duration."
-                  },
-                  "input_reference": {
-                    "type": "string",
-                    "description": "Sora/Veo điểm vào ảnh tham chiếu tương thích, có thể là tệp multipart hoặc đối tượng tương thích."
-                  },
-                  "parameters": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "title": "Kling 4.0",
+                    "x-kling-4-request": true
                   }
-                },
-                "required": [
-                  "model",
-                  "prompt"
                 ]
               },
               "examples": {
@@ -1543,6 +1729,118 @@
                     "resolution": "768p",
                     "aspect_ratio": "16:9"
                   }
+                },
+                "kling_4_text": {
+                  "summary": "Kling 4.0 720p Tạo video từ văn bản",
+                  "value": {
+                    "model": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_reference": {
+                  "summary": "Tạo tham chiếu Kling 4.0 720p",
+                  "value": {
+                    "model": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_sora": {
+                  "summary": "Định dạng video Kling 4.0 720p OpenAI",
+                  "value": {
+                    "model": "kling-4.0",
+                    "prompt": "A cinematic product shot with natural motion",
+                    "seconds": "4",
+                    "size": "1280x720",
+                    "input_reference": "https://example.com/product.jpg"
+                  }
+                },
+                "kling_4_text_1080p": {
+                  "summary": "Kling 4.0 1080p Chuyển văn bản thành video",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "1080p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_reference_1080p": {
+                  "summary": "Tạo tham chiếu Kling 4.0 1080p",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "1080p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_sora_1080p": {
+                  "summary": "Định dạng video OpenAI Kling 4.0 1080p",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "prompt": "A cinematic product shot with natural motion",
+                    "seconds": "4",
+                    "size": "1920x1080",
+                    "input_reference": "https://example.com/product.jpg"
+                  }
                 }
               }
             }
@@ -1855,7 +2153,7 @@
       "post": {
         "summary": "Kling tạo video từ văn bản",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nSử dụng mô hình Kling để tạo video từ mô tả văn bản.\n\nCác mô hình hỗ trợ: kling-v1, kling-v1-5, v.v.",
+        "description": "Đối với request body contents/settings/options của Kling 4.0, vui lòng gửi qua POST /api/v3/contents/generations/tasks (định dạng nhiệm vụ Volcano) hoặc POST /v1/videos (định dạng video OpenAI), sau đó truy vấn nhiệm vụ theo cùng đường dẫn. Đường dẫn hiện tại được giữ lại để tương thích với các yêu cầu Kling phiên bản cũ.\n\nDòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nSử dụng mô hình Kling để tạo video từ mô tả văn bản.\n\nCác mô hình hỗ trợ: kling-v1, kling-v1-5, v.v.",
         "operationId": "createKlingText2Video",
         "tags": [
           "Định dạngKling tạo video"
@@ -1920,7 +2218,7 @@
       "get": {
         "summary": "Lấy trạng thái tác vụ tạo video từ văn bản Kling",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ tạo video từ văn bản Kling.",
+        "description": "Khi gửi qua lối vào tác vụ Volcano của Kling 4.0, hãy sử dụng GET /api/v3/contents/generations/tasks/{task_id} để truy vấn; khi gửi qua lối vào video OpenAI, hãy sử dụng GET /v1/videos/{task_id} để truy vấn. Đường dẫn này duy trì tương thích với truy vấn tác vụ Kling phiên bản cũ.\n\nDòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ tạo video từ văn bản Kling.",
         "operationId": "getKlingText2Video",
         "tags": [
           "Định dạngKling tạo video"
@@ -1979,7 +2277,7 @@
       "post": {
         "summary": "Kling Chuyển hình ảnh thành video",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nDùng mô hình Kling để tạo video từ hình ảnh.\n\nHỗ trợ truyền URL hình ảnh hoặc dữ liệu hình ảnh mã hóa Base64 thông qua tham số image.",
+        "description": "Đối với request body contents/settings/options của Kling 4.0, vui lòng gửi qua POST /api/v3/contents/generations/tasks (định dạng nhiệm vụ Volcano) hoặc POST /v1/videos (định dạng video OpenAI), sau đó truy vấn nhiệm vụ theo cùng đường dẫn. Đường dẫn hiện tại được giữ lại để tương thích với các yêu cầu Kling phiên bản cũ.\n\nDòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nDùng mô hình Kling để tạo video từ hình ảnh.\n\nHỗ trợ truyền URL hình ảnh hoặc dữ liệu hình ảnh mã hóa Base64 thông qua tham số image.",
         "operationId": "createKlingImage2Video",
         "tags": [
           "Định dạngKling tạo video"
@@ -2044,7 +2342,7 @@
       "get": {
         "summary": "Lấy trạng thái tác vụ tạo video từ ảnh Kling",
         "deprecated": false,
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ tạo video từ ảnh Kling.",
+        "description": "Khi gửi qua lối vào tác vụ Volcano của Kling 4.0, hãy sử dụng GET /api/v3/contents/generations/tasks/{task_id} để truy vấn; khi gửi qua lối vào video OpenAI, hãy sử dụng GET /v1/videos/{task_id} để truy vấn. Đường dẫn này duy trì tương thích với truy vấn tác vụ Kling phiên bản cũ.\n\nDòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ tạo video từ ảnh Kling.",
         "operationId": "getKlingImage2Video",
         "tags": [
           "Định dạngKling tạo video"
@@ -4404,7 +4702,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "Tạo video（Seedance）",
-        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Không bắt buộc; nếu không truyền, cần cung cấp mục văn bản không rỗng trong `content`.\n- `content`: tùy chọn, mảng content của Volcano Ark, trộn văn bản, hình ảnh, video và âm thanh.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n\nCác trường sau chủ yếu dùng để tương thích với client cũ và giao thức cũ. Với tích hợp mới, vui lòng ưu tiên dùng định dạng chuẩn trong “Ví dụ yêu cầu” trên trang này: văn bản và tài liệu tham chiếu sử dụng mảng `content`, còn cấu hình sinh sử dụng các trường cấp cao nhất `duration`, `ratio`, `resolution`, `fps`, v.v.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- `content` mục văn bản được viết theo dạng `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` các mục tài nguyên hình ảnh, video, âm thanh lần lượt dùng cú pháp đối tượng `image_url`, `video_url`, `audio_url`, ví dụ `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` có thể dùng để xác định mục đích của tài nguyên, `name` có thể được tham chiếu theo tên trong prompt.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nSeedance 2.5 Ví dụ tham chiếu kết hợp hình ảnh, video và âm thanh (URL tài nguyên là phần giữ chỗ; khi gọi, vui lòng thay bằng liên kết thực tế có thể truy cập):\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGọi Gemini Omni:\n- `gemini-omni` cũng có thể được gọi thông qua giao diện tác vụ Seedance này.\n- `mode=t2v` dùng cho tạo video từ văn bản, `mode=r2v` dùng cho tạo bằng ảnh tham chiếu/tài nguyên tham chiếu, `mode=edit` dùng cho chỉnh sửa video.\n- Văn bản có thể đặt trong mục `text` của `prompt` hoặc `content`; hình ảnh có thể đặt trong `image_url / image_urls / reference_images / input_reference / content`; video có thể đặt trong `video_urls / content`.\n- Trường thời lượng có thể dùng `duration` hoặc `seconds`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.\n\nMiniMax / Hailuo gọi:\n- `minimax-h3` có thể được gọi thông qua API tác vụ này, hỗ trợ tạo video từ văn bản, tham chiếu ảnh và tham chiếu âm thanh; văn bản có thể đặt trong mục văn bản `prompt` hoặc `content`, dữ liệu có thể đặt trong các trường như `content`, `image_urls`, `audio_urls`.\n- `hailuo-2.3` có thể được gọi thông qua API tác vụ này, cần ảnh khung hình đầu tiên; khuyến nghị truyền mục `image_url` của `role=first_frame` trong `content`.\n- `minimax-h3` thường dùng `duration=5~15`, `resolution=1440p`; `hailuo-2.3` thường dùng `duration=6` hoặc `10`, `resolution=768p`.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "Dòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nĐược dùng để tạo tác vụ tạo video và truy vấn trạng thái cũng như kết quả thông qua ID tác vụ.\n\nCác trường cốt lõi để tạo tác vụ:\n- `model`: Bắt buộc, tên mô hình.\n- `prompt`: Không bắt buộc; nếu không truyền, cần cung cấp mục văn bản không rỗng trong `content`.\n- `content`: tùy chọn, mảng content của Volcano Ark, trộn văn bản, hình ảnh, video và âm thanh.\n- `function_mode`: Tùy chọn, thường dùng cho các chế độ nâng cao như tham chiếu toàn năng.\n\nCác tham số đầu vào tương thích:\n\nCác trường sau chủ yếu dùng để tương thích với client cũ và giao thức cũ. Với tích hợp mới, vui lòng ưu tiên dùng định dạng chuẩn trong “Ví dụ yêu cầu” trên trang này: văn bản và tài liệu tham chiếu sử dụng mảng `content`, còn cấu hình sinh sử dụng các trường cấp cao nhất `duration`, `ratio`, `resolution`, `fps`, v.v.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nChi tiết gọi API:\n- Khi là `mode=reference_material` hoặc `function_mode=omni_reference`, nên truyền văn bản và tài liệu tham chiếu thông qua `content`.\n- `content` mục văn bản được viết theo dạng `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` các mục tài nguyên hình ảnh, video, âm thanh lần lượt dùng cú pháp đối tượng `image_url`, `video_url`, `audio_url`, ví dụ `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` có thể dùng để xác định mục đích của tài nguyên, `name` có thể được tham chiếu theo tên trong prompt.\n- `ratio`, `duration`, `resolution`, `fps` sẽ ảnh hưởng đến cấu hình tạo cuối cùng.\n\nSeedance 2.5 Ví dụ tham chiếu kết hợp hình ảnh, video và âm thanh (URL tài nguyên là phần giữ chỗ; khi gọi, vui lòng thay bằng liên kết thực tế có thể truy cập):\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGọi Gemini Omni:\n- `gemini-omni` cũng có thể được gọi thông qua giao diện tác vụ Seedance này.\n- `mode=t2v` dùng cho tạo video từ văn bản, `mode=r2v` dùng cho tạo bằng ảnh tham chiếu/tài nguyên tham chiếu, `mode=edit` dùng cho chỉnh sửa video.\n- Văn bản có thể đặt trong mục `text` của `prompt` hoặc `content`; hình ảnh có thể đặt trong `image_url / image_urls / reference_images / input_reference / content`; video có thể đặt trong `video_urls / content`.\n- Trường thời lượng có thể dùng `duration` hoặc `seconds`, hệ thống sẽ tự động khớp với các mức 4 / 6 / 8 / 10 giây.\n\nMiniMax / Hailuo gọi:\n- `minimax-h3` có thể được gọi thông qua API tác vụ này, hỗ trợ tạo video từ văn bản, tham chiếu ảnh và tham chiếu âm thanh; văn bản có thể đặt trong mục văn bản `prompt` hoặc `content`, dữ liệu có thể đặt trong các trường như `content`, `image_urls`, `audio_urls`.\n- `hailuo-2.3` có thể được gọi thông qua API tác vụ này, cần ảnh khung hình đầu tiên; khuyến nghị truyền mục `image_url` của `role=first_frame` trong `content`.\n- `minimax-h3` thường dùng `duration=5~15`, `resolution=1440p`; `hailuo-2.3` thường dùng `duration=6` hoặc `10`, `resolution=768p`.\n\nCác trường cần lưu ý trong kết quả truy vấn:\n- `items[].status`\n- `items[].content.video_url` hoặc `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```\n\n## Kling 4.0\n\nGọi Kling 4.0: `kling-4.0` (720p) và `kling-4.0-1080p` sử dụng `contents/settings/options`, có thể dùng chung một body yêu cầu với `/v1/videos`; văn bản được đặt trong mục `type=prompt` của `contents`, không cần truyền lại `prompt` ở cấp cao nhất. `settings.resolution` phải thống nhất với tên mô hình.",
         "operationId": "create__seedance__task",
         "tags": [
           "Tạo video Seedance"
@@ -4414,216 +4712,501 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": [
-                  "model"
-                ],
-                "properties": {
-                  "model": {
-                    "type": "string",
-                    "example": "doubao-seedance-2-0-260128",
-                    "enum": [
-                      "sd-2-5",
-                      "doubao-seedance-1-0-lite-i2v-250428",
-                      "doubao-seedance-1-0-lite-t2v-250428",
-                      "doubao-seedance-1-0-pro-250528",
-                      "doubao-seedance-1-0-pro-fast-251015",
-                      "doubao-seedance-1-5-pro-251215",
-                      "doubao-seedance-2-0-260128",
-                      "doubao-seedance-2-0-fast-260128",
-                      "minimax-h3",
-                      "hailuo-2.3",
-                      "gemini-omni"
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "model"
                     ],
-                    "description": "Bắt buộc. Tên mô hình. Có thể truyền Seedance mô hình bên ngoài, `gemini-omni`, `minimax-h3` hoặc `hailuo-2.3`."
-                  },
-                  "prompt": {
-                    "type": "string",
-                    "description": "Tùy chọn; nếu không truyền, trong content phải cung cấp mục text không rỗng làm mô tả để tạo video.",
-                    "example": "参考素材生成一段剧情短视频"
-                  },
-                  "content": {
-                    "type": "array",
-                    "description": "Tùy chọn. Mảng content của Volcano Ark, sắp xếp xen kẽ theo thứ tự giữa văn bản và các mục nội dung. Mục văn bản dùng `{ \"type\": \"text\", \"text\": \"...\" }`; các mục hình ảnh, video, âm thanh lần lượt dùng các đối tượng `image_url`, `video_url`, `audio_url` và đặt `url` bên trong, có thể kết hợp với `role` (như `reference_image`, `reference_video`, `reference_audio`) và `name` để văn bản tham chiếu.",
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "type"
-                      ],
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "text",
-                            "image_url",
-                            "video_url",
-                            "audio_url"
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "example": "doubao-seedance-2-0-260128",
+                        "enum": [
+                          "sd-2-5",
+                          "doubao-seedance-1-0-lite-i2v-250428",
+                          "doubao-seedance-1-0-lite-t2v-250428",
+                          "doubao-seedance-1-0-pro-250528",
+                          "doubao-seedance-1-0-pro-fast-251015",
+                          "doubao-seedance-1-5-pro-251215",
+                          "doubao-seedance-2-0-260128",
+                          "doubao-seedance-2-0-fast-260128",
+                          "minimax-h3",
+                          "hailuo-2.3",
+                          "gemini-omni"
+                        ],
+                        "description": "Bắt buộc. Tên mô hình. Có thể truyền Seedance mô hình bên ngoài, `gemini-omni`, `minimax-h3` hoặc `hailuo-2.3`."
+                      },
+                      "prompt": {
+                        "type": "string",
+                        "description": "Tùy chọn; nếu không truyền, trong content phải cung cấp mục text không rỗng làm mô tả để tạo video.",
+                        "example": "参考素材生成一段剧情短视频"
+                      },
+                      "content": {
+                        "type": "array",
+                        "description": "Tùy chọn. Mảng content của Volcano Ark, sắp xếp xen kẽ theo thứ tự giữa văn bản và các mục nội dung. Mục văn bản dùng `{ \"type\": \"text\", \"text\": \"...\" }`; các mục hình ảnh, video, âm thanh lần lượt dùng các đối tượng `image_url`, `video_url`, `audio_url` và đặt `url` bên trong, có thể kết hợp với `role` (như `reference_image`, `reference_video`, `reference_audio`) và `name` để văn bản tham chiếu.",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
                           ],
-                          "description": "Loại mục nội dung."
-                        },
-                        "text": {
-                          "type": "string",
-                          "description": "Nội dung văn bản, chỉ dùng khi type=text."
-                        },
-                        "image_url": {
-                          "oneOf": [
-                            {
-                              "type": "string"
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "text",
+                                "image_url",
+                                "video_url",
+                                "audio_url"
+                              ],
+                              "description": "Loại mục nội dung."
                             },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "url": {
-                                  "type": "string"
-                                }
-                              }
-                            }
-                          ],
-                          "description": "URL hình ảnh, khuyến nghị dùng dạng đối tượng: `{\"url\":\"https://...\"}`."
-                        },
-                        "video_url": {
-                          "oneOf": [
-                            {
-                              "type": "string"
+                            "text": {
+                              "type": "string",
+                              "description": "Nội dung văn bản, chỉ dùng khi type=text."
                             },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "url": {
+                            "image_url": {
+                              "oneOf": [
+                                {
                                   "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
                                 }
-                              }
-                            }
-                          ],
-                          "description": "URL video, khuyến nghị dùng dạng object: `{\"url\":\"https://...\"}`."
-                        },
-                        "audio_url": {
-                          "oneOf": [
-                            {
-                              "type": "string"
+                              ],
+                              "description": "URL hình ảnh, khuyến nghị dùng dạng đối tượng: `{\"url\":\"https://...\"}`."
                             },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "url": {
+                            "video_url": {
+                              "oneOf": [
+                                {
                                   "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
                                 }
-                              }
+                              ],
+                              "description": "URL video, khuyến nghị dùng dạng object: `{\"url\":\"https://...\"}`."
+                            },
+                            "audio_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "URL âm thanh, khuyến nghị dùng dạng đối tượng: `{\"url\":\"https://...\"}`."
+                            },
+                            "role": {
+                              "type": "string",
+                              "description": "Mã định danh mục đích sử dụng tài nguyên, các giá trị thường gặp như reference_image, reference_video, reference_audio."
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Tên tài liệu, có thể được tham chiếu trong prompt văn bản hoặc dùng để phân biệt nhiều tài liệu."
                             }
-                          ],
-                          "description": "URL âm thanh, khuyến nghị dùng dạng đối tượng: `{\"url\":\"https://...\"}`."
-                        },
-                        "role": {
-                          "type": "string",
-                          "description": "Mã định danh mục đích sử dụng tài nguyên, các giá trị thường gặp như reference_image, reference_video, reference_audio."
-                        },
-                        "name": {
-                          "type": "string",
-                          "description": "Tên tài liệu, có thể được tham chiếu trong prompt văn bản hoặc dùng để phân biệt nhiều tài liệu."
+                          }
                         }
+                      },
+                      "function_mode": {
+                        "type": "string",
+                        "description": "Tùy chọn. Chế độ tính năng nâng cao, chẳng hạn như `omni_reference` dùng để tham khảo toàn diện."
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "Tùy chọn. Các trường ở chế độ tương thích, như `t2v`, `i2v`, `i2v_first_last`, `reference_images`, `reference_material`; `gemini-omni` hỗ trợ `t2v`, `r2v`, `edit`."
+                      },
+                      "image_url": {
+                        "type": "string",
+                        "description": "Tùy chọn. URL của một ảnh tham chiếu duy nhất."
+                      },
+                      "image_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Tùy chọn. Danh sách URL của nhiều ảnh tham chiếu."
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "Tùy chọn. Tương thích với các trường nhập liệu tham chiếu."
+                      },
+                      "end_image_url": {
+                        "type": "string",
+                        "description": "Tùy chọn. URL hình ảnh tham chiếu cho khung hình cuối."
+                      },
+                      "last_image_url": {
+                        "type": "string",
+                        "description": "Tùy chọn. Alias URL của hình ảnh tham chiếu khung hình cuối."
+                      },
+                      "video_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Tùy chọn. Danh sách URL video tham chiếu."
+                      },
+                      "audio_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Tùy chọn. Danh sách URL âm thanh tham chiếu."
+                      },
+                      "seconds": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "Tùy chọn. Thời lượng video, tính bằng giây; tương thích với `duration`."
+                      },
+                      "duration": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "Tùy chọn. Thời lượng video, tính bằng giây; tương thích với `seconds`."
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "description": "Tùy chọn. Tỷ lệ khung hình, ví dụ: `16:9`."
+                      },
+                      "ratio": {
+                        "type": "string",
+                        "description": "Tùy chọn. Biệt danh của tỷ lệ khung hình, ví dụ: `16:9`."
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "Tùy chọn. Trường tương thích với độ phân giải hoặc kích thước."
+                      },
+                      "quality": {
+                        "type": "string",
+                        "description": "Tùy chọn. Cấu hình chất lượng tạo."
+                      },
+                      "resolution": {
+                        "type": "string",
+                        "description": "Tùy chọn. Độ phân giải đầu ra."
+                      },
+                      "fps": {
+                        "type": "number",
+                        "description": "Tùy chọn. Tốc độ khung hình."
+                      },
+                      "generate_audio": {
+                        "type": "boolean",
+                        "description": "Tùy chọn. Có tạo âm thanh hay không."
+                      },
+                      "watermark": {
+                        "type": "boolean",
+                        "description": "Tùy chọn. Có thêm hình mờ (watermark) hay không."
                       }
                     }
                   },
-                  "function_mode": {
-                    "type": "string",
-                    "description": "Tùy chọn. Chế độ tính năng nâng cao, chẳng hạn như `omni_reference` dùng để tham khảo toàn diện."
-                  },
-                  "mode": {
-                    "type": "string",
-                    "description": "Tùy chọn. Các trường ở chế độ tương thích, như `t2v`, `i2v`, `i2v_first_last`, `reference_images`, `reference_material`; `gemini-omni` hỗ trợ `t2v`, `r2v`, `edit`."
-                  },
-                  "image_url": {
-                    "type": "string",
-                    "description": "Tùy chọn. URL của một ảnh tham chiếu duy nhất."
-                  },
-                  "image_urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Tùy chọn. Danh sách URL của nhiều ảnh tham chiếu."
-                  },
-                  "input_reference": {
-                    "type": "string",
-                    "description": "Tùy chọn. Tương thích với các trường nhập liệu tham chiếu."
-                  },
-                  "end_image_url": {
-                    "type": "string",
-                    "description": "Tùy chọn. URL hình ảnh tham chiếu cho khung hình cuối."
-                  },
-                  "last_image_url": {
-                    "type": "string",
-                    "description": "Tùy chọn. Alias URL của hình ảnh tham chiếu khung hình cuối."
-                  },
-                  "video_urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Tùy chọn. Danh sách URL video tham chiếu."
-                  },
-                  "audio_urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Tùy chọn. Danh sách URL âm thanh tham chiếu."
-                  },
-                  "seconds": {
-                    "oneOf": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "string"
-                      }
+                  {
+                    "type": "object",
+                    "required": [
+                      "model"
                     ],
-                    "description": "Tùy chọn. Thời lượng video, tính bằng giây; tương thích với `duration`."
-                  },
-                  "duration": {
-                    "oneOf": [
-                      {
-                        "type": "number"
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "example": "kling-4.0",
+                        "enum": [
+                          "kling-4.0",
+                          "kling-4.0-1080p"
+                        ],
+                        "description": "Bắt buộc. Tên mô hình. Có thể truyền các mô hình công khai Seedance, Kling 4.0, `gemini-omni`, `minimax-h3` hoặc `hailuo-2.3`."
                       },
-                      {
-                        "type": "string"
+                      "prompt": {
+                        "type": "string",
+                        "description": "Tùy chọn; nếu không truyền, bạn phải cung cấp mô tả văn bản trong mục text của content hoặc mục prompt của contents thuộc Kling 4.0.",
+                        "example": "参考素材生成一段剧情短视频"
+                      },
+                      "content": {
+                        "type": "array",
+                        "description": "Tùy chọn. Mảng content của Volcano Ark, sắp xếp xen kẽ theo thứ tự giữa văn bản và các mục nội dung. Mục văn bản dùng `{ \"type\": \"text\", \"text\": \"...\" }`; các mục hình ảnh, video, âm thanh lần lượt dùng các đối tượng `image_url`, `video_url`, `audio_url` và đặt `url` bên trong, có thể kết hợp với `role` (như `reference_image`, `reference_video`, `reference_audio`) và `name` để văn bản tham chiếu.",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "text",
+                                "image_url",
+                                "video_url",
+                                "audio_url"
+                              ],
+                              "description": "Loại mục nội dung."
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "Nội dung văn bản, chỉ dùng khi type=text."
+                            },
+                            "image_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "URL hình ảnh, khuyến nghị dùng dạng đối tượng: `{\"url\":\"https://...\"}`."
+                            },
+                            "video_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "URL video, khuyến nghị dùng dạng object: `{\"url\":\"https://...\"}`."
+                            },
+                            "audio_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "URL âm thanh, khuyến nghị dùng dạng đối tượng: `{\"url\":\"https://...\"}`."
+                            },
+                            "role": {
+                              "type": "string",
+                              "description": "Mã định danh mục đích sử dụng tài nguyên, các giá trị thường gặp như reference_image, reference_video, reference_audio."
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Tên tài liệu, có thể được tham chiếu trong prompt văn bản hoặc dùng để phân biệt nhiều tài liệu."
+                            }
+                          }
+                        }
+                      },
+                      "contents": {
+                        "type": "array",
+                        "minItems": 1,
+                        "description": "Mảng nội dung phiên bản mới Kling 4.0, sử dụng các mục prompt, reference_image, reference_video, first_frame hoặc last_frame.",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt",
+                                "reference_image",
+                                "reference_video",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "Mô tả văn bản khi type=prompt."
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "description": "URL có thể truy cập của tài liệu tham khảo hoặc khung hình đầu/cuối."
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "type": "object",
+                        "description": "Các tham số phiên bản mới của Kling 4.0: duration, resolution, aspect_ratio, audio.",
+                        "properties": {
+                          "duration": {
+                            "type": "integer",
+                            "minimum": 4,
+                            "maximum": 30,
+                            "example": 4
+                          },
+                          "resolution": {
+                            "type": "string",
+                            "enum": [
+                              "720p",
+                              "1080p"
+                            ]
+                          },
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ]
+                          },
+                          "audio": {
+                            "oneOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ],
+                            "example": "native"
+                          }
+                        }
+                      },
+                      "options": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "Tùy chọn mở rộng Kling 4.0."
+                      },
+                      "function_mode": {
+                        "type": "string",
+                        "description": "Tùy chọn. Chế độ tính năng nâng cao, chẳng hạn như `omni_reference` dùng để tham khảo toàn diện."
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "Tùy chọn. Các trường ở chế độ tương thích, như `t2v`, `i2v`, `i2v_first_last`, `reference_images`, `reference_material`; `gemini-omni` hỗ trợ `t2v`, `r2v`, `edit`."
+                      },
+                      "image_url": {
+                        "type": "string",
+                        "description": "Tùy chọn. URL của một ảnh tham chiếu duy nhất."
+                      },
+                      "image_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Tùy chọn. Danh sách URL của nhiều ảnh tham chiếu."
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "Tùy chọn. Tương thích với các trường nhập liệu tham chiếu."
+                      },
+                      "end_image_url": {
+                        "type": "string",
+                        "description": "Tùy chọn. URL hình ảnh tham chiếu cho khung hình cuối."
+                      },
+                      "last_image_url": {
+                        "type": "string",
+                        "description": "Tùy chọn. Alias URL của hình ảnh tham chiếu khung hình cuối."
+                      },
+                      "video_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Tùy chọn. Danh sách URL video tham chiếu."
+                      },
+                      "audio_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Tùy chọn. Danh sách URL âm thanh tham chiếu."
+                      },
+                      "seconds": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "Tùy chọn. Thời lượng video, tính bằng giây; tương thích với `duration`."
+                      },
+                      "duration": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "Tùy chọn. Thời lượng video, tính bằng giây; tương thích với `seconds`."
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "description": "Tùy chọn. Tỷ lệ khung hình, ví dụ: `16:9`."
+                      },
+                      "ratio": {
+                        "type": "string",
+                        "description": "Tùy chọn. Biệt danh của tỷ lệ khung hình, ví dụ: `16:9`."
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "Tùy chọn. Trường tương thích với độ phân giải hoặc kích thước."
+                      },
+                      "quality": {
+                        "type": "string",
+                        "description": "Tùy chọn. Cấu hình chất lượng tạo."
+                      },
+                      "resolution": {
+                        "type": "string",
+                        "description": "Tùy chọn. Độ phân giải đầu ra."
+                      },
+                      "fps": {
+                        "type": "number",
+                        "description": "Tùy chọn. Tốc độ khung hình."
+                      },
+                      "generate_audio": {
+                        "type": "boolean",
+                        "description": "Tùy chọn. Có tạo âm thanh hay không."
+                      },
+                      "watermark": {
+                        "type": "boolean",
+                        "description": "Tùy chọn. Có thêm hình mờ (watermark) hay không."
                       }
-                    ],
-                    "description": "Tùy chọn. Thời lượng video, tính bằng giây; tương thích với `seconds`."
-                  },
-                  "aspect_ratio": {
-                    "type": "string",
-                    "description": "Tùy chọn. Tỷ lệ khung hình, ví dụ: `16:9`."
-                  },
-                  "ratio": {
-                    "type": "string",
-                    "description": "Tùy chọn. Biệt danh của tỷ lệ khung hình, ví dụ: `16:9`."
-                  },
-                  "size": {
-                    "type": "string",
-                    "description": "Tùy chọn. Trường tương thích với độ phân giải hoặc kích thước."
-                  },
-                  "quality": {
-                    "type": "string",
-                    "description": "Tùy chọn. Cấu hình chất lượng tạo."
-                  },
-                  "resolution": {
-                    "type": "string",
-                    "description": "Tùy chọn. Độ phân giải đầu ra."
-                  },
-                  "fps": {
-                    "type": "number",
-                    "description": "Tùy chọn. Tốc độ khung hình."
-                  },
-                  "generate_audio": {
-                    "type": "boolean",
-                    "description": "Tùy chọn. Có tạo âm thanh hay không."
-                  },
-                  "watermark": {
-                    "type": "boolean",
-                    "description": "Tùy chọn. Có thêm hình mờ (watermark) hay không."
+                    },
+                    "title": "Kling 4.0",
+                    "x-kling-4-request": true
                   }
-                }
+                ]
               },
               "examples": {
                 "seedance_sd25_mixed_content": {
@@ -4834,6 +5417,60 @@
                     ],
                     "duration": 8,
                     "size": "1280x720"
+                  }
+                },
+                "kling_4_ark_contents": {
+                  "summary": "Tạo tham chiếu Kling 4.0 720p",
+                  "value": {
+                    "model": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_ark_contents_1080p": {
+                  "summary": "Tạo tham chiếu Kling 4.0 1080p",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "1080p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
                   }
                 }
               }

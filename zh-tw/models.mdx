@@ -203,7 +203,7 @@ Veo 主模型優先走 `/v1/videos` 相容格式；`/v1beta/...` 為 Veo 原生�
 
 ### Kling Videos
 
-同時公開模型專用介面與統一影片入口。
+Kling 4.0 使用新版 contents/settings/options 格式，透過火山任務入口或 OpenAI 影片入口提交。
 
 
 
@@ -211,9 +211,13 @@ Veo 主模型優先走 `/v1/videos` 相容格式；`/v1beta/...` 為 Veo 原生�
 
 |---|---|
 
-| `kling-video` | `/kling/v1/...` / `/v1/videos` |
+| `kling-4.0` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
-| `kling-*` | `/kling/v1/...` / `/v1/videos` |
+| `kling-4.0-1080p` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `kling-video` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `kling-*` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
 
 

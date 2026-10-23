@@ -895,7 +895,7 @@
       "post": {
         "summary": "Create video",
         "deprecated": false,
-        "description": "OpenAI Sora video generation API in a compatible format. Supports text-to-video and image/video reference generation modes.\n\n- `POST /v1/videos`: Create video task\n- `GET /v1/videos/{video_id}`: Query task status\n- `GET /v1/videos/{video_id}/content`: Retrieve the video binary content\n\nCurrently not available externally:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nStandard authentication headers:\n- `Content-Type: application/json`\n\n1. Use `POST /v1/videos` to create a task and obtain `id`\n2. Poll `GET /v1/videos/{id}` until `completed` or `failed`\n3. After completion, prefer using `video_url` returned in the response\n4. For unified download, call `GET /v1/videos/{id}/content`\n\nCore parameters:\n- `model: string`: Required, public model name\n- `prompt: string`: Recommended, video generation description\n- `seconds: number|string`: Optional, target duration\n- `duration: number|string`: Optional, duration alias\n- `size: string`: Optional, output resolution\n- `mode: string`: Optional, common values: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nCommon compatibility parameters:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling common extended parameters:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo series\n\nNote: `stable`, `official`, and similar labels indicate different groups, not external `model` suffixes; when calling, keep `model` as the base model name, and let the account or token group determine which group is actually used.\n\n#### Veo 3.x main model\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommendations:\n- For text-to-video only, prefer the `veo3*` / `veo3.1*` base models\n- For image-to-video or reference-to-video scenarios, it is recommended to explicitly pass `mode + image_url/reference_images`\n\n### 4.2 Sora series\n\nBase models:\n- `sora-2`\n- `sora-2-pro`\n\nRecommendations:\n- `sora-2*` is suitable for general-purpose use\n- To use groups such as `stable` / `official`, keep `model` as the base model name and do not append any suffix to the model name.\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse series\n\nPublic model:\n- `happyhorse-1.0`\n\nRecommendations:\n- `happyhorse-1.0` are distinguished by `mode` into `t2v`, `i2v`, `r2v`, and `video_edit`.\n- In Sora-compatible format, it is recommended to pass media items in the `content` array for reference images.\n- Use `type=text` for text items and `type=image_url` for media items, and optionally use `role` and `name` to indicate the asset's purpose.\n\nRequest example:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance Series\n\nPublic model:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommendations:\n- For text-to-video, prefer `*-t2v-*` or `pro / fast`\n- For image-to-video, prefer `*-i2v-*`\n- For scenarios with complex reference materials, prefer `content`\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok Video Series\n\nPublic model:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nCommon parameters:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExample:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling Video Main Model\n\nPublic base model:\n- `kling-video`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCommon `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nMinimum input parameters:\n- Text-to-video: `model + model_name + prompt + mode=t2v`\n- Image-to-video: `model + model_name + prompt + mode=i2v + image`\n- Multi-image reference: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Video extension: `model + model_name + mode=extend + video_id`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo Video Series\n\nPublic model:\n- `minimax-h3`\n- `hailuo-2.3`\n\nRecommendations:\n- `minimax-h3` supports text-to-video, image references, and audio references. We recommend mixing text and assets via `content`; you can also use compatible fields such as `image_urls` and `audio_urls`.\n- `hailuo-2.3` requires a first-frame image. We recommend passing the `image_url` field of `role=first_frame` in `content`, or using `image_urls` to pass the first-frame image.\n- `minimax-h3` commonly uses `duration=5~15` and `resolution=1440p`; `hailuo-2.3` commonly uses `duration=6` or `10` and `resolution=768p`.\n\n`minimax-h3` Example:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` Example:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Minimum input: `model + prompt`\n\n- `mode=i2v`\n- Minimum input: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Minimum input: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Minimum input: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Minimum input: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni usage instructions\n\n- `gemini-omni` is the publicly exposed video model name of new-api, and can be called directly via `POST /v1/videos`.\n- `mode=t2v`: text-to-video, with the minimum input parameter being `model + prompt`.\n- `mode=r2v`: reference image/reference material generation; images can be placed in `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference`, or `content`.\n- `mode=edit`: video editing; videos can be placed in `video`, `video_url`, `videos`, or `content`, and reference images can also be provided at the same time.\n- The duration field can use `seconds` or `duration`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.",
+        "description": "OpenAI Sora video generation API in a compatible format. Supports text-to-video and image/video reference generation modes.\n\n- `POST /v1/videos`: Create video task\n- `GET /v1/videos/{video_id}`: Query task status\n- `GET /v1/videos/{video_id}/content`: Retrieve the video binary content\n\nCurrently not available externally:\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\nStandard authentication headers:\n- `Content-Type: application/json`\n\n1. Use `POST /v1/videos` to create a task and obtain `id`\n2. Poll `GET /v1/videos/{id}` until `completed` or `failed`\n3. After completion, prefer using `video_url` returned in the response\n4. For unified download, call `GET /v1/videos/{id}/content`\n\nCore parameters:\n- `model: string`: Required, public model name\n- `prompt: string`: Recommended, video generation description\n- `seconds: number|string`: Optional, target duration\n- `duration: number|string`: Optional, duration alias\n- `size: string`: Optional, output resolution\n- `mode: string`: Optional, common values: `t2v` `i2v` `i2v_first_last` `reference_material`\n\nCommon compatibility parameters:\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling common extended parameters:\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo series\n\nNote: `stable`, `official`, and similar labels indicate different groups, not external `model` suffixes; when calling, keep `model` as the base model name, and let the account or token group determine which group is actually used.\n\n#### Veo 3.x main model\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\nRecommendations:\n- For text-to-video only, prefer the `veo3*` / `veo3.1*` base models\n- For image-to-video or reference-to-video scenarios, it is recommended to explicitly pass `mode + image_url/reference_images`\n\n### 4.2 Sora series\n\nBase models:\n- `sora-2`\n- `sora-2-pro`\n\nRecommendations:\n- `sora-2*` is suitable for general-purpose use\n- To use groups such as `stable` / `official`, keep `model` as the base model name and do not append any suffix to the model name.\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse series\n\nPublic model:\n- `happyhorse-1.0`\n\nRecommendations:\n- `happyhorse-1.0` are distinguished by `mode` into `t2v`, `i2v`, `r2v`, and `video_edit`.\n- In Sora-compatible format, it is recommended to pass media items in the `content` array for reference images.\n- Use `type=text` for text items and `type=image_url` for media items, and optionally use `role` and `name` to indicate the asset's purpose.\n\nRequest example:\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance Series\n\nPublic model:\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\nRecommendations:\n- For text-to-video, prefer `*-t2v-*` or `pro / fast`\n- For image-to-video, prefer `*-i2v-*`\n- For scenarios with complex reference materials, prefer `content`\n\nRequest example:\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok Video Series\n\nPublic model:\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\nCommon parameters:\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\nExample:\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling Video Main Model\n\nPublic base model:\n- `kling-video`\n\nRequired:\n- `model`\n- `model_name`\n\nSupported `model_name`:\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\nCommon `mode`:\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\nMinimum input parameters:\n- Text-to-video: `model + model_name + prompt + mode=t2v`\n- Image-to-video: `model + model_name + prompt + mode=i2v + image`\n- Multi-image reference: `model + model_name + prompt + mode=multi_i2v + image_list`\n- Video extension: `model + model_name + mode=extend + video_id`\n\nExample:\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo Video Series\n\nPublic model:\n- `minimax-h3`\n- `hailuo-2.3`\n\nRecommendations:\n- `minimax-h3` supports text-to-video, image references, and audio references. We recommend mixing text and assets via `content`; you can also use compatible fields such as `image_urls` and `audio_urls`.\n- `hailuo-2.3` requires a first-frame image. We recommend passing the `image_url` field of `role=first_frame` in `content`, or using `image_urls` to pass the first-frame image.\n- `minimax-h3` commonly uses `duration=5~15` and `resolution=1440p`; `hailuo-2.3` commonly uses `duration=6` or `10` and `resolution=768p`.\n\n`minimax-h3` Example:\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` Example:\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- Minimum input: `model + prompt`\n\n- `mode=i2v`\n- Minimum input: `model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- Minimum input: `model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- Minimum input: `model + prompt + reference_images`\n\n- `mode=reference_material`\n- Minimum input: `model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni usage instructions\n\n- `gemini-omni` is the publicly exposed video model name of new-api, and can be called directly via `POST /v1/videos`.\n- `mode=t2v`: text-to-video, with the minimum input parameter being `model + prompt`.\n- `mode=r2v`: reference image/reference material generation; images can be placed in `image`, `image_url`, `images`, `image_urls`, `reference_images`, `input_reference`, or `content`.\n- `mode=edit`: video editing; videos can be placed in `video`, `video_url`, `videos`, or `content`, and reference images can also be provided at the same time.\n- The duration field can use `seconds` or `duration`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\n## Kling 4.0\n\nExternal models: `kling-4.0` (720p), `kling-4.0-1080p`. Submissions can be made via `POST /api/v3/contents/generations/tasks` or `POST /v1/videos`, and queried through `GET /{task_id}` on their respective paths. Both entry points support the `contents/settings/options` request body. `/v1/videos` is also compatible with `prompt`, `seconds`, `size`, and `input_reference` of the OpenAI video format. In `contents`, `type=prompt` is text, `type=reference_image` and `reference_video` are reference assets, and `first_frame` and `last_frame` are first and last frames. `kling-4.0` corresponds to 720p, and `kling-4.0-1080p` corresponds to 1080p; please ensure `settings.resolution` matches the model name. In `settings`, use `duration` (4–30 seconds), `resolution` (720p/1080p), `aspect_ratio` (21:9, 16:9, 9:16, 1:1), and `audio`. The current API supports up to 10 reference images and 5 reference videos, but does not support reference audio. The legacy `kling-video` and `model_name` modes remain as backwards-compatible endpoints.\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"contents\": [\n    {\n      \"type\": \"prompt\",\n      \"text\": \"A cinematic product shot\"\n    },\n    {\n      \"type\": \"reference_image\",\n      \"url\": \"https://example.com/product.jpg\"\n    }\n  ],\n  \"settings\": {\n    \"duration\": 4,\n    \"resolution\": \"720p\",\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": \"native\"\n  },\n  \"options\": {}\n}\n```",
         "operationId": "createVideo",
         "tags": [
           "Video generation Sora compatible formats"
@@ -906,141 +906,327 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "type": "string",
-                    "description": "Required, external model name. `gemini-omni` Can be called via `/v1/videos`.",
-                    "enum": [
-                      "sora-2",
-                      "sora-2-pro",
-                      "gemini-omni",
-                      "happyhorse-1.0",
-                      "happyhorse-1.0-i2v",
-                      "happyhorse-1.0-t2v",
-                      "happyhorse-1.0-r2v",
-                      "happyhorse-1.0-video-edit",
-                      "doubao-seedance-1-0-lite-i2v-250428",
-                      "doubao-seedance-1-0-lite-t2v-250428",
-                      "doubao-seedance-1-0-pro-250528",
-                      "doubao-seedance-1-0-pro-fast-251015",
-                      "doubao-seedance-1-5-pro-251215",
-                      "doubao-seedance-2-0-260128",
-                      "doubao-seedance-2-0-fast-260128",
-                      "sd-2-5",
-                      "veo3",
-                      "veo3-fast",
-                      "veo3-fast-frames",
-                      "veo3-frames",
-                      "veo3-pro",
-                      "veo3-pro-frames",
-                      "veo3.1",
-                      "veo3.1-4k",
-                      "veo3.1-components",
-                      "veo3.1-fast",
-                      "veo3.1-pro",
-                      "veo3.1-pro-4k",
-                      "kling-video",
-                      "grok-imagine-1.0-video",
-                      "grok-imagine-video-1.5-preview",
-                      "grok-video-3",
-                      "minimax-h3",
-                      "hailuo-2.3",
-                      "viduq3-turbo"
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "description": "Required, external model name. `gemini-omni` Can be called via `/v1/videos`.",
+                        "enum": [
+                          "sora-2",
+                          "sora-2-pro",
+                          "gemini-omni",
+                          "happyhorse-1.0",
+                          "happyhorse-1.0-i2v",
+                          "happyhorse-1.0-t2v",
+                          "happyhorse-1.0-r2v",
+                          "happyhorse-1.0-video-edit",
+                          "doubao-seedance-1-0-lite-i2v-250428",
+                          "doubao-seedance-1-0-lite-t2v-250428",
+                          "doubao-seedance-1-0-pro-250528",
+                          "doubao-seedance-1-0-pro-fast-251015",
+                          "doubao-seedance-1-5-pro-251215",
+                          "doubao-seedance-2-0-260128",
+                          "doubao-seedance-2-0-fast-260128",
+                          "sd-2-5",
+                          "veo3",
+                          "veo3-fast",
+                          "veo3-fast-frames",
+                          "veo3-frames",
+                          "veo3-pro",
+                          "veo3-pro-frames",
+                          "veo3.1",
+                          "veo3.1-4k",
+                          "veo3.1-components",
+                          "veo3.1-fast",
+                          "veo3.1-pro",
+                          "veo3.1-pro-4k",
+                          "kling-video",
+                          "grok-imagine-1.0-video",
+                          "grok-imagine-video-1.5-preview",
+                          "grok-video-3",
+                          "minimax-h3",
+                          "hailuo-2.3",
+                          "viduq3-turbo"
+                        ],
+                        "example": "sora-2"
+                      },
+                      "prompt": {
+                        "type": "string",
+                        "description": "Unified prompt entry point. Required for most models."
+                      },
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Single image entry point; will be mapped to `images` in certain compatibility modes."
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "description": "Unified duration parameter. Some models also accept `seconds`."
+                      },
+                      "width": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video width"
+                      },
+                      "height": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video height"
+                      },
+                      "fps": {
+                        "type": "integer",
+                        "example": 30,
+                        "description": "Video frame rate"
+                      },
+                      "seed": {
+                        "type": "integer",
+                        "example": 20231234,
+                        "description": "Random seed"
+                      },
+                      "n": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Number of videos to generate"
+                      },
+                      "response_format": {
+                        "type": "string",
+                        "example": "url",
+                        "description": "Response format"
+                      },
+                      "user": {
+                        "type": "string",
+                        "example": "user-1234",
+                        "description": "User identifier"
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "Dynamic extension field container. Numerous model-specific fields are deserialized from here."
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "Optional, video generation mode. `gemini-omni` Supports `t2v`, `r2v`, and `edit`."
+                      },
+                      "images": {
+                        "type": "array",
+                        "description": "Unified multi-image entry point. Used by Vidu, Seedance, Veo, etc.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "Unified size input, which maps to resolution/aspect_ratio and related fields."
+                      },
+                      "seconds": {
+                        "type": "string",
+                        "description": "Sora compatibility entry point; at runtime, it falls back to duration."
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "Sora/Veo compatible reference image input, can be a multipart file or a compatible object."
+                      },
+                      "parameters": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "model",
+                      "prompt"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "description": "Required, external model name. `gemini-omni` Can be called via `/v1/videos`.",
+                        "enum": [
+                          "kling-4.0",
+                          "kling-4.0-1080p"
+                        ],
+                        "example": "kling-4.0"
+                      },
+                      "prompt": {
+                        "type": "string",
+                        "description": "Video description. Not required when using the prompt field inside contents for Kling 4.0. Other models should provide text according to their respective format requirements."
+                      },
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Single image entry point; will be mapped to `images` in certain compatibility modes."
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "description": "Unified duration parameter. Some models also accept `seconds`."
+                      },
+                      "width": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video width"
+                      },
+                      "height": {
+                        "type": "integer",
+                        "example": 512,
+                        "description": "Video height"
+                      },
+                      "fps": {
+                        "type": "integer",
+                        "example": 30,
+                        "description": "Video frame rate"
+                      },
+                      "seed": {
+                        "type": "integer",
+                        "example": 20231234,
+                        "description": "Random seed"
+                      },
+                      "n": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Number of videos to generate"
+                      },
+                      "response_format": {
+                        "type": "string",
+                        "example": "url",
+                        "description": "Response format"
+                      },
+                      "user": {
+                        "type": "string",
+                        "example": "user-1234",
+                        "description": "User identifier"
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "Dynamic extension field container. Numerous model-specific fields are deserialized from here."
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "Optional, video generation mode. `gemini-omni` Supports `t2v`, `r2v`, and `edit`."
+                      },
+                      "images": {
+                        "type": "array",
+                        "description": "Unified multi-image entry point. Used by Vidu, Seedance, Veo, etc.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      },
+                      "contents": {
+                        "type": "array",
+                        "minItems": 1,
+                        "description": "Kling 4.0 content items, supporting prompt, reference_image, reference_video, first_frame, and last_frame.",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt",
+                                "reference_image",
+                                "reference_video",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "The text description when `type=prompt`."
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "description": "Accessible URL of reference materials or the first/last frames."
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "type": "object",
+                        "description": "Kling 4.0 new duration, resolution, aspect ratio, and audio settings.",
+                        "properties": {
+                          "duration": {
+                            "type": "integer",
+                            "minimum": 4,
+                            "maximum": 30,
+                            "example": 4
+                          },
+                          "resolution": {
+                            "type": "string",
+                            "enum": [
+                              "720p",
+                              "1080p"
+                            ]
+                          },
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ]
+                          },
+                          "audio": {
+                            "oneOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ],
+                            "example": "native"
+                          }
+                        }
+                      },
+                      "options": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "New extension options for Kling 4.0."
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "Unified size input, which maps to resolution/aspect_ratio and related fields."
+                      },
+                      "seconds": {
+                        "type": "string",
+                        "description": "Sora compatibility entry point; at runtime, it falls back to duration."
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "Sora/Veo compatible reference image input, can be a multipart file or a compatible object."
+                      },
+                      "parameters": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "model"
                     ],
-                    "example": "sora-2"
-                  },
-                  "prompt": {
-                    "type": "string",
-                    "description": "Unified prompt entry point. Required for most models."
-                  },
-                  "image": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Single image entry point; will be mapped to `images` in certain compatibility modes."
-                  },
-                  "duration": {
-                    "type": "integer",
-                    "description": "Unified duration parameter. Some models also accept `seconds`."
-                  },
-                  "width": {
-                    "type": "integer",
-                    "example": 512,
-                    "description": "Video width"
-                  },
-                  "height": {
-                    "type": "integer",
-                    "example": 512,
-                    "description": "Video height"
-                  },
-                  "fps": {
-                    "type": "integer",
-                    "example": 30,
-                    "description": "Video frame rate"
-                  },
-                  "seed": {
-                    "type": "integer",
-                    "example": 20231234,
-                    "description": "Random seed"
-                  },
-                  "n": {
-                    "type": "integer",
-                    "example": 1,
-                    "description": "Number of videos to generate"
-                  },
-                  "response_format": {
-                    "type": "string",
-                    "example": "url",
-                    "description": "Response format"
-                  },
-                  "user": {
-                    "type": "string",
-                    "example": "user-1234",
-                    "description": "User identifier"
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "additionalProperties": true,
-                    "description": "Dynamic extension field container. Numerous model-specific fields are deserialized from here."
-                  },
-                  "mode": {
-                    "type": "string",
-                    "description": "Optional, video generation mode. `gemini-omni` Supports `t2v`, `r2v`, and `edit`."
-                  },
-                  "images": {
-                    "type": "array",
-                    "description": "Unified multi-image entry point. Used by Vidu, Seedance, Veo, etc.",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "content": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "additionalProperties": true
-                    }
-                  },
-                  "size": {
-                    "type": "string",
-                    "description": "Unified size input, which maps to resolution/aspect_ratio and related fields."
-                  },
-                  "seconds": {
-                    "type": "string",
-                    "description": "Sora compatibility entry point; at runtime, it falls back to duration."
-                  },
-                  "input_reference": {
-                    "type": "string",
-                    "description": "Sora/Veo compatible reference image input, can be a multipart file or a compatible object."
-                  },
-                  "parameters": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "title": "Kling 4.0",
+                    "x-kling-4-request": true
                   }
-                },
-                "required": [
-                  "model",
-                  "prompt"
                 ]
               },
               "examples": {
@@ -1543,6 +1729,118 @@
                     "resolution": "768p",
                     "aspect_ratio": "16:9"
                   }
+                },
+                "kling_4_text": {
+                  "summary": "Kling 4.0 720p Text-to-Video",
+                  "value": {
+                    "model": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_reference": {
+                  "summary": "Kling 4.0 720p Reference Generation",
+                  "value": {
+                    "model": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_sora": {
+                  "summary": "Kling 4.0 720p OpenAI video format",
+                  "value": {
+                    "model": "kling-4.0",
+                    "prompt": "A cinematic product shot with natural motion",
+                    "seconds": "4",
+                    "size": "1280x720",
+                    "input_reference": "https://example.com/product.jpg"
+                  }
+                },
+                "kling_4_text_1080p": {
+                  "summary": "Kling 4.0 1080p Text-to-Video",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "1080p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_reference_1080p": {
+                  "summary": "Kling 4.0 1080p Reference Generation",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "1080p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_sora_1080p": {
+                  "summary": "Kling 4.0 1080p OpenAI video format",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "prompt": "A cinematic product shot with natural motion",
+                    "seconds": "4",
+                    "size": "1920x1080",
+                    "input_reference": "https://example.com/product.jpg"
+                  }
                 }
               }
             }
@@ -1855,7 +2153,7 @@
       "post": {
         "summary": "Kling Text-to-Video",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUse the Kling model to generate videos from text descriptions.\n\nSupported models: kling-v1, kling-v1-5, etc.",
+        "description": "For Kling 4.0, send request bodies with contents/settings/options via POST /api/v3/contents/generations/tasks (Volcano task format) or POST /v1/videos (OpenAI video format), then query tasks via the same path. The current path retains compatibility with legacy Kling requests.\n\nThis series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUse the Kling model to generate videos from text descriptions.\n\nSupported models: kling-v1, kling-v1-5, etc.",
         "operationId": "createKlingText2Video",
         "tags": [
           "Video generation Kling format"
@@ -1920,7 +2218,7 @@
       "get": {
         "summary": "Get Kling text-to-video task status",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nQuery the status and result of a Kling text-to-video task.",
+        "description": "When Kling 4.0 is submitted via the Volcengine task endpoint, query using GET /api/v3/contents/generations/tasks/{task_id}; when submitted via the OpenAI video endpoint, query using GET /v1/videos/{task_id}. This path is retained for legacy Kling task query compatibility.\n\nThis series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nQuery the status and result of a Kling text-to-video task.",
         "operationId": "getKlingText2Video",
         "tags": [
           "Video generation Kling format"
@@ -1979,7 +2277,7 @@
       "post": {
         "summary": "Kling Image-to-Video",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUse the Kling model to generate videos from images.\n\nSupports passing image URLs or Base64-encoded image data via the `image` parameter.",
+        "description": "For Kling 4.0, send request bodies with contents/settings/options via POST /api/v3/contents/generations/tasks (Volcano task format) or POST /v1/videos (OpenAI video format), then query tasks via the same path. The current path retains compatibility with legacy Kling requests.\n\nThis series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUse the Kling model to generate videos from images.\n\nSupports passing image URLs or Base64-encoded image data via the `image` parameter.",
         "operationId": "createKlingImage2Video",
         "tags": [
           "Video generation Kling format"
@@ -2044,7 +2342,7 @@
       "get": {
         "summary": "Get Kling image-to-video task status",
         "deprecated": false,
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nQuery the status and result of the Kling image-to-video task.",
+        "description": "When Kling 4.0 is submitted via the Volcengine task endpoint, query using GET /api/v3/contents/generations/tasks/{task_id}; when submitted via the OpenAI video endpoint, query using GET /v1/videos/{task_id}. This path is retained for legacy Kling task query compatibility.\n\nThis series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nQuery the status and result of the Kling image-to-video task.",
         "operationId": "getKlingImage2Video",
         "tags": [
           "Video generation Kling format"
@@ -4404,7 +4702,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "Create video (Seedance)",
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Optional; if not provided, `content` must include a non-empty text item.\n- `content`: Optional, the Volcano Ark content array, mixing text, image, video, and audio materials.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n\nThe following fields are mainly used for compatibility with legacy clients and older protocols. For new integrations, please use the standard format in the “Request Example” on this page whenever possible: use the `content` array for text and reference materials, and use top-level `duration`, `ratio`, `resolution`, `fps`, and other fields for generation configuration.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- `content` text items are written as `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` image, video, and audio material items use the `image_url`, `video_url`, and `audio_url` object formats respectively, for example `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` can be used to identify the purpose of the material, and `name` can be referenced by name in prompts.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nSeedance 2.5 Mixed image, video, and audio reference example (the asset URLs are placeholders; replace them with actual accessible links when calling):\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni invocation:\n- `gemini-omni` can also be invoked through this Seedance task API.\n- `mode=t2v` is used for text-to-video, `mode=r2v` for generation with reference images/reference materials, and `mode=edit` for video editing.\n- Text can be placed in the `text` item of `prompt` or `content`; images can be placed in `image_url / image_urls / reference_images / input_reference / content`; videos can be placed in `video_urls / content`.\n- The duration field can use `duration` or `seconds`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\nMiniMax / Hailuo Invocation:\n- `minimax-h3` can be invoked through this task API and supports text-to-video, image reference, and audio reference; text can be placed in the `prompt` or `content` text fields, and assets can be placed in fields such as `content`, `image_urls`, and `audio_urls`.\n- `hailuo-2.3` can be invoked through this task API. A first-frame image is required. It is recommended to pass the `image_url` item of `role=first_frame` in `content`.\n- `minimax-h3` commonly uses `duration=5~15` and `resolution=1440p`; `hailuo-2.3` commonly uses `duration=6` or `10` and `resolution=768p`.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nUsed to create video generation tasks and query status and results via task ID.\n\nCore fields for task creation:\n- `model`: Required. Model name.\n- `prompt`: Optional; if not provided, `content` must include a non-empty text item.\n- `content`: Optional, the Volcano Ark content array, mixing text, image, video, and audio materials.\n- `function_mode`: Optional. Commonly used for advanced modes such as Omni-Reference.\n\nCompatible input parameters:\n\nThe following fields are mainly used for compatibility with legacy clients and older protocols. For new integrations, please use the standard format in the “Request Example” on this page whenever possible: use the `content` array for text and reference materials, and use top-level `duration`, `ratio`, `resolution`, `fps`, and other fields for generation configuration.\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\nCall details:\n- When using `mode=reference_material` or `function_mode=omni_reference`, it is recommended to pass text and reference materials via `content`.\n- `content` text items are written as `{ \"type\": \"text\", \"text\": \"测试文字\" }`.\n- `content` image, video, and audio material items use the `image_url`, `video_url`, and `audio_url` object formats respectively, for example `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`.\n- `role` can be used to identify the purpose of the material, and `name` can be referenced by name in prompts.\n- `ratio`, `duration`, `resolution`, and `fps` will affect the final generation configuration.\n\nSeedance 2.5 Mixed image, video, and audio reference example (the asset URLs are placeholders; replace them with actual accessible links when calling):\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni invocation:\n- `gemini-omni` can also be invoked through this Seedance task API.\n- `mode=t2v` is used for text-to-video, `mode=r2v` for generation with reference images/reference materials, and `mode=edit` for video editing.\n- Text can be placed in the `text` item of `prompt` or `content`; images can be placed in `image_url / image_urls / reference_images / input_reference / content`; videos can be placed in `video_urls / content`.\n- The duration field can use `duration` or `seconds`, and will be automatically mapped to the 4 / 6 / 8 / 10 second options.\n\nMiniMax / Hailuo Invocation:\n- `minimax-h3` can be invoked through this task API and supports text-to-video, image reference, and audio reference; text can be placed in the `prompt` or `content` text fields, and assets can be placed in fields such as `content`, `image_urls`, and `audio_urls`.\n- `hailuo-2.3` can be invoked through this task API. A first-frame image is required. It is recommended to pass the `image_url` item of `role=first_frame` in `content`.\n- `minimax-h3` commonly uses `duration=5~15` and `resolution=1440p`; `hailuo-2.3` commonly uses `duration=6` or `10` and `resolution=768p`.\n\nKey fields in query results:\n- `items[].status`\n- `items[].content.video_url` or `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```\n\n## Kling 4.0\n\nKling 4.0 calls: `kling-4.0` (720p) and `kling-4.0-1080p` use `contents/settings/options` and can share the same request body with `/v1/videos`; text is placed in the `type=prompt` item within `contents`, with no need to pass top-level `prompt`. `settings.resolution` must match the model name.",
         "operationId": "create__seedance__task",
         "tags": [
           "Video generation Seedance"
@@ -4414,216 +4712,501 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": [
-                  "model"
-                ],
-                "properties": {
-                  "model": {
-                    "type": "string",
-                    "example": "doubao-seedance-2-0-260128",
-                    "enum": [
-                      "sd-2-5",
-                      "doubao-seedance-1-0-lite-i2v-250428",
-                      "doubao-seedance-1-0-lite-t2v-250428",
-                      "doubao-seedance-1-0-pro-250528",
-                      "doubao-seedance-1-0-pro-fast-251015",
-                      "doubao-seedance-1-5-pro-251215",
-                      "doubao-seedance-2-0-260128",
-                      "doubao-seedance-2-0-fast-260128",
-                      "minimax-h3",
-                      "hailuo-2.3",
-                      "gemini-omni"
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "model"
                     ],
-                    "description": "Required. Model name. You can pass the Seedance external model, `gemini-omni`, `minimax-h3`, or `hailuo-2.3`."
-                  },
-                  "prompt": {
-                    "type": "string",
-                    "description": "Optional; if not provided, `content` must include a non-empty `text` item as the video generation description.",
-                    "example": "参考素材生成一段剧情短视频"
-                  },
-                  "content": {
-                    "type": "array",
-                    "description": "Optional. The Volcano Ark content array, which interleaves text and media items in order. Text items use `{ \"type\": \"text\", \"text\": \"...\" }`; image, video, and audio items use `image_url`, `video_url`, and `audio_url` objects respectively, with `url` placed inside them. These can be used together with `role` (such as `reference_image`, `reference_video`, and `reference_audio`) and `name` for text references.",
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "type"
-                      ],
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "text",
-                            "image_url",
-                            "video_url",
-                            "audio_url"
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "example": "doubao-seedance-2-0-260128",
+                        "enum": [
+                          "sd-2-5",
+                          "doubao-seedance-1-0-lite-i2v-250428",
+                          "doubao-seedance-1-0-lite-t2v-250428",
+                          "doubao-seedance-1-0-pro-250528",
+                          "doubao-seedance-1-0-pro-fast-251015",
+                          "doubao-seedance-1-5-pro-251215",
+                          "doubao-seedance-2-0-260128",
+                          "doubao-seedance-2-0-fast-260128",
+                          "minimax-h3",
+                          "hailuo-2.3",
+                          "gemini-omni"
+                        ],
+                        "description": "Required. Model name. You can pass the Seedance external model, `gemini-omni`, `minimax-h3`, or `hailuo-2.3`."
+                      },
+                      "prompt": {
+                        "type": "string",
+                        "description": "Optional; if not provided, `content` must include a non-empty `text` item as the video generation description.",
+                        "example": "参考素材生成一段剧情短视频"
+                      },
+                      "content": {
+                        "type": "array",
+                        "description": "Optional. The Volcano Ark content array, which interleaves text and media items in order. Text items use `{ \"type\": \"text\", \"text\": \"...\" }`; image, video, and audio items use `image_url`, `video_url`, and `audio_url` objects respectively, with `url` placed inside them. These can be used together with `role` (such as `reference_image`, `reference_video`, and `reference_audio`) and `name` for text references.",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
                           ],
-                          "description": "Content item type."
-                        },
-                        "text": {
-                          "type": "string",
-                          "description": "Text content, used only when type=text."
-                        },
-                        "image_url": {
-                          "oneOf": [
-                            {
-                              "type": "string"
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "text",
+                                "image_url",
+                                "video_url",
+                                "audio_url"
+                              ],
+                              "description": "Content item type."
                             },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "url": {
-                                  "type": "string"
-                                }
-                              }
-                            }
-                          ],
-                          "description": "Image URL. Recommended object format: `{\"url\":\"https://...\"}`."
-                        },
-                        "video_url": {
-                          "oneOf": [
-                            {
-                              "type": "string"
+                            "text": {
+                              "type": "string",
+                              "description": "Text content, used only when type=text."
                             },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "url": {
+                            "image_url": {
+                              "oneOf": [
+                                {
                                   "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
                                 }
-                              }
-                            }
-                          ],
-                          "description": "Video URL. Recommended object syntax: `{\"url\":\"https://...\"}`."
-                        },
-                        "audio_url": {
-                          "oneOf": [
-                            {
-                              "type": "string"
+                              ],
+                              "description": "Image URL. Recommended object format: `{\"url\":\"https://...\"}`."
                             },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "url": {
+                            "video_url": {
+                              "oneOf": [
+                                {
                                   "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
                                 }
-                              }
+                              ],
+                              "description": "Video URL. Recommended object syntax: `{\"url\":\"https://...\"}`."
+                            },
+                            "audio_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "Audio URL. Recommended object format: `{\"url\":\"https://...\"}`."
+                            },
+                            "role": {
+                              "type": "string",
+                              "description": "Asset usage identifier. Common values include reference_image, reference_video, and reference_audio."
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Asset name, can be referenced in text prompts or used to distinguish between multiple assets."
                             }
-                          ],
-                          "description": "Audio URL. Recommended object format: `{\"url\":\"https://...\"}`."
-                        },
-                        "role": {
-                          "type": "string",
-                          "description": "Asset usage identifier. Common values include reference_image, reference_video, and reference_audio."
-                        },
-                        "name": {
-                          "type": "string",
-                          "description": "Asset name, can be referenced in text prompts or used to distinguish between multiple assets."
+                          }
                         }
+                      },
+                      "function_mode": {
+                        "type": "string",
+                        "description": "Optional. Advanced feature mode, such as `omni_reference` for all-in-one reference."
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "Optional. Compatibility mode fields, such as `t2v`, `i2v`, `i2v_first_last`, `reference_images`, and `reference_material`; `gemini-omni` supports `t2v`, `r2v`, and `edit`."
+                      },
+                      "image_url": {
+                        "type": "string",
+                        "description": "Optional. URL of a single reference image."
+                      },
+                      "image_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Optional. A list of URLs for multiple reference images."
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "Optional. Compatible with reference input fields."
+                      },
+                      "end_image_url": {
+                        "type": "string",
+                        "description": "Optional. The URL of the last-frame reference image."
+                      },
+                      "last_image_url": {
+                        "type": "string",
+                        "description": "Optional. URL alias for the last frame reference image."
+                      },
+                      "video_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Optional. List of reference video URLs."
+                      },
+                      "audio_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Optional. List of reference audio URLs."
+                      },
+                      "seconds": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "Optional. Video duration in seconds; compatible with `duration`."
+                      },
+                      "duration": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "Optional. Video duration in seconds; compatible with `seconds`."
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "description": "Optional. Aspect ratio, such as `16:9`."
+                      },
+                      "ratio": {
+                        "type": "string",
+                        "description": "Optional. Aspect ratio aliases, such as `16:9`."
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "Optional. Field for resolution or dimension compatibility."
+                      },
+                      "quality": {
+                        "type": "string",
+                        "description": "Optional. Generation quality configuration."
+                      },
+                      "resolution": {
+                        "type": "string",
+                        "description": "Optional. The output resolution."
+                      },
+                      "fps": {
+                        "type": "number",
+                        "description": "Optional. Frame rate."
+                      },
+                      "generate_audio": {
+                        "type": "boolean",
+                        "description": "Optional. Whether to generate audio."
+                      },
+                      "watermark": {
+                        "type": "boolean",
+                        "description": "Optional. Whether to add a watermark."
                       }
                     }
                   },
-                  "function_mode": {
-                    "type": "string",
-                    "description": "Optional. Advanced feature mode, such as `omni_reference` for all-in-one reference."
-                  },
-                  "mode": {
-                    "type": "string",
-                    "description": "Optional. Compatibility mode fields, such as `t2v`, `i2v`, `i2v_first_last`, `reference_images`, and `reference_material`; `gemini-omni` supports `t2v`, `r2v`, and `edit`."
-                  },
-                  "image_url": {
-                    "type": "string",
-                    "description": "Optional. URL of a single reference image."
-                  },
-                  "image_urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Optional. A list of URLs for multiple reference images."
-                  },
-                  "input_reference": {
-                    "type": "string",
-                    "description": "Optional. Compatible with reference input fields."
-                  },
-                  "end_image_url": {
-                    "type": "string",
-                    "description": "Optional. The URL of the last-frame reference image."
-                  },
-                  "last_image_url": {
-                    "type": "string",
-                    "description": "Optional. URL alias for the last frame reference image."
-                  },
-                  "video_urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Optional. List of reference video URLs."
-                  },
-                  "audio_urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Optional. List of reference audio URLs."
-                  },
-                  "seconds": {
-                    "oneOf": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "string"
-                      }
+                  {
+                    "type": "object",
+                    "required": [
+                      "model"
                     ],
-                    "description": "Optional. Video duration in seconds; compatible with `duration`."
-                  },
-                  "duration": {
-                    "oneOf": [
-                      {
-                        "type": "number"
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "example": "kling-4.0",
+                        "enum": [
+                          "kling-4.0",
+                          "kling-4.0-1080p"
+                        ],
+                        "description": "Required. Model name. Accepts Seedance, Kling 4.0, `gemini-omni`, `minimax-h3`, or `hailuo-2.3` external models."
                       },
-                      {
-                        "type": "string"
+                      "prompt": {
+                        "type": "string",
+                        "description": "Optional. If omitted, text description must be provided in the text field of `content` or the prompt field of Kling 4.0 `contents`.",
+                        "example": "参考素材生成一段剧情短视频"
+                      },
+                      "content": {
+                        "type": "array",
+                        "description": "Optional. The Volcano Ark content array, which interleaves text and media items in order. Text items use `{ \"type\": \"text\", \"text\": \"...\" }`; image, video, and audio items use `image_url`, `video_url`, and `audio_url` objects respectively, with `url` placed inside them. These can be used together with `role` (such as `reference_image`, `reference_video`, and `reference_audio`) and `name` for text references.",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "text",
+                                "image_url",
+                                "video_url",
+                                "audio_url"
+                              ],
+                              "description": "Content item type."
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "Text content, used only when type=text."
+                            },
+                            "image_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "Image URL. Recommended object format: `{\"url\":\"https://...\"}`."
+                            },
+                            "video_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "Video URL. Recommended object syntax: `{\"url\":\"https://...\"}`."
+                            },
+                            "audio_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ],
+                              "description": "Audio URL. Recommended object format: `{\"url\":\"https://...\"}`."
+                            },
+                            "role": {
+                              "type": "string",
+                              "description": "Asset usage identifier. Common values include reference_image, reference_video, and reference_audio."
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Asset name, can be referenced in text prompts or used to distinguish between multiple assets."
+                            }
+                          }
+                        }
+                      },
+                      "contents": {
+                        "type": "array",
+                        "minItems": 1,
+                        "description": "Kling 4.0 new content array, using prompt, reference_image, reference_video, first_frame, or last_frame items.",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "prompt",
+                                "reference_image",
+                                "reference_video",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "The text description when `type=prompt`."
+                            },
+                            "url": {
+                              "type": "string",
+                              "format": "uri",
+                              "description": "Accessible URL of reference materials or the first/last frames."
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "type": "object",
+                        "description": "Kling 4.0 new parameters: duration, resolution, aspect_ratio, audio.",
+                        "properties": {
+                          "duration": {
+                            "type": "integer",
+                            "minimum": 4,
+                            "maximum": 30,
+                            "example": 4
+                          },
+                          "resolution": {
+                            "type": "string",
+                            "enum": [
+                              "720p",
+                              "1080p"
+                            ]
+                          },
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ]
+                          },
+                          "audio": {
+                            "oneOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ],
+                            "example": "native"
+                          }
+                        }
+                      },
+                      "options": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "Kling 4.0 extension options."
+                      },
+                      "function_mode": {
+                        "type": "string",
+                        "description": "Optional. Advanced feature mode, such as `omni_reference` for all-in-one reference."
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "Optional. Compatibility mode fields, such as `t2v`, `i2v`, `i2v_first_last`, `reference_images`, and `reference_material`; `gemini-omni` supports `t2v`, `r2v`, and `edit`."
+                      },
+                      "image_url": {
+                        "type": "string",
+                        "description": "Optional. URL of a single reference image."
+                      },
+                      "image_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Optional. A list of URLs for multiple reference images."
+                      },
+                      "input_reference": {
+                        "type": "string",
+                        "description": "Optional. Compatible with reference input fields."
+                      },
+                      "end_image_url": {
+                        "type": "string",
+                        "description": "Optional. The URL of the last-frame reference image."
+                      },
+                      "last_image_url": {
+                        "type": "string",
+                        "description": "Optional. URL alias for the last frame reference image."
+                      },
+                      "video_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Optional. List of reference video URLs."
+                      },
+                      "audio_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Optional. List of reference audio URLs."
+                      },
+                      "seconds": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "Optional. Video duration in seconds; compatible with `duration`."
+                      },
+                      "duration": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "Optional. Video duration in seconds; compatible with `seconds`."
+                      },
+                      "aspect_ratio": {
+                        "type": "string",
+                        "description": "Optional. Aspect ratio, such as `16:9`."
+                      },
+                      "ratio": {
+                        "type": "string",
+                        "description": "Optional. Aspect ratio aliases, such as `16:9`."
+                      },
+                      "size": {
+                        "type": "string",
+                        "description": "Optional. Field for resolution or dimension compatibility."
+                      },
+                      "quality": {
+                        "type": "string",
+                        "description": "Optional. Generation quality configuration."
+                      },
+                      "resolution": {
+                        "type": "string",
+                        "description": "Optional. The output resolution."
+                      },
+                      "fps": {
+                        "type": "number",
+                        "description": "Optional. Frame rate."
+                      },
+                      "generate_audio": {
+                        "type": "boolean",
+                        "description": "Optional. Whether to generate audio."
+                      },
+                      "watermark": {
+                        "type": "boolean",
+                        "description": "Optional. Whether to add a watermark."
                       }
-                    ],
-                    "description": "Optional. Video duration in seconds; compatible with `seconds`."
-                  },
-                  "aspect_ratio": {
-                    "type": "string",
-                    "description": "Optional. Aspect ratio, such as `16:9`."
-                  },
-                  "ratio": {
-                    "type": "string",
-                    "description": "Optional. Aspect ratio aliases, such as `16:9`."
-                  },
-                  "size": {
-                    "type": "string",
-                    "description": "Optional. Field for resolution or dimension compatibility."
-                  },
-                  "quality": {
-                    "type": "string",
-                    "description": "Optional. Generation quality configuration."
-                  },
-                  "resolution": {
-                    "type": "string",
-                    "description": "Optional. The output resolution."
-                  },
-                  "fps": {
-                    "type": "number",
-                    "description": "Optional. Frame rate."
-                  },
-                  "generate_audio": {
-                    "type": "boolean",
-                    "description": "Optional. Whether to generate audio."
-                  },
-                  "watermark": {
-                    "type": "boolean",
-                    "description": "Optional. Whether to add a watermark."
+                    },
+                    "title": "Kling 4.0",
+                    "x-kling-4-request": true
                   }
-                }
+                ]
               },
               "examples": {
                 "seedance_sd25_mixed_content": {
@@ -4834,6 +5417,60 @@
                     ],
                     "duration": 8,
                     "size": "1280x720"
+                  }
+                },
+                "kling_4_ark_contents": {
+                  "summary": "Kling 4.0 720p Reference Generation",
+                  "value": {
+                    "model": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "720p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
+                  }
+                },
+                "kling_4_ark_contents_1080p": {
+                  "summary": "Kling 4.0 1080p Reference Generation",
+                  "value": {
+                    "model": "kling-4.0-1080p",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A cinematic product shot with natural motion"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/product.jpg"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/motion.mp4"
+                      }
+                    ],
+                    "settings": {
+                      "duration": 4,
+                      "resolution": "1080p",
+                      "aspect_ratio": "16:9",
+                      "audio": "native"
+                    },
+                    "options": {}
                   }
                 }
               }
