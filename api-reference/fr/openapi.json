@@ -5737,7 +5737,7 @@
         "tags": [
           "Format de génération vidéo Kling"
         ],
-        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nInterface de tâches native Kling 4.0. Utilise l'authentification Bearer API Key de ce site. Le corps de la requête ne nécessite pas `model` ; `settings.resolution=720p` utilise `kling-4.0`, `1080p` utilise `kling-4.0-1080p`, avec `1080p` par défaut. Après une création réussie, utilisez le `data.id` renvoyé pour appeler `GET /tasks?task_ids=ID_DE_TÂCHE` ; séparez plusieurs ID par des virgules. Le `data` de la requête est un tableau ; la vidéo générée se trouve dans `data[].outputs[].url`.\n\nLes scénarios de génération correspondant à prompt, first_frame, last_frame, refer_image et feature_video sont actuellement pris en charge. middle_frame, base_video, element, voice, la référence audio, les rappels et les ID de tâche externe personnalisés ne sont pas pris en charge ; une valeur non vide pour options.callback_url, options.external_task_id ou contents.id, ainsi que tout autre champ non pris en charge, renverra une erreur 400. options peut être omis ou transmis sous la forme d’un objet vide ; watermark_info.enabled=false peut également être transmis. L’activation du filigrane n’est pas encore prise en charge. Les durées prises en charge vont actuellement de 4 à 30 secondes, avec une valeur par défaut de 10 secondes ; 3 secondes ne sont pas prises en charge. Le format par défaut est 16:9 ; spécifier explicitement adaptive renverra une erreur 400.\n\nPour la génération de vidéo à partir de texte, transmettez `prompt` au niveau supérieur ; `contents` n'est pas requis.",
+        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nInterface de tâches native Kling 4.0. Utilise l'authentification Bearer API Key de ce site. Le corps de la requête ne nécessite pas `model` ; `settings.resolution=720p` utilise `kling-4.0`, `1080p` utilise `kling-4.0-1080p`, avec `1080p` par défaut. Après une création réussie, utilisez le `data.id` renvoyé pour appeler `GET /tasks?task_ids=ID_DE_TÂCHE` ; séparez plusieurs ID par des virgules. Le `data` de la requête est un tableau ; la vidéo générée se trouve dans `data[].outputs[].url`.\n\nLes scénarios de génération actuellement pris en charge correspondent à l'invite, à first_frame, à last_frame, à refer_image et à feature_video. middle_frame, base_video, element, voice, les références audio, les rappels et les ID de tâche externes personnalisés ne sont pas pris en charge ; une valeur non vide pour options.callback_url, options.external_task_id ou contents.id, ainsi que tout autre champ non pris en charge, renverra une erreur 400. options peut être omis ou transmis comme objet vide ; vous pouvez également transmettre watermark_info.enabled=false. L'activation du filigrane n'est pas encore prise en charge. Les durées prises en charge sont actuellement de 4 à 30 secondes, avec une valeur par défaut de 10 secondes ; 3 secondes ne sont pas prises en charge. Pour les scénarios de génération à partir de texte et de référence, le format par défaut est 16:9 ; spécifier explicitement adaptive renverra une erreur 400. Les scénarios avec première et dernière image n'acceptent pas de settings.aspect_ratio explicite ; le format est déterminé par les dimensions de la première image frame.\n\nPour la génération de vidéo à partir de texte, transmettez `prompt` au niveau supérieur ; `contents` n'est pas requis.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5934,7 +5934,7 @@
         "tags": [
           "Format de génération vidéo Kling"
         ],
-        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nInterface de tâches native Kling 4.0. Utilise l'authentification Bearer API Key de ce site. Le corps de la requête ne nécessite pas `model` ; `settings.resolution=720p` utilise `kling-4.0`, `1080p` utilise `kling-4.0-1080p`, avec `1080p` par défaut. Après une création réussie, utilisez le `data.id` renvoyé pour appeler `GET /tasks?task_ids=ID_DE_TÂCHE` ; séparez plusieurs ID par des virgules. Le `data` de la requête est un tableau ; la vidéo générée se trouve dans `data[].outputs[].url`.\n\nLes scénarios de génération correspondant à prompt, first_frame, last_frame, refer_image et feature_video sont actuellement pris en charge. middle_frame, base_video, element, voice, la référence audio, les rappels et les ID de tâche externe personnalisés ne sont pas pris en charge ; une valeur non vide pour options.callback_url, options.external_task_id ou contents.id, ainsi que tout autre champ non pris en charge, renverra une erreur 400. options peut être omis ou transmis sous la forme d’un objet vide ; watermark_info.enabled=false peut également être transmis. L’activation du filigrane n’est pas encore prise en charge. Les durées prises en charge vont actuellement de 4 à 30 secondes, avec une valeur par défaut de 10 secondes ; 3 secondes ne sont pas prises en charge. Le format par défaut est 16:9 ; spécifier explicitement adaptive renverra une erreur 400.\n\nPour la génération de vidéo à partir d’images, `contents` doit inclure un `prompt` non vide et `first_frame`. Vous pouvez également fournir `last_frame` ; les première et dernière images sont limitées à une image chacune. `settings.aspect_ratio` n’est pas accepté.",
+        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nInterface de tâches native Kling 4.0. Utilise l'authentification Bearer API Key de ce site. Le corps de la requête ne nécessite pas `model` ; `settings.resolution=720p` utilise `kling-4.0`, `1080p` utilise `kling-4.0-1080p`, avec `1080p` par défaut. Après une création réussie, utilisez le `data.id` renvoyé pour appeler `GET /tasks?task_ids=ID_DE_TÂCHE` ; séparez plusieurs ID par des virgules. Le `data` de la requête est un tableau ; la vidéo générée se trouve dans `data[].outputs[].url`.\n\nLes scénarios de génération actuellement pris en charge correspondent à l'invite, à first_frame, à last_frame, à refer_image et à feature_video. middle_frame, base_video, element, voice, les références audio, les rappels et les ID de tâche externes personnalisés ne sont pas pris en charge ; une valeur non vide pour options.callback_url, options.external_task_id ou contents.id, ainsi que tout autre champ non pris en charge, renverra une erreur 400. options peut être omis ou transmis comme objet vide ; vous pouvez également transmettre watermark_info.enabled=false. L'activation du filigrane n'est pas encore prise en charge. Les durées prises en charge sont actuellement de 4 à 30 secondes, avec une valeur par défaut de 10 secondes ; 3 secondes ne sont pas prises en charge. Pour les scénarios de génération à partir de texte et de référence, le format par défaut est 16:9 ; spécifier explicitement adaptive renverra une erreur 400. Les scénarios avec première et dernière image n'acceptent pas de settings.aspect_ratio explicite ; le format est déterminé par les dimensions de la première image frame.\n\nPour la génération de vidéo à partir d’images, `contents` doit inclure un `prompt` non vide et `first_frame`. Vous pouvez également fournir `last_frame` ; les images de début et de fin sont limitées à une image chacune. Les images de début et de fin ne peuvent pas être combinées avec l’image de référence `refer_image` ni la vidéo de référence `feature_video` ; cette combinaison renvoie une erreur 400. `settings.aspect_ratio` n’est pas accepté.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5991,7 +5991,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "Doit inclure à la fois un `prompt` non vide et un média pris en charge ; la génération de vidéo à partir d’image doit inclure `first_frame`. Consultez la documentation de l’API pour les limites de quantité de chaque type de média.",
+                    "description": "Un `prompt` non vide et un média pris en charge doivent être fournis simultanément ; la génération vidéo à partir d’une image doit inclure `first_frame`. `first_frame`/`last_frame` ne peuvent pas être utilisés avec `refer_image`/`feature_video`, sinon une erreur 400 est renvoyée. Consultez la documentation de l’API pour les limites de quantité de chaque type de média.",
                     "items": {
                       "oneOf": [
                         {
@@ -6184,7 +6184,7 @@
         "tags": [
           "Format de génération vidéo Kling"
         ],
-        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nInterface de tâches native Kling 4.0. Utilise l'authentification Bearer API Key de ce site. Le corps de la requête ne nécessite pas `model` ; `settings.resolution=720p` utilise `kling-4.0`, `1080p` utilise `kling-4.0-1080p`, avec `1080p` par défaut. Après une création réussie, utilisez le `data.id` renvoyé pour appeler `GET /tasks?task_ids=ID_DE_TÂCHE` ; séparez plusieurs ID par des virgules. Le `data` de la requête est un tableau ; la vidéo générée se trouve dans `data[].outputs[].url`.\n\nLes scénarios de génération correspondant à prompt, first_frame, last_frame, refer_image et feature_video sont actuellement pris en charge. middle_frame, base_video, element, voice, la référence audio, les rappels et les ID de tâche externe personnalisés ne sont pas pris en charge ; une valeur non vide pour options.callback_url, options.external_task_id ou contents.id, ainsi que tout autre champ non pris en charge, renverra une erreur 400. options peut être omis ou transmis sous la forme d’un objet vide ; watermark_info.enabled=false peut également être transmis. L’activation du filigrane n’est pas encore prise en charge. Les durées prises en charge vont actuellement de 4 à 30 secondes, avec une valeur par défaut de 10 secondes ; 3 secondes ne sont pas prises en charge. Le format par défaut est 16:9 ; spécifier explicitement adaptive renverra une erreur 400.\n\nLe champ `contents` de la référence universelle doit contenir un `prompt` non vide et au moins un média pris en charge. Les images de première et dernière image, les images de référence `refer_image` et les vidéos de référence `feature_video` sont prises en charge ; `first_frame`, `last_frame` et `refer_image` peuvent contenir au maximum un élément chacun, tandis que `feature_video` peut en contenir jusqu’à cinq. Les scénarios de plusieurs images de référence reposant sur des références par `id` ne sont pas encore pris en charge.",
+        "description": "Cette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nInterface de tâches native Kling 4.0. Utilise l'authentification Bearer API Key de ce site. Le corps de la requête ne nécessite pas `model` ; `settings.resolution=720p` utilise `kling-4.0`, `1080p` utilise `kling-4.0-1080p`, avec `1080p` par défaut. Après une création réussie, utilisez le `data.id` renvoyé pour appeler `GET /tasks?task_ids=ID_DE_TÂCHE` ; séparez plusieurs ID par des virgules. Le `data` de la requête est un tableau ; la vidéo générée se trouve dans `data[].outputs[].url`.\n\nLes scénarios de génération actuellement pris en charge correspondent à l'invite, à first_frame, à last_frame, à refer_image et à feature_video. middle_frame, base_video, element, voice, les références audio, les rappels et les ID de tâche externes personnalisés ne sont pas pris en charge ; une valeur non vide pour options.callback_url, options.external_task_id ou contents.id, ainsi que tout autre champ non pris en charge, renverra une erreur 400. options peut être omis ou transmis comme objet vide ; vous pouvez également transmettre watermark_info.enabled=false. L'activation du filigrane n'est pas encore prise en charge. Les durées prises en charge sont actuellement de 4 à 30 secondes, avec une valeur par défaut de 10 secondes ; 3 secondes ne sont pas prises en charge. Pour les scénarios de génération à partir de texte et de référence, le format par défaut est 16:9 ; spécifier explicitement adaptive renverra une erreur 400. Les scénarios avec première et dernière image n'acceptent pas de settings.aspect_ratio explicite ; le format est déterminé par les dimensions de la première image frame.\n\nLes `contents` de la référence universelle doivent inclure un `prompt` non vide et au moins un média pris en charge. Pour les scénarios avec image de début et de fin, vous pouvez fournir `first_frame`, `last_frame` ou les deux. Les images de début et de fin ne peuvent pas être utilisées conjointement avec l’image de référence `refer_image` ou la vidéo de référence `feature_video` ; cette combinaison renvoie une erreur 400. Pour les scénarios de référence, vous pouvez combiner l’image de référence `refer_image` et la vidéo de référence `feature_video`. `first_frame`, `last_frame` et `refer_image` acceptent chacun au maximum un élément, tandis que `feature_video` accepte au maximum cinq éléments. Les scénarios avec plusieurs images de référence reposant sur des références par `id` ne sont pas encore pris en charge.",
         "requestBody": {
           "required": true,
           "content": {
@@ -6221,8 +6221,7 @@
                           "16:9",
                           "9:16",
                           "1:1"
-                        ],
-                        "default": "16:9"
+                        ]
                       }
                     }
                   },
@@ -6251,7 +6250,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "Doit inclure à la fois un `prompt` non vide et un média pris en charge ; la génération de vidéo à partir d’image doit inclure `first_frame`. Consultez la documentation de l’API pour les limites de quantité de chaque type de média.",
+                    "description": "Doit inclure à la fois un prompt non vide et un média pris en charge ; la génération vidéo à partir d’une image doit inclure first_frame. first_frame/last_frame ne peuvent pas être utilisés avec refer_image/feature_video, sinon une erreur 400 est renvoyée. Consultez la documentation de l’API pour les limites de quantité de chaque média. La référence polyvalente autorise uniquement last_frame avec un prompt.",
                     "items": {
                       "oneOf": [
                         {
@@ -6299,9 +6298,79 @@
                           }
                         }
                       ]
+                    },
+                    "not": {
+                      "items": {
+                        "properties": {
+                          "type": {
+                            "enum": [
+                              "prompt"
+                            ]
+                          }
+                        }
+                      }
                     }
                   }
-                }
+                },
+                "oneOf": [
+                  {
+                    "description": "Scénarios avec première et dernière image : `first_frame`, `last_frame` ou les deux, sans mélanger les ressources de référence ; omettez `aspect_ratio`, le format suit la première `frame`.",
+                    "properties": {
+                      "contents": {
+                        "items": {
+                          "properties": {
+                            "type": {
+                              "enum": [
+                                "prompt",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "not": {
+                          "required": [
+                            "aspect_ratio"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "description": "Scénario de référence : `refer_image` et `feature_video` peuvent être utilisés ensemble. Le format d’image par défaut est 16:9.",
+                    "properties": {
+                      "contents": {
+                        "items": {
+                          "properties": {
+                            "type": {
+                              "enum": [
+                                "prompt",
+                                "refer_image",
+                                "feature_video"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "properties": {
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ],
+                            "default": "16:9"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
               },
               "examples": {
                 "kling4_native_720p": {
@@ -6309,17 +6378,14 @@
                   "value": {
                     "settings": {
                       "resolution": "720p",
-                      "duration": 10
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
                     },
                     "options": {},
                     "contents": [
                       {
                         "type": "prompt",
                         "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/first-frame.jpg"
                       },
                       {
                         "type": "refer_image",
@@ -6337,17 +6403,14 @@
                   "value": {
                     "settings": {
                       "resolution": "1080p",
-                      "duration": 10
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
                     },
                     "options": {},
                     "contents": [
                       {
                         "type": "prompt",
                         "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/first-frame.jpg"
                       },
                       {
                         "type": "refer_image",

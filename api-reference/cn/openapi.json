@@ -5737,7 +5737,7 @@
         "tags": [
           "视频生成Kling格式"
         ],
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nKling 4.0 原生任务接口。使用本站 Bearer API Key 鉴权。请求体无需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，默认1080p。创建成功后使用返回的 data.id 调用 GET /tasks?task_ids=任务ID；多个ID用逗号分隔。查询的 data 为数组，结果视频位于 data[].outputs[].url。\n\n当前支持提示词、first_frame、last_frame、refer_image、feature_video 的对应生成场景。不支持 middle_frame、base_video、element、voice、音频参考、回调或自定义外部任务ID；非空options.callback_url、非空options.external_task_id、非空contents.id及其它未支持字段会返回400。options 可省略或传空对象，也可传 watermark_info.enabled=false；开启水印暂不支持。当前时长支持4至30秒，默认10秒；3秒暂不支持。画幅默认16:9，显式adaptive会返回400。\n\n文生视频传顶层 prompt，不需要 contents。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nKling 4.0 原生任务接口。使用本站 Bearer API Key 鉴权。请求体无需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，默认1080p。创建成功后使用返回的 data.id 调用 GET /tasks?task_ids=任务ID；多个ID用逗号分隔。查询的 data 为数组，结果视频位于 data[].outputs[].url。\n\n当前支持提示词、first_frame、last_frame、refer_image、feature_video 的对应生成场景。不支持 middle_frame、base_video、element、voice、音频参考、回调或自定义外部任务ID；非空options.callback_url、非空options.external_task_id、非空contents.id及其它未支持字段会返回400。options 可省略或传空对象，也可传 watermark_info.enabled=false；开启水印暂不支持。当前时长支持4至30秒，默认10秒；3秒暂不支持。文生与参考场景画幅默认16:9，显式adaptive会返回400。首尾帧场景不接受显式settings.aspect_ratio，画幅按首张frame图尺寸确定。\n\n文生视频传顶层 prompt，不需要 contents。",
         "requestBody": {
           "required": true,
           "content": {
@@ -5934,7 +5934,7 @@
         "tags": [
           "视频生成Kling格式"
         ],
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nKling 4.0 原生任务接口。使用本站 Bearer API Key 鉴权。请求体无需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，默认1080p。创建成功后使用返回的 data.id 调用 GET /tasks?task_ids=任务ID；多个ID用逗号分隔。查询的 data 为数组，结果视频位于 data[].outputs[].url。\n\n当前支持提示词、first_frame、last_frame、refer_image、feature_video 的对应生成场景。不支持 middle_frame、base_video、element、voice、音频参考、回调或自定义外部任务ID；非空options.callback_url、非空options.external_task_id、非空contents.id及其它未支持字段会返回400。options 可省略或传空对象，也可传 watermark_info.enabled=false；开启水印暂不支持。当前时长支持4至30秒，默认10秒；3秒暂不支持。画幅默认16:9，显式adaptive会返回400。\n\n图生视频的 contents 必须包含非空prompt与first_frame，可同时传last_frame；首尾帧各最多1张。不接受settings.aspect_ratio。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nKling 4.0 原生任务接口。使用本站 Bearer API Key 鉴权。请求体无需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，默认1080p。创建成功后使用返回的 data.id 调用 GET /tasks?task_ids=任务ID；多个ID用逗号分隔。查询的 data 为数组，结果视频位于 data[].outputs[].url。\n\n当前支持提示词、first_frame、last_frame、refer_image、feature_video 的对应生成场景。不支持 middle_frame、base_video、element、voice、音频参考、回调或自定义外部任务ID；非空options.callback_url、非空options.external_task_id、非空contents.id及其它未支持字段会返回400。options 可省略或传空对象，也可传 watermark_info.enabled=false；开启水印暂不支持。当前时长支持4至30秒，默认10秒；3秒暂不支持。文生与参考场景画幅默认16:9，显式adaptive会返回400。首尾帧场景不接受显式settings.aspect_ratio，画幅按首张frame图尺寸确定。\n\n图生视频的 contents 必须包含非空prompt与first_frame，可同时传last_frame；首尾帧各最多1张。首尾帧不能与refer_image参考图或feature_video参考视频混用，混用会返回400。不接受settings.aspect_ratio。",
         "requestBody": {
           "required": true,
           "content": {
@@ -5991,7 +5991,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "必须同时包含非空prompt和支持的媒体；图生视频必须包含first_frame。各媒体数量限制见接口说明。",
+                    "description": "必须同时包含非空prompt和支持的媒体；图生视频必须包含first_frame。first_frame/last_frame不能与refer_image/feature_video混用，否则返回400。各媒体数量限制见接口说明。",
                     "items": {
                       "oneOf": [
                         {
@@ -6184,7 +6184,7 @@
         "tags": [
           "视频生成Kling格式"
         ],
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nKling 4.0 原生任务接口。使用本站 Bearer API Key 鉴权。请求体无需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，默认1080p。创建成功后使用返回的 data.id 调用 GET /tasks?task_ids=任务ID；多个ID用逗号分隔。查询的 data 为数组，结果视频位于 data[].outputs[].url。\n\n当前支持提示词、first_frame、last_frame、refer_image、feature_video 的对应生成场景。不支持 middle_frame、base_video、element、voice、音频参考、回调或自定义外部任务ID；非空options.callback_url、非空options.external_task_id、非空contents.id及其它未支持字段会返回400。options 可省略或传空对象，也可传 watermark_info.enabled=false；开启水印暂不支持。当前时长支持4至30秒，默认10秒；3秒暂不支持。画幅默认16:9，显式adaptive会返回400。\n\n全能参考的 contents 必须包含非空prompt与至少一个支持的媒体。支持首尾帧、refer_image参考图和feature_video参考视频；first_frame、last_frame、refer_image各最多1项，feature_video最多5项。暂不支持依赖id引用的多参考图场景。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nKling 4.0 原生任务接口。使用本站 Bearer API Key 鉴权。请求体无需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，默认1080p。创建成功后使用返回的 data.id 调用 GET /tasks?task_ids=任务ID；多个ID用逗号分隔。查询的 data 为数组，结果视频位于 data[].outputs[].url。\n\n当前支持提示词、first_frame、last_frame、refer_image、feature_video 的对应生成场景。不支持 middle_frame、base_video、element、voice、音频参考、回调或自定义外部任务ID；非空options.callback_url、非空options.external_task_id、非空contents.id及其它未支持字段会返回400。options 可省略或传空对象，也可传 watermark_info.enabled=false；开启水印暂不支持。当前时长支持4至30秒，默认10秒；3秒暂不支持。文生与参考场景画幅默认16:9，显式adaptive会返回400。首尾帧场景不接受显式settings.aspect_ratio，画幅按首张frame图尺寸确定。\n\n全能参考的 contents 必须包含非空prompt与至少一个支持的媒体。首尾帧场景可传first_frame、last_frame或两者，首尾帧不能与refer_image参考图或feature_video参考视频混用，混用会返回400。参考场景可组合refer_image参考图与feature_video参考视频。first_frame、last_frame、refer_image各最多1项，feature_video最多5项。暂不支持依赖id引用的多参考图场景。",
         "requestBody": {
           "required": true,
           "content": {
@@ -6221,8 +6221,7 @@
                           "16:9",
                           "9:16",
                           "1:1"
-                        ],
-                        "default": "16:9"
+                        ]
                       }
                     }
                   },
@@ -6251,7 +6250,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "必须同时包含非空prompt和支持的媒体；图生视频必须包含first_frame。各媒体数量限制见接口说明。",
+                    "description": "必须同时包含非空prompt和支持的媒体；图生视频必须包含first_frame。first_frame/last_frame不能与refer_image/feature_video混用，否则返回400。各媒体数量限制见接口说明。全能参考允许仅last_frame配prompt。",
                     "items": {
                       "oneOf": [
                         {
@@ -6299,9 +6298,79 @@
                           }
                         }
                       ]
+                    },
+                    "not": {
+                      "items": {
+                        "properties": {
+                          "type": {
+                            "enum": [
+                              "prompt"
+                            ]
+                          }
+                        }
+                      }
                     }
                   }
-                }
+                },
+                "oneOf": [
+                  {
+                    "description": "首尾帧场景：first_frame、last_frame或两者，不混用参考素材；省略aspect_ratio，画幅沿首张frame。",
+                    "properties": {
+                      "contents": {
+                        "items": {
+                          "properties": {
+                            "type": {
+                              "enum": [
+                                "prompt",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "not": {
+                          "required": [
+                            "aspect_ratio"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "description": "参考场景：refer_image和feature_video可组合使用，画幅默认16:9。",
+                    "properties": {
+                      "contents": {
+                        "items": {
+                          "properties": {
+                            "type": {
+                              "enum": [
+                                "prompt",
+                                "refer_image",
+                                "feature_video"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "properties": {
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ],
+                            "default": "16:9"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
               },
               "examples": {
                 "kling4_native_720p": {
@@ -6309,17 +6378,14 @@
                   "value": {
                     "settings": {
                       "resolution": "720p",
-                      "duration": 10
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
                     },
                     "options": {},
                     "contents": [
                       {
                         "type": "prompt",
                         "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/first-frame.jpg"
                       },
                       {
                         "type": "refer_image",
@@ -6337,17 +6403,14 @@
                   "value": {
                     "settings": {
                       "resolution": "1080p",
-                      "duration": 10
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
                     },
                     "options": {},
                     "contents": [
                       {
                         "type": "prompt",
                         "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/first-frame.jpg"
                       },
                       {
                         "type": "refer_image",

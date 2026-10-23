@@ -5737,7 +5737,7 @@
         "tags": [
           "影片生成Kling格式"
         ],
-        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成情境。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id，以及其他未支援欄位皆會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。畫面比例預設為 16:9，明確指定 adaptive 會返回 400。\n\n文字生成影片時傳入頂層 prompt，不需要 contents。",
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成場景。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id 及其他未支援欄位會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。文生與參考場景的畫幅預設為 16:9，明確指定 adaptive 會返回 400。首尾幀場景不接受明確指定 settings.aspect_ratio，畫幅依首張 frame 圖片尺寸而定。\n\n文字生成影片時傳入頂層 prompt，不需要 contents。",
         "requestBody": {
           "required": true,
           "content": {
@@ -5934,7 +5934,7 @@
         "tags": [
           "影片生成Kling格式"
         ],
-        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成情境。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id，以及其他未支援欄位皆會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。畫面比例預設為 16:9，明確指定 adaptive 會返回 400。\n\n圖生影片的 contents 必須包含非空的 prompt 與 first_frame，可同時傳入 last_frame；首尾影格各最多 1 張。不接受 settings.aspect_ratio。",
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成場景。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id 及其他未支援欄位會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。文生與參考場景的畫幅預設為 16:9，明確指定 adaptive 會返回 400。首尾幀場景不接受明確指定 settings.aspect_ratio，畫幅依首張 frame 圖片尺寸而定。\n\n圖生影片的 contents 必須包含非空的 prompt 與 first_frame，也可同時傳入 last_frame；首尾幀各最多 1 張。首尾幀不能與 refer_image 參考圖或 feature_video 參考影片混用，混用會回傳 400。不接受 settings.aspect_ratio。",
         "requestBody": {
           "required": true,
           "content": {
@@ -5991,7 +5991,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "必須同時包含非空的 prompt 和支援的媒體；圖生影片必須包含 first_frame。各媒體數量限制請見介面說明。",
+                    "description": "必須同時包含非空的 prompt 和支援的媒體；圖生影片必須包含 first_frame。first_frame/last_frame 不可與 refer_image/feature_video 混用，否則會傳回 400。各媒體的數量限制請參閱介面說明。",
                     "items": {
                       "oneOf": [
                         {
@@ -6184,7 +6184,7 @@
         "tags": [
           "影片生成Kling格式"
         ],
-        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成情境。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id，以及其他未支援欄位皆會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。畫面比例預設為 16:9，明確指定 adaptive 會返回 400。\n\n全能參考的 contents 必須包含非空的 prompt 與至少一個支援的媒體。支援首尾影格、refer_image 參考圖片和 feature_video 參考影片；first_frame、last_frame、refer_image 各最多 1 項，feature_video 最多 5 項。暫不支援依賴 id 引用的多參考圖片情境。",
+        "description": "此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\nKling 4.0 原生任務介面。使用本站 Bearer API Key 驗證。請求主體無需 model；settings.resolution=720p 使用 kling-4.0，1080p 使用 kling-4.0-1080p，預設為 1080p。建立成功後，使用傳回的 data.id 呼叫 GET /tasks?task_ids=任務ID；多個 ID 以逗號分隔。查詢傳回的 data 為陣列，結果影片位於 data[].outputs[].url。\n\n目前支援提示詞、first_frame、last_frame、refer_image、feature_video 對應的生成場景。不支援 middle_frame、base_video、element、voice、音訊參考、回呼或自訂外部任務 ID；非空的 options.callback_url、非空的 options.external_task_id、非空的 contents.id 及其他未支援欄位會返回 400。options 可省略或傳入空物件，也可傳入 watermark_info.enabled=false；暫不支援開啟浮水印。目前時長支援 4 至 30 秒，預設為 10 秒；暫不支援 3 秒。文生與參考場景的畫幅預設為 16:9，明確指定 adaptive 會返回 400。首尾幀場景不接受明確指定 settings.aspect_ratio，畫幅依首張 frame 圖片尺寸而定。\n\n全能參考的 contents 必須包含非空的 prompt 與至少一個支援的媒體。首尾幀情境可傳入 first_frame、last_frame 或兩者；首尾幀不可與 refer_image 參考圖或 feature_video 參考影片混用，混用時會傳回 400。參考情境可組合 refer_image 參考圖與 feature_video 參考影片。first_frame、last_frame、refer_image 各最多 1 項，feature_video 最多 5 項。暫不支援依賴 id 引用的多參考圖情境。",
         "requestBody": {
           "required": true,
           "content": {
@@ -6221,8 +6221,7 @@
                           "16:9",
                           "9:16",
                           "1:1"
-                        ],
-                        "default": "16:9"
+                        ]
                       }
                     }
                   },
@@ -6251,7 +6250,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "必須同時包含非空的 prompt 和支援的媒體；圖生影片必須包含 first_frame。各媒體數量限制請見介面說明。",
+                    "description": "必須同時包含非空的 prompt 和支援的媒體；圖生影片必須包含 first_frame。first_frame/last_frame 不可與 refer_image/feature_video 混用，否則會傳回 400。各媒體的數量限制請參閱介面說明。全能參考允許僅使用 last_frame 搭配 prompt。",
                     "items": {
                       "oneOf": [
                         {
@@ -6299,9 +6298,79 @@
                           }
                         }
                       ]
+                    },
+                    "not": {
+                      "items": {
+                        "properties": {
+                          "type": {
+                            "enum": [
+                              "prompt"
+                            ]
+                          }
+                        }
+                      }
                     }
                   }
-                }
+                },
+                "oneOf": [
+                  {
+                    "description": "首尾幀情境：first_frame、last_frame 或兩者，不混用參考素材；省略 aspect_ratio 時，畫幅沿用首張 frame。",
+                    "properties": {
+                      "contents": {
+                        "items": {
+                          "properties": {
+                            "type": {
+                              "enum": [
+                                "prompt",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "not": {
+                          "required": [
+                            "aspect_ratio"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "description": "參考場景：refer_image 和 feature_video 可搭配使用，畫面比例預設為 16:9。",
+                    "properties": {
+                      "contents": {
+                        "items": {
+                          "properties": {
+                            "type": {
+                              "enum": [
+                                "prompt",
+                                "refer_image",
+                                "feature_video"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "properties": {
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ],
+                            "default": "16:9"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
               },
               "examples": {
                 "kling4_native_720p": {
@@ -6309,17 +6378,14 @@
                   "value": {
                     "settings": {
                       "resolution": "720p",
-                      "duration": 10
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
                     },
                     "options": {},
                     "contents": [
                       {
                         "type": "prompt",
                         "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/first-frame.jpg"
                       },
                       {
                         "type": "refer_image",
@@ -6337,17 +6403,14 @@
                   "value": {
                     "settings": {
                       "resolution": "1080p",
-                      "duration": 10
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
                     },
                     "options": {},
                     "contents": [
                       {
                         "type": "prompt",
                         "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/first-frame.jpg"
                       },
                       {
                         "type": "refer_image",

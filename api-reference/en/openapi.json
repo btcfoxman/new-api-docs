@@ -5737,7 +5737,7 @@
         "tags": [
           "Video generation Kling format"
         ],
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nKling 4.0 native task API. Authenticate using this site's Bearer API Key. The request body does not require model; settings.resolution=720p uses kling-4.0, while 1080p uses kling-4.0-1080p, with 1080p as the default. After successful creation, use the returned data.id to call GET /tasks?task_ids=task ID; separate multiple IDs with commas. The returned data is an array, and the result video is available at data[].outputs[].url.\n\nThe currently supported generation scenarios correspond to prompts, first_frame, last_frame, refer_image, and feature_video. middle_frame, base_video, element, voice, audio references, callbacks, and custom external task IDs are not supported. A non-empty options.callback_url, non-empty options.external_task_id, non-empty contents.id, or any other unsupported field will return 400. options may be omitted or passed as an empty object; watermark_info.enabled=false may also be passed. Enabling watermarks is not currently supported. Supported durations are 4 to 30 seconds, with a default of 10 seconds; 3 seconds is not supported. The default aspect ratio is 16:9; explicitly specifying adaptive will return 400.\n\nFor text-to-video, pass prompt at the top level; contents is not required.",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nKling 4.0 native task API. Authenticate using this site's Bearer API Key. The request body does not require model; settings.resolution=720p uses kling-4.0, while 1080p uses kling-4.0-1080p, with 1080p as the default. After successful creation, use the returned data.id to call GET /tasks?task_ids=task ID; separate multiple IDs with commas. The returned data is an array, and the result video is available at data[].outputs[].url.\n\nCurrently supported generation scenarios include prompts, first_frame, last_frame, refer_image, and feature_video. middle_frame, base_video, element, voice, audio references, callbacks, and custom external task IDs are not supported. Non-empty options.callback_url, non-empty options.external_task_id, non-empty contents.id, and other unsupported fields will return 400. options can be omitted or passed as an empty object; watermark_info.enabled=false can also be passed. Enabling watermarks is not currently supported. Supported durations range from 4 to 30 seconds, with a default of 10 seconds; 3 seconds is not supported. For text-to-video and reference scenarios, the default aspect ratio is 16:9; explicitly specifying adaptive will return 400. For first- and last-frame scenarios, explicitly specifying settings.aspect_ratio is not accepted; the aspect ratio is determined by the dimensions of the first frame image.\n\nFor text-to-video, pass prompt at the top level; contents is not required.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5934,7 +5934,7 @@
         "tags": [
           "Video generation Kling format"
         ],
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nKling 4.0 native task API. Authenticate using this site's Bearer API Key. The request body does not require model; settings.resolution=720p uses kling-4.0, while 1080p uses kling-4.0-1080p, with 1080p as the default. After successful creation, use the returned data.id to call GET /tasks?task_ids=task ID; separate multiple IDs with commas. The returned data is an array, and the result video is available at data[].outputs[].url.\n\nThe currently supported generation scenarios correspond to prompts, first_frame, last_frame, refer_image, and feature_video. middle_frame, base_video, element, voice, audio references, callbacks, and custom external task IDs are not supported. A non-empty options.callback_url, non-empty options.external_task_id, non-empty contents.id, or any other unsupported field will return 400. options may be omitted or passed as an empty object; watermark_info.enabled=false may also be passed. Enabling watermarks is not currently supported. Supported durations are 4 to 30 seconds, with a default of 10 seconds; 3 seconds is not supported. The default aspect ratio is 16:9; explicitly specifying adaptive will return 400.\n\nFor image-to-video generation, `contents` must include non-empty `prompt` and `first_frame`. You may also provide `last_frame`; each of the first and last frames can contain at most one image. `settings.aspect_ratio` is not accepted.",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nKling 4.0 native task API. Authenticate using this site's Bearer API Key. The request body does not require model; settings.resolution=720p uses kling-4.0, while 1080p uses kling-4.0-1080p, with 1080p as the default. After successful creation, use the returned data.id to call GET /tasks?task_ids=task ID; separate multiple IDs with commas. The returned data is an array, and the result video is available at data[].outputs[].url.\n\nCurrently supported generation scenarios include prompts, first_frame, last_frame, refer_image, and feature_video. middle_frame, base_video, element, voice, audio references, callbacks, and custom external task IDs are not supported. Non-empty options.callback_url, non-empty options.external_task_id, non-empty contents.id, and other unsupported fields will return 400. options can be omitted or passed as an empty object; watermark_info.enabled=false can also be passed. Enabling watermarks is not currently supported. Supported durations range from 4 to 30 seconds, with a default of 10 seconds; 3 seconds is not supported. For text-to-video and reference scenarios, the default aspect ratio is 16:9; explicitly specifying adaptive will return 400. For first- and last-frame scenarios, explicitly specifying settings.aspect_ratio is not accepted; the aspect ratio is determined by the dimensions of the first frame image.\n\nFor image-to-video, `contents` must include a non-empty `prompt` and `first_frame`, and may also include `last_frame`; `first_frame` and `last_frame` can each contain at most one image. The first and last frames cannot be used together with `refer_image` reference images or `feature_video` reference videos; doing so returns a 400 error. `settings.aspect_ratio` is not supported.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5991,7 +5991,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "A non-empty prompt and supported media must both be included. Image-to-video requests must include first_frame. See the API documentation for media quantity limits.",
+                    "description": "A non-empty prompt and supported media must both be provided. Image-to-video generation must include first_frame. first_frame/last_frame cannot be used together with refer_image/feature_video; otherwise, a 400 error is returned. See the API documentation for quantity limits for each type of media.",
                     "items": {
                       "oneOf": [
                         {
@@ -6184,7 +6184,7 @@
         "tags": [
           "Video generation Kling format"
         ],
-        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nKling 4.0 native task API. Authenticate using this site's Bearer API Key. The request body does not require model; settings.resolution=720p uses kling-4.0, while 1080p uses kling-4.0-1080p, with 1080p as the default. After successful creation, use the returned data.id to call GET /tasks?task_ids=task ID; separate multiple IDs with commas. The returned data is an array, and the result video is available at data[].outputs[].url.\n\nThe currently supported generation scenarios correspond to prompts, first_frame, last_frame, refer_image, and feature_video. middle_frame, base_video, element, voice, audio references, callbacks, and custom external task IDs are not supported. A non-empty options.callback_url, non-empty options.external_task_id, non-empty contents.id, or any other unsupported field will return 400. options may be omitted or passed as an empty object; watermark_info.enabled=false may also be passed. Enabling watermarks is not currently supported. Supported durations are 4 to 30 seconds, with a default of 10 seconds; 3 seconds is not supported. The default aspect ratio is 16:9; explicitly specifying adaptive will return 400.\n\nFor universal reference, `contents` must include a non-empty `prompt` and at least one supported media item. Supported media include first and last frames, `refer_image` reference images, and `feature_video` reference videos. `first_frame`, `last_frame`, and `refer_image` each support up to 1 item, while `feature_video` supports up to 5 items. Multiple reference images referenced by ID are not currently supported.",
+        "description": "This series supports OpenAI video generation formats (see the link [Video generation Sora compatible formats](/api-reference/en/video-generation-sora-compatible-format/create-video)).\n\nKling 4.0 native task API. Authenticate using this site's Bearer API Key. The request body does not require model; settings.resolution=720p uses kling-4.0, while 1080p uses kling-4.0-1080p, with 1080p as the default. After successful creation, use the returned data.id to call GET /tasks?task_ids=task ID; separate multiple IDs with commas. The returned data is an array, and the result video is available at data[].outputs[].url.\n\nCurrently supported generation scenarios include prompts, first_frame, last_frame, refer_image, and feature_video. middle_frame, base_video, element, voice, audio references, callbacks, and custom external task IDs are not supported. Non-empty options.callback_url, non-empty options.external_task_id, non-empty contents.id, and other unsupported fields will return 400. options can be omitted or passed as an empty object; watermark_info.enabled=false can also be passed. Enabling watermarks is not currently supported. Supported durations range from 4 to 30 seconds, with a default of 10 seconds; 3 seconds is not supported. For text-to-video and reference scenarios, the default aspect ratio is 16:9; explicitly specifying adaptive will return 400. For first- and last-frame scenarios, explicitly specifying settings.aspect_ratio is not accepted; the aspect ratio is determined by the dimensions of the first frame image.\n\nFor Omni Reference, `contents` must include a non-empty `prompt` and at least one supported media item. For first/last frame scenarios, you can provide `first_frame`, `last_frame`, or both. First and last frames cannot be used together with `refer_image` reference images or `feature_video` reference videos; mixing them returns a 400 error. For reference scenarios, `refer_image` reference images and `feature_video` reference videos can be combined. `first_frame`, `last_frame`, and `refer_image` each support a maximum of 1 item, while `feature_video` supports up to 5 items. Multi-reference image scenarios that rely on ID references are not currently supported.",
         "requestBody": {
           "required": true,
           "content": {
@@ -6221,8 +6221,7 @@
                           "16:9",
                           "9:16",
                           "1:1"
-                        ],
-                        "default": "16:9"
+                        ]
                       }
                     }
                   },
@@ -6251,7 +6250,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "A non-empty prompt and supported media must both be included. Image-to-video requests must include first_frame. See the API documentation for media quantity limits.",
+                    "description": "A non-empty prompt and supported media must both be provided. Image-to-video requests must include first_frame. Do not use first_frame/last_frame together with refer_image/feature_video; otherwise, a 400 error will be returned. See the API documentation for media quantity limits. Omni Reference allows using only last_frame with a prompt.",
                     "items": {
                       "oneOf": [
                         {
@@ -6299,9 +6298,79 @@
                           }
                         }
                       ]
+                    },
+                    "not": {
+                      "items": {
+                        "properties": {
+                          "type": {
+                            "enum": [
+                              "prompt"
+                            ]
+                          }
+                        }
+                      }
                     }
                   }
-                }
+                },
+                "oneOf": [
+                  {
+                    "description": "First/last frame scenarios: use first_frame, last_frame, or both; do not combine them with reference assets. If aspect_ratio is omitted, the aspect ratio follows the first frame.",
+                    "properties": {
+                      "contents": {
+                        "items": {
+                          "properties": {
+                            "type": {
+                              "enum": [
+                                "prompt",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "not": {
+                          "required": [
+                            "aspect_ratio"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "description": "Example scenario: `refer_image` and `feature_video` can be used together. The default aspect ratio is 16:9.",
+                    "properties": {
+                      "contents": {
+                        "items": {
+                          "properties": {
+                            "type": {
+                              "enum": [
+                                "prompt",
+                                "refer_image",
+                                "feature_video"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "properties": {
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ],
+                            "default": "16:9"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
               },
               "examples": {
                 "kling4_native_720p": {
@@ -6309,17 +6378,14 @@
                   "value": {
                     "settings": {
                       "resolution": "720p",
-                      "duration": 10
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
                     },
                     "options": {},
                     "contents": [
                       {
                         "type": "prompt",
                         "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/first-frame.jpg"
                       },
                       {
                         "type": "refer_image",
@@ -6337,17 +6403,14 @@
                   "value": {
                     "settings": {
                       "resolution": "1080p",
-                      "duration": 10
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
                     },
                     "options": {},
                     "contents": [
                       {
                         "type": "prompt",
                         "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/first-frame.jpg"
                       },
                       {
                         "type": "refer_image",

@@ -5737,7 +5737,7 @@
         "tags": [
           "動画生成Kling形式"
         ],
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling 4.0 ネイティブタスクAPI。本サイトの Bearer API Key を使用して認証します。リクエスト本文に model は不要です。settings.resolution=720p では kling-4.0、1080p では kling-4.0-1080p を使用し、デフォルトは1080pです。作成後、返された data.id を使用して GET /tasks?task_ids=タスクID を呼び出します。複数のIDはカンマで区切ります。照会結果の data は配列で、生成された動画は data[].outputs[].url にあります。\n\n現在、プロンプト、first_frame、last_frame、refer_image、feature_video に対応する生成シナリオをサポートしています。middle_frame、base_video、element、voice、音声参照、コールバック、カスタム外部タスクIDはサポートしていません。空でないoptions.callback_url、空でないoptions.external_task_id、空でないcontents.id、およびその他の未サポートフィールドを指定すると、400が返されます。optionsは省略するか空のオブジェクトを指定できます。また、watermark_info.enabled=falseを指定することもできます。ウォーターマークの有効化は現在サポートしていません。現在、動画の長さは4～30秒をサポートし、デフォルトは10秒です。3秒はサポートしていません。アスペクト比のデフォルトは16:9で、adaptiveを明示的に指定すると400が返されます。\n\nテキストから動画を生成する場合は、トップレベルの prompt を渡します。contents は不要です。",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling 4.0 ネイティブタスクAPI。本サイトの Bearer API Key を使用して認証します。リクエスト本文に model は不要です。settings.resolution=720p では kling-4.0、1080p では kling-4.0-1080p を使用し、デフォルトは1080pです。作成後、返された data.id を使用して GET /tasks?task_ids=タスクID を呼び出します。複数のIDはカンマで区切ります。照会結果の data は配列で、生成された動画は data[].outputs[].url にあります。\n\n現在、プロンプト、first_frame、last_frame、refer_image、feature_video に対応する生成シナリオをサポートしています。middle_frame、base_video、element、voice、音声参照、コールバック、またはカスタム外部タスクIDはサポートしていません。空でないoptions.callback_url、空でないoptions.external_task_id、空でないcontents.id、およびその他の未サポートのフィールドは400を返します。optionsは省略するか空のオブジェクトを指定でき、watermark_info.enabled=falseを指定することもできます。ウォーターマークの有効化は現在サポートされていません。現在、動画の長さは4～30秒をサポートし、デフォルトは10秒です。3秒はサポートされていません。テキスト生成および参照シナリオのアスペクト比はデフォルトで16:9です。adaptiveを明示的に指定すると400が返されます。先頭・末尾フレームのシナリオでは、settings.aspect_ratioを明示的に指定できません。アスペクト比は最初のframe画像のサイズによって決まります。\n\nテキストから動画を生成する場合は、トップレベルの prompt を渡します。contents は不要です。",
         "requestBody": {
           "required": true,
           "content": {
@@ -5934,7 +5934,7 @@
         "tags": [
           "動画生成Kling形式"
         ],
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling 4.0 ネイティブタスクAPI。本サイトの Bearer API Key を使用して認証します。リクエスト本文に model は不要です。settings.resolution=720p では kling-4.0、1080p では kling-4.0-1080p を使用し、デフォルトは1080pです。作成後、返された data.id を使用して GET /tasks?task_ids=タスクID を呼び出します。複数のIDはカンマで区切ります。照会結果の data は配列で、生成された動画は data[].outputs[].url にあります。\n\n現在、プロンプト、first_frame、last_frame、refer_image、feature_video に対応する生成シナリオをサポートしています。middle_frame、base_video、element、voice、音声参照、コールバック、カスタム外部タスクIDはサポートしていません。空でないoptions.callback_url、空でないoptions.external_task_id、空でないcontents.id、およびその他の未サポートフィールドを指定すると、400が返されます。optionsは省略するか空のオブジェクトを指定できます。また、watermark_info.enabled=falseを指定することもできます。ウォーターマークの有効化は現在サポートしていません。現在、動画の長さは4～30秒をサポートし、デフォルトは10秒です。3秒はサポートしていません。アスペクト比のデフォルトは16:9で、adaptiveを明示的に指定すると400が返されます。\n\n画像から動画を生成する場合、contents には空でない prompt と first_frame を含める必要があり、last_frame も同時に渡せます。先頭フレームと末尾フレームはそれぞれ最大1枚です。settings.aspect_ratio は受け付けられません。",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling 4.0 ネイティブタスクAPI。本サイトの Bearer API Key を使用して認証します。リクエスト本文に model は不要です。settings.resolution=720p では kling-4.0、1080p では kling-4.0-1080p を使用し、デフォルトは1080pです。作成後、返された data.id を使用して GET /tasks?task_ids=タスクID を呼び出します。複数のIDはカンマで区切ります。照会結果の data は配列で、生成された動画は data[].outputs[].url にあります。\n\n現在、プロンプト、first_frame、last_frame、refer_image、feature_video に対応する生成シナリオをサポートしています。middle_frame、base_video、element、voice、音声参照、コールバック、またはカスタム外部タスクIDはサポートしていません。空でないoptions.callback_url、空でないoptions.external_task_id、空でないcontents.id、およびその他の未サポートのフィールドは400を返します。optionsは省略するか空のオブジェクトを指定でき、watermark_info.enabled=falseを指定することもできます。ウォーターマークの有効化は現在サポートされていません。現在、動画の長さは4～30秒をサポートし、デフォルトは10秒です。3秒はサポートされていません。テキスト生成および参照シナリオのアスペクト比はデフォルトで16:9です。adaptiveを明示的に指定すると400が返されます。先頭・末尾フレームのシナリオでは、settings.aspect_ratioを明示的に指定できません。アスペクト比は最初のframe画像のサイズによって決まります。\n\n画像から動画を生成する場合、contents には空でない prompt と first_frame を含める必要があります。last_frame も同時に指定できます。先頭フレームと末尾フレームはそれぞれ最大1枚です。先頭・末尾フレームは、refer_image の参照画像または feature_video の参照動画と併用できません。併用すると 400 が返されます。settings.aspect_ratio は受け付けられません。",
         "requestBody": {
           "required": true,
           "content": {
@@ -5991,7 +5991,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "空でないpromptとサポートされているメディアを両方含める必要があります。画像から動画を生成する場合は、first_frameを必ず含めてください。各メディアの数量制限については、API仕様を参照してください。",
+                    "description": "空でないpromptとサポートされているメディアを同時に含める必要があります。画像から動画を生成する場合は、first_frameを含める必要があります。first_frame/last_frameはrefer_image/feature_videoと併用できません。併用した場合は400が返されます。各メディアの数量制限については、API仕様を参照してください。",
                     "items": {
                       "oneOf": [
                         {
@@ -6184,7 +6184,7 @@
         "tags": [
           "動画生成Kling形式"
         ],
-        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling 4.0 ネイティブタスクAPI。本サイトの Bearer API Key を使用して認証します。リクエスト本文に model は不要です。settings.resolution=720p では kling-4.0、1080p では kling-4.0-1080p を使用し、デフォルトは1080pです。作成後、返された data.id を使用して GET /tasks?task_ids=タスクID を呼び出します。複数のIDはカンマで区切ります。照会結果の data は配列で、生成された動画は data[].outputs[].url にあります。\n\n現在、プロンプト、first_frame、last_frame、refer_image、feature_video に対応する生成シナリオをサポートしています。middle_frame、base_video、element、voice、音声参照、コールバック、カスタム外部タスクIDはサポートしていません。空でないoptions.callback_url、空でないoptions.external_task_id、空でないcontents.id、およびその他の未サポートフィールドを指定すると、400が返されます。optionsは省略するか空のオブジェクトを指定できます。また、watermark_info.enabled=falseを指定することもできます。ウォーターマークの有効化は現在サポートしていません。現在、動画の長さは4～30秒をサポートし、デフォルトは10秒です。3秒はサポートしていません。アスペクト比のデフォルトは16:9で、adaptiveを明示的に指定すると400が返されます。\n\n全能参考の contents には、空でない prompt と少なくとも1つのサポート対象メディアを含める必要があります。先頭・末尾フレーム、refer_image 参照画像、および feature_video 参照動画をサポートします。first_frame、last_frame、refer_image はそれぞれ最大1件、feature_video は最大5件です。id 参照に依存する複数参照画像のシナリオは現在サポートされていません。",
+        "description": "このシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling 4.0 ネイティブタスクAPI。本サイトの Bearer API Key を使用して認証します。リクエスト本文に model は不要です。settings.resolution=720p では kling-4.0、1080p では kling-4.0-1080p を使用し、デフォルトは1080pです。作成後、返された data.id を使用して GET /tasks?task_ids=タスクID を呼び出します。複数のIDはカンマで区切ります。照会結果の data は配列で、生成された動画は data[].outputs[].url にあります。\n\n現在、プロンプト、first_frame、last_frame、refer_image、feature_video に対応する生成シナリオをサポートしています。middle_frame、base_video、element、voice、音声参照、コールバック、またはカスタム外部タスクIDはサポートしていません。空でないoptions.callback_url、空でないoptions.external_task_id、空でないcontents.id、およびその他の未サポートのフィールドは400を返します。optionsは省略するか空のオブジェクトを指定でき、watermark_info.enabled=falseを指定することもできます。ウォーターマークの有効化は現在サポートされていません。現在、動画の長さは4～30秒をサポートし、デフォルトは10秒です。3秒はサポートされていません。テキスト生成および参照シナリオのアスペクト比はデフォルトで16:9です。adaptiveを明示的に指定すると400が返されます。先頭・末尾フレームのシナリオでは、settings.aspect_ratioを明示的に指定できません。アスペクト比は最初のframe画像のサイズによって決まります。\n\nオールインワン参照の contents には、空でない prompt と、少なくとも1つのサポート対象メディアを含める必要があります。開始・終了フレームのシナリオでは、first_frame、last_frame、または両方を渡せます。開始・終了フレームは、refer_image の参照画像または feature_video の参照動画と併用できません。併用すると 400 が返されます。参照シナリオでは、refer_image の参照画像と feature_video の参照動画を組み合わせて使用できます。first_frame、last_frame、refer_image はそれぞれ最大1件、feature_video は最大5件です。id による参照に依存する複数参照画像のシナリオは現在サポートされていません。",
         "requestBody": {
           "required": true,
           "content": {
@@ -6221,8 +6221,7 @@
                           "16:9",
                           "9:16",
                           "1:1"
-                        ],
-                        "default": "16:9"
+                        ]
                       }
                     }
                   },
@@ -6251,7 +6250,7 @@
                   "contents": {
                     "type": "array",
                     "minItems": 2,
-                    "description": "空でないpromptとサポートされているメディアを両方含める必要があります。画像から動画を生成する場合は、first_frameを必ず含めてください。各メディアの数量制限については、API仕様を参照してください。",
+                    "description": "空でないpromptとサポートされているメディアを同時に含める必要があります。画像から動画を生成する場合は、first_frameが必須です。first_frame/last_frameはrefer_image/feature_videoと併用できません。併用した場合は400が返されます。各メディアの数量制限については、API仕様を参照してください。オールインワン参照では、last_frameとpromptのみを指定できます。",
                     "items": {
                       "oneOf": [
                         {
@@ -6299,9 +6298,79 @@
                           }
                         }
                       ]
+                    },
+                    "not": {
+                      "items": {
+                        "properties": {
+                          "type": {
+                            "enum": [
+                              "prompt"
+                            ]
+                          }
+                        }
+                      }
                     }
                   }
-                }
+                },
+                "oneOf": [
+                  {
+                    "description": "開始・終了フレームのシナリオ：first_frame、last_frame、または両方を使用し、参照素材とは併用しません。aspect_ratio を省略した場合、画角は最初の frame に従います。",
+                    "properties": {
+                      "contents": {
+                        "items": {
+                          "properties": {
+                            "type": {
+                              "enum": [
+                                "prompt",
+                                "first_frame",
+                                "last_frame"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "not": {
+                          "required": [
+                            "aspect_ratio"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "description": "参考シナリオ：refer_image と feature_video は組み合わせて使用でき、アスペクト比はデフォルトで16:9です。",
+                    "properties": {
+                      "contents": {
+                        "items": {
+                          "properties": {
+                            "type": {
+                              "enum": [
+                                "prompt",
+                                "refer_image",
+                                "feature_video"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "settings": {
+                        "properties": {
+                          "aspect_ratio": {
+                            "type": "string",
+                            "enum": [
+                              "21:9",
+                              "16:9",
+                              "9:16",
+                              "1:1"
+                            ],
+                            "default": "16:9"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
               },
               "examples": {
                 "kling4_native_720p": {
@@ -6309,17 +6378,14 @@
                   "value": {
                     "settings": {
                       "resolution": "720p",
-                      "duration": 10
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
                     },
                     "options": {},
                     "contents": [
                       {
                         "type": "prompt",
                         "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/first-frame.jpg"
                       },
                       {
                         "type": "refer_image",
@@ -6337,17 +6403,14 @@
                   "value": {
                     "settings": {
                       "resolution": "1080p",
-                      "duration": 10
+                      "duration": 10,
+                      "aspect_ratio": "16:9"
                     },
                     "options": {},
                     "contents": [
                       {
                         "type": "prompt",
                         "text": "A cinematic product shot with natural motion"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/first-frame.jpg"
                       },
                       {
                         "type": "refer_image",
