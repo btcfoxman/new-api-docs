@@ -2149,254 +2149,6 @@
         }
       }
     },
-    "/kling/v1/videos/text2video": {
-      "post": {
-        "summary": "Kling Генерация видео по тексту",
-        "deprecated": false,
-        "description": "Для тела запроса contents/settings/options в Kling 4.0 используйте POST /api/v3/contents/generations/tasks (формат задач Volcengine) или POST /v1/videos (формат видео OpenAI), затем запросите статус задачи по тому же пути. Текущий путь сохранен для совместимости с запросами устаревшей версии Kling.\n\nЭта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nИспользуйте модель Kling для генерации видео по текстовому описанию.\n\nПоддерживаемые модели: kling-v1, kling-v1-5 и др.",
-        "operationId": "createKlingText2Video",
-        "tags": [
-          "ФорматKling генерации видео"
-        ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
-              },
-              "example": {
-                "model": "kling-v1",
-                "prompt": "宇航员站起身走了",
-                "duration": 5,
-                "width": 1280,
-                "height": 720,
-                "fps": 30
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Задача на генерацию видео успешно создана",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "Ошибка параметров запроса",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ru/форматkling-генерации-видео/kling-генерация-видео-по-тексту"
-        }
-      }
-    },
-    "/kling/v1/videos/text2video/{task_id}": {
-      "get": {
-        "summary": "Получить статус задачи генерации видео по тексту Kling",
-        "deprecated": false,
-        "description": "При отправке через вход задач Kling 4.0 используйте GET /api/v3/contents/generations/tasks/{task_id} для запроса; при отправке через вход видео OpenAI используйте GET /v1/videos/{task_id} для запроса. Этот путь сохраняет совместимость с запросами задач старой версии Kling.\n\nЭта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nЗапросить статус и результат задачи генерации видео по тексту Kling.",
-        "operationId": "getKlingText2Video",
-        "tags": [
-          "ФорматKling генерации видео"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "description": "ID задачи",
-            "required": true,
-            "example": "task-abc123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Статус задачи успешно получен",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "Задача не существует",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ru/форматkling-генерации-видео/получить-статус-задачи-генерации-видео-по-тексту-kling"
-        }
-      }
-    },
-    "/kling/v1/videos/image2video": {
-      "post": {
-        "summary": "Kling Генерация видео по изображению",
-        "deprecated": false,
-        "description": "Для тела запроса contents/settings/options в Kling 4.0 используйте POST /api/v3/contents/generations/tasks (формат задач Volcengine) или POST /v1/videos (формат видео OpenAI), затем запросите статус задачи по тому же пути. Текущий путь сохранен для совместимости с запросами устаревшей версии Kling.\n\nЭта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nИспользуйте модель Kling для создания видео из изображения.\n\nПоддерживается передача URL-адреса изображения или данных изображения в кодировке Base64 через параметр image.",
-        "operationId": "createKlingImage2Video",
-        "tags": [
-          "ФорматKling генерации видео"
-        ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
-              },
-              "example": {
-                "model": "kling-v1",
-                "prompt": "人物转身走开",
-                "image": "https://example.com/image.jpg",
-                "duration": 5,
-                "width": 1280,
-                "height": 720
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Задача на генерацию видео успешно создана",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "Ошибка параметров запроса",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ru/форматkling-генерации-видео/kling-генерация-видео-по-изображению"
-        }
-      }
-    },
-    "/kling/v1/videos/image2video/{task_id}": {
-      "get": {
-        "summary": "Получить статус задачи генерации видео из изображения Kling",
-        "deprecated": false,
-        "description": "При отправке через вход задач Kling 4.0 используйте GET /api/v3/contents/generations/tasks/{task_id} для запроса; при отправке через вход видео OpenAI используйте GET /v1/videos/{task_id} для запроса. Этот путь сохраняет совместимость с запросами задач старой версии Kling.\n\nЭта серия поддерживает формат генерации видео OpenAI (подробности см. по ссылке [совместимые форматы видео生成Sora ](/api-reference/ru/generaciya-video-sovmestimyi-format-sora/sozdat-video)).\n\nЗапросить статус и результат задачи Kling по преобразованию изображения в видео.",
-        "operationId": "getKlingImage2Video",
-        "tags": [
-          "ФорматKling генерации видео"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "description": "ID задачи",
-            "required": true,
-            "example": "task-abc123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Статус задачи успешно получен",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "Задача не существует",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ru/форматkling-генерации-видео/получить-статус-задачи-генерации-видео-из-изображения-kling"
-        }
-      }
-    },
     "/v1/responses/{response_id}": {
       "get": {
         "summary": "Ответы на запрос (OpenAI Responses API)",
@@ -5980,7 +5732,7 @@
     },
     "/text-to-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 нативная генерация видео из текста",
+        "summary": "Kling Генерация видео по тексту",
         "operationId": "create_kling4_native_text_to_video",
         "tags": [
           "ФорматKling генерации видео"
@@ -6057,7 +5809,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6069,7 +5821,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6171,13 +5923,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/ru/форматkling-генерации-видео/kling-4.0-нативная-генерация-видео-из-текста"
+          "href": "/api-reference/ru/форматkling-генерации-видео/kling-генерация-видео-по-тексту"
         }
       }
     },
     "/image-to-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 нативная генерация видео из изображений",
+        "summary": "Kling Генерация видео по изображению",
         "operationId": "create_kling4_native_image_to_video",
         "tags": [
           "ФорматKling генерации видео"
@@ -6291,7 +6043,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6311,7 +6063,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6421,13 +6173,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/ru/форматkling-генерации-видео/kling-4.0-нативная-генерация-видео-из-изображений"
+          "href": "/api-reference/ru/форматkling-генерации-видео/kling-генерация-видео-по-изображению"
         }
       }
     },
     "/omni-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 Универсальная нативная справка",
+        "summary": "Kling Универсальный справочник",
         "operationId": "create_kling4_native_omni_video",
         "tags": [
           "ФорматKling генерации видео"
@@ -6553,7 +6305,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6581,7 +6333,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6699,13 +6451,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/ru/форматkling-генерации-видео/kling-4.0-универсальная-нативная-справка"
+          "href": "/api-reference/ru/форматkling-генерации-видео/kling-универсальный-справочник"
         }
       }
     },
     "/tasks": {
       "get": {
-        "summary": "Пакетный запрос нативных задач Kling 4.0",
+        "summary": "Пакетный запрос задач Kling",
         "operationId": "query_kling4_native_tasks",
         "tags": [
           "ФорматKling генерации видео"
@@ -6855,7 +6607,7 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/ru/форматkling-генерации-видео/пакетный-запрос-нативных-задач-kling-4.0"
+          "href": "/api-reference/ru/форматkling-генерации-видео/пакетный-запрос-задач-kling"
         }
       }
     }

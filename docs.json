@@ -77,13 +77,9 @@
                 "group": "Video generation Kling format",
                 "pages": [
                   "api-reference/en/video-generation-kling-format/create-kling-image-to-video",
-                  "api-reference/en/video-generation-kling-format/get-kling-image-to-video-task",
                   "api-reference/en/video-generation-kling-format/create-kling-text-to-video",
-                  "api-reference/en/video-generation-kling-format/get-kling-text-to-video-task",
-                  "api-reference/en/video-generation-kling-format/kling-4.0-native-image-to-video",
-                  "api-reference/en/video-generation-kling-format/kling-4.0-native-all-in-one-reference",
-                  "api-reference/en/video-generation-kling-format/batch-query-kling-4.0-native-tasks",
-                  "api-reference/en/video-generation-kling-format/kling-4.0-native-text-to-video"
+                  "api-reference/en/video-generation-kling-format/kling-all-in-one-reference",
+                  "api-reference/en/video-generation-kling-format/batch-query-kling-tasks"
                 ]
               },
               {
@@ -272,13 +268,9 @@
                 "group": "视频生成Kling格式",
                 "pages": [
                   "api-reference/cn/视频生成kling格式/kling图生视频",
-                  "api-reference/cn/视频生成kling格式/获取kling图生视频任务状态",
                   "api-reference/cn/视频生成kling格式/kling文生视频",
-                  "api-reference/cn/视频生成kling格式/获取kling文生视频任务状态",
-                  "api-reference/cn/视频生成kling格式/kling-4.0-原生图生视频",
-                  "api-reference/cn/视频生成kling格式/kling-4.0-原生全能参考",
-                  "api-reference/cn/视频生成kling格式/批量查询-kling-4.0-原生任务",
-                  "api-reference/cn/视频生成kling格式/kling-4.0-原生文生视频"
+                  "api-reference/cn/视频生成kling格式/kling-全能参考",
+                  "api-reference/cn/视频生成kling格式/批量查询-kling-任务"
                 ]
               },
               {
@@ -484,13 +476,9 @@
                 "group": "影片生成Kling格式",
                 "pages": [
                   "api-reference/zh-tw/影片生成kling格式/kling-圖生影片",
-                  "api-reference/zh-tw/影片生成kling格式/取得-kling-圖生影片任務狀態",
                   "api-reference/zh-tw/影片生成kling格式/kling-文生影片",
-                  "api-reference/zh-tw/影片生成kling格式/取得-kling-文生影片任務狀態",
-                  "api-reference/zh-tw/影片生成kling格式/kling-4.0-原生圖生影片",
-                  "api-reference/zh-tw/影片生成kling格式/kling-4.0-原生全能參考",
-                  "api-reference/zh-tw/影片生成kling格式/批次查詢-kling-4.0-原生任務",
-                  "api-reference/zh-tw/影片生成kling格式/kling-4.0-原生文字生成影片"
+                  "api-reference/zh-tw/影片生成kling格式/kling-全能參考",
+                  "api-reference/zh-tw/影片生成kling格式/批量查詢-kling-任務"
                 ]
               },
               {
@@ -642,13 +630,9 @@
                 "group": "Format de génération vidéo Kling",
                 "pages": [
                   "api-reference/fr/format-de-génération-vidéo-kling/kling-image-vers-vidéo",
-                  "api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-d’une-image-kling",
                   "api-reference/fr/format-de-génération-vidéo-kling/kling-génération-de-vidéo-à-partir-de-texte",
-                  "api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-de-texte-kling",
-                  "api-reference/fr/format-de-génération-vidéo-kling/kling-4.0-génération-vidéo-à-partir-d'images-native",
-                  "api-reference/fr/format-de-génération-vidéo-kling/kling-4.0-référence-native-tout-en-un",
-                  "api-reference/fr/format-de-génération-vidéo-kling/interroger-par-lots-les-tâches-natives-de-kling-4.0",
-                  "api-reference/fr/format-de-génération-vidéo-kling/kling-4.0-génération-native-de-vidéos-à-partir-de-texte"
+                  "api-reference/fr/format-de-génération-vidéo-kling/kling-référence-complète",
+                  "api-reference/fr/format-de-génération-vidéo-kling/interroger-par-lot-les-tâches-kling"
                 ]
               },
               {
@@ -861,13 +845,9 @@
                 "group": "動画生成Kling形式",
                 "pages": [
                   "api-reference/ja/動画生成kling形式/kling-イメージから動画生成",
-                  "api-reference/ja/動画生成kling形式/kling-の画像から動画へのタスク状態を取得",
                   "api-reference/ja/動画生成kling形式/kling-テキストから動画を生成",
-                  "api-reference/ja/動画生成kling形式/kling-のテキストから動画生成タスクのステータスを取得",
-                  "api-reference/ja/動画生成kling形式/kling-4.0-ネイティブ画像生成動画",
-                  "api-reference/ja/動画生成kling形式/kling-4.0-ネイティブ全機能リファレンス",
-                  "api-reference/ja/動画生成kling形式/kling-4.0-ネイティブタスクを一括照会",
-                  "api-reference/ja/動画生成kling形式/kling-4.0-ネイティブテキスト動画生成"
+                  "api-reference/ja/動画生成kling形式/kling-オールインワンリファレンス",
+                  "api-reference/ja/動画生成kling形式/kling-タスクを一括照会"
                 ]
               },
               {
@@ -1091,13 +1071,9 @@
                 "group": "ФорматKling генерации видео",
                 "pages": [
                   "api-reference/ru/форматkling-генерации-видео/kling-генерация-видео-по-изображению",
-                  "api-reference/ru/форматkling-генерации-видео/получить-статус-задачи-генерации-видео-из-изображения-kling",
                   "api-reference/ru/форматkling-генерации-видео/kling-генерация-видео-по-тексту",
-                  "api-reference/ru/форматkling-генерации-видео/получить-статус-задачи-генерации-видео-по-тексту-kling",
-                  "api-reference/ru/форматkling-генерации-видео/kling-4.0-нативная-генерация-видео-из-изображений",
-                  "api-reference/ru/форматkling-генерации-видео/kling-4.0-универсальная-нативная-справка",
-                  "api-reference/ru/форматkling-генерации-видео/пакетный-запрос-нативных-задач-kling-4.0",
-                  "api-reference/ru/форматkling-генерации-видео/kling-4.0-нативная-генерация-видео-из-текста"
+                  "api-reference/ru/форматkling-генерации-видео/kling-универсальный-справочник",
+                  "api-reference/ru/форматkling-генерации-видео/пакетный-запрос-задач-kling"
                 ]
               }
             ]
@@ -1286,13 +1262,9 @@
                 "group": "Định dạngKling tạo video",
                 "pages": [
                   "api-reference/vi/định-dạngkling-tạo-video/kling-chuyển-hình-ảnh-thành-video",
-                  "api-reference/vi/định-dạngkling-tạo-video/lấy-trạng-thái-tác-vụ-tạo-video-từ-ảnh-kling",
                   "api-reference/vi/định-dạngkling-tạo-video/kling-tạo-video-từ-văn-bản",
-                  "api-reference/vi/định-dạngkling-tạo-video/lấy-trạng-thái-tác-vụ-tạo-video-từ-văn-bản-kling",
-                  "api-reference/vi/định-dạngkling-tạo-video/kling-4.0-tạo-video-từ-hình-ảnh-nguyên-bản",
-                  "api-reference/vi/định-dạngkling-tạo-video/kling-4.0-tham-chiếu-đa-năng-nguyên-bản",
-                  "api-reference/vi/định-dạngkling-tạo-video/truy-vấn-hàng-loạt-tác-vụ-gốc-kling-4.0",
-                  "api-reference/vi/định-dạngkling-tạo-video/kling-4.0-tạo-video-từ-văn-bản-gốc"
+                  "api-reference/vi/định-dạngkling-tạo-video/kling-tham-khảo-toàn-diện",
+                  "api-reference/vi/định-dạngkling-tạo-video/truy-vấn-hàng-loạt-các-tác-vụ-kling"
                 ]
               }
             ]

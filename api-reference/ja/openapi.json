@@ -2149,254 +2149,6 @@
         }
       }
     },
-    "/kling/v1/videos/text2video": {
-      "post": {
-        "summary": "Kling テキストから動画を生成",
-        "deprecated": false,
-        "description": "Kling 4.0 の contents/settings/options リクエストボディは、POST /api/v3/contents/generations/tasks（火山タスク形式）または POST /v1/videos（OpenAI 動画形式）から送信し、同じパスでタスクを照会してください。現在のパスは旧バージョンの Kling リクエストに対する互換性を維持しています。\n\nこのシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling モデルを使用して、テキスト説明から動画を生成します。\n\n対応モデル：kling-v1, kling-v1-5 など",
-        "operationId": "createKlingText2Video",
-        "tags": [
-          "動画生成Kling形式"
-        ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
-              },
-              "example": {
-                "model": "kling-v1",
-                "prompt": "宇航员站起身走了",
-                "duration": 5,
-                "width": 1280,
-                "height": 720,
-                "fps": 30
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "動画生成タスクの作成に成功しました",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "リクエストパラメータのエラー",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ja/動画生成kling形式/kling-テキストから動画を生成"
-        }
-      }
-    },
-    "/kling/v1/videos/text2video/{task_id}": {
-      "get": {
-        "summary": "Kling のテキストから動画生成タスクのステータスを取得",
-        "deprecated": false,
-        "description": "Kling 4.0 を火山タスクの入り口から送信した場合は GET /api/v3/contents/generations/tasks/{task_id} を使用して照会し、OpenAI 動画の入り口から送信した場合は GET /v1/videos/{task_id} を使用して照会します。本パスは旧バージョンの Kling タスク照会との互換性のために保持されています。\n\nこのシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling のテキストから動画を生成するタスクの状態と結果を取得します。",
-        "operationId": "getKlingText2Video",
-        "tags": [
-          "動画生成Kling形式"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "description": "タスクID",
-            "required": true,
-            "example": "task-abc123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "タスクステータスの取得に成功しました",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "タスクが存在しません",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ja/動画生成kling形式/kling-のテキストから動画生成タスクのステータスを取得"
-        }
-      }
-    },
-    "/kling/v1/videos/image2video": {
-      "post": {
-        "summary": "Kling イメージから動画生成",
-        "deprecated": false,
-        "description": "Kling 4.0 の contents/settings/options リクエストボディは、POST /api/v3/contents/generations/tasks（火山タスク形式）または POST /v1/videos（OpenAI 動画形式）から送信し、同じパスでタスクを照会してください。現在のパスは旧バージョンの Kling リクエストに対する互換性を維持しています。\n\nこのシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling モデルを使用して、画像から動画を生成します。\n\nimage パラメータを介した画像 URL または Base64 エンコードされた画像データの入力に対応しています。",
-        "operationId": "createKlingImage2Video",
-        "tags": [
-          "動画生成Kling形式"
-        ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
-              },
-              "example": {
-                "model": "kling-v1",
-                "prompt": "人物转身走开",
-                "image": "https://example.com/image.jpg",
-                "duration": 5,
-                "width": 1280,
-                "height": 720
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "動画生成タスクの作成に成功しました",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "リクエストパラメータのエラー",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ja/動画生成kling形式/kling-イメージから動画生成"
-        }
-      }
-    },
-    "/kling/v1/videos/image2video/{task_id}": {
-      "get": {
-        "summary": "Kling の画像から動画へのタスク状態を取得",
-        "deprecated": false,
-        "description": "Kling 4.0 を火山タスクの入り口から送信した場合は GET /api/v3/contents/generations/tasks/{task_id} を使用して照会し、OpenAI 動画の入り口から送信した場合は GET /v1/videos/{task_id} を使用して照会します。本パスは旧バージョンの Kling タスク照会との互換性のために保持されています。\n\nこのシリーズはOpenAIの動画生成形式をサポートしています（詳細はリンク [動画生成Sora互換形式](/api-reference/ja/video-generation-sora-compatible-format/create-video) を参照してください）。\n\nKling の画像から動画生成タスクのステータスと結果を取得します。",
-        "operationId": "getKlingImage2Video",
-        "tags": [
-          "動画生成Kling形式"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "description": "タスクID",
-            "required": true,
-            "example": "task-abc123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "タスクステータスの取得に成功しました",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "タスクが存在しません",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/ja/動画生成kling形式/kling-の画像から動画へのタスク状態を取得"
-        }
-      }
-    },
     "/v1/responses/{response_id}": {
       "get": {
         "summary": "クエリ応答 (OpenAI Responses API)",
@@ -5980,7 +5732,7 @@
     },
     "/text-to-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 ネイティブテキスト動画生成",
+        "summary": "Kling テキストから動画を生成",
         "operationId": "create_kling4_native_text_to_video",
         "tags": [
           "動画生成Kling形式"
@@ -6057,7 +5809,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6069,7 +5821,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6171,13 +5923,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成kling形式/kling-4.0-ネイティブテキスト動画生成"
+          "href": "/api-reference/ja/動画生成kling形式/kling-テキストから動画を生成"
         }
       }
     },
     "/image-to-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 ネイティブ画像生成動画",
+        "summary": "Kling イメージから動画生成",
         "operationId": "create_kling4_native_image_to_video",
         "tags": [
           "動画生成Kling形式"
@@ -6291,7 +6043,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6311,7 +6063,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6421,13 +6173,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成kling形式/kling-4.0-ネイティブ画像生成動画"
+          "href": "/api-reference/ja/動画生成kling形式/kling-イメージから動画生成"
         }
       }
     },
     "/omni-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 ネイティブ全機能リファレンス",
+        "summary": "Kling オールインワンリファレンス",
         "operationId": "create_kling4_native_omni_video",
         "tags": [
           "動画生成Kling形式"
@@ -6553,7 +6305,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6581,7 +6333,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6699,13 +6451,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成kling形式/kling-4.0-ネイティブ全機能リファレンス"
+          "href": "/api-reference/ja/動画生成kling形式/kling-オールインワンリファレンス"
         }
       }
     },
     "/tasks": {
       "get": {
-        "summary": "Kling 4.0 ネイティブタスクを一括照会",
+        "summary": "Kling タスクを一括照会",
         "operationId": "query_kling4_native_tasks",
         "tags": [
           "動画生成Kling形式"
@@ -6855,7 +6607,7 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/ja/動画生成kling形式/kling-4.0-ネイティブタスクを一括照会"
+          "href": "/api-reference/ja/動画生成kling形式/kling-タスクを一括照会"
         }
       }
     }

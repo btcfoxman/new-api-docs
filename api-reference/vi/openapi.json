@@ -2149,254 +2149,6 @@
         }
       }
     },
-    "/kling/v1/videos/text2video": {
-      "post": {
-        "summary": "Kling tạo video từ văn bản",
-        "deprecated": false,
-        "description": "Đối với request body contents/settings/options của Kling 4.0, vui lòng gửi qua POST /api/v3/contents/generations/tasks (định dạng nhiệm vụ Volcano) hoặc POST /v1/videos (định dạng video OpenAI), sau đó truy vấn nhiệm vụ theo cùng đường dẫn. Đường dẫn hiện tại được giữ lại để tương thích với các yêu cầu Kling phiên bản cũ.\n\nDòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nSử dụng mô hình Kling để tạo video từ mô tả văn bản.\n\nCác mô hình hỗ trợ: kling-v1, kling-v1-5, v.v.",
-        "operationId": "createKlingText2Video",
-        "tags": [
-          "Định dạngKling tạo video"
-        ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
-              },
-              "example": {
-                "model": "kling-v1",
-                "prompt": "宇航员站起身走了",
-                "duration": 5,
-                "width": 1280,
-                "height": 720,
-                "fps": 30
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Đã tạo tác vụ tạo video thành công",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "Tham số yêu cầu bị lỗi",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-tạo-video-từ-văn-bản"
-        }
-      }
-    },
-    "/kling/v1/videos/text2video/{task_id}": {
-      "get": {
-        "summary": "Lấy trạng thái tác vụ tạo video từ văn bản Kling",
-        "deprecated": false,
-        "description": "Khi gửi qua lối vào tác vụ Volcano của Kling 4.0, hãy sử dụng GET /api/v3/contents/generations/tasks/{task_id} để truy vấn; khi gửi qua lối vào video OpenAI, hãy sử dụng GET /v1/videos/{task_id} để truy vấn. Đường dẫn này duy trì tương thích với truy vấn tác vụ Kling phiên bản cũ.\n\nDòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ tạo video từ văn bản Kling.",
-        "operationId": "getKlingText2Video",
-        "tags": [
-          "Định dạngKling tạo video"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "description": "ID nhiệm vụ",
-            "required": true,
-            "example": "task-abc123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Lấy trạng thái nhiệm vụ thành công",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "Nhiệm vụ không tồn tại",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/vi/định-dạngkling-tạo-video/lấy-trạng-thái-tác-vụ-tạo-video-từ-văn-bản-kling"
-        }
-      }
-    },
-    "/kling/v1/videos/image2video": {
-      "post": {
-        "summary": "Kling Chuyển hình ảnh thành video",
-        "deprecated": false,
-        "description": "Đối với request body contents/settings/options của Kling 4.0, vui lòng gửi qua POST /api/v3/contents/generations/tasks (định dạng nhiệm vụ Volcano) hoặc POST /v1/videos (định dạng video OpenAI), sau đó truy vấn nhiệm vụ theo cùng đường dẫn. Đường dẫn hiện tại được giữ lại để tương thích với các yêu cầu Kling phiên bản cũ.\n\nDòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nDùng mô hình Kling để tạo video từ hình ảnh.\n\nHỗ trợ truyền URL hình ảnh hoặc dữ liệu hình ảnh mã hóa Base64 thông qua tham số image.",
-        "operationId": "createKlingImage2Video",
-        "tags": [
-          "Định dạngKling tạo video"
-        ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
-              },
-              "example": {
-                "model": "kling-v1",
-                "prompt": "人物转身走开",
-                "image": "https://example.com/image.jpg",
-                "duration": 5,
-                "width": 1280,
-                "height": 720
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Đã tạo tác vụ tạo video thành công",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "Tham số yêu cầu bị lỗi",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-chuyển-hình-ảnh-thành-video"
-        }
-      }
-    },
-    "/kling/v1/videos/image2video/{task_id}": {
-      "get": {
-        "summary": "Lấy trạng thái tác vụ tạo video từ ảnh Kling",
-        "deprecated": false,
-        "description": "Khi gửi qua lối vào tác vụ Volcano của Kling 4.0, hãy sử dụng GET /api/v3/contents/generations/tasks/{task_id} để truy vấn; khi gửi qua lối vào video OpenAI, hãy sử dụng GET /v1/videos/{task_id} để truy vấn. Đường dẫn này duy trì tương thích với truy vấn tác vụ Kling phiên bản cũ.\n\nDòng này hỗ trợ định dạng tạo video OpenAI (xem chi tiết tại liên kết [Định dạng tương thích với Sora tạo video](/api-reference/vi/tao-video-dinh-dang-tuong-thich-sora/tao-video)).\n\nTruy vấn trạng thái và kết quả của tác vụ tạo video từ ảnh Kling.",
-        "operationId": "getKlingImage2Video",
-        "tags": [
-          "Định dạngKling tạo video"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "description": "ID nhiệm vụ",
-            "required": true,
-            "example": "task-abc123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Lấy trạng thái nhiệm vụ thành công",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "Nhiệm vụ không tồn tại",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/vi/định-dạngkling-tạo-video/lấy-trạng-thái-tác-vụ-tạo-video-từ-ảnh-kling"
-        }
-      }
-    },
     "/v1/responses/{response_id}": {
       "get": {
         "summary": "Phản hồi truy vấn (OpenAI Responses API)",
@@ -5980,7 +5732,7 @@
     },
     "/text-to-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 tạo video từ văn bản gốc",
+        "summary": "Kling tạo video từ văn bản",
         "operationId": "create_kling4_native_text_to_video",
         "tags": [
           "Định dạngKling tạo video"
@@ -6057,7 +5809,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6069,7 +5821,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6171,13 +5923,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-4.0-tạo-video-từ-văn-bản-gốc"
+          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-tạo-video-từ-văn-bản"
         }
       }
     },
     "/image-to-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 tạo video từ hình ảnh nguyên bản",
+        "summary": "Kling Chuyển hình ảnh thành video",
         "operationId": "create_kling4_native_image_to_video",
         "tags": [
           "Định dạngKling tạo video"
@@ -6291,7 +6043,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6311,7 +6063,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6421,13 +6173,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-4.0-tạo-video-từ-hình-ảnh-nguyên-bản"
+          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-chuyển-hình-ảnh-thành-video"
         }
       }
     },
     "/omni-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 Tham chiếu đa năng nguyên bản",
+        "summary": "Kling Tham khảo toàn diện",
         "operationId": "create_kling4_native_omni_video",
         "tags": [
           "Định dạngKling tạo video"
@@ -6553,7 +6305,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6581,7 +6333,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6699,13 +6451,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-4.0-tham-chiếu-đa-năng-nguyên-bản"
+          "href": "/api-reference/vi/định-dạngkling-tạo-video/kling-tham-khảo-toàn-diện"
         }
       }
     },
     "/tasks": {
       "get": {
-        "summary": "Truy vấn hàng loạt tác vụ gốc Kling 4.0",
+        "summary": "Truy vấn hàng loạt các tác vụ Kling",
         "operationId": "query_kling4_native_tasks",
         "tags": [
           "Định dạngKling tạo video"
@@ -6855,7 +6607,7 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/vi/định-dạngkling-tạo-video/truy-vấn-hàng-loạt-tác-vụ-gốc-kling-4.0"
+          "href": "/api-reference/vi/định-dạngkling-tạo-video/truy-vấn-hàng-loạt-các-tác-vụ-kling"
         }
       }
     }

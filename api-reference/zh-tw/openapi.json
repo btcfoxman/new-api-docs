@@ -2149,254 +2149,6 @@
         }
       }
     },
-    "/kling/v1/videos/text2video": {
-      "post": {
-        "summary": "Kling 文生影片",
-        "deprecated": false,
-        "description": "Kling 4.0 的 contents/settings/options 請求體請透過 POST /api/v3/contents/generations/tasks（火山任務格式）或 POST /v1/videos（OpenAI 影片格式），再按相同路徑查詢任務。當前路徑保留舊版 Kling 請求相容。\n\n此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n使用 Kling 模型從文字描述生成影片。\n\n支援的模型：kling-v1, kling-v1-5 等",
-        "operationId": "createKlingText2Video",
-        "tags": [
-          "影片生成Kling格式"
-        ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
-              },
-              "example": {
-                "model": "kling-v1",
-                "prompt": "宇航员站起身走了",
-                "duration": 5,
-                "width": 1280,
-                "height": 720,
-                "fps": 30
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "成功建立影片生成任務",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "請求參數錯誤",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成kling格式/kling-文生影片"
-        }
-      }
-    },
-    "/kling/v1/videos/text2video/{task_id}": {
-      "get": {
-        "summary": "取得 Kling 文生影片任務狀態",
-        "deprecated": false,
-        "description": "Kling 4.0 透過火山任務入口提交時，使用 GET /api/v3/contents/generations/tasks/{task_id} 查詢；透過 OpenAI 影片入口提交時，使用 GET /v1/videos/{task_id} 查詢。本路徑保留舊版 Kling 任務查詢相容性。\n\n此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n查詢 Kling 文生影片任務的狀態和結果。",
-        "operationId": "getKlingText2Video",
-        "tags": [
-          "影片生成Kling格式"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "description": "任務 ID",
-            "required": true,
-            "example": "task-abc123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "成功獲取任務狀態",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "任務不存在",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成kling格式/取得-kling-文生影片任務狀態"
-        }
-      }
-    },
-    "/kling/v1/videos/image2video": {
-      "post": {
-        "summary": "Kling 圖生影片",
-        "deprecated": false,
-        "description": "Kling 4.0 的 contents/settings/options 請求體請透過 POST /api/v3/contents/generations/tasks（火山任務格式）或 POST /v1/videos（OpenAI 影片格式），再按相同路徑查詢任務。當前路徑保留舊版 Kling 請求相容。\n\n此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n使用 Kling 模型從圖片生成影片。\n\n支援透過 image 參數傳入圖片 URL 或 Base64 編碼的圖片資料。",
-        "operationId": "createKlingImage2Video",
-        "tags": [
-          "影片生成Kling格式"
-        ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
-              },
-              "example": {
-                "model": "kling-v1",
-                "prompt": "人物转身走开",
-                "image": "https://example.com/image.jpg",
-                "duration": 5,
-                "width": 1280,
-                "height": 720
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "成功建立影片生成任務",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "請求參數錯誤",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成kling格式/kling-圖生影片"
-        }
-      }
-    },
-    "/kling/v1/videos/image2video/{task_id}": {
-      "get": {
-        "summary": "取得 Kling 圖生影片任務狀態",
-        "deprecated": false,
-        "description": "Kling 4.0 透過火山任務入口提交時，使用 GET /api/v3/contents/generations/tasks/{task_id} 查詢；透過 OpenAI 影片入口提交時，使用 GET /v1/videos/{task_id} 查詢。本路徑保留舊版 Kling 任務查詢相容性。\n\n此系列支援OpenAI影片生成格式（詳見連結 [影片生成Sora相容格式](/api-reference/zh-tw/%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90sora%E7%9B%B8%E5%AE%B9%E6%A0%BC%E5%BC%8F/%E5%BB%BA%E7%AB%8B%E5%BD%B1%E7%89%87)）。\n\n查詢 Kling 圖生影片任務的狀態和結果。",
-        "operationId": "getKlingImage2Video",
-        "tags": [
-          "影片生成Kling格式"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "description": "任務 ID",
-            "required": true,
-            "example": "task-abc123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "成功獲取任務狀態",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "任務不存在",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成kling格式/取得-kling-圖生影片任務狀態"
-        }
-      }
-    },
     "/v1/responses/{response_id}": {
       "get": {
         "summary": "查詢回應 (OpenAI Responses API)",
@@ -5980,7 +5732,7 @@
     },
     "/text-to-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 原生文字生成影片",
+        "summary": "Kling 文生影片",
         "operationId": "create_kling4_native_text_to_video",
         "tags": [
           "影片生成Kling格式"
@@ -6057,7 +5809,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6069,7 +5821,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6171,13 +5923,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成kling格式/kling-4.0-原生文字生成影片"
+          "href": "/api-reference/zh-tw/影片生成kling格式/kling-文生影片"
         }
       }
     },
     "/image-to-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 原生圖生影片",
+        "summary": "Kling 圖生影片",
         "operationId": "create_kling4_native_image_to_video",
         "tags": [
           "影片生成Kling格式"
@@ -6291,7 +6043,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6311,7 +6063,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6421,13 +6173,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成kling格式/kling-4.0-原生圖生影片"
+          "href": "/api-reference/zh-tw/影片生成kling格式/kling-圖生影片"
         }
       }
     },
     "/omni-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 原生全能參考",
+        "summary": "Kling 全能參考",
         "operationId": "create_kling4_native_omni_video",
         "tags": [
           "影片生成Kling格式"
@@ -6553,7 +6305,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6581,7 +6333,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6699,13 +6451,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成kling格式/kling-4.0-原生全能參考"
+          "href": "/api-reference/zh-tw/影片生成kling格式/kling-全能參考"
         }
       }
     },
     "/tasks": {
       "get": {
-        "summary": "批次查詢 Kling 4.0 原生任務",
+        "summary": "批量查詢 Kling 任務",
         "operationId": "query_kling4_native_tasks",
         "tags": [
           "影片生成Kling格式"
@@ -6855,7 +6607,7 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/zh-tw/影片生成kling格式/批次查詢-kling-4.0-原生任務"
+          "href": "/api-reference/zh-tw/影片生成kling格式/批量查詢-kling-任務"
         }
       }
     }

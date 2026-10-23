@@ -2149,254 +2149,6 @@
         }
       }
     },
-    "/kling/v1/videos/text2video": {
-      "post": {
-        "summary": "Kling Génération de vidéo à partir de texte",
-        "deprecated": false,
-        "description": "Pour le corps de requête contents/settings/options de Kling 4.0, veuillez passer par POST /api/v3/contents/generations/tasks (format de tâche Volcano) ou POST /v1/videos (format vidéo OpenAI), puis interroger la tâche via le même chemin. Le chemin actuel conserve la compatibilité avec les requêtes Kling de l'ancienne version.\n\nCette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nUtilisez le modèle Kling pour générer des vidéos à partir de descriptions textuelles.\n\nModèles pris en charge : kling-v1, kling-v1-5, etc.",
-        "operationId": "createKlingText2Video",
-        "tags": [
-          "Format de génération vidéo Kling"
-        ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
-              },
-              "example": {
-                "model": "kling-v1",
-                "prompt": "宇航员站起身走了",
-                "duration": 5,
-                "width": 1280,
-                "height": 720,
-                "fps": 30
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "La tâche de génération de vidéo a été créée avec succès.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "Paramètres de requête non valides",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-génération-de-vidéo-à-partir-de-texte"
-        }
-      }
-    },
-    "/kling/v1/videos/text2video/{task_id}": {
-      "get": {
-        "summary": "Obtenir l’état de la tâche de génération de vidéo à partir de texte Kling",
-        "deprecated": false,
-        "description": "Lors de la soumission via l'entrée des tâches Volcano de Kling 4.0, utilisez GET /api/v3/contents/generations/tasks/{task_id} pour effectuer la requête ; lors de la soumission via l'entrée vidéo OpenAI, utilisez GET /v1/videos/{task_id}. Ce chemin conserve la compatibilité avec les requêtes de tâches Kling de l'ancienne version.\n\nCette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nConsulte l'état et le résultat de la tâche de génération de vidéo à partir de texte Kling.",
-        "operationId": "getKlingText2Video",
-        "tags": [
-          "Format de génération vidéo Kling"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "description": "ID de la tâche",
-            "required": true,
-            "example": "task-abc123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Statut de la tâche récupéré avec succès",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "La tâche n'existe pas",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-de-texte-kling"
-        }
-      }
-    },
-    "/kling/v1/videos/image2video": {
-      "post": {
-        "summary": "Kling Image-vers-Vidéo",
-        "deprecated": false,
-        "description": "Pour le corps de requête contents/settings/options de Kling 4.0, veuillez passer par POST /api/v3/contents/generations/tasks (format de tâche Volcano) ou POST /v1/videos (format vidéo OpenAI), puis interroger la tâche via le même chemin. Le chemin actuel conserve la compatibilité avec les requêtes Kling de l'ancienne version.\n\nCette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nUtilisez le modèle Kling pour générer des vidéos à partir d’images.\n\nPrend en charge le passage d'URL d'image ou de données d'image encodées en Base64 via le paramètre `image`.",
-        "operationId": "createKlingImage2Video",
-        "tags": [
-          "Format de génération vidéo Kling"
-        ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoRequest"
-              },
-              "example": {
-                "model": "kling-v1",
-                "prompt": "人物转身走开",
-                "image": "https://example.com/image.jpg",
-                "duration": 5,
-                "width": 1280,
-                "height": 720
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "La tâche de génération de vidéo a été créée avec succès.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "400": {
-            "description": "Paramètres de requête non valides",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-image-vers-vidéo"
-        }
-      }
-    },
-    "/kling/v1/videos/image2video/{task_id}": {
-      "get": {
-        "summary": "Obtenir l’état de la tâche de génération de vidéo à partir d’une image Kling",
-        "deprecated": false,
-        "description": "Lors de la soumission via l'entrée des tâches Volcano de Kling 4.0, utilisez GET /api/v3/contents/generations/tasks/{task_id} pour effectuer la requête ; lors de la soumission via l'entrée vidéo OpenAI, utilisez GET /v1/videos/{task_id}. Ce chemin conserve la compatibilité avec les requêtes de tâches Kling de l'ancienne version.\n\nCette série prend en charge le format de génération vidéo OpenAI (voir le lien [Formats compatibles pour la génération vidéo Sora](/api-reference/fr/generation-video-format-compatible-sora/creer-video)).\n\nConsultez l’état et le résultat de la tâche image vers vidéo Kling.",
-        "operationId": "getKlingImage2Video",
-        "tags": [
-          "Format de génération vidéo Kling"
-        ],
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "description": "ID de la tâche",
-            "required": true,
-            "example": "task-abc123",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Statut de la tâche récupéré avec succès",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoTaskResponse"
-                }
-              }
-            },
-            "headers": {}
-          },
-          "404": {
-            "description": "La tâche n'existe pas",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "x-doc-source": "relay-openapi+contract-transform",
-        "x-drift-status": "ok",
-        "x-drift-count": 0,
-        "x-drift-types": [],
-        "x-mint": {
-          "href": "/api-reference/fr/format-de-génération-vidéo-kling/obtenir-l’état-de-la-tâche-de-génération-de-vidéo-à-partir-d’une-image-kling"
-        }
-      }
-    },
     "/v1/responses/{response_id}": {
       "get": {
         "summary": "Réponses de requête (OpenAI Responses API)",
@@ -5980,7 +5732,7 @@
     },
     "/text-to-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 : génération native de vidéos à partir de texte",
+        "summary": "Kling Génération de vidéo à partir de texte",
         "operationId": "create_kling4_native_text_to_video",
         "tags": [
           "Format de génération vidéo Kling"
@@ -6057,7 +5809,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6069,7 +5821,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6171,13 +5923,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-4.0-génération-native-de-vidéos-à-partir-de-texte"
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-génération-de-vidéo-à-partir-de-texte"
         }
       }
     },
     "/image-to-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 génération vidéo à partir d'images native",
+        "summary": "Kling Image-vers-Vidéo",
         "operationId": "create_kling4_native_image_to_video",
         "tags": [
           "Format de génération vidéo Kling"
@@ -6291,7 +6043,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6311,7 +6063,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6421,13 +6173,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-4.0-génération-vidéo-à-partir-d'images-native"
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-image-vers-vidéo"
         }
       }
     },
     "/omni-video/kling-4.0": {
       "post": {
-        "summary": "Kling 4.0 Référence native tout-en-un",
+        "summary": "Kling Référence complète",
         "operationId": "create_kling4_native_omni_video",
         "tags": [
           "Format de génération vidéo Kling"
@@ -6553,7 +6305,7 @@
               },
               "examples": {
                 "kling4_native_720p": {
-                  "summary": "Kling 4.0 720p",
+                  "summary": "Kling 720p",
                   "value": {
                     "settings": {
                       "resolution": "720p",
@@ -6581,7 +6333,7 @@
                   }
                 },
                 "kling4_native_1080p": {
-                  "summary": "Kling 4.0 1080p",
+                  "summary": "Kling 1080p",
                   "value": {
                     "settings": {
                       "resolution": "1080p",
@@ -6699,13 +6451,13 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-4.0-référence-native-tout-en-un"
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/kling-référence-complète"
         }
       }
     },
     "/tasks": {
       "get": {
-        "summary": "Interroger par lots les tâches natives de Kling 4.0",
+        "summary": "Interroger par lot les tâches Kling",
         "operationId": "query_kling4_native_tasks",
         "tags": [
           "Format de génération vidéo Kling"
@@ -6855,7 +6607,7 @@
         "x-drift-count": 0,
         "x-drift-types": [],
         "x-mint": {
-          "href": "/api-reference/fr/format-de-génération-vidéo-kling/interroger-par-lots-les-tâches-natives-de-kling-4.0"
+          "href": "/api-reference/fr/format-de-génération-vidéo-kling/interroger-par-lot-les-tâches-kling"
         }
       }
     }
