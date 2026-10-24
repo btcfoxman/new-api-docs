@@ -241,7 +241,7 @@ Kling 4.0 直接支持标准 OpenAI/Sora prompt/seconds/size/input_reference，�
 
 ### Vidu
 
-支持 Vidu 官方视频生成格式，也支持通过 `/v1/videos` 兼容接入，适合文生、单图、首尾帧和多参考图场景。
+Vidu Q4：`vidu-q4` 固定 720p，`vidu-q4-540p` 固定 540p，支持生成 3～16 秒视频。至少需要 1 张图片，最多支持 15 张参考图；参考生成可附带最多 3 段 MP3 音频，每段 3～12 秒、最大 50MB。不支持纯文生、指定首尾帧或参考视频。多张图片用于共同参考，不表示首尾位置。可通过 `POST /v1/videos`、`POST /api/v3/contents/generations/tasks`，或 Vidu 格式 `POST /ent/v2/img2video`、`POST /ent/v2/reference2video` 创建任务。统一入口推荐使用 `mode=reference_images`；带音频时使用 `mode=reference_material`。参考音频可用 `audio_urls`，Seedance 格式也可用标准 `content` 的 `audio_url` 项；`audio` 布尔字段表示生成音频开关，与参考音频 URL 列表分别使用。分辨率须与模型名一致。旧 Q3/Q2/V2 模型继续按各自能力使用原有接口。
 
 
 
@@ -249,7 +249,15 @@ Kling 4.0 直接支持标准 OpenAI/Sora prompt/seconds/size/input_reference，�
 
 |---|---|
 
+| `vidu-q4` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu-q4-540p` | `/ent/v2/...` / `/v1/videos` |
+
 | `viduq3-turbo` | `/ent/v2/...` / `/v1/videos` |
+
+| `viduq2` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu2.0` | `/ent/v2/...` / `/v1/videos` |
 
 | `vidu*` | `/ent/v2/...` / `/v1/videos` |
 

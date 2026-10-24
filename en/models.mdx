@@ -241,7 +241,7 @@ Use the unified video capability for integration. `minimax-h3` Supports text-to-
 
 ### Vidu
 
-Supports the Vidu official video generation format, and also supports compatible integration via `/v1/videos`, suitable for text-to-video, single-image, first-and-last-frame, and multi-reference-image scenarios.
+Vidu Q4: `vidu-q4` is fixed at 720p, and `vidu-q4-540p` is fixed at 540p. Supports generating 3–16 second videos. At least 1 image is required, with up to 15 reference images supported. Reference-based generation can include up to 3 MP3 audio clips, each 3–12 seconds and up to 50 MB. Pure text-to-video, specified first and last frames, and reference videos are not supported. Multiple images are used as shared references and do not indicate first/last-frame positions. Tasks can be created through `POST /v1/videos`, `POST /api/v3/contents/generations/tasks`, or the Vidu formats `POST /ent/v2/img2video` and `POST /ent/v2/reference2video`. For the unified entry point, `mode=reference_images` is recommended; use `mode=reference_material` when including audio. Reference audio can use `audio_urls`; the Seedance format can also use the `audio_url` field of the standard `content`. The `audio` boolean field controls whether audio is generated and is used separately from the reference audio URL list. The resolution must match the model name. Legacy Q3/Q2/V2 models should continue using their original APIs according to their respective capabilities.
 
 
 
@@ -249,7 +249,15 @@ Supports the Vidu official video generation format, and also supports compatible
 
 |---|---|
 
+| `vidu-q4` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu-q4-540p` | `/ent/v2/...` / `/v1/videos` |
+
 | `viduq3-turbo` | `/ent/v2/...` / `/v1/videos` |
+
+| `viduq2` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu2.0` | `/ent/v2/...` / `/v1/videos` |
 
 | `vidu*` | `/ent/v2/...` / `/v1/videos` |
 

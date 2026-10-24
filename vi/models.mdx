@@ -241,7 +241,7 @@ Sử dụng khả năng video thống nhất để tích hợp. `minimax-h3` H�
 
 ### Vidu
 
-Hỗ trợ định dạng tạo video chính thức của Vidu, đồng thời cũng hỗ trợ tích hợp tương thích qua `/v1/videos`, phù hợp cho các kịch bản văn bản sang video, một ảnh, khung đầu-cuối và nhiều ảnh tham chiếu.
+Vidu Q4: `vidu-q4` cố định ở 720p, `vidu-q4-540p` cố định ở 540p, hỗ trợ tạo video dài 3–16 giây. Yêu cầu ít nhất 1 hình ảnh và hỗ trợ tối đa 15 hình ảnh tham chiếu; quá trình tạo từ tham chiếu có thể kèm tối đa 3 đoạn âm thanh MP3, mỗi đoạn dài 3–12 giây và tối đa 50MB. Không hỗ trợ chỉ tạo từ văn bản, chỉ định khung hình đầu/cuối hoặc video tham chiếu. Nhiều hình ảnh được dùng làm tham chiếu chung, không biểu thị vị trí đầu/cuối. Có thể tạo tác vụ thông qua `POST /v1/videos`, `POST /api/v3/contents/generations/tasks`, hoặc định dạng Vidu `POST /ent/v2/img2video`, `POST /ent/v2/reference2video`. Nên sử dụng `mode=reference_images` làm điểm truy cập thống nhất; khi có âm thanh, hãy dùng `mode=reference_material`. Có thể dùng `audio_urls` cho âm thanh tham chiếu; ở định dạng Seedance, cũng có thể dùng mục `audio_url` của `content` tiêu chuẩn; trường boolean `audio` biểu thị công tắc tạo âm thanh và được sử dụng riêng với danh sách URL âm thanh tham chiếu. Độ phân giải phải khớp với tên mô hình. Các mô hình Q3/Q2/V2 cũ tiếp tục sử dụng giao diện ban đầu theo khả năng tương ứng.
 
 
 
@@ -249,7 +249,15 @@ Hỗ trợ định dạng tạo video chính thức của Vidu, đồng thời c
 
 |---|---|
 
+| `vidu-q4` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu-q4-540p` | `/ent/v2/...` / `/v1/videos` |
+
 | `viduq3-turbo` | `/ent/v2/...` / `/v1/videos` |
+
+| `viduq2` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu2.0` | `/ent/v2/...` / `/v1/videos` |
 
 | `vidu*` | `/ent/v2/...` / `/v1/videos` |
 

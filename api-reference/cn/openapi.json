@@ -895,7 +895,7 @@
       "post": {
         "summary": "创建视频",
         "deprecated": false,
-        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容\n\n当前对外不提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 创建任务，获取 `id`\n2. 轮询 `GET /v1/videos/{id}` 直到 `completed` 或 `failed`\n3. 完成后优先使用返回中的 `video_url`\n4. 如需统一下载，调用 `GET /v1/videos/{id}/content`\n\n核心参数：\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，视频生成描述\n- `seconds: number|string`：可选，目标时长\n- `duration: number|string`：可选，时长别名\n- `size: string`：可选，输出尺寸\n- `mode: string`：可选，常见值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用兼容参数：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用扩展参数：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n说明：`stable`、`official` 等表示不同分组，不是对外 `model` 后缀；调用时请保持 `model` 为基础模型名，由账户或令牌分组决定实际走哪个分组。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建议：\n- 纯文生视频优先使用 `veo3*` / `veo3.1*` 主模型\n- 图生或参考生视频场景，建议显式传 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基础模型：\n- `sora-2`\n- `sora-2-pro`\n\n建议：\n- `sora-2*` 适合通用调用\n- 如需使用 `stable` / `official` 等分组，请保持 `model` 为基础模型名，不要在模型名后追加后缀。\n\n请求示例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse 系列\n\n对外模型：\n- `happyhorse-1.0`\n\n建议：\n- `happyhorse-1.0` 通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。\n- Sora 兼容格式中参考图建议使用 `content` 数组传递媒体项。\n- 文本项使用 `type=text`，媒体项使用 `type=image_url` 并可配合 `role`、`name` 标识素材用途。\n\n请求示例：\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance 系列\n\n对外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建议：\n- 文生视频优先 `*-t2v-*` 或 `pro / fast`\n- 图生视频优先 `*-i2v-*`\n- 复杂参考素材场景优先使用 `content`\n\n请求示例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok 视频系列\n\n对外模型：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\n常用参数：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n示例：\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling 视频主模型\n\n对外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常见 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入参：\n- 文生视频：`model + model_name + prompt + mode=t2v`\n- 图生视频：`model + model_name + prompt + mode=i2v + image`\n- 多图参考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 视频延长：`model + model_name + mode=extend + video_id`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo 视频系列\n\n对外模型：\n- `minimax-h3`\n- `hailuo-2.3`\n\n建议：\n- `minimax-h3` 支持文生视频、图片参考和音频参考，推荐通过 `content` 混排文本与素材；也可使用 `image_urls`、`audio_urls` 等兼容字段。\n- `hailuo-2.3` 需要首帧图片，推荐在 `content` 中传 `role=first_frame` 的 `image_url` 项，或使用 `image_urls` 传首帧图片。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n`minimax-h3` 示例：\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` 示例：\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`\n- 最小入参：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 调用说明\n\n- `gemini-omni` 是 new-api 对外公开的视频模型名，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生视频，最小入参为 `model + prompt`。\n- `mode=r2v`：参考图/参考素材生成，图片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：视频编辑，视频可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同时传参考图。\n- 时长字段可用 `seconds` 或 `duration`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\n## Kling 4.0\n\n对外模型：`kling-4.0`（720p）、`kling-4.0-1080p`。原生格式可使用 `POST /text-to-video/kling-4.0`、`POST /image-to-video/kling-4.0`、`POST /omni-video/kling-4.0`，并通过 `GET /tasks?task_ids=任务ID` 查询。原生请求无需 `model`，由 `settings.resolution` 选择清晰度，默认1080p；原生参考图/视频类型为 `refer_image`、`feature_video`，创建返回 `data` 对象，查询返回 `data` 数组。可通过 `POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos` 提交，分别通过对应路径的 `GET /{task_id}` 查询。OpenAI/Sora 直接使用 `prompt`、`seconds`、`size` 和 `input_reference`；Seedance 直接使用 `content` 与顶层 `duration/resolution/ratio/mode`，两者都无需额外 `contents/settings/options`。旧信封仍兼容：`contents` 中 `type=prompt` 为文本，`type=reference_image`、`reference_video` 为参考素材，`first_frame`、`last_frame` 为首尾帧。`kling-4.0` 对应 720p，`kling-4.0-1080p` 对应 1080p；请让 `settings.resolution` 与模型名一致。`settings` 中使用 `duration`（4–30 秒）、`resolution`（720p/1080p）、`aspect_ratio`（21:9、16:9、9:16、1:1）。`audio` 仅普通参考素材的全能模式可选；文生与首尾帧模式请省略音频开关。当前接口最多支持 10 张参考图、5 段参考视频，不支持参考音频。旧 `kling-video` 与 `model_name` 模式仍是历史兼容接口。\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"prompt\": \"A cinematic product shot\",\n  \"seconds\": \"4\",\n  \"size\": \"1280x720\",\n  \"input_reference\": \"https://example.com/product.jpg\"\n}\n```\n\nKling 4.0 可直接使用 Seedance 格式 content/duration/resolution/ratio/mode，或 OpenAI 视频格式 prompt/seconds/size/input_reference；两者都无需额外的 contents/settings/options。旧 contents/settings/options 信封仅作兼容。mode 可选 t2v（纯文本）、i2v（单张首帧）、i2v_first_last（首尾两帧）、reference_images（普通参考图）、reference_material（图片或视频参考）。省略 mode 且没有显式工具时，有参考素材默认 reference_material，无任何参考素材默认 t2v。参考模式使用普通参考图角色，不把明确的首尾帧静默改成参考图；首尾帧请显式选择 i2v 或 i2v_first_last，并省略画幅参数。当前不支持参考音频。settings.audio 仅参考图片／参考素材的全能模式可选；t2v、i2v、i2v_first_last 请省略音频开关。",
+        "description": "OpenAI Sora 兼容格式的视频生成接口。支持文生视频与图/视频参考生成模式。\n\n- `POST /v1/videos`：创建视频任务\n- `GET /v1/videos/{video_id}`：查询任务状态\n- `GET /v1/videos/{video_id}/content`：获取视频二进制内容\n\n当前对外不提供：\n- `GET /v1/videos`\n- `POST /v1/videos/{video_id}/remix`\n\n标准鉴权头：\n- `Content-Type: application/json`\n\n1. `POST /v1/videos` 创建任务，获取 `id`\n2. 轮询 `GET /v1/videos/{id}` 直到 `completed` 或 `failed`\n3. 完成后优先使用返回中的 `video_url`\n4. 如需统一下载，调用 `GET /v1/videos/{id}/content`\n\n核心参数：\n- `model: string`：必填，对外模型名\n- `prompt: string`：推荐，视频生成描述\n- `seconds: number|string`：可选，目标时长\n- `duration: number|string`：可选，时长别名\n- `size: string`：可选，输出尺寸\n- `mode: string`：可选，常见值 `t2v` `i2v` `i2v_first_last` `reference_material`\n\n常用兼容参数：\n- `aspect_ratio`\n- `ratio`\n- `quality`\n- `resolution`\n- `fps`\n- `image`\n- `image_url`\n- `image_urls`\n- `images`\n- `reference_images`\n- `input_reference`\n- `end_image_url`\n- `last_image_url`\n- `video_urls`\n- `audio_urls`\n- `function_mode`\n- `content`\n- `callback_url`\n- `external_task_id`\n\nKling 常用扩展参数：\n- `model_name`\n- `negative_prompt`\n- `cfg_scale`\n- `sound`\n- `camera_control`\n- `image_list`\n- `video_id`\n- `task_id`\n- `watermark_info`\n\n### 4.1 Veo 系列\n\n说明：`stable`、`official` 等表示不同分组，不是对外 `model` 后缀；调用时请保持 `model` 为基础模型名，由账户或令牌分组决定实际走哪个分组。\n\n#### Veo 3.x 主模型\n\n- `veo3`\n- `veo3-fast`\n- `veo3-fast-frames`\n- `veo3-frames`\n- `veo3-pro`\n- `veo3-pro-frames`\n- `veo3.1`\n- `veo3.1-fast`\n- `veo3.1-pro`\n- `veo3.1-components`\n- `veo3.1-4k`\n- `veo3.1-pro-4k`\n\n建议：\n- 纯文生视频优先使用 `veo3*` / `veo3.1*` 主模型\n- 图生或参考生视频场景，建议显式传 `mode + image_url/reference_images`\n\n### 4.2 Sora 系列\n\n基础模型：\n- `sora-2`\n- `sora-2-pro`\n\n建议：\n- `sora-2*` 适合通用调用\n- 如需使用 `stable` / `official` 等分组，请保持 `model` 为基础模型名，不要在模型名后追加后缀。\n\n请求示例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"images\": [\n    \"https://example.png\"\n  ],\n  \"model\": \"sora-2\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 12,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"i2v\"\n}\n```\n\n### 4.3 HappyHorse 系列\n\n对外模型：\n- `happyhorse-1.0`\n\n建议：\n- `happyhorse-1.0` 通过 `mode` 区分 `t2v`、`i2v`、`r2v`、`video_edit`。\n- Sora 兼容格式中参考图建议使用 `content` 数组传递媒体项。\n- 文本项使用 `type=text`，媒体项使用 `type=image_url` 并可配合 `role`、`name` 标识素材用途。\n\n请求示例：\n\n```json\n{\n  \"size\": \"720x1280\",\n  \"model\": \"happyhorse-1.0\",\n  \"mode\": \"r2v\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    }\n  ],\n  \"parameters\": {\n    \"resolution\": \"720P\",\n    \"ratio\": \"9:16\",\n    \"duration\": 15,\n    \"seed\": 1\n  }\n}\n```\n\n### 4.4 Seedance 系列\n\n对外模型：\n- `doubao-seedance-1-0-lite-t2v-250428`\n- `doubao-seedance-1-0-lite-i2v-250428`\n- `doubao-seedance-1-0-pro-250528`\n- `doubao-seedance-1-0-pro-fast-251015`\n- `doubao-seedance-1-5-pro-251215`\n- `doubao-seedance-2-0-260128`\n- `doubao-seedance-2-0-fast-260128`\n\n建议：\n- 文生视频优先 `*-t2v-*` 或 `pro / fast`\n- 图生视频优先 `*-i2v-*`\n- 复杂参考素材场景优先使用 `content`\n\n请求示例：\n\n```json\n{\n  \"size\": \"1280x720\",\n  \"model\": \"doubao-seedance-2-0-fast-260128\",\n  \"prompt\": \"this is an example\",\n  \"duration\": 15,\n  \"fps\": \"24\",\n  \"seed\": \"20231024\",\n  \"mode\": \"reference_material\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"this is an example\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"image1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"audio1\"\n    }\n  ]\n}\n```\n\n### 4.5 Grok 视频系列\n\n对外模型：\n- `grok-imagine-1.0-video`\n- `grok-imagine-video-1.5-preview`\n- `grok-video-3`\n\n常用参数：\n- `prompt`\n- `ratio` / `aspect_ratio`\n- `resolution` / `size`\n- `seconds` / `duration`\n- `image` / `image_url` / `input_reference`\n- `reference_images`\n\n示例：\n\n```json\n{\n  \"model\": \"grok-imagine-1.0-video\",\n  \"prompt\": \"雨夜霓虹街道上的电影感推镜，光影丰富，运动自然\",\n  \"reference_images\": [\n    \"https://example.com/ref-1.jpg\"\n  ],\n  \"seconds\": 10,\n  \"aspect_ratio\": \"16:9\",\n  \"resolution\": \"720P\"\n}\n```\n\n### 4.6 Kling 视频主模型\n\n对外主模型：\n- `kling-video`\n\n必填：\n- `model`\n- `model_name`\n\n支持的 `model_name`：\n- `kling-v1`\n- `kling-v1-5`\n- `kling-v1-6`\n- `kling-v2-master`\n- `kling-v2-1`\n- `kling-v2-1-master`\n- `kling-v2-5-turbo`\n- `kling-v2-6`\n- `kling-v3`\n\n常见 `mode`：\n- `t2v`\n- `i2v`\n- `multi_i2v`\n- `extend`\n\n最小入参：\n- 文生视频：`model + model_name + prompt + mode=t2v`\n- 图生视频：`model + model_name + prompt + mode=i2v + image`\n- 多图参考：`model + model_name + prompt + mode=multi_i2v + image_list`\n- 视频延长：`model + model_name + mode=extend + video_id`\n\n示例：\n\n```json\n{\n  \"model\": \"kling-video\",\n  \"model_name\": \"kling-v2-6\",\n  \"mode\": \"t2v\",\n  \"prompt\": \"海边日落镜头，电影感，风吹长发\",\n  \"duration\": 5,\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n### 4.7 MiniMax / Hailuo 视频系列\n\n对外模型：\n- `minimax-h3`\n- `hailuo-2.3`\n\n建议：\n- `minimax-h3` 支持文生视频、图片参考和音频参考，推荐通过 `content` 混排文本与素材；也可使用 `image_urls`、`audio_urls` 等兼容字段。\n- `hailuo-2.3` 需要首帧图片，推荐在 `content` 中传 `role=first_frame` 的 `image_url` 项，或使用 `image_urls` 传首帧图片。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n`minimax-h3` 示例：\n\n```json\n{\n  \"model\": \"minimax-h3\",\n  \"prompt\": \"A cinematic product video with smooth camera motion\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Use the product image as reference and match the rhythm of the audio.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/product.jpg\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"product\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://example.com/music.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"music\"\n    }\n  ],\n  \"duration\": 8,\n  \"resolution\": \"1440p\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true\n}\n```\n\n`hailuo-2.3` 示例：\n\n```json\n{\n  \"model\": \"hailuo-2.3\",\n  \"prompt\": \"The camera slowly pushes in, natural motion and cinematic lighting.\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"The camera slowly pushes in, natural motion and cinematic lighting.\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://example.com/first-frame.jpg\"\n      },\n      \"role\": \"first_frame\",\n      \"name\": \"first\"\n    }\n  ],\n  \"duration\": 10,\n  \"resolution\": \"768p\",\n  \"aspect_ratio\": \"16:9\"\n}\n```\n\n- `mode=t2v`\n- 最小入参：`model + prompt`\n\n- `mode=i2v`\n- 最小入参：`model + prompt + image_url`\n\n- `mode=i2v_first_last`\n- 最小入参：`model + prompt + image_url + end_image_url`\n\n- `mode=reference_images`\n- 最小入参：`model + prompt + reference_images`\n\n- `mode=reference_material`\n- 最小入参：`model + prompt + (image_urls/video_urls/audio_urls 至少一种)`\n\n### Gemini Omni 调用说明\n\n- `gemini-omni` 是 new-api 对外公开的视频模型名，可直接走 `POST /v1/videos`。\n- `mode=t2v`：文生视频，最小入参为 `model + prompt`。\n- `mode=r2v`：参考图/参考素材生成，图片可放在 `image`、`image_url`、`images`、`image_urls`、`reference_images`、`input_reference` 或 `content` 中。\n- `mode=edit`：视频编辑，视频可放在 `video`、`video_url`、`videos` 或 `content` 中，也可同时传参考图。\n- 时长字段可用 `seconds` 或 `duration`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\n## Kling 4.0\n\n对外模型：`kling-4.0`（720p）、`kling-4.0-1080p`。原生格式可使用 `POST /text-to-video/kling-4.0`、`POST /image-to-video/kling-4.0`、`POST /omni-video/kling-4.0`，并通过 `GET /tasks?task_ids=任务ID` 查询。原生请求无需 `model`，由 `settings.resolution` 选择清晰度，默认1080p；原生参考图/视频类型为 `refer_image`、`feature_video`，创建返回 `data` 对象，查询返回 `data` 数组。可通过 `POST /api/v3/contents/generations/tasks` 或 `POST /v1/videos` 提交，分别通过对应路径的 `GET /{task_id}` 查询。OpenAI/Sora 直接使用 `prompt`、`seconds`、`size` 和 `input_reference`；Seedance 直接使用 `content` 与顶层 `duration/resolution/ratio/mode`，两者都无需额外 `contents/settings/options`。旧信封仍兼容：`contents` 中 `type=prompt` 为文本，`type=reference_image`、`reference_video` 为参考素材，`first_frame`、`last_frame` 为首尾帧。`kling-4.0` 对应 720p，`kling-4.0-1080p` 对应 1080p；请让 `settings.resolution` 与模型名一致。`settings` 中使用 `duration`（4–30 秒）、`resolution`（720p/1080p）、`aspect_ratio`（21:9、16:9、9:16、1:1）。`audio` 仅普通参考素材的全能模式可选；文生与首尾帧模式请省略音频开关。当前接口最多支持 10 张参考图、5 段参考视频，不支持参考音频。旧 `kling-video` 与 `model_name` 模式仍是历史兼容接口。\n\n```json\n{\n  \"model\": \"kling-4.0\",\n  \"prompt\": \"A cinematic product shot\",\n  \"seconds\": \"4\",\n  \"size\": \"1280x720\",\n  \"input_reference\": \"https://example.com/product.jpg\"\n}\n```\n\nKling 4.0 可直接使用 Seedance 格式 content/duration/resolution/ratio/mode，或 OpenAI 视频格式 prompt/seconds/size/input_reference；两者都无需额外的 contents/settings/options。旧 contents/settings/options 信封仅作兼容。mode 可选 t2v（纯文本）、i2v（单张首帧）、i2v_first_last（首尾两帧）、reference_images（普通参考图）、reference_material（图片或视频参考）。省略 mode 且没有显式工具时，有参考素材默认 reference_material，无任何参考素材默认 t2v。参考模式使用普通参考图角色，不把明确的首尾帧静默改成参考图；首尾帧请显式选择 i2v 或 i2v_first_last，并省略画幅参数。当前不支持参考音频。settings.audio 仅参考图片／参考素材的全能模式可选；t2v、i2v、i2v_first_last 请省略音频开关。\n\n## Vidu Q4\n\nVidu Q4：`vidu-q4` 固定 720p，`vidu-q4-540p` 固定 540p，支持生成 3～16 秒视频。至少需要 1 张图片，最多支持 15 张参考图；参考生成可附带最多 3 段 MP3 音频，每段 3～12 秒、最大 50MB。不支持纯文生、指定首尾帧或参考视频。多张图片用于共同参考，不表示首尾位置。可通过 `POST /v1/videos`、`POST /api/v3/contents/generations/tasks`，或 Vidu 格式 `POST /ent/v2/img2video`、`POST /ent/v2/reference2video` 创建任务。统一入口推荐使用 `mode=reference_images`；带音频时使用 `mode=reference_material`。参考音频可用 `audio_urls`，Seedance 格式也可用标准 `content` 的 `audio_url` 项；`audio` 布尔字段表示生成音频开关，与参考音频 URL 列表分别使用。分辨率须与模型名一致。",
         "operationId": "createVideo",
         "tags": [
           "视频生成Sora兼容格式"
@@ -942,13 +942,14 @@
                           "veo3.1-fast",
                           "veo3.1-pro",
                           "veo3.1-pro-4k",
-                          "kling-video",
                           "grok-imagine-1.0-video",
                           "grok-imagine-video-1.5-preview",
                           "grok-video-3",
                           "minimax-h3",
                           "hailuo-2.3",
-                          "viduq3-turbo"
+                          "viduq3-turbo",
+                          "vidu-q4",
+                          "vidu-q4-540p"
                         ],
                         "example": "sora-2"
                       },
@@ -1038,6 +1039,17 @@
                       "parameters": {
                         "type": "object",
                         "additionalProperties": true
+                      },
+                      "audio_urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Vidu Q4 参考音频，最多 3 段 MP3，每段 3～12 秒、最大 50MB；与 audio 布尔开关分开。"
+                      },
+                      "resolution": {
+                        "type": "string",
+                        "description": "输出分辨率，常见值 `540p`、`720p`、`1080p`。"
                       }
                     },
                     "required": [
@@ -1552,33 +1564,6 @@
                     "size": "1280x720"
                   }
                 },
-                "kling_text2video": {
-                  "summary": "Kling 文生视频",
-                  "value": {
-                    "model": "kling-video",
-                    "prompt": "A cat playing piano in the garden",
-                    "duration": 5,
-                    "size": "1280x720",
-                    "metadata": {
-                      "negative_prompt": "blurry, low quality",
-                      "mode": "std"
-                    }
-                  }
-                },
-                "kling_image2video": {
-                  "summary": "Kling 图生视频",
-                  "value": {
-                    "model": "kling-video",
-                    "prompt": "A cat playing piano in the garden",
-                    "image": "https://example.com/input.jpg",
-                    "duration": 5,
-                    "size": "1280x720",
-                    "metadata": {
-                      "negative_prompt": "blurry, low quality",
-                      "mode": "std"
-                    }
-                  }
-                },
                 "grok_reference_video": {
                   "summary": "Grok 视频模式",
                   "value": {
@@ -2084,6 +2069,42 @@
                       "aspect_ratio": "16:9"
                     },
                     "options": {}
+                  }
+                },
+                "vidu_q4_openai_720p_reference": {
+                  "summary": "Vidu Q4 720p 多图 / 音频参考",
+                  "value": {
+                    "model": "vidu-q4",
+                    "prompt": "保持参考图中的主体与色彩，镜头缓慢推进，主体自然运动。",
+                    "resolution": "720p",
+                    "mode": "reference_material",
+                    "seconds": "3",
+                    "images": [
+                      "https://example.com/reference-1.jpg",
+                      "https://example.com/reference-2.jpg"
+                    ],
+                    "audio_urls": [
+                      "https://example.com/reference-1.mp3",
+                      "https://example.com/reference-2.mp3"
+                    ]
+                  }
+                },
+                "vidu_q4_openai_540p_reference": {
+                  "summary": "Vidu Q4 540p 多图 / 音频参考",
+                  "value": {
+                    "model": "vidu-q4-540p",
+                    "prompt": "保持参考图中的主体与色彩，镜头缓慢推进，主体自然运动。",
+                    "resolution": "540p",
+                    "mode": "reference_material",
+                    "seconds": "3",
+                    "images": [
+                      "https://example.com/reference-1.jpg",
+                      "https://example.com/reference-2.jpg"
+                    ],
+                    "audio_urls": [
+                      "https://example.com/reference-1.mp3",
+                      "https://example.com/reference-2.mp3"
+                    ]
                   }
                 }
               }
@@ -3327,7 +3348,7 @@
     "/ent/v2/text2video": {
       "post": {
         "summary": "创建文生视频(Vidu)",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nVidu 官方视频生成接口，公开路径遵循 Vidu 官方协议。\n\n当前公开模型：`viduq3-turbo`。支持文生视频、图生视频、首尾帧生视频、参考生视频。同一模型也支持通过 `/v1/videos` Sora 兼容格式接入，常用 `mode` 为 `t2v`、`i2v`、`i2v_first_last`、`reference_images`。\n\n补充 Vidu 官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 Vidu 官方端点格式。\n\n支持模型：\nviduq3-turbo\n\n统一请求字段：\n- `model` (string, 必填): Vidu 对外模型名，当前公开 `viduq3-turbo`。\n- `prompt` (string, 可选): 视频生成提示词；文生视频必填，图生/首尾帧/参考生视频按业务需要传。\n- `images` (array[string], 可选): 图片输入。图生视频 1 张，首尾帧 2 张，参考生视频 1~7 张。\n- `videos` (array[string], 可选): 参考生视频可选视频主体输入，按 Vidu 官方模型能力使用。\n- `subjects` (array[object], 可选): 参考生视频主体库格式输入，可包含主体名称、图片、视频或音色等字段。\n- `duration` (integer, 可选): 视频时长，单位秒。`viduq3-turbo` 常用 5 秒，可按官方范围设置。\n- `resolution` (string, 可选): 输出分辨率，常见值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可选): 输出宽高比，文生/参考生视频常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可选): 随机种子。\n- `movement_amplitude` (string, 可选): 运动幅度，常见值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可选): 是否开启音视频直出。\n- `off_peak` (boolean, 可选): 是否使用错峰生成。\n- `watermark` (boolean, 可选): 是否添加水印。\n\n常见模型/模式差异：\n- `Vidu 文生视频`: 支持模型 viduq3-turbo；官方格式文生视频。\n- `Vidu 图生视频`: 支持模型 viduq3-turbo；官方格式单图图生视频。\n- `Vidu 首尾帧生视频`: 支持模型 viduq3-turbo；官方格式首尾帧双图生视频。\n- `Vidu 参考生视频`: 支持模型 viduq3-turbo；官方格式多参考图生视频。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nVidu 官方视频生成接口，公开路径遵循 Vidu 官方协议。\n\n`viduq3-turbo`、`viduq2`、`vidu2.0` 按各自能力支持文生、图生、首尾帧或参考生视频，也可通过 `/v1/videos` Sora 兼容格式接入。\n\nVidu Q4：`vidu-q4` 固定 720p，`vidu-q4-540p` 固定 540p，支持生成 3～16 秒视频。至少需要 1 张图片，最多支持 15 张参考图；参考生成可附带最多 3 段 MP3 音频，每段 3～12 秒、最大 50MB。不支持纯文生、指定首尾帧或参考视频。多张图片用于共同参考，不表示首尾位置。可通过 `POST /v1/videos`、`POST /api/v3/contents/generations/tasks`，或 Vidu 格式 `POST /ent/v2/img2video`、`POST /ent/v2/reference2video` 创建任务。统一入口推荐使用 `mode=reference_images`；带音频时使用 `mode=reference_material`。参考音频可用 `audio_urls`，Seedance 格式也可用标准 `content` 的 `audio_url` 项；`audio` 布尔字段表示生成音频开关，与参考音频 URL 列表分别使用。分辨率须与模型名一致。\n\n补充 Vidu 官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 Vidu 官方端点格式。\n\n支持模型：\nviduq3-turbo, viduq2, vidu2.0\n\n统一请求字段：\n- `model` (string, 必填): Vidu 对外模型名。Vidu Q4 仅支持带图片的图生与参考生视频；Q3/Q2/V2 沿用各自能力。\n- `prompt` (string, 可选): 视频生成提示词；文生视频必填，图生/首尾帧/参考生视频按业务需要传。\n- `images` (array[string], 可选): 图片输入。单图图生 1 张；Vidu Q4 参考生成 1～15 张，且图片用于共同参考。旧模型首尾帧与参考数量按各自能力使用。\n- `videos` (array[string], 可选): 仅按旧模型能力提供视频主体输入；Vidu Q4 不支持参考视频。\n- `subjects` (array[object], 可选): 参考生视频主体库格式输入，可包含主体名称、图片、视频或音色等字段。\n- `duration` (integer, 可选): 视频时长，单位秒。`viduq3-turbo` 常用 5 秒，可按官方范围设置。\n- `resolution` (string, 可选): 输出分辨率，常见值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可选): 输出宽高比，文生/参考生视频常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可选): 随机种子。\n- `movement_amplitude` (string, 可选): 运动幅度，常见值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可选): 是否开启音视频直出。\n- `audio_urls` (array[string], 可选): Vidu Q4 参考音频，最多 3 段 MP3，每段 3～12 秒、最大 50MB；与 audio 布尔开关分开。\n- `off_peak` (boolean, 可选): 是否使用错峰生成。\n- `watermark` (boolean, 可选): 是否添加水印。\n\n常见模型/模式差异：\n- `Vidu 文生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式文生视频。\n- `Vidu 图生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式单图图生视频。\n- `Vidu 首尾帧生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式首尾帧双图生视频。\n- `Vidu 参考生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式多参考图生视频。",
         "operationId": "createViduTextVideo",
         "tags": [
           "视频生成Vidu格式"
@@ -3346,10 +3367,12 @@
                   "model": {
                     "type": "string",
                     "enum": [
-                      "viduq3-turbo"
+                      "viduq3-turbo",
+                      "viduq2",
+                      "vidu2.0"
                     ],
                     "example": "viduq3-turbo",
-                    "description": "Vidu 对外模型名，当前公开 `viduq3-turbo`。"
+                    "description": "Vidu 对外模型名。Vidu Q4 仅支持带图片的图生与参考生视频；Q3/Q2/V2 沿用各自能力。"
                   },
                   "prompt": {
                     "type": "string",
@@ -3365,7 +3388,7 @@
                     "example": [
                       "https://example.com/input.jpg"
                     ],
-                    "description": "图片输入。图生视频 1 张，首尾帧 2 张，参考生视频 1~7 张。"
+                    "description": "图片输入。单图图生 1 张；Vidu Q4 参考生成 1～15 张，且图片用于共同参考。旧模型首尾帧与参考数量按各自能力使用。"
                   },
                   "videos": {
                     "type": "array",
@@ -3373,7 +3396,7 @@
                       "type": "string",
                       "format": "uri"
                     },
-                    "description": "参考生视频可选视频主体输入，按 Vidu 官方模型能力使用。"
+                    "description": "仅按旧模型能力提供视频主体输入；Vidu Q4 不支持参考视频。"
                   },
                   "subjects": {
                     "type": "array",
@@ -3455,6 +3478,15 @@
                   "audio": {
                     "type": "boolean",
                     "description": "是否开启音视频直出。"
+                  },
+                  "audio_urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "maxItems": 3,
+                    "description": "Vidu Q4 参考音频，最多 3 段 MP3，每段 3～12 秒、最大 50MB；与 audio 布尔开关分开。"
                   },
                   "audio_type": {
                     "type": "string",
@@ -3645,7 +3677,7 @@
     "/ent/v2/img2video": {
       "post": {
         "summary": "创建图生视频(Vidu)",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nVidu 官方视频生成接口，公开路径遵循 Vidu 官方协议。\n\n当前公开模型：`viduq3-turbo`。支持文生视频、图生视频、首尾帧生视频、参考生视频。同一模型也支持通过 `/v1/videos` Sora 兼容格式接入，常用 `mode` 为 `t2v`、`i2v`、`i2v_first_last`、`reference_images`。\n\n补充 Vidu 官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 Vidu 官方端点格式。\n\n支持模型：\nviduq3-turbo\n\n统一请求字段：\n- `model` (string, 必填): Vidu 对外模型名，当前公开 `viduq3-turbo`。\n- `prompt` (string, 可选): 视频生成提示词；文生视频必填，图生/首尾帧/参考生视频按业务需要传。\n- `images` (array[string], 可选): 图片输入。图生视频 1 张，首尾帧 2 张，参考生视频 1~7 张。\n- `videos` (array[string], 可选): 参考生视频可选视频主体输入，按 Vidu 官方模型能力使用。\n- `subjects` (array[object], 可选): 参考生视频主体库格式输入，可包含主体名称、图片、视频或音色等字段。\n- `duration` (integer, 可选): 视频时长，单位秒。`viduq3-turbo` 常用 5 秒，可按官方范围设置。\n- `resolution` (string, 可选): 输出分辨率，常见值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可选): 输出宽高比，文生/参考生视频常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可选): 随机种子。\n- `movement_amplitude` (string, 可选): 运动幅度，常见值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可选): 是否开启音视频直出。\n- `off_peak` (boolean, 可选): 是否使用错峰生成。\n- `watermark` (boolean, 可选): 是否添加水印。\n\n常见模型/模式差异：\n- `Vidu 文生视频`: 支持模型 viduq3-turbo；官方格式文生视频。\n- `Vidu 图生视频`: 支持模型 viduq3-turbo；官方格式单图图生视频。\n- `Vidu 首尾帧生视频`: 支持模型 viduq3-turbo；官方格式首尾帧双图生视频。\n- `Vidu 参考生视频`: 支持模型 viduq3-turbo；官方格式多参考图生视频。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nVidu 官方视频生成接口，公开路径遵循 Vidu 官方协议。\n\n`viduq3-turbo`、`viduq2`、`vidu2.0` 按各自能力支持文生、图生、首尾帧或参考生视频，也可通过 `/v1/videos` Sora 兼容格式接入。\n\nVidu Q4：`vidu-q4` 固定 720p，`vidu-q4-540p` 固定 540p，支持生成 3～16 秒视频。至少需要 1 张图片，最多支持 15 张参考图；参考生成可附带最多 3 段 MP3 音频，每段 3～12 秒、最大 50MB。不支持纯文生、指定首尾帧或参考视频。多张图片用于共同参考，不表示首尾位置。可通过 `POST /v1/videos`、`POST /api/v3/contents/generations/tasks`，或 Vidu 格式 `POST /ent/v2/img2video`、`POST /ent/v2/reference2video` 创建任务。统一入口推荐使用 `mode=reference_images`；带音频时使用 `mode=reference_material`。参考音频可用 `audio_urls`，Seedance 格式也可用标准 `content` 的 `audio_url` 项；`audio` 布尔字段表示生成音频开关，与参考音频 URL 列表分别使用。分辨率须与模型名一致。\n\n补充 Vidu 官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 Vidu 官方端点格式。\n\n支持模型：\nviduq3-turbo, viduq2, vidu2.0, vidu-q4, vidu-q4-540p\n\n统一请求字段：\n- `model` (string, 必填): Vidu 对外模型名。Vidu Q4 仅支持带图片的图生与参考生视频；Q3/Q2/V2 沿用各自能力。\n- `prompt` (string, 可选): 视频生成提示词；文生视频必填，图生/首尾帧/参考生视频按业务需要传。\n- `images` (array[string], 可选): 图片输入。单图图生 1 张；Vidu Q4 参考生成 1～15 张，且图片用于共同参考。旧模型首尾帧与参考数量按各自能力使用。\n- `videos` (array[string], 可选): 仅按旧模型能力提供视频主体输入；Vidu Q4 不支持参考视频。\n- `subjects` (array[object], 可选): 参考生视频主体库格式输入，可包含主体名称、图片、视频或音色等字段。\n- `duration` (integer, 可选): 视频时长，单位秒。`viduq3-turbo` 常用 5 秒，可按官方范围设置。\n- `resolution` (string, 可选): 输出分辨率，常见值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可选): 输出宽高比，文生/参考生视频常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可选): 随机种子。\n- `movement_amplitude` (string, 可选): 运动幅度，常见值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可选): 是否开启音视频直出。\n- `audio_urls` (array[string], 可选): Vidu Q4 参考音频，最多 3 段 MP3，每段 3～12 秒、最大 50MB；与 audio 布尔开关分开。\n- `off_peak` (boolean, 可选): 是否使用错峰生成。\n- `watermark` (boolean, 可选): 是否添加水印。\n\n常见模型/模式差异：\n- `Vidu 文生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式文生视频。\n- `Vidu 图生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式单图图生视频。\n- `Vidu 首尾帧生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式首尾帧双图生视频。\n- `Vidu 参考生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式多参考图生视频。\n- `Vidu Q4 720p 单图`: 支持模型 vidu-q4；单图或两图两段 MP3 参考示例；多图用于共同参考，不指定首尾帧。调用前替换示例素材 URL。\n- `Vidu Q4 540p 单图`: 支持模型 vidu-q4-540p；单图或两图两段 MP3 参考示例；多图用于共同参考，不指定首尾帧。调用前替换示例素材 URL。",
         "operationId": "createViduImageVideo",
         "tags": [
           "视频生成Vidu格式"
@@ -3664,10 +3696,14 @@
                   "model": {
                     "type": "string",
                     "enum": [
-                      "viduq3-turbo"
+                      "viduq3-turbo",
+                      "viduq2",
+                      "vidu2.0",
+                      "vidu-q4",
+                      "vidu-q4-540p"
                     ],
                     "example": "viduq3-turbo",
-                    "description": "Vidu 对外模型名，当前公开 `viduq3-turbo`。"
+                    "description": "Vidu 对外模型名。Vidu Q4 仅支持带图片的图生与参考生视频；Q3/Q2/V2 沿用各自能力。"
                   },
                   "prompt": {
                     "type": "string",
@@ -3685,7 +3721,7 @@
                     ],
                     "minItems": 1,
                     "maxItems": 1,
-                    "description": "图片输入。图生视频 1 张，首尾帧 2 张，参考生视频 1~7 张。"
+                    "description": "图片输入。单图图生 1 张；Vidu Q4 参考生成 1～15 张，且图片用于共同参考。旧模型首尾帧与参考数量按各自能力使用。"
                   },
                   "videos": {
                     "type": "array",
@@ -3693,7 +3729,7 @@
                       "type": "string",
                       "format": "uri"
                     },
-                    "description": "参考生视频可选视频主体输入，按 Vidu 官方模型能力使用。"
+                    "description": "仅按旧模型能力提供视频主体输入；Vidu Q4 不支持参考视频。"
                   },
                   "subjects": {
                     "type": "array",
@@ -3775,6 +3811,15 @@
                   "audio": {
                     "type": "boolean",
                     "description": "是否开启音视频直出。"
+                  },
+                  "audio_urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "maxItems": 3,
+                    "description": "Vidu Q4 参考音频，最多 3 段 MP3，每段 3～12 秒、最大 50MB；与 audio 布尔开关分开。"
                   },
                   "audio_type": {
                     "type": "string",
@@ -3873,6 +3918,30 @@
                     "resolution": "720p",
                     "aspect_ratio": "16:9"
                   }
+                },
+                "vidu_q4_vidu_720p_single": {
+                  "summary": "Vidu Q4 720p 单图",
+                  "value": {
+                    "model": "vidu-q4",
+                    "prompt": "保持参考图中的主体与色彩，镜头缓慢推进，主体自然运动。",
+                    "duration": 3,
+                    "resolution": "720p",
+                    "images": [
+                      "https://example.com/reference-1.jpg"
+                    ]
+                  }
+                },
+                "vidu_q4_vidu_540p_single": {
+                  "summary": "Vidu Q4 540p 单图",
+                  "value": {
+                    "model": "vidu-q4-540p",
+                    "prompt": "保持参考图中的主体与色彩，镜头缓慢推进，主体自然运动。",
+                    "duration": 3,
+                    "resolution": "540p",
+                    "images": [
+                      "https://example.com/reference-1.jpg"
+                    ]
+                  }
                 }
               }
             }
@@ -3965,7 +4034,7 @@
     "/ent/v2/start-end2video": {
       "post": {
         "summary": "创建首尾帧视频(Vidu)",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nVidu 官方视频生成接口，公开路径遵循 Vidu 官方协议。\n\n当前公开模型：`viduq3-turbo`。支持文生视频、图生视频、首尾帧生视频、参考生视频。同一模型也支持通过 `/v1/videos` Sora 兼容格式接入，常用 `mode` 为 `t2v`、`i2v`、`i2v_first_last`、`reference_images`。\n\n补充 Vidu 官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 Vidu 官方端点格式。\n\n支持模型：\nviduq3-turbo\n\n统一请求字段：\n- `model` (string, 必填): Vidu 对外模型名，当前公开 `viduq3-turbo`。\n- `prompt` (string, 可选): 视频生成提示词；文生视频必填，图生/首尾帧/参考生视频按业务需要传。\n- `images` (array[string], 可选): 图片输入。图生视频 1 张，首尾帧 2 张，参考生视频 1~7 张。\n- `videos` (array[string], 可选): 参考生视频可选视频主体输入，按 Vidu 官方模型能力使用。\n- `subjects` (array[object], 可选): 参考生视频主体库格式输入，可包含主体名称、图片、视频或音色等字段。\n- `duration` (integer, 可选): 视频时长，单位秒。`viduq3-turbo` 常用 5 秒，可按官方范围设置。\n- `resolution` (string, 可选): 输出分辨率，常见值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可选): 输出宽高比，文生/参考生视频常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可选): 随机种子。\n- `movement_amplitude` (string, 可选): 运动幅度，常见值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可选): 是否开启音视频直出。\n- `off_peak` (boolean, 可选): 是否使用错峰生成。\n- `watermark` (boolean, 可选): 是否添加水印。\n\n常见模型/模式差异：\n- `Vidu 文生视频`: 支持模型 viduq3-turbo；官方格式文生视频。\n- `Vidu 图生视频`: 支持模型 viduq3-turbo；官方格式单图图生视频。\n- `Vidu 首尾帧生视频`: 支持模型 viduq3-turbo；官方格式首尾帧双图生视频。\n- `Vidu 参考生视频`: 支持模型 viduq3-turbo；官方格式多参考图生视频。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nVidu 官方视频生成接口，公开路径遵循 Vidu 官方协议。\n\n`viduq3-turbo`、`viduq2`、`vidu2.0` 按各自能力支持文生、图生、首尾帧或参考生视频，也可通过 `/v1/videos` Sora 兼容格式接入。\n\nVidu Q4：`vidu-q4` 固定 720p，`vidu-q4-540p` 固定 540p，支持生成 3～16 秒视频。至少需要 1 张图片，最多支持 15 张参考图；参考生成可附带最多 3 段 MP3 音频，每段 3～12 秒、最大 50MB。不支持纯文生、指定首尾帧或参考视频。多张图片用于共同参考，不表示首尾位置。可通过 `POST /v1/videos`、`POST /api/v3/contents/generations/tasks`，或 Vidu 格式 `POST /ent/v2/img2video`、`POST /ent/v2/reference2video` 创建任务。统一入口推荐使用 `mode=reference_images`；带音频时使用 `mode=reference_material`。参考音频可用 `audio_urls`，Seedance 格式也可用标准 `content` 的 `audio_url` 项；`audio` 布尔字段表示生成音频开关，与参考音频 URL 列表分别使用。分辨率须与模型名一致。\n\n补充 Vidu 官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 Vidu 官方端点格式。\n\n支持模型：\nviduq3-turbo, viduq2, vidu2.0\n\n统一请求字段：\n- `model` (string, 必填): Vidu 对外模型名。Vidu Q4 仅支持带图片的图生与参考生视频；Q3/Q2/V2 沿用各自能力。\n- `prompt` (string, 可选): 视频生成提示词；文生视频必填，图生/首尾帧/参考生视频按业务需要传。\n- `images` (array[string], 可选): 图片输入。单图图生 1 张；Vidu Q4 参考生成 1～15 张，且图片用于共同参考。旧模型首尾帧与参考数量按各自能力使用。\n- `videos` (array[string], 可选): 仅按旧模型能力提供视频主体输入；Vidu Q4 不支持参考视频。\n- `subjects` (array[object], 可选): 参考生视频主体库格式输入，可包含主体名称、图片、视频或音色等字段。\n- `duration` (integer, 可选): 视频时长，单位秒。`viduq3-turbo` 常用 5 秒，可按官方范围设置。\n- `resolution` (string, 可选): 输出分辨率，常见值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可选): 输出宽高比，文生/参考生视频常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可选): 随机种子。\n- `movement_amplitude` (string, 可选): 运动幅度，常见值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可选): 是否开启音视频直出。\n- `audio_urls` (array[string], 可选): Vidu Q4 参考音频，最多 3 段 MP3，每段 3～12 秒、最大 50MB；与 audio 布尔开关分开。\n- `off_peak` (boolean, 可选): 是否使用错峰生成。\n- `watermark` (boolean, 可选): 是否添加水印。\n\n常见模型/模式差异：\n- `Vidu 文生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式文生视频。\n- `Vidu 图生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式单图图生视频。\n- `Vidu 首尾帧生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式首尾帧双图生视频。\n- `Vidu 参考生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式多参考图生视频。",
         "operationId": "createViduStartEndVideo",
         "tags": [
           "视频生成Vidu格式"
@@ -3984,10 +4053,12 @@
                   "model": {
                     "type": "string",
                     "enum": [
-                      "viduq3-turbo"
+                      "viduq3-turbo",
+                      "viduq2",
+                      "vidu2.0"
                     ],
                     "example": "viduq3-turbo",
-                    "description": "Vidu 对外模型名，当前公开 `viduq3-turbo`。"
+                    "description": "Vidu 对外模型名。Vidu Q4 仅支持带图片的图生与参考生视频；Q3/Q2/V2 沿用各自能力。"
                   },
                   "prompt": {
                     "type": "string",
@@ -4005,7 +4076,7 @@
                     ],
                     "minItems": 2,
                     "maxItems": 2,
-                    "description": "图片输入。图生视频 1 张，首尾帧 2 张，参考生视频 1~7 张。"
+                    "description": "图片输入。单图图生 1 张；Vidu Q4 参考生成 1～15 张，且图片用于共同参考。旧模型首尾帧与参考数量按各自能力使用。"
                   },
                   "videos": {
                     "type": "array",
@@ -4013,7 +4084,7 @@
                       "type": "string",
                       "format": "uri"
                     },
-                    "description": "参考生视频可选视频主体输入，按 Vidu 官方模型能力使用。"
+                    "description": "仅按旧模型能力提供视频主体输入；Vidu Q4 不支持参考视频。"
                   },
                   "subjects": {
                     "type": "array",
@@ -4095,6 +4166,15 @@
                   "audio": {
                     "type": "boolean",
                     "description": "是否开启音视频直出。"
+                  },
+                  "audio_urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "maxItems": 3,
+                    "description": "Vidu Q4 参考音频，最多 3 段 MP3，每段 3～12 秒、最大 50MB；与 audio 布尔开关分开。"
                   },
                   "audio_type": {
                     "type": "string",
@@ -4285,7 +4365,7 @@
     "/ent/v2/reference2video": {
       "post": {
         "summary": "创建参考生视频(Vidu)",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nVidu 官方视频生成接口，公开路径遵循 Vidu 官方协议。\n\n当前公开模型：`viduq3-turbo`。支持文生视频、图生视频、首尾帧生视频、参考生视频。同一模型也支持通过 `/v1/videos` Sora 兼容格式接入，常用 `mode` 为 `t2v`、`i2v`、`i2v_first_last`、`reference_images`。\n\n补充 Vidu 官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 Vidu 官方端点格式。\n\n支持模型：\nviduq3-turbo\n\n统一请求字段：\n- `model` (string, 必填): Vidu 对外模型名，当前公开 `viduq3-turbo`。\n- `prompt` (string, 可选): 视频生成提示词；文生视频必填，图生/首尾帧/参考生视频按业务需要传。\n- `images` (array[string], 可选): 图片输入。图生视频 1 张，首尾帧 2 张，参考生视频 1~7 张。\n- `videos` (array[string], 可选): 参考生视频可选视频主体输入，按 Vidu 官方模型能力使用。\n- `subjects` (array[object], 可选): 参考生视频主体库格式输入，可包含主体名称、图片、视频或音色等字段。\n- `duration` (integer, 可选): 视频时长，单位秒。`viduq3-turbo` 常用 5 秒，可按官方范围设置。\n- `resolution` (string, 可选): 输出分辨率，常见值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可选): 输出宽高比，文生/参考生视频常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可选): 随机种子。\n- `movement_amplitude` (string, 可选): 运动幅度，常见值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可选): 是否开启音视频直出。\n- `off_peak` (boolean, 可选): 是否使用错峰生成。\n- `watermark` (boolean, 可选): 是否添加水印。\n\n常见模型/模式差异：\n- `Vidu 文生视频`: 支持模型 viduq3-turbo；官方格式文生视频。\n- `Vidu 图生视频`: 支持模型 viduq3-turbo；官方格式单图图生视频。\n- `Vidu 首尾帧生视频`: 支持模型 viduq3-turbo；官方格式首尾帧双图生视频。\n- `Vidu 参考生视频`: 支持模型 viduq3-turbo；官方格式多参考图生视频。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nVidu 官方视频生成接口，公开路径遵循 Vidu 官方协议。\n\n`viduq3-turbo`、`viduq2`、`vidu2.0` 按各自能力支持文生、图生、首尾帧或参考生视频，也可通过 `/v1/videos` Sora 兼容格式接入。\n\nVidu Q4：`vidu-q4` 固定 720p，`vidu-q4-540p` 固定 540p，支持生成 3～16 秒视频。至少需要 1 张图片，最多支持 15 张参考图；参考生成可附带最多 3 段 MP3 音频，每段 3～12 秒、最大 50MB。不支持纯文生、指定首尾帧或参考视频。多张图片用于共同参考，不表示首尾位置。可通过 `POST /v1/videos`、`POST /api/v3/contents/generations/tasks`，或 Vidu 格式 `POST /ent/v2/img2video`、`POST /ent/v2/reference2video` 创建任务。统一入口推荐使用 `mode=reference_images`；带音频时使用 `mode=reference_material`。参考音频可用 `audio_urls`，Seedance 格式也可用标准 `content` 的 `audio_url` 项；`audio` 布尔字段表示生成音频开关，与参考音频 URL 列表分别使用。分辨率须与模型名一致。\n\n补充 Vidu 官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 Vidu 官方端点格式。\n\n支持模型：\nviduq3-turbo, viduq2, vidu2.0, vidu-q4, vidu-q4-540p\n\n统一请求字段：\n- `model` (string, 必填): Vidu 对外模型名。Vidu Q4 仅支持带图片的图生与参考生视频；Q3/Q2/V2 沿用各自能力。\n- `prompt` (string, 可选): 视频生成提示词；文生视频必填，图生/首尾帧/参考生视频按业务需要传。\n- `images` (array[string], 可选): 图片输入。单图图生 1 张；Vidu Q4 参考生成 1～15 张，且图片用于共同参考。旧模型首尾帧与参考数量按各自能力使用。\n- `videos` (array[string], 可选): 仅按旧模型能力提供视频主体输入；Vidu Q4 不支持参考视频。\n- `subjects` (array[object], 可选): 参考生视频主体库格式输入，可包含主体名称、图片、视频或音色等字段。\n- `duration` (integer, 可选): 视频时长，单位秒。`viduq3-turbo` 常用 5 秒，可按官方范围设置。\n- `resolution` (string, 可选): 输出分辨率，常见值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可选): 输出宽高比，文生/参考生视频常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可选): 随机种子。\n- `movement_amplitude` (string, 可选): 运动幅度，常见值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可选): 是否开启音视频直出。\n- `audio_urls` (array[string], 可选): Vidu Q4 参考音频，最多 3 段 MP3，每段 3～12 秒、最大 50MB；与 audio 布尔开关分开。\n- `off_peak` (boolean, 可选): 是否使用错峰生成。\n- `watermark` (boolean, 可选): 是否添加水印。\n\n常见模型/模式差异：\n- `Vidu 文生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式文生视频。\n- `Vidu 图生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式单图图生视频。\n- `Vidu 首尾帧生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式首尾帧双图生视频。\n- `Vidu 参考生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式多参考图生视频。\n- `Vidu Q4 720p 多图 / 音频参考`: 支持模型 vidu-q4；单图或两图两段 MP3 参考示例；多图用于共同参考，不指定首尾帧。调用前替换示例素材 URL。\n- `Vidu Q4 540p 多图 / 音频参考`: 支持模型 vidu-q4-540p；单图或两图两段 MP3 参考示例；多图用于共同参考，不指定首尾帧。调用前替换示例素材 URL。",
         "operationId": "createViduReferenceVideo",
         "tags": [
           "视频生成Vidu格式"
@@ -4305,10 +4385,14 @@
                   "model": {
                     "type": "string",
                     "enum": [
-                      "viduq3-turbo"
+                      "viduq3-turbo",
+                      "viduq2",
+                      "vidu2.0",
+                      "vidu-q4",
+                      "vidu-q4-540p"
                     ],
                     "example": "viduq3-turbo",
-                    "description": "Vidu 对外模型名，当前公开 `viduq3-turbo`。"
+                    "description": "Vidu 对外模型名。Vidu Q4 仅支持带图片的图生与参考生视频；Q3/Q2/V2 沿用各自能力。"
                   },
                   "prompt": {
                     "type": "string",
@@ -4324,7 +4408,7 @@
                     "example": [
                       "https://example.com/input.jpg"
                     ],
-                    "description": "图片输入。图生视频 1 张，首尾帧 2 张，参考生视频 1~7 张。"
+                    "description": "图片输入。单图图生 1 张；Vidu Q4 参考生成 1～15 张，且图片用于共同参考。旧模型首尾帧与参考数量按各自能力使用。"
                   },
                   "videos": {
                     "type": "array",
@@ -4332,7 +4416,7 @@
                       "type": "string",
                       "format": "uri"
                     },
-                    "description": "参考生视频可选视频主体输入，按 Vidu 官方模型能力使用。"
+                    "description": "仅按旧模型能力提供视频主体输入；Vidu Q4 不支持参考视频。"
                   },
                   "subjects": {
                     "type": "array",
@@ -4414,6 +4498,15 @@
                   "audio": {
                     "type": "boolean",
                     "description": "是否开启音视频直出。"
+                  },
+                  "audio_urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "maxItems": 3,
+                    "description": "Vidu Q4 参考音频，最多 3 段 MP3，每段 3～12 秒、最大 50MB；与 audio 布尔开关分开。"
                   },
                   "audio_type": {
                     "type": "string",
@@ -4512,6 +4605,40 @@
                     "resolution": "720p",
                     "aspect_ratio": "16:9"
                   }
+                },
+                "vidu_q4_vidu_720p_reference": {
+                  "summary": "Vidu Q4 720p 多图 / 音频参考",
+                  "value": {
+                    "model": "vidu-q4",
+                    "prompt": "保持参考图中的主体与色彩，镜头缓慢推进，主体自然运动。",
+                    "duration": 3,
+                    "resolution": "720p",
+                    "images": [
+                      "https://example.com/reference-1.jpg",
+                      "https://example.com/reference-2.jpg"
+                    ],
+                    "audio_urls": [
+                      "https://example.com/reference-1.mp3",
+                      "https://example.com/reference-2.mp3"
+                    ]
+                  }
+                },
+                "vidu_q4_vidu_540p_reference": {
+                  "summary": "Vidu Q4 540p 多图 / 音频参考",
+                  "value": {
+                    "model": "vidu-q4-540p",
+                    "prompt": "保持参考图中的主体与色彩，镜头缓慢推进，主体自然运动。",
+                    "duration": 3,
+                    "resolution": "540p",
+                    "images": [
+                      "https://example.com/reference-1.jpg",
+                      "https://example.com/reference-2.jpg"
+                    ],
+                    "audio_urls": [
+                      "https://example.com/reference-1.mp3",
+                      "https://example.com/reference-2.mp3"
+                    ]
+                  }
                 }
               }
             }
@@ -4604,7 +4731,7 @@
     "/ent/v2/tasks/{task_id}/creations": {
       "get": {
         "summary": "查询任务(Vidu)",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nVidu 官方视频生成接口，公开路径遵循 Vidu 官方协议。\n\n当前公开模型：`viduq3-turbo`。支持文生视频、图生视频、首尾帧生视频、参考生视频。同一模型也支持通过 `/v1/videos` Sora 兼容格式接入，常用 `mode` 为 `t2v`、`i2v`、`i2v_first_last`、`reference_images`。\n\n补充 Vidu 官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 Vidu 官方端点格式。\n\n支持模型：\nviduq3-turbo\n\n统一请求字段：\n- `model` (string, 必填): Vidu 对外模型名，当前公开 `viduq3-turbo`。\n- `prompt` (string, 可选): 视频生成提示词；文生视频必填，图生/首尾帧/参考生视频按业务需要传。\n- `images` (array[string], 可选): 图片输入。图生视频 1 张，首尾帧 2 张，参考生视频 1~7 张。\n- `videos` (array[string], 可选): 参考生视频可选视频主体输入，按 Vidu 官方模型能力使用。\n- `subjects` (array[object], 可选): 参考生视频主体库格式输入，可包含主体名称、图片、视频或音色等字段。\n- `duration` (integer, 可选): 视频时长，单位秒。`viduq3-turbo` 常用 5 秒，可按官方范围设置。\n- `resolution` (string, 可选): 输出分辨率，常见值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可选): 输出宽高比，文生/参考生视频常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可选): 随机种子。\n- `movement_amplitude` (string, 可选): 运动幅度，常见值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可选): 是否开启音视频直出。\n- `off_peak` (boolean, 可选): 是否使用错峰生成。\n- `watermark` (boolean, 可选): 是否添加水印。\n\n常见模型/模式差异：\n- `Vidu 文生视频`: 支持模型 viduq3-turbo；官方格式文生视频。\n- `Vidu 图生视频`: 支持模型 viduq3-turbo；官方格式单图图生视频。\n- `Vidu 首尾帧生视频`: 支持模型 viduq3-turbo；官方格式首尾帧双图生视频。\n- `Vidu 参考生视频`: 支持模型 viduq3-turbo；官方格式多参考图生视频。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\nVidu 官方视频生成接口，公开路径遵循 Vidu 官方协议。\n\n`viduq3-turbo`、`viduq2`、`vidu2.0` 按各自能力支持文生、图生、首尾帧或参考生视频，也可通过 `/v1/videos` Sora 兼容格式接入。\n\nVidu Q4：`vidu-q4` 固定 720p，`vidu-q4-540p` 固定 540p，支持生成 3～16 秒视频。至少需要 1 张图片，最多支持 15 张参考图；参考生成可附带最多 3 段 MP3 音频，每段 3～12 秒、最大 50MB。不支持纯文生、指定首尾帧或参考视频。多张图片用于共同参考，不表示首尾位置。可通过 `POST /v1/videos`、`POST /api/v3/contents/generations/tasks`，或 Vidu 格式 `POST /ent/v2/img2video`、`POST /ent/v2/reference2video` 创建任务。统一入口推荐使用 `mode=reference_images`；带音频时使用 `mode=reference_material`。参考音频可用 `audio_urls`，Seedance 格式也可用标准 `content` 的 `audio_url` 项；`audio` 布尔字段表示生成音频开关，与参考音频 URL 列表分别使用。分辨率须与模型名一致。\n\n补充 Vidu 官方视频生成格式的公开请求骨架、任务查询结构和推荐验证模板，公开路径保持 Vidu 官方端点格式。\n\n支持模型：\nviduq3-turbo, viduq2, vidu2.0\n\n统一请求字段：\n- `model` (string, 必填): Vidu 对外模型名。Vidu Q4 仅支持带图片的图生与参考生视频；Q3/Q2/V2 沿用各自能力。\n- `prompt` (string, 可选): 视频生成提示词；文生视频必填，图生/首尾帧/参考生视频按业务需要传。\n- `images` (array[string], 可选): 图片输入。单图图生 1 张；Vidu Q4 参考生成 1～15 张，且图片用于共同参考。旧模型首尾帧与参考数量按各自能力使用。\n- `videos` (array[string], 可选): 仅按旧模型能力提供视频主体输入；Vidu Q4 不支持参考视频。\n- `subjects` (array[object], 可选): 参考生视频主体库格式输入，可包含主体名称、图片、视频或音色等字段。\n- `duration` (integer, 可选): 视频时长，单位秒。`viduq3-turbo` 常用 5 秒，可按官方范围设置。\n- `resolution` (string, 可选): 输出分辨率，常见值 `540p`、`720p`、`1080p`。\n- `aspect_ratio` (string, 可选): 输出宽高比，文生/参考生视频常用，如 `16:9`、`9:16`、`1:1`。\n- `seed` (integer, 可选): 随机种子。\n- `movement_amplitude` (string, 可选): 运动幅度，常见值 `auto`、`small`、`medium`、`large`。\n- `audio` (boolean, 可选): 是否开启音视频直出。\n- `audio_urls` (array[string], 可选): Vidu Q4 参考音频，最多 3 段 MP3，每段 3～12 秒、最大 50MB；与 audio 布尔开关分开。\n- `off_peak` (boolean, 可选): 是否使用错峰生成。\n- `watermark` (boolean, 可选): 是否添加水印。\n\n常见模型/模式差异：\n- `Vidu 文生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式文生视频。\n- `Vidu 图生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式单图图生视频。\n- `Vidu 首尾帧生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式首尾帧双图生视频。\n- `Vidu 参考生视频`: 支持模型 viduq3-turbo, viduq2, vidu2.0；官方格式多参考图生视频。",
         "operationId": "queryViduTaskCreations",
         "tags": [
           "视频生成Vidu格式"
@@ -4698,7 +4825,7 @@
     "/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "创建视频（Seedance）",
-        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：可选；不传时须在 `content` 中提供非空文本项。\n- `content`：可选，火山方舟 content 数组，混排文本、图片、视频、音频素材。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n\n以下字段主要用于历史客户端和旧协议适配。新接入请尽量采用本页“请求示例”中的标准格式：文本与参考素材使用 `content` 数组，生成配置使用顶层 `duration`、`ratio`、`resolution`、`fps` 等字段。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 文本项写法为 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 图片、视频、音频素材项分别使用 `image_url`、`video_url`、`audio_url` 对象写法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可标识素材用途，`name` 可供提示词中按名称引用。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nSeedance 2.5 图、视频、音频混合参考示例（素材 URL 为占位符，调用时请替换为实际可访问的链接）：\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\nMiniMax / Hailuo 调用：\n- `minimax-h3` 可通过本任务接口调用，支持文生视频、图片参考和音频参考；文本可放在 `prompt` 或 `content` 文本项，素材可放在 `content`、`image_urls`、`audio_urls` 等字段。\n- `hailuo-2.3` 可通过本任务接口调用，需要首帧图片，建议在 `content` 中传 `role=first_frame` 的 `image_url` 项。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```\n\n## Kling 4.0\n\nKling 4.0 调用：`kling-4.0`（720p）与 `kling-4.0-1080p` 同时支持 Seedance `content/duration/resolution/ratio/mode` 格式、`contents/settings/options` 与 OpenAI 视频格式；两种统一视频入口可复用请求体。分辨率须与模型名一致。Kling 4.0 可直接使用 Seedance 格式 content/duration/resolution/ratio/mode，或 OpenAI 视频格式 prompt/seconds/size/input_reference；两者都无需额外的 contents/settings/options。旧 contents/settings/options 信封仅作兼容。mode 可选 t2v（纯文本）、i2v（单张首帧）、i2v_first_last（首尾两帧）、reference_images（普通参考图）、reference_material（图片或视频参考）。省略 mode 且没有显式工具时，有参考素材默认 reference_material，无任何参考素材默认 t2v。参考模式使用普通参考图角色，不把明确的首尾帧静默改成参考图；首尾帧请显式选择 i2v 或 i2v_first_last，并省略画幅参数。当前不支持参考音频。settings.audio 仅参考图片／参考素材的全能模式可选；t2v、i2v、i2v_first_last 请省略音频开关。",
+        "description": "该系列支持OpenAI视频生成格式（详见链接 [视频生成Sora兼容格式](/api-reference/cn/视频生成sora兼容格式/创建视频)）。\n\n用于创建视频生成任务，并通过任务 ID 查询状态与结果。\n\n创建任务核心字段：\n- `model`：必填，模型名称。\n- `prompt`：可选；不传时须在 `content` 中提供非空文本项。\n- `content`：可选，火山方舟 content 数组，混排文本、图片、视频、音频素材。\n- `function_mode`：可选，常用于全能参考等高级模式。\n\n兼容入参：\n\n以下字段主要用于历史客户端和旧协议适配。新接入请尽量采用本页“请求示例”中的标准格式：文本与参考素材使用 `content` 数组，生成配置使用顶层 `duration`、`ratio`、`resolution`、`fps` 等字段。\n\n- `mode`：`t2v / i2v / i2v_first_last / reference_images / reference_material`\n- `image_url / image_urls / input_reference`\n- `end_image_url / last_image_url`\n- `video_urls / audio_urls`\n- `seconds / duration`\n- `aspect_ratio / ratio / size`\n- `quality / resolution`\n- `fps`\n- `generate_audio / watermark`\n\n调用细节：\n- 当 `mode=reference_material` 或 `function_mode=omni_reference` 时，建议通过 `content` 传递文本与参考素材。\n- `content` 文本项写法为 `{ \"type\": \"text\", \"text\": \"测试文字\" }`。\n- `content` 图片、视频、音频素材项分别使用 `image_url`、`video_url`、`audio_url` 对象写法，例如 `{ \"type\": \"image_url\", \"image_url\": { \"url\": \"https://example.com/ref.png\" }, \"role\": \"reference_image\", \"name\": \"1\" }`。\n- `role` 可标识素材用途，`name` 可供提示词中按名称引用。\n- `ratio`、`duration`、`resolution`、`fps` 会影响最终生成配置。\n\nSeedance 2.5 图、视频、音频混合参考示例（素材 URL 为占位符，调用时请替换为实际可访问的链接）：\n\n```json\n{\n  \"model\": \"sd-2-5\",\n  \"ratio\": \"9:16\",\n  \"fps\": 24,\n  \"duration\": 10,\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"使用 @图片1 @图片2 @图片3 @音频1 参考@视频1 生成视频\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo1.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片1\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo2.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片2\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"https://demo3.png\"\n      },\n      \"role\": \"reference_image\",\n      \"name\": \"图片3\"\n    },\n    {\n      \"type\": \"video_url\",\n      \"video_url\": {\n        \"url\": \"https://video.mp4\"\n      },\n      \"role\": \"reference_video\",\n      \"name\": \"视频1\"\n    },\n    {\n      \"type\": \"audio_url\",\n      \"audio_url\": {\n        \"url\": \"https://audio.mp3\"\n      },\n      \"role\": \"reference_audio\",\n      \"name\": \"音频1\"\n    }\n  ]\n}\n```\n\nGemini Omni 调用：\n- `gemini-omni` 也可通过本 Seedance 任务接口调用。\n- `mode=t2v` 用于文生视频，`mode=r2v` 用于参考图/参考素材生成，`mode=edit` 用于视频编辑。\n- 文本可放在 `prompt` 或 `content` 的 `text` 项；图片可放在 `image_url / image_urls / reference_images / input_reference / content`；视频可放在 `video_urls / content`。\n- 时长字段可用 `duration` 或 `seconds`，会自动匹配到 4 / 6 / 8 / 10 秒档。\n\nMiniMax / Hailuo 调用：\n- `minimax-h3` 可通过本任务接口调用，支持文生视频、图片参考和音频参考；文本可放在 `prompt` 或 `content` 文本项，素材可放在 `content`、`image_urls`、`audio_urls` 等字段。\n- `hailuo-2.3` 可通过本任务接口调用，需要首帧图片，建议在 `content` 中传 `role=first_frame` 的 `image_url` 项。\n- `minimax-h3` 常用 `duration=5~15`、`resolution=1440p`；`hailuo-2.3` 常用 `duration=6` 或 `10`、`resolution=768p`。\n\n查询结果关注字段：\n- `items[].status`\n- `items[].content.video_url` 或 `items[].video_url`\n- `items[].error`\n- `items[].progress`\n\nError fields: `error.code`, `error.message`.\n\n```json\n{\n  \"error\": {\n    \"code\": \"invalid_request_error\",\n    \"message\": \"requires at least one image in `images`\"\n  }\n}\n```\n\n## Kling 4.0\n\nKling 4.0 调用：`kling-4.0`（720p）与 `kling-4.0-1080p` 同时支持 Seedance `content/duration/resolution/ratio/mode` 格式、`contents/settings/options` 与 OpenAI 视频格式；两种统一视频入口可复用请求体。分辨率须与模型名一致。Kling 4.0 可直接使用 Seedance 格式 content/duration/resolution/ratio/mode，或 OpenAI 视频格式 prompt/seconds/size/input_reference；两者都无需额外的 contents/settings/options。旧 contents/settings/options 信封仅作兼容。mode 可选 t2v（纯文本）、i2v（单张首帧）、i2v_first_last（首尾两帧）、reference_images（普通参考图）、reference_material（图片或视频参考）。省略 mode 且没有显式工具时，有参考素材默认 reference_material，无任何参考素材默认 t2v。参考模式使用普通参考图角色，不把明确的首尾帧静默改成参考图；首尾帧请显式选择 i2v 或 i2v_first_last，并省略画幅参数。当前不支持参考音频。settings.audio 仅参考图片／参考素材的全能模式可选；t2v、i2v、i2v_first_last 请省略音频开关。\n\n## Vidu Q4\n\nVidu Q4：`vidu-q4` 固定 720p，`vidu-q4-540p` 固定 540p，支持生成 3～16 秒视频。至少需要 1 张图片，最多支持 15 张参考图；参考生成可附带最多 3 段 MP3 音频，每段 3～12 秒、最大 50MB。不支持纯文生、指定首尾帧或参考视频。多张图片用于共同参考，不表示首尾位置。可通过 `POST /v1/videos`、`POST /api/v3/contents/generations/tasks`，或 Vidu 格式 `POST /ent/v2/img2video`、`POST /ent/v2/reference2video` 创建任务。统一入口推荐使用 `mode=reference_images`；带音频时使用 `mode=reference_material`。参考音频可用 `audio_urls`，Seedance 格式也可用标准 `content` 的 `audio_url` 项；`audio` 布尔字段表示生成音频开关，与参考音频 URL 列表分别使用。分辨率须与模型名一致。",
         "operationId": "create__seedance__task",
         "tags": [
           "视频生成Seedance格式"
@@ -4729,7 +4856,9 @@
                           "doubao-seedance-2-0-fast-260128",
                           "minimax-h3",
                           "hailuo-2.3",
-                          "gemini-omni"
+                          "gemini-omni",
+                          "vidu-q4",
+                          "vidu-q4-540p"
                         ],
                         "description": "必填。模型名称。可传 Seedance 对外模型、`gemini-omni`、`minimax-h3` 或 `hailuo-2.3`。"
                       },
@@ -5707,6 +5836,92 @@
                       "aspect_ratio": "16:9"
                     },
                     "options": {}
+                  }
+                },
+                "vidu_q4_seedance_720p_reference": {
+                  "summary": "Vidu Q4 720p 多图 / 音频参考",
+                  "value": {
+                    "model": "vidu-q4",
+                    "duration": 3,
+                    "resolution": "720p",
+                    "mode": "reference_material",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "保持参考图中的主体与色彩，镜头缓慢推进，主体自然运动。"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/reference-1.jpg"
+                        },
+                        "role": "reference_image"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/reference-2.jpg"
+                        },
+                        "role": "reference_image"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://example.com/reference-1.mp3"
+                        },
+                        "role": "reference_audio"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://example.com/reference-2.mp3"
+                        },
+                        "role": "reference_audio"
+                      }
+                    ]
+                  }
+                },
+                "vidu_q4_seedance_540p_reference": {
+                  "summary": "Vidu Q4 540p 多图 / 音频参考",
+                  "value": {
+                    "model": "vidu-q4-540p",
+                    "duration": 3,
+                    "resolution": "540p",
+                    "mode": "reference_material",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "保持参考图中的主体与色彩，镜头缓慢推进，主体自然运动。"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/reference-1.jpg"
+                        },
+                        "role": "reference_image"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/reference-2.jpg"
+                        },
+                        "role": "reference_image"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://example.com/reference-1.mp3"
+                        },
+                        "role": "reference_audio"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://example.com/reference-2.mp3"
+                        },
+                        "role": "reference_audio"
+                      }
+                    ]
                   }
                 }
               }

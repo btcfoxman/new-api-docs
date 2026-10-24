@@ -241,7 +241,7 @@ Kling 4.0 は、標準の OpenAI/Sora prompt/seconds/size/input_reference、お�
 
 ### Vidu
 
-Vidu の公式動画生成フォーマットをサポートし、`/v1/videos` を通じた互換接続にも対応しています。テキスト生成、単一画像、開始・終了フレーム、複数参照画像のシナリオに適しています。
+Vidu Q4：`vidu-q4` は 720p 固定、`vidu-q4-540p` は 540p 固定で、3～16 秒の動画生成に対応しています。画像は最低 1 枚必要で、参照画像は最大 15 枚までサポートします。参照生成には MP3 音声を最大 3 本付加でき、各音声は 3～12 秒、最大 50MB です。テキストのみからの生成、開始・終了フレームの指定、参照動画には対応していません。複数の画像は共通の参照用であり、開始・終了位置を示すものではありません。タスクは `POST /v1/videos`、`POST /api/v3/contents/generations/tasks`、または Vidu 形式の `POST /ent/v2/img2video`、`POST /ent/v2/reference2video` で作成できます。統合エントリには `mode=reference_images` の使用を推奨します。音声付きの場合は `mode=reference_material` を使用してください。参照音声には `audio_urls` を使用できます。Seedance 形式では、標準の `content` の `audio_url` 項目も使用できます。`audio` のブールフィールドは生成音声のオン・オフを示し、参照音声 URL のリストとは別に使用します。解像度はモデル名と一致している必要があります。旧 Q3/Q2/V2 モデルは、引き続き各モデルの機能に応じて従来のインターフェースを使用してください。
 
 
 
@@ -249,7 +249,15 @@ Vidu の公式動画生成フォーマットをサポートし、`/v1/videos` �
 
 |---|---|
 
+| `vidu-q4` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu-q4-540p` | `/ent/v2/...` / `/v1/videos` |
+
 | `viduq3-turbo` | `/ent/v2/...` / `/v1/videos` |
+
+| `viduq2` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu2.0` | `/ent/v2/...` / `/v1/videos` |
 
 | `vidu*` | `/ent/v2/...` / `/v1/videos` |
 

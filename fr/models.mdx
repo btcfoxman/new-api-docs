@@ -241,7 +241,7 @@ Utilisez l’intégration via la capacité vidéo unifiée. `minimax-h3` Prend e
 
 ### Vidu
 
-Prend en charge le format officiel de génération vidéo Vidu, ainsi qu’une intégration compatible via `/v1/videos` ; adapté aux scénarios texte vers image, image unique, image de début et de fin, et multi-images de référence.
+Vidu Q4 : `vidu-q4` est fixé à 720p et `vidu-q4-540p` à 540p ; la génération de vidéos de 3 à 16 secondes est prise en charge. Au moins 1 image est requise, avec un maximum de 15 images de référence. La génération à partir de références peut inclure jusqu’à 3 fichiers audio MP3, de 3 à 12 secondes chacun et d’une taille maximale de 50 Mo. La génération uniquement à partir de texte, la spécification d’images de début et de fin, ainsi que les vidéos de référence ne sont pas prises en charge. Plusieurs images servent de références communes et n’indiquent pas les positions de début et de fin. Vous pouvez créer des tâches via `POST /v1/videos`, `POST /api/v3/contents/generations/tasks`, ou au format Vidu avec `POST /ent/v2/img2video` et `POST /ent/v2/reference2video`. Il est recommandé d’utiliser `mode=reference_images` comme point d’entrée unifié ; utilisez `mode=reference_material` avec de l’audio. Vous pouvez utiliser `audio_urls` pour l’audio de référence ; au format Seedance, vous pouvez également utiliser le champ `audio_url` de `content` standard. Le champ booléen `audio` contrôle la génération audio et s’utilise séparément de la liste d’URL d’audio de référence. La résolution doit correspondre au nom du modèle. Les anciens modèles Q3/Q2/V2 continuent d’utiliser leurs interfaces d’origine selon leurs capacités respectives.
 
 
 
@@ -249,7 +249,15 @@ Prend en charge le format officiel de génération vidéo Vidu, ainsi qu’une i
 
 |---|---|
 
+| `vidu-q4` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu-q4-540p` | `/ent/v2/...` / `/v1/videos` |
+
 | `viduq3-turbo` | `/ent/v2/...` / `/v1/videos` |
+
+| `viduq2` | `/ent/v2/...` / `/v1/videos` |
+
+| `vidu2.0` | `/ent/v2/...` / `/v1/videos` |
 
 | `vidu*` | `/ent/v2/...` / `/v1/videos` |
 
