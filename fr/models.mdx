@@ -5,6 +5,18 @@ description: "Cette page présente les modèles actuellement disponibles dans le
 
 ## Groupement de modèles
 
+### Magi
+
+`magi-2-1080p` prend en charge deux formats : OpenAI `/v1/videos` et Ark `/api/v3/contents/generations/tasks`, interrogés respectivement via `GET /{task_id}` sur les chemins correspondants. La résolution est fixe à 1080p et la durée de génération est de 4 à 30 secondes. Les formats pris en charge sont 16:9, 9:16, 1:1, 4:3, 3:4 et 21:9 ; la sortie 1:1 est en 1440×1440. Le mode de référence accepte au maximum 10 images, 5 vidéos et 5 fichiers audio, soit 20 éléments au total. Chaque vidéo et fichier audio doit durer de 2 à 30 secondes ; la durée cumulée des vidéos ne doit pas dépasser 30 secondes, de même que celle des fichiers audio. La taille maximale est de 30 MB pour les images, 200 MB pour les vidéos et 15 MB pour les fichiers audio. Le mode image de début et de fin ne peut pas être combiné avec d'autres références d'images, de vidéos ou audio. Dans le prompt, `<<<image_1>>>`, `<<<video_1>>>` et `<<<audio_1>>>` peuvent être utilisés pour référencer les éléments selon leur ordre d'entrée pour chaque type de média. Aucun point d'entrée distinct au format officiel sand.ai n'est actuellement fourni.
+
+
+
+| Modèle | Méthode d'accès principale |
+
+|---|---|
+
+| `magi-2-1080p` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
 ### Nano Banana
 
 Principalement utilisé pour la génération et l'édition d'images, supporte également l'accès au format natif Gemini.

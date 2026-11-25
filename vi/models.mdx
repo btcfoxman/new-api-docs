@@ -5,6 +5,18 @@ description: "Trang này hiển thị các mô hình hiện có trong các giao 
 
 ## Nhóm mô hình
 
+### Magi
+
+`magi-2-1080p` hỗ trợ hai định dạng OpenAI `/v1/videos` và Ark `/api/v3/contents/generations/tasks`, được truy vấn lần lượt qua `GET /{task_id}` tại các đường dẫn tương ứng. Độ phân giải cố định là 1080p, thời lượng tạo từ 4～30 giây. Hỗ trợ 16:9, 9:16, 1:1, 4:3, 3:4, 21:9; đầu ra 1:1 là 1440×1440. Chế độ tham chiếu hỗ trợ tối đa 10 ảnh, 5 đoạn video và 5 đoạn âm thanh, tổng cộng 20 tư liệu. Mỗi đoạn video và âm thanh dài 2～30 giây; tổng thời lượng của tất cả video không quá 30 giây và của tất cả âm thanh không quá 30 giây. Giới hạn kích thước là 30 MB cho ảnh, 200 MB cho video và 15 MB cho âm thanh. Chế độ khung hình đầu-cuối không thể kết hợp với tham chiếu ảnh, video hoặc âm thanh khác. Trong prompt, có thể dùng `<<<image_1>>>`, `<<<video_1>>>`, `<<<audio_1>>>` để tham chiếu theo thứ tự nhập của từng loại tư liệu. Hiện không cung cấp điểm truy cập độc lập cho định dạng chính thức sand.ai.
+
+
+
+| Mô hình | Phương thức truy cập chính |
+
+|---|---|
+
+| `magi-2-1080p` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
 ### Nano Banana
 
 Chủ yếu được sử dụng để tạo và chỉnh sửa hình ảnh, đồng thời hỗ trợ truy cập định dạng gốc của Gemini.

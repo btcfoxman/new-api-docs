@@ -5,6 +5,18 @@ description: "This page displays the models currently available in the public `n
 
 ## Model Grouping
 
+### Magi
+
+`magi-2-1080p` supports the OpenAI `/v1/videos` and Ark `/api/v3/contents/generations/tasks` formats, which can be queried through `GET /{task_id}` at their respective paths. The output is fixed at 1080p, with generation durations of 4–30 seconds. Supported aspect ratios are 16:9, 9:16, 1:1, 4:3, 3:4, and 21:9; 1:1 output is 1440×1440. Reference mode supports up to 10 images, 5 video clips, and 5 audio clips, for a total of 20 assets. Each video and audio clip must be 2–30 seconds; the total duration of all videos must not exceed 30 seconds, and the total duration of all audio must not exceed 30 seconds. Size limits are 30 MB for images, 200 MB for videos, and 15 MB for audio. First-and-last-frame mode cannot be combined with other image, video, or audio references. Prompts can use `<<<image_1>>>`, `<<<video_1>>>`, and `<<<audio_1>>>` to reference assets in the input order for each asset type. A standalone official sand.ai format endpoint is not currently available.
+
+
+
+| Model | Primary Integration Method |
+
+|---|---|
+
+| `magi-2-1080p` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
+
 ### Nano Banana
 
 Primarily used for image generation and editing; also supports Gemini native format integration.
