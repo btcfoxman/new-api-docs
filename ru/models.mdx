@@ -5,6 +5,34 @@ description: "На этой странице представлены модел
 
 ## Группировка моделей
 
+### SeedMusic
+
+Используйте формат клиента Suno. При отправке передайте `model=suno_music` и `upstream_model=sd-music-1.0-preview`, чтобы получить аудио одной композиции по ID задачи. Длительность — от 30 до 360 секунд, оплата взимается за композицию.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `sd-music-1.0-preview` | `POST /suno/submit/music` / `GET /suno/fetch/{task_id}` |
+
+### Seedream
+
+5.0 Flash и Pro поддерживают 1.5K, 2K и 4K. 5.5 поддерживает 1.5K и 2K.
+
+
+
+| Модель | Основной способ подключения |
+
+|---|---|
+
+| `seedream-5.0-flash` | `/v1/images/generations` |
+
+| `seedream-5.0-pro` | `/v1/images/generations` |
+
+| `seedream-5.5` | `/v1/images/generations` |
+
 ### Magi
 
 `magi-2-1080p` поддерживает два формата: OpenAI `/v1/videos` и Ark `/api/v3/contents/generations/tasks`, которые запрашиваются через `GET /{task_id}` по соответствующим путям. Разрешение фиксировано на 1080p, длительность генерации — от 4 до 30 секунд. Поддерживаются соотношения сторон 16:9, 9:16, 1:1, 4:3, 3:4 и 21:9; для 1:1 выводится 1440×1440. В режиме референсов можно использовать не более 10 изображений, 5 видео и 5 аудиофайлов — всего до 20 материалов. Длительность каждого видео и аудиофайла — от 2 до 30 секунд; суммарная длительность всех видео не должна превышать 30 секунд, как и суммарная длительность всех аудиофайлов. Максимальный размер: изображения — 30 MB, видео — 200 MB, аудио — 15 MB. В режиме первого и последнего кадра нельзя добавлять другие референсы изображений, видео или аудио. В промпте можно использовать `<<<image_1>>>`, `<<<video_1>>>` и `<<<audio_1>>>` для ссылок в порядке ввода материалов каждого типа. Отдельный вход для официального формата sand.ai в настоящее время не предоставляется.
@@ -93,7 +121,9 @@ description: "На этой странице представлены модел
 
 | `happyhorse-1.0-video-edit` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
 
+| `happyhorse-1.1` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
+| `happyhorse-1.1-1080p` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
 ### Wan
 
@@ -111,7 +141,9 @@ description: "На этой странице представлены модел
 
 | `wan-3.0-1080p` | `/v1/videos` |
 
+| `wan-3.0-prime` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
+| `wan-3.0-prime-1080p` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
 ### Veo
 
@@ -191,7 +223,11 @@ description: "На этой странице представлены модел
 
 | `doubao-seedance-2-0-fast-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
+| `sd-2-5-4k` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
+| `sd-2-5-flash` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `sd-2-5-flash-480p` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
 ### Kling Images
 

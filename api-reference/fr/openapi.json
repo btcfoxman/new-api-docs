@@ -628,6 +628,14 @@
                     "human_image": "https://example.com/human.jpg",
                     "cloth_image": "https://example.com/cloth.jpg"
                   }
+                },
+                "seedream_canvas_generation": {
+                  "summary": "Génération d’images à partir de texte avec Seedream",
+                  "value": {
+                    "model": "seedream-5.5",
+                    "prompt": "A mountain lake in morning light.",
+                    "size": "2k"
+                  }
                 }
               }
             }
@@ -2125,6 +2133,15 @@
                       "https://example.com/rhythm.wav"
                     ]
                   }
+                },
+                "canvas_video_tier": {
+                  "summary": "Vidéo à résolution fixe",
+                  "value": {
+                    "model": "happyhorse-1.1-1080p",
+                    "prompt": "A white horse walking through a meadow.",
+                    "seconds": "5",
+                    "size": "1920x1080"
+                  }
                 }
               }
             }
@@ -2562,7 +2579,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "Créer une tâche de génération de musique ou de son",
-        "description": "Interface de soumission pour la génération de musique et de sons, compatible avec l’ancien chemin `/suno/submit/music`. Renvoie l’ID de tâche, puis permet de consulter le résultat via `/suno/fetch/{task_id}`.\n\nInterface de soumission des tâches de génération de musique et de sons. Transmettez le nom du sous-modèle via `upstream_model`. L’interface de création renvoie `task_id`, puis utilisez `/suno/fetch/{task_id}` pour interroger la sortie.\n\nSi `upstream_model` n’est pas transmis (ou si seul `{\"model\":\"suno_music\"}` est transmis), Suno v5.5 est utilisé par défaut. Pour continuer à utiliser l’ancienne version de Suno, transmettez explicitement `\"upstream_model\":\"suno-v5\"`.\n\n## Sous-modèles disponibles\n\n| Type | `upstream_model` |\n| --- | --- |\n| Musique | `suno-v6` |\n| Musique | `suno-v5.5` |\n| Musique | `suno-v5` |\n| Musique | `lyria-3-pro` |\n| Son | `seed-audio-1.0` |\n| Son | `minimax-speech-2.8-hd` |\n\n## Mode de description par prompt\n\nConvient lorsque vous décrivez uniquement le style, l’ambiance, la langue, le type de voix et le contexte ; le modèle génère automatiquement le contenu de la chanson.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## Génération de son\n\nMiniMax Speech permet de définir les paramètres vocaux via `extraParams`.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nLorsque aucun paramètre vocal n’est transmis pour MiniMax Speech, le serveur envoie par défaut les valeurs `voice`, `outputFormat=mp3`, `sampleRate=32000`, `speed=1`, `volume=1` et `pitch=0` de l’exemple ci-dessus.\n\nLyria 3 Pro utilise `upstream_model=lyria-3-pro` :\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## Musique légère ou instrumental pur\n\nVous pouvez utiliser `light_music=true` ou `make_instrumental=true`. `light_music` indique une tendance musique légère/musique d’ambiance, et `make_instrumental` indique de ne pas générer de voix chantée.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## Mode avancé des paroles\n\nConvient lorsque les paroles sont déjà prêtes côté métier et qu’il faut spécifier un titre ainsi que des balises de style. Transmettez `custom_mode=true` et utilisez `lyrics` pour soumettre les paroles.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Consultation\n\nAprès la création réussie, enregistrez l’ID de tâche `data` renvoyé, par exemple `task_xxx`, puis appelez `GET /suno/fetch/{task_id}` pour consulter le statut, l’URL audio, la couverture, le titre, les paroles et les informations de segments bruts renvoyées en amont.",
+        "description": "Interface de soumission pour la génération de musique et de sons, compatible avec l’ancien chemin `/suno/submit/music`. Renvoie l’ID de tâche, puis permet de consulter le résultat via `/suno/fetch/{task_id}`.\n\nInterface de soumission des tâches de génération de musique et de sons. Transmettez le nom du sous-modèle via `upstream_model`. L’interface de création renvoie `task_id`, puis utilisez `/suno/fetch/{task_id}` pour interroger la sortie.\n\nSi `upstream_model` n’est pas transmis (ou si seul `{\"model\":\"suno_music\"}` est transmis), Suno v5.5 est utilisé par défaut. Pour continuer à utiliser l’ancienne version de Suno, transmettez explicitement `\"upstream_model\":\"suno-v5\"`.\n\n## Sous-modèles disponibles\n\n| Type | `upstream_model` |\n| --- | --- |\n| Musique | `suno-v6` |\n| Musique | `suno-v5.5` |\n| Musique | `suno-v5` |\n| Musique | `lyria-3-pro` |\n| Son | `seed-audio-1.0` |\n| Son | `minimax-speech-2.8-hd` |\n\n## Mode de description par prompt\n\nConvient lorsque vous décrivez uniquement le style, l’ambiance, la langue, le type de voix et le contexte ; le modèle génère automatiquement le contenu de la chanson.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## Génération de son\n\nMiniMax Speech permet de définir les paramètres vocaux via `extraParams`.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nLorsque aucun paramètre vocal n’est transmis pour MiniMax Speech, le serveur envoie par défaut les valeurs `voice`, `outputFormat=mp3`, `sampleRate=32000`, `speed=1`, `volume=1` et `pitch=0` de l’exemple ci-dessus.\n\nLyria 3 Pro utilise `upstream_model=lyria-3-pro` :\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## Musique légère ou instrumental pur\n\nVous pouvez utiliser `light_music=true` ou `make_instrumental=true`. `light_music` indique une tendance musique légère/musique d’ambiance, et `make_instrumental` indique de ne pas générer de voix chantée.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## Mode avancé des paroles\n\nConvient lorsque les paroles sont déjà prêtes côté métier et qu’il faut spécifier un titre ainsi que des balises de style. Transmettez `custom_mode=true` et utilisez `lyrics` pour soumettre les paroles.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Consultation\n\nAprès la création réussie, enregistrez l’ID de tâche `data` renvoyé, par exemple `task_xxx`, puis appelez `GET /suno/fetch/{task_id}` pour consulter le statut, l’URL audio, la couverture, le titre, les paroles et les informations de segments bruts renvoyées en amont.\n\nSeedMusic utilise le même chemin de soumission et de requête. Transmettez `model: \"suno_music\"`, `upstream_model: \"sd-music-1.0-preview\"`, `prompt` et l’entier facultatif `duration` (de 30 à 360 secondes, 30 secondes par défaut). Le prompt doit contenir entre 1 et 4 000 caractères. En cas de succès, récupérez l’audio depuis `audio_url` du fragment.",
         "tags": [
           "Format de tâche de génération musicale"
         ],
@@ -2588,11 +2605,11 @@
                   "upstream_model": {
                     "type": "string",
                     "example": "suno-v6",
-                    "description": "Nom du sous-modèle, par exemple `suno-v6` ou `suno-v5.5` ; valeur par défaut : `suno-v5.5`."
+                    "description": "Vous pouvez transmettre `sd-music-1.0-preview`, `suno-v6` ou `suno-v5.5`. Par défaut : `suno-v5.5`."
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Invite descriptive pour la musique ou les sons."
+                    "description": "Prompt décrivant la musique ou le son. SeedMusic accepte de 1 à 4 000 caractères."
                   },
                   "extraParams": {
                     "type": "object",
@@ -2653,6 +2670,12 @@
                   "lyrics": {
                     "type": "string",
                     "description": "Contenu des paroles."
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "minimum": 30,
+                    "maximum": 360,
+                    "description": "La durée d’un morceau SeedMusic est comprise entre 30 et 360 secondes, et de 30 secondes par défaut."
                   }
                 }
               },
@@ -2726,6 +2749,15 @@
                     "title": "Summer Sea Breeze",
                     "tags": "electro pop, female vocal, bright summer",
                     "lyrics": "[Verse]\nSea breeze moves across the white sand\n[Chorus]\nTurn the summer into a beam of light"
+                  }
+                },
+                "seedmusic_single_track": {
+                  "summary": "Musique SeedMusic à piste unique",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "sd-music-1.0-preview",
+                    "duration": 60,
+                    "prompt": "A quiet piano piece with gentle rain."
                   }
                 }
               }
@@ -5978,6 +6010,20 @@
                         "role": "reference_audio"
                       }
                     ]
+                  }
+                },
+                "canvas_ark_tier": {
+                  "summary": "Tâche vidéo à résolution fixe",
+                  "value": {
+                    "model": "wan-3.0-prime",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Gentle waves rolling onto a beach."
+                      }
+                    ],
+                    "duration": 5,
+                    "ratio": "16:9"
                   }
                 }
               }

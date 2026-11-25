@@ -5,6 +5,34 @@ description: "This page displays the models currently available in the public `n
 
 ## Model Grouping
 
+### SeedMusic
+
+Use the Suno client format. Pass `model=suno_music` and `upstream_model=sd-music-1.0-preview` when submitting, then query a single audio track by task ID. The duration is 30–360 seconds, and pricing is per track.
+
+
+
+| Model | Primary Integration Method |
+
+|---|---|
+
+| `sd-music-1.0-preview` | `POST /suno/submit/music` / `GET /suno/fetch/{task_id}` |
+
+### Seedream
+
+5.0 Flash and Pro support 1.5K, 2K, and 4K. 5.5 supports 1.5K and 2K.
+
+
+
+| Model | Primary Integration Method |
+
+|---|---|
+
+| `seedream-5.0-flash` | `/v1/images/generations` |
+
+| `seedream-5.0-pro` | `/v1/images/generations` |
+
+| `seedream-5.5` | `/v1/images/generations` |
+
 ### Magi
 
 `magi-2-1080p` supports the OpenAI `/v1/videos` and Ark `/api/v3/contents/generations/tasks` formats, which can be queried through `GET /{task_id}` at their respective paths. The output is fixed at 1080p, with generation durations of 4–30 seconds. Supported aspect ratios are 16:9, 9:16, 1:1, 4:3, 3:4, and 21:9; 1:1 output is 1440×1440. Reference mode supports up to 10 images, 5 video clips, and 5 audio clips, for a total of 20 assets. Each video and audio clip must be 2–30 seconds; the total duration of all videos must not exceed 30 seconds, and the total duration of all audio must not exceed 30 seconds. Size limits are 30 MB for images, 200 MB for videos, and 15 MB for audio. First-and-last-frame mode cannot be combined with other image, video, or audio references. Prompts can use `<<<image_1>>>`, `<<<video_1>>>`, and `<<<audio_1>>>` to reference assets in the input order for each asset type. A standalone official sand.ai format endpoint is not currently available.
@@ -93,7 +121,9 @@ Supports Alibaba DashScope official video generation format, and also supports c
 
 | `happyhorse-1.0-video-edit` | `/api/v1/services/aigc/video-generation/video-synthesis` / `/v1/videos` |
 
+| `happyhorse-1.1` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
+| `happyhorse-1.1-1080p` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
 ### Wan
 
@@ -111,7 +141,9 @@ Refer to the specific API documentation.
 
 | `wan-3.0-1080p` | `/v1/videos` |
 
+| `wan-3.0-prime` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
+| `wan-3.0-prime-1080p` | `/v1/videos` / `/api/v3/contents/generations/tasks` |
 
 ### Veo
 
@@ -191,7 +223,11 @@ Supports the `/api/v3/contents/generations/tasks` native format, and also suppor
 
 | `doubao-seedance-2-0-fast-260128` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
+| `sd-2-5-4k` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
+| `sd-2-5-flash` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
+
+| `sd-2-5-flash-480p` | `/api/v3/contents/generations/tasks` / `/v1/videos` |
 
 ### Kling Images
 

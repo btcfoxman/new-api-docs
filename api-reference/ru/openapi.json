@@ -628,6 +628,14 @@
                     "human_image": "https://example.com/human.jpg",
                     "cloth_image": "https://example.com/cloth.jpg"
                   }
+                },
+                "seedream_canvas_generation": {
+                  "summary": "Seedream: генерация изображений по тексту",
+                  "value": {
+                    "model": "seedream-5.5",
+                    "prompt": "A mountain lake in morning light.",
+                    "size": "2k"
+                  }
                 }
               }
             }
@@ -2125,6 +2133,15 @@
                       "https://example.com/rhythm.wav"
                     ]
                   }
+                },
+                "canvas_video_tier": {
+                  "summary": "Видео с фиксированным разрешением",
+                  "value": {
+                    "model": "happyhorse-1.1-1080p",
+                    "prompt": "A white horse walking through a meadow.",
+                    "seconds": "5",
+                    "size": "1920x1080"
+                  }
                 }
               }
             }
@@ -2562,7 +2579,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "Создать задачу генерации музыки или звука",
-        "description": "Интерфейс отправки задания на генерацию музыки и звука, совместимый со старым путем `/suno/submit/music`. Возвращает ID задачи; затем запрос можно проверить через `/suno/fetch/{task_id}`.\n\nИнтерфейс отправки задач на генерацию музыки и звука. Передавайте имя подмодели через `upstream_model`. Интерфейс создания возвращает `task_id`, затем используйте `/suno/fetch/{task_id}` для запроса результата.\n\nЕсли не передан `upstream_model` (или передан только `{\"model\":\"suno_music\"}`), по умолчанию используется Suno v5.5. Если нужно продолжать использовать старую версию Suno, явно передайте `\"upstream_model\":\"suno-v5\"`.\n\n## Доступные подмодели\n\n| Тип | `upstream_model` |\n| --- | --- |\n| Музыка | `suno-v6` |\n| Музыка | `suno-v5.5` |\n| Музыка | `suno-v5` |\n| Музыка | `lyria-3-pro` |\n| Звук | `seed-audio-1.0` |\n| Звук | `minimax-speech-2.8-hd` |\n\n## Режим описания промпта\n\nПодходит, если нужно описать только стиль, настроение, язык, тип исполнителя и сцену, а модель автоматически сгенерирует содержимое песни.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## Генерация звука\n\nВ MiniMax Speech можно настроить параметры голоса через `extraParams`.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nЕсли для MiniMax Speech не переданы параметры голоса, сервер по умолчанию отправляет `voice`, `outputFormat=mp3`, `sampleRate=32000`, `speed=1`, `volume=1` и `pitch=0` из примера выше.\n\nLyria 3 Pro использует `upstream_model=lyria-3-pro`:\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## Легкая музыка или чистый аккомпанемент\n\nМожно использовать `light_music=true` или `make_instrumental=true`. `light_music` означает уклон в легкую/фоновую музыку, а `make_instrumental` — не генерировать вокал.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## Расширенный режим текста песни\n\nПодходит для случаев, когда на стороне бизнеса уже подготовлены тексты песен и нужно указать название и теги стиля. Передайте `custom_mode=true` и используйте `lyrics` для отправки текста песни.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Запрос\n\nПосле успешного создания сохраните возвращенный `data` ID задачи, например `task_xxx`, и вызовите `GET /suno/fetch/{task_id}`, чтобы получить статус, URL аудио, обложку, заголовок, текст песни и исходные фрагменты, возвращенные upstream.",
+        "description": "Интерфейс отправки задания на генерацию музыки и звука, совместимый со старым путем `/suno/submit/music`. Возвращает ID задачи; затем запрос можно проверить через `/suno/fetch/{task_id}`.\n\nИнтерфейс отправки задач на генерацию музыки и звука. Передавайте имя подмодели через `upstream_model`. Интерфейс создания возвращает `task_id`, затем используйте `/suno/fetch/{task_id}` для запроса результата.\n\nЕсли не передан `upstream_model` (или передан только `{\"model\":\"suno_music\"}`), по умолчанию используется Suno v5.5. Если нужно продолжать использовать старую версию Suno, явно передайте `\"upstream_model\":\"suno-v5\"`.\n\n## Доступные подмодели\n\n| Тип | `upstream_model` |\n| --- | --- |\n| Музыка | `suno-v6` |\n| Музыка | `suno-v5.5` |\n| Музыка | `suno-v5` |\n| Музыка | `lyria-3-pro` |\n| Звук | `seed-audio-1.0` |\n| Звук | `minimax-speech-2.8-hd` |\n\n## Режим описания промпта\n\nПодходит, если нужно описать только стиль, настроение, язык, тип исполнителя и сцену, а модель автоматически сгенерирует содержимое песни.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## Генерация звука\n\nВ MiniMax Speech можно настроить параметры голоса через `extraParams`.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nЕсли для MiniMax Speech не переданы параметры голоса, сервер по умолчанию отправляет `voice`, `outputFormat=mp3`, `sampleRate=32000`, `speed=1`, `volume=1` и `pitch=0` из примера выше.\n\nLyria 3 Pro использует `upstream_model=lyria-3-pro`:\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## Легкая музыка или чистый аккомпанемент\n\nМожно использовать `light_music=true` или `make_instrumental=true`. `light_music` означает уклон в легкую/фоновую музыку, а `make_instrumental` — не генерировать вокал.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## Расширенный режим текста песни\n\nПодходит для случаев, когда на стороне бизнеса уже подготовлены тексты песен и нужно указать название и теги стиля. Передайте `custom_mode=true` и используйте `lyrics` для отправки текста песни.\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## Запрос\n\nПосле успешного создания сохраните возвращенный `data` ID задачи, например `task_xxx`, и вызовите `GET /suno/fetch/{task_id}`, чтобы получить статус, URL аудио, обложку, заголовок, текст песни и исходные фрагменты, возвращенные upstream.\n\nSeedMusic использует один и тот же путь для отправки и запроса. Передайте `model: \"suno_music\"`, `upstream_model: \"sd-music-1.0-preview\"`, `prompt` и необязательное целое число `duration` (от 30 до 360 секунд, по умолчанию — 30 секунд). Длина запроса должна составлять от 1 до 4000 символов. После успешного выполнения получите аудио из `audio_url` фрагмента.",
         "tags": [
           "Формат задачи генерации музыки"
         ],
@@ -2588,11 +2605,11 @@
                   "upstream_model": {
                     "type": "string",
                     "example": "suno-v6",
-                    "description": "Имя подмодели, например `suno-v6` или `suno-v5.5`; по умолчанию `suno-v5.5`."
+                    "description": "Можно передать `sd-music-1.0-preview`, `suno-v6` или `suno-v5.5`. По умолчанию используется `suno-v5.5`."
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "Описание музыки или звука в виде подсказки."
+                    "description": "Текстовое описание музыки или звука. SeedMusic поддерживает от 1 до 4000 символов."
                   },
                   "extraParams": {
                     "type": "object",
@@ -2653,6 +2670,12 @@
                   "lyrics": {
                     "type": "string",
                     "description": "Содержимое текста песни."
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "minimum": 30,
+                    "maximum": 360,
+                    "description": "Длительность одной композиции SeedMusic составляет от 30 до 360 секунд, по умолчанию — 30 секунд."
                   }
                 }
               },
@@ -2726,6 +2749,15 @@
                     "title": "Summer Sea Breeze",
                     "tags": "electro pop, female vocal, bright summer",
                     "lyrics": "[Verse]\nSea breeze moves across the white sand\n[Chorus]\nTurn the summer into a beam of light"
+                  }
+                },
+                "seedmusic_single_track": {
+                  "summary": "Один музыкальный трек SeedMusic",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "sd-music-1.0-preview",
+                    "duration": 60,
+                    "prompt": "A quiet piano piece with gentle rain."
                   }
                 }
               }
@@ -5978,6 +6010,20 @@
                         "role": "reference_audio"
                       }
                     ]
+                  }
+                },
+                "canvas_ark_tier": {
+                  "summary": "Видеозадача с фиксированным разрешением",
+                  "value": {
+                    "model": "wan-3.0-prime",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Gentle waves rolling onto a beach."
+                      }
+                    ],
+                    "duration": 5,
+                    "ratio": "16:9"
                   }
                 }
               }

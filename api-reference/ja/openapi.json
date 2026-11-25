@@ -628,6 +628,14 @@
                     "human_image": "https://example.com/human.jpg",
                     "cloth_image": "https://example.com/cloth.jpg"
                   }
+                },
+                "seedream_canvas_generation": {
+                  "summary": "Seedream テキストから画像生成",
+                  "value": {
+                    "model": "seedream-5.5",
+                    "prompt": "A mountain lake in morning light.",
+                    "size": "2k"
+                  }
                 }
               }
             }
@@ -2125,6 +2133,15 @@
                       "https://example.com/rhythm.wav"
                     ]
                   }
+                },
+                "canvas_video_tier": {
+                  "summary": "固定解像度動画",
+                  "value": {
+                    "model": "happyhorse-1.1-1080p",
+                    "prompt": "A white horse walking through a meadow.",
+                    "seconds": "5",
+                    "size": "1920x1080"
+                  }
                 }
               }
             }
@@ -2562,7 +2579,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "音楽または音声生成タスクを作成する",
-        "description": "音楽および音声生成の送信 API。旧 `/suno/submit/music` パスと互換性があります。タスク ID を返し、後続は `/suno/fetch/{task_id}` で確認します。\n\n音楽および音声生成タスクの送信インターフェースです。`upstream_model` でサブモデル名を渡します。作成インターフェースは `task_id` を返し、その後 `/suno/fetch/{task_id}` で出力を照会します。\n\n`upstream_model` を指定しない場合（または `{\"model\":\"suno_music\"}` のみを指定した場合）、既定で Suno v5.5 を使用します。旧版 Suno を引き続き使用する場合は、`\"upstream_model\":\"suno-v5\"` を明示的に指定してください。\n\n## 利用可能なサブモデル\n\n| タイプ | `upstream_model` |\n| --- | --- |\n| 音楽 | `suno-v6` |\n| 音楽 | `suno-v5.5` |\n| 音楽 | `suno-v5` |\n| 音楽 | `lyria-3-pro` |\n| 音声 | `seed-audio-1.0` |\n| 音声 | `minimax-speech-2.8-hd` |\n\n## プロンプト記述モード\n\nスタイル、感情、言語、歌手タイプ、シーンのみを記述する場合に適しており、モデルが自動的に楽曲内容を生成します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## 音声生成\n\nMiniMax Speech では `extraParams` で音声パラメータを設定できます。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nMiniMax Speech で音声パラメータが未指定の場合、サーバーは既定で上記の `voice`、`outputFormat=mp3`、`sampleRate=32000`、`speed=1`、`volume=1`、`pitch=0` を送信します。\n\nLyria 3 Pro は `upstream_model=lyria-3-pro` を使用します：\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## インストゥルメンタルまたは純伴奏\n\n`light_music=true` または `make_instrumental=true` を使用できます。`light_music` はインストゥルメンタル／BGM 寄りであることを示し、`make_instrumental` は歌唱ボーカルを生成しないことを示します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌詞の詳細モード\n\nビジネス側で歌詞がすでに用意されており、タイトルとスタイルタグを指定する必要がある場合に適しています。`custom_mode=true` を渡し、`lyrics` を使用して歌詞を送信します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 照会\n\n作成成功後、返却された `data` のタスク ID を保存します。たとえば `task_xxx` です。`GET /suno/fetch/{task_id}` を呼び出して、状態、音声 URL、カバー、タイトル、歌詞、および上流から返された元のセグメント情報を照会します。",
+        "description": "音楽および音声生成の送信 API。旧 `/suno/submit/music` パスと互換性があります。タスク ID を返し、後続は `/suno/fetch/{task_id}` で確認します。\n\n音楽および音声生成タスクの送信インターフェースです。`upstream_model` でサブモデル名を渡します。作成インターフェースは `task_id` を返し、その後 `/suno/fetch/{task_id}` で出力を照会します。\n\n`upstream_model` を指定しない場合（または `{\"model\":\"suno_music\"}` のみを指定した場合）、既定で Suno v5.5 を使用します。旧版 Suno を引き続き使用する場合は、`\"upstream_model\":\"suno-v5\"` を明示的に指定してください。\n\n## 利用可能なサブモデル\n\n| タイプ | `upstream_model` |\n| --- | --- |\n| 音楽 | `suno-v6` |\n| 音楽 | `suno-v5.5` |\n| 音楽 | `suno-v5` |\n| 音楽 | `lyria-3-pro` |\n| 音声 | `seed-audio-1.0` |\n| 音声 | `minimax-speech-2.8-hd` |\n\n## プロンプト記述モード\n\nスタイル、感情、言語、歌手タイプ、シーンのみを記述する場合に適しており、モデルが自動的に楽曲内容を生成します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## 音声生成\n\nMiniMax Speech では `extraParams` で音声パラメータを設定できます。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nMiniMax Speech で音声パラメータが未指定の場合、サーバーは既定で上記の `voice`、`outputFormat=mp3`、`sampleRate=32000`、`speed=1`、`volume=1`、`pitch=0` を送信します。\n\nLyria 3 Pro は `upstream_model=lyria-3-pro` を使用します：\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## インストゥルメンタルまたは純伴奏\n\n`light_music=true` または `make_instrumental=true` を使用できます。`light_music` はインストゥルメンタル／BGM 寄りであることを示し、`make_instrumental` は歌唱ボーカルを生成しないことを示します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌詞の詳細モード\n\nビジネス側で歌詞がすでに用意されており、タイトルとスタイルタグを指定する必要がある場合に適しています。`custom_mode=true` を渡し、`lyrics` を使用して歌詞を送信します。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 照会\n\n作成成功後、返却された `data` のタスク ID を保存します。たとえば `task_xxx` です。`GET /suno/fetch/{task_id}` を呼び出して、状態、音声 URL、カバー、タイトル、歌詞、および上流から返された元のセグメント情報を照会します。\n\nSeedMusic は同じ送信およびクエリのパスを使用します。`model: \"suno_music\"`、`upstream_model: \"sd-music-1.0-preview\"`、`prompt` と、任意の整数 `duration`（30～360 秒、デフォルトは 30 秒）を渡します。プロンプトは 1～4000 文字です。成功したら、セグメントの `audio_url` から音声を取得します。",
         "tags": [
           "音楽生成タスクの形式"
         ],
@@ -2588,11 +2605,11 @@
                   "upstream_model": {
                     "type": "string",
                     "example": "suno-v6",
-                    "description": "サブモデル名（例: `suno-v6` または `suno-v5.5`）。デフォルトは `suno-v5.5`。"
+                    "description": "`sd-music-1.0-preview`、`suno-v6`、または `suno-v5.5` を指定できます。デフォルトは `suno-v5.5` です。"
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "音楽や音声を説明するプロンプト。"
+                    "description": "音楽またはサウンドを説明するプロンプト。SeedMusic は1～4000文字に対応しています。"
                   },
                   "extraParams": {
                     "type": "object",
@@ -2653,6 +2670,12 @@
                   "lyrics": {
                     "type": "string",
                     "description": "歌詞の内容。"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "minimum": 30,
+                    "maximum": 360,
+                    "description": "SeedMusicの1曲あたりの長さは30～360秒で、デフォルトは30秒です。"
                   }
                 }
               },
@@ -2726,6 +2749,15 @@
                     "title": "Summer Sea Breeze",
                     "tags": "electro pop, female vocal, bright summer",
                     "lyrics": "[Verse]\nSea breeze moves across the white sand\n[Chorus]\nTurn the summer into a beam of light"
+                  }
+                },
+                "seedmusic_single_track": {
+                  "summary": "SeedMusicの単曲",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "sd-music-1.0-preview",
+                    "duration": 60,
+                    "prompt": "A quiet piano piece with gentle rain."
                   }
                 }
               }
@@ -5978,6 +6010,20 @@
                         "role": "reference_audio"
                       }
                     ]
+                  }
+                },
+                "canvas_ark_tier": {
+                  "summary": "固定解像度の動画タスク",
+                  "value": {
+                    "model": "wan-3.0-prime",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Gentle waves rolling onto a beach."
+                      }
+                    ],
+                    "duration": 5,
+                    "ratio": "16:9"
                   }
                 }
               }

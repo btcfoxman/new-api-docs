@@ -628,6 +628,14 @@
                     "human_image": "https://example.com/human.jpg",
                     "cloth_image": "https://example.com/cloth.jpg"
                   }
+                },
+                "seedream_canvas_generation": {
+                  "summary": "Seedream 文生圖",
+                  "value": {
+                    "model": "seedream-5.5",
+                    "prompt": "A mountain lake in morning light.",
+                    "size": "2k"
+                  }
                 }
               }
             }
@@ -2125,6 +2133,15 @@
                       "https://example.com/rhythm.wav"
                     ]
                   }
+                },
+                "canvas_video_tier": {
+                  "summary": "固定解析度影片",
+                  "value": {
+                    "model": "happyhorse-1.1-1080p",
+                    "prompt": "A white horse walking through a meadow.",
+                    "seconds": "5",
+                    "size": "1920x1080"
+                  }
                 }
               }
             }
@@ -2562,7 +2579,7 @@
     "/suno/submit/music": {
       "post": {
         "summary": "建立音樂或聲音生成任務",
-        "description": "音樂與聲音生成提交介面，相容舊 `/suno/submit/music` 路徑。返回任務 ID，後續透過 `/suno/fetch/{task_id}` 查詢。\n\n音樂與聲音生成任務提交介面。透過 `upstream_model` 傳入子模型名稱。建立介面會返回 `task_id`，接著使用 `/suno/fetch/{task_id}` 查詢輸出。\n\n未傳 `upstream_model`（或只傳 `{\"model\":\"suno_music\"}`）時，預設使用 Suno v5.5。需要繼續使用舊版 Suno 時，請明確傳入 `\"upstream_model\":\"suno-v5\"`。\n\n## 可用子模型\n\n| 類型 | `upstream_model` |\n| --- | --- |\n| 音樂 | `suno-v6` |\n| 音樂 | `suno-v5.5` |\n| 音樂 | `suno-v5` |\n| 音樂 | `lyria-3-pro` |\n| 聲音 | `seed-audio-1.0` |\n| 聲音 | `minimax-speech-2.8-hd` |\n\n## 提示詞描述模式\n\n適合只描述風格、情緒、語言、歌手類型和場景，由模型自動生成歌曲內容。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## 聲音生成\n\nMiniMax Speech 可透過 `extraParams` 設定語音參數。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nMiniMax Speech 未傳語音參數時，服務端預設發送上例中的 `voice`、`outputFormat=mp3`、`sampleRate=32000`、`speed=1`、`volume=1` 和 `pitch=0`。\n\nLyria 3 Pro 使用 `upstream_model=lyria-3-pro`：\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## 輕音樂或純伴奏\n\n可使用 `light_music=true` 或 `make_instrumental=true`。`light_music` 表示偏輕音樂/背景音樂，`make_instrumental` 表示不生成演唱人聲。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌詞高級模式\n\n適合業務端已準備好歌詞，且需要指定標題與風格標籤的情境。傳入 `custom_mode=true`，並使用 `lyrics` 提交歌詞。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 查詢\n\n建立成功後保存回傳的 `data` 任務 ID，例如 `task_xxx`，呼叫 `GET /suno/fetch/{task_id}` 查詢狀態、音訊位址、封面、標題、歌詞和上游回傳的原始片段資訊。",
+        "description": "音樂與聲音生成提交介面，相容舊 `/suno/submit/music` 路徑。返回任務 ID，後續透過 `/suno/fetch/{task_id}` 查詢。\n\n音樂與聲音生成任務提交介面。透過 `upstream_model` 傳入子模型名稱。建立介面會返回 `task_id`，接著使用 `/suno/fetch/{task_id}` 查詢輸出。\n\n未傳 `upstream_model`（或只傳 `{\"model\":\"suno_music\"}`）時，預設使用 Suno v5.5。需要繼續使用舊版 Suno 時，請明確傳入 `\"upstream_model\":\"suno-v5\"`。\n\n## 可用子模型\n\n| 類型 | `upstream_model` |\n| --- | --- |\n| 音樂 | `suno-v6` |\n| 音樂 | `suno-v5.5` |\n| 音樂 | `suno-v5` |\n| 音樂 | `lyria-3-pro` |\n| 聲音 | `seed-audio-1.0` |\n| 聲音 | `minimax-speech-2.8-hd` |\n\n## 提示詞描述模式\n\n適合只描述風格、情緒、語言、歌手類型和場景，由模型自動生成歌曲內容。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"suno-v6\",\n  \"prompt\": \"Create an energetic retro-pop DJ song about the artificial intelligence revolution.\",\n  \"make_instrumental\": false\n}\n```\n\n## 聲音生成\n\nMiniMax Speech 可透過 `extraParams` 設定語音參數。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-speech-2.8-hd\",\n  \"prompt\": \"欢迎使用新版语音生成服务。\",\n  \"extraParams\": {\n    \"voice\": \"moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\",\n    \"outputFormat\": \"mp3\",\n    \"sampleRate\": 32000,\n    \"speed\": 1,\n    \"volume\": 1,\n    \"pitch\": 0\n  }\n}\n```\n\nMiniMax Speech 未傳語音參數時，服務端預設發送上例中的 `voice`、`outputFormat=mp3`、`sampleRate=32000`、`speed=1`、`volume=1` 和 `pitch=0`。\n\nLyria 3 Pro 使用 `upstream_model=lyria-3-pro`：\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"lyria-3-pro\",\n  \"prompt\": \"Cinematic orchestral music with a hopeful finale.\"\n}\n```\n\n## 輕音樂或純伴奏\n\n可使用 `light_music=true` 或 `make_instrumental=true`。`light_music` 表示偏輕音樂/背景音樂，`make_instrumental` 表示不生成演唱人聲。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"minimax-music-v2.6\",\n  \"prompt\": \"Warm cafe background music with soft piano and strings, relaxing and cinematic.\",\n  \"light_music\": true,\n  \"make_instrumental\": true\n}\n```\n\n## 歌詞高級模式\n\n適合業務端已準備好歌詞，且需要指定標題與風格標籤的情境。傳入 `custom_mode=true`，並使用 `lyrics` 提交歌詞。\n\n```json\n{\n  \"model\": \"suno_music\",\n  \"upstream_model\": \"mureka-v9\",\n  \"custom_mode\": true,\n  \"title\": \"Summer Sea Breeze\",\n  \"tags\": \"electro pop, female vocal, bright summer\",\n  \"lyrics\": \"[Verse]\\nSea breeze moves across the white sand\\n[Chorus]\\nTurn the summer into a beam of light\"\n}\n```\n\n## 查詢\n\n建立成功後保存回傳的 `data` 任務 ID，例如 `task_xxx`，呼叫 `GET /suno/fetch/{task_id}` 查詢狀態、音訊位址、封面、標題、歌詞和上游回傳的原始片段資訊。\n\nSeedMusic 使用相同的提交和查詢路徑。傳入 `model: \"suno_music\"`、`upstream_model: \"sd-music-1.0-preview\"`、`prompt` 和選用的整數 `duration`（30～360 秒，預設為 30 秒）。提示詞長度為 1～4000 個字元，成功後從片段的 `audio_url` 讀取音訊。",
         "tags": [
           "音樂生成任務格式"
         ],
@@ -2588,11 +2605,11 @@
                   "upstream_model": {
                     "type": "string",
                     "example": "suno-v6",
-                    "description": "子模型名稱，例如 `suno-v6` 或 `suno-v5.5`；預設為 `suno-v5.5`。"
+                    "description": "可傳入 `sd-music-1.0-preview`、`suno-v6` 或 `suno-v5.5`，預設為 `suno-v5.5`。"
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "音樂或聲音的描述提示詞。"
+                    "description": "音樂或聲音的描述提示詞。SeedMusic 支援 1～4000 個字元。"
                   },
                   "extraParams": {
                     "type": "object",
@@ -2653,6 +2670,12 @@
                   "lyrics": {
                     "type": "string",
                     "description": "歌詞內容。"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "minimum": 30,
+                    "maximum": 360,
+                    "description": "SeedMusic 單首時長為 30～360 秒，預設為 30 秒。"
                   }
                 }
               },
@@ -2726,6 +2749,15 @@
                     "title": "Summer Sea Breeze",
                     "tags": "electro pop, female vocal, bright summer",
                     "lyrics": "[Verse]\nSea breeze moves across the white sand\n[Chorus]\nTurn the summer into a beam of light"
+                  }
+                },
+                "seedmusic_single_track": {
+                  "summary": "SeedMusic 單首音樂",
+                  "value": {
+                    "model": "suno_music",
+                    "upstream_model": "sd-music-1.0-preview",
+                    "duration": 60,
+                    "prompt": "A quiet piano piece with gentle rain."
                   }
                 }
               }
@@ -5978,6 +6010,20 @@
                         "role": "reference_audio"
                       }
                     ]
+                  }
+                },
+                "canvas_ark_tier": {
+                  "summary": "固定解析度影片任務",
+                  "value": {
+                    "model": "wan-3.0-prime",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Gentle waves rolling onto a beach."
+                      }
+                    ],
+                    "duration": 5,
+                    "ratio": "16:9"
                   }
                 }
               }
